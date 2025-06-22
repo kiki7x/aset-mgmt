@@ -30,7 +30,6 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::get('/asettik/{id}/edit', [App\Http\Controllers\ShowAsetRtController::class, 'getEditAssetContent'])->name('admin.asettik.edit');
         Route::patch('/asettik/{id}/update', [App\Http\Controllers\AssetController::class, 'update'])->name('admin.asettik.update');
         Route::delete('/asettik/destroy/{id}/{classification}', [App\Http\Controllers\AssetController::class, 'destroy'])->name('admin.asettik.destroy');
-        // Route::get('/asettik/show/{id}/{section?}', App\Livewire\Assets\ShowAsetTik::class)->name('admin.asettik.show');
         Route::get('/asettik/{id}/overview', [App\Http\Controllers\ShowAsetRtController::class, 'getOverviewContent'])->name('admin.asettik.overview');
         Route::get('/asettik/{id}/pemeliharaan', [App\Http\Controllers\PemeliharaanController::class, 'index'])->name('admin.asettik.pemeliharaan');
         Route::get('/asettik/{id}/penugasan', [App\Http\Controllers\ShowAsetRtController::class, 'getPenugasanContent'])->name('admin.asettik.penugasan');
@@ -50,7 +49,6 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::get('/asetrt/get_assets', [App\Http\Controllers\AssetController::class, 'get_assets'])->name('admin.asetrt.get_assets');
         Route::post('/asetrt/store/{classification}', [App\Http\Controllers\AssetController::class, 'store'])->name('admin.asetrt.store');
         Route::post('/asettik/destroy/{id}/{classification}', [App\Http\Controllers\AssetController::class, 'destroy'])->name('admin.asetrt.destroy');
-        // Route::get('/asetrt/show/{id}/{section?}', App\Livewire\Assets\ShowAsetRt::class)->name('admin.asetrt.show');
         Route::get('/asetrt/{id}', [App\Http\Controllers\ShowAsetRtController::class, 'showDetails'])->name('admin.asetrt.details');
         Route::get('/asetrt/{id}/overview', [App\Http\Controllers\ShowAsetRtController::class, 'getOverviewContent'])->name('admin.asetrt.overview');
         Route::get('/asetrt/{id}/pemeliharaan', [App\Http\Controllers\PemeliharaanController::class, 'index'])->name('admin.asetrt.pemeliharaan');
@@ -63,7 +61,6 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::get('/asetrt/{id}/files', [App\Http\Controllers\ShowAsetRtController::class, 'getFilesContent'])->name('admin.asetrt.files');
         Route::get('/asetrt/{id}/timelog', [App\Http\Controllers\ShowAsetRtController::class, 'getTimeLogContent'])->name('admin.asetrt.timelog');
         Route::get('/asetrt/{id}/edit', [App\Http\Controllers\ShowAsetRtController::class, 'getEditAssetContent'])->name('admin.asetrt.edit');
-        // Route::get('/asetrt/create', App\Livewire\Modal\CreateAsetRt::class)->name('admin.asetrt.create');
     });
 
     // Route::resource('maintenances', MaintenanceController::class);
