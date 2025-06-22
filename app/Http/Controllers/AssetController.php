@@ -176,7 +176,7 @@ class AssetController extends Controller
         $data = [
             'classification_id' => (int) $classification_id,
             'category_id' => $request->category_id,
-            'admin_id' => $request->admin_id,
+            'admin_id' => auth()->user()->id,
             'client_id' => $this->client_id,
             'user_id' => $request->user_id,
             'manufacturer_id' => (int) $request->manufacturer_id,
