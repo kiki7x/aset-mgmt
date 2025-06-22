@@ -13,7 +13,7 @@
             <div class="container">
                 <div class="row gy-4">
                     <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center" data-aos="zoom-out">
-                        <h1>Sistem Aplikasi Pengelolaan Aset Poltekpar Lombok</h1>
+                        <h1>Sistem Aplikasi Pemeliharaan Aset Poltekpar Lombok</h1>
                         <p>Layanan SAPA PPL bertujuan untuk mempermudah melacak pemanfaatan aset, penjadwalan pemeliharaan aset serta
                             mempermudah penanganan laporan gangguan sarana dan prasarana bidang TIK dan Peralatan Rumah Tangga.</p>
                         <div class="d-flex">

@@ -32,7 +32,10 @@ class UpdateAssetRequest extends FormRequest
             'model_id.0' => 'required',
             'supplier_id' => 'required|array|min:1|max:1',
             'supplier_id.0' => 'required',
-            'serial' => 'required|unique:assets,serial',
+            'serial' => [
+                'required',
+                Rule::unique('assets', 'serial')->ignore($this->id),
+            ],
             'location_id' => 'required',
             'status_id' => 'required',
             'user_id' => 'required',

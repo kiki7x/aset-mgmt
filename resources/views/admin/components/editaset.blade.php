@@ -18,7 +18,7 @@
                 <input type="text" name="id" value="{{ $asset->id }}" hidden>
                 <div class="form-group col-md-4">
                     <label for="tag">Tag Aset *</label>
-                    <input type="text" name="tag" class="form-control" id="tag" placeholder="Asset Tag" value="{{ $asset->tag ?? '' }}">
+                    <input type="text" name="tag" class="form-control" id="tag" placeholder="Asset Tag" value="{{ $asset->tag ?? '' }}" readonly>
                     <span id="error-tag" class="text-danger small"></span>
                 </div>
                 <div class="form-group col-md-8">
@@ -130,7 +130,7 @@
                 </div>
             </div>
             <div class="d-flex justify-content-end mt-4">
-                <button type="button" id="resetButton" class="btn btn-info mr-2">Reset</button>
+                <a href="javascript:void(0)" type="button" id="resetButton" class="btn btn-info mr-2" onclick="window.location.reload()">Reset</a>
                 <a href="{{ $asset->classification_id == 2 ? route('admin.asettik.overview', $id) : route('admin.asetrt.overview', $id) }}" class="btn btn-info mr-2">Batal</a>
                 <button id="submitFormEdit" type="submit" class="btn btn-primary">Simpan</button>
             </div>
@@ -146,53 +146,53 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     {{-- Laravel javascript Validation --}}
-    <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.min.js') }}"></script>
-    {!! JsValidator::formRequest('App\Http\Requests\UpdateAssetRequest', '#formEditAsset') !!}
+    {{-- <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.min.js') }}"></script> --}}
+    {{-- {!! JsValidator::formRequest('App\Http\Requests\UpdateAssetRequest', '#formEditAsset') !!} --}}
 
     <script>
         // $(document).ready(function() {
-            // Fungsi untuk menginisialisasi Select2
-            function initSelect2(selector, options = {}) {
-                $(selector).select2({
-                    theme: 'bootstrap4', // Pastikan tema Bootstrap 4 tersedia
-                    width: '100%',
-                    ...options
-                });
-            }
+        // Fungsi untuk menginisialisasi Select2
+        function initSelect2(selector, options = {}) {
+            $(selector).select2({
+                theme: 'bootstrap4', // Pastikan tema Bootstrap 4 tersedia
+                width: '100%',
+                ...options
+            });
+        }
 
-            // Inisialisasi Select2 untuk field non-tag
-            initSelect2('#category');
-            initSelect2('#location');
-            initSelect2('#status');
-            initSelect2('#useraset');
-            initSelect2('#adminaset');
+        // Inisialisasi Select2 untuk field non-tag
+        initSelect2('#category');
+        initSelect2('#location');
+        initSelect2('#status');
+        initSelect2('#useraset');
+        initSelect2('#adminaset');
 
-            // Inisialisasi Select2 untuk field tag (multiple dengan max 1 selection)
-            initSelect2('.select2tag', {
-                tags: true,
-                maximumSelectionLength: 1,
-                placeholder: 'Pilih.../tambahkan',
-                // Fungsi untuk membuat tag baru jika tidak ada di daftar
-                createTag: function(params) {
-                    if (params.term.trim() === '') {
-                        return null;
-                    }
-                    return {
-                        id: params.term, // ID baru bisa berupa teks input
-                        text: params.term,
-                        newTag: true // Flag untuk menandakan tag baru
-                    };
+        // Inisialisasi Select2 untuk field tag (multiple dengan max 1 selection)
+        initSelect2('.select2tag', {
+            tags: true,
+            maximumSelectionLength: 1,
+            placeholder: 'Pilih.../tambahkan',
+            // Fungsi untuk membuat tag baru jika tidak ada di daftar
+            createTag: function(params) {
+                if (params.term.trim() === '') {
+                    return null;
                 }
-            });
+                return {
+                    id: params.term, // ID baru bisa berupa teks input
+                    text: params.term,
+                    newTag: true // Flag untuk menandakan tag baru
+                };
+            }
+        });
 
-            // Inisialisasi Flatpickr
-            flatpickr("#purchaseDateInput", {
-                dateFormat: "Y-m-d",
-                allowInput: true, // Memungkinkan input manual
-                // Anda bisa menambahkan opsi lain di sini, misalnya:
-                // defaultDate: initialAssetData.purchase_date,
-                // enableTime: false,
-            });
+        // Inisialisasi Flatpickr
+        flatpickr("#purchaseDateInput", {
+            dateFormat: "Y-m-d",
+            allowInput: true, // Memungkinkan input manual
+            // Anda bisa menambahkan opsi lain di sini, misalnya:
+            // defaultDate: initialAssetData.purchase_date,
+            // enableTime: false,
+        });
     </script>
     <script>
         $(document).ready(function() {
@@ -217,17 +217,24 @@
                         })
                     },
                     error: function(xhr) {
-                        if (xhr.responseJSON?.errors) {
-                            $.each(xhr.responseJSON.errors, function(key, value) {
+                        if (xhr.status === 422) {
+                            let errors = xhr.responseJSON.errors;
+                            $('.text-danger').text(''); // clear old errors
+                            $.each(errors, function(key, value) {
                                 $(`#error-${key}`).text(value[0]);
-                                console.log(xhr.responseJSON.errors);
+                                $(`[name="${key}"]`).addClass('is-invalid');
                             });
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Cek kembali isian form.',
+                            })
                         } else {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Oops...',
                                 text: 'Terjadi kesalahan saat memperbarui data.',
-                            })
+                            });
                         }
                     }
                 })

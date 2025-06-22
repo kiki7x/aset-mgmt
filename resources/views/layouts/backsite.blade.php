@@ -94,9 +94,7 @@
     <script src="{{ asset('assets/dist/js/adminlte.js?v=3.2.0') }}"></script>
     <!-- init bootstrap tooltip -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    {{-- <script src="https://code.jquery.com/jquery-3.7.1.js"></script> --}}
-    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" xintegrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script> --}}
-    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js" xintegrity="sha384-xOolHFLEh07PJGoPkLv1b5hQby+MXeArB+wEwNteaeNaoTxMXxSR1GAsXpkmFMX2" crossorigin="anonymous"></script> --}}
+    {{-- Datatables --}}
     <script src="https://cdn.datatables.net/2.3.1/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.3.1/js/dataTables.bootstrap5.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>

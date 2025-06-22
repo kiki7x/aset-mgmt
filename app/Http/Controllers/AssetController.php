@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Controller;
 use App\Http\Requests\StoreAssetRequest;
 use App\Http\Requests\UpdateAssetRequest;
 use App\Models\AssetcategoriesModel;
@@ -14,10 +19,11 @@ use App\Models\SuppliersModel;
 use App\Models\User;
 use App\Notifications\CreateAsetRT;
 use App\Notifications\CreateAsetTik;
+use App\Notifications\EditAsetRT;
+use App\Notifications\EditAsetTik;
 use App\Notifications\DeleteAsetRT;
 use App\Notifications\DeleteAsetTik;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 class AssetController extends Controller
@@ -28,7 +34,7 @@ class AssetController extends Controller
     public $classification_rt_id = "3";
     public $client_id = 1;
 
-    public function index_tik()
+    public function index_tik() : View
     {
         $manufacturers = ManufacturersModel::get();
         $models = ModelsModel::get();
@@ -42,7 +48,7 @@ class AssetController extends Controller
         return view('admin.asettik.index', compact('totalAssets', 'categories', 'manufacturers', 'models', 'suppliers', 'locations', 'statuses', 'users'));
     }
 
-    public function index_rt(): \Illuminate\Contracts\View\View
+    public function index_rt() : View
     {
         $manufacturers = ManufacturersModel::get();
         $models = ModelsModel::get();
@@ -60,7 +66,7 @@ class AssetController extends Controller
         return view('admin.asetrt.index', compact('assets', 'totalAssets', 'categories', 'manufacturers', 'models', 'suppliers', 'locations', 'statuses', 'users'));
     }
 
-    public function get_assets(Request $request)
+    public function get_assets(Request $request) : JsonResponse
     {
         $category = $request->category;
         $classification = $request->classification;
@@ -142,7 +148,7 @@ class AssetController extends Controller
             ->make(true);
     }
 
-    public function store(StoreAssetRequest $request, $classification)
+    public function store(StoreAssetRequest $request, $classification): JsonResponse
     {
         if ($classification === "tik") {
             $prefix = $this->prefix_tik;
@@ -174,7 +180,7 @@ class AssetController extends Controller
         $request->merge(["model_id" => $cekmodel->id]);
 
         $data = [
-            'classification_id' => (int) $classification_id,
+            'classification_id' => $classification_id,
             'category_id' => $request->category_id,
             'admin_id' => auth()->user()->id,
             'client_id' => $this->client_id,
@@ -207,17 +213,22 @@ class AssetController extends Controller
         }
     }
 
-    public function update(UpdateAssetRequest $request, $id): Illuminate\Http\JsonResponse
+    public function update(UpdateAssetRequest $request, $id): JsonResponse
     {
-        // Dapatkan ID pertama dari array multi-select jika maximumSelectionLength: 1
-        // $manufacturerId = $request->input('manufacturer_id')[0] ?? null;
-        // $modelId = $request->input('model_id')[0] ?? null;
-        // $supplierId = $request->input('supplier_id')[0] ?? null;
+        $asset = AssetsModel::findOrFail($id);
+        $classification_id = $asset->classification_id;
 
-
-
-        $checkTag = $this->incrementTag($classification);
-        $newTag = $prefix . '-' . $checkTag;
+        if ($classification_id === 2 ) {
+            $prefix = $this->prefix_tik;
+            $sendNotificationByRole = ['superadmin', 'admin_tik', 'staf_tik'];
+            $notificationClass = EditAsetTik::class;
+        } elseif ($classification_id === 3 || $classification_id === 4) {
+            $prefix = $this->prefix_rt;
+            $sendNotificationByRole = ['superadmin', 'admin_rt', 'staf_driver', 'staf_engineering'];
+            $notificationClass = EditAsetRT::class;
+        } else {
+            return response()->json(['error' => 'Invalid classification'], 400);
+        }
 
         $ceksupplier = SuppliersModel::firstOrNew(["id" => (int) $request->supplier_id[0]], ["name" => $request->supplier_id[0]]);
         $ceksupplier->save();
@@ -231,10 +242,8 @@ class AssetController extends Controller
         $cekmodel->save();
         $request->merge(["model_id" => $cekmodel->id]);
 
-        $asset = AssetsModel::findOrFail($id);
         $asset->update([
-            'classification_id' => (int) $request->classification_id,
-            'client_id' => (int) $this->client_id,
+            'client_id' => $this->client_id,
             'tag' => $request->tag,
             'name' => $request->name,
             'category_id' => $request->category_id,
@@ -243,9 +252,9 @@ class AssetController extends Controller
             'manufacturer_id' => $request->manufacturer_id,
             'model_id' => $request->model_id,
             'serial' => $request->serial,
-            'status_id' => (int) $request->status_id,
-            'user_id' => (int) $request->user_id,
-            'admin_id' => (int) $request->admin_id,
+            'status_id' => $request->status_id,
+            'user_id' => $request->user_id,
+            'admin_id' => $request->admin_id,
             'purchase_date' => Carbon::parse($request->purchase_date)->format('Y-m-d'),
             'warranty_months' => $request->warranty_months,
             'notes' => $request->notes,
@@ -261,6 +270,7 @@ class AssetController extends Controller
         foreach ($users as $user) {
             $user->notify(new $notificationClass($asset));
         }
+        return response()->json(['success' => 'Asset updated successfully']);
     }
 
     public function destroy($id, $classification)
