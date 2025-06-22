@@ -12,40 +12,13 @@ use App\Notifications\CreatePemeliharaanAsetRT;
 
 class PemeliharaanController extends Controller
 {
-    // Data untuk dropdown
-    private $opsiPreventifKendaraan = [
-        'Pajak STNK',
-        'Tune Up',
-        'Pelumasan',
-        'Inspeksi Radiator',
-        'Inspeksi Mesin',
-        'Inspeksi AC',
-        'Inspeksi Ban'
-    ];
-
-    private $opsiPreventifElektronik = [
-        'Pembersihan',
-        'Pengecekan Kondisi'
-    ];
-
-    private $skejulOpsiPreventif = [
-        'per_3_bulan' => 'Per 3 Bulan Sekali',
-        'per_4_bulan' => 'Per 4 Bulan Sekali',
-        'per_6_bulan' => 'Per 6 Bulan Sekali',
-        'per_12_bulan' => 'Per 12 Bulan Sekali'
-    ];
-
     public function index($id): View
     {
         $maintenances_schedule = \App\Models\Maintenances_scheduleModel::where('asset_id', $id)->get(); // Menggunakan model Maintenance::with('item')->latest()->get();
-        $assets = \App\Models\AssetsModel::findOrFail($id); // Untuk dropdown di form tambah
+        // $assets = \App\Models\AssetsModel::findOrFail($id); // Untuk dropdown di form tambah
+        $asset = \App\Models\AssetsModel::findOrFail($id);
         Log::info("Loading Penjadwalan for asset ID: $id");
-        return view('admin.components.pemeliharaan', compact('id', 'maintenances_schedule', 'assets'))
-            ->with([
-                'opsiPreventifKendaraan' => $this->opsiPreventifKendaraan,
-                'opsiPreventifElektronik' => $this->opsiPreventifElektronik,
-                'skejulOpsiPreventif' => $this->skejulOpsiPreventif
-            ]);
+        return view('admin.components.pemeliharaan', compact('id', 'maintenances_schedule', 'asset'));
     }
 
     public function preventifdataTable(Request $request, $id)

@@ -1,4 +1,7 @@
-@extends('layouts.backsite-navtab-asetrt')
+@extends('layouts.backsite-navtab-aset', [
+    'id' => $asset->id,
+    'classification_id' => $asset->classification_id
+])
 
 @section('content-tab')
 <form id="editAssetForm">
@@ -121,7 +124,7 @@
         </div>
         <div class="d-flex justify-content-end mt-4">
             <button type="button" id="resetButton" class="btn btn-info mr-2">Reset</button>
-            <a href="{{ route('admin.asetrt.show', ['id' => $asset->id]) }}" class="btn btn-info mr-2">Batal</a>
+            <a href="{{ $asset->classification_id == 2 ? route('admin.asettik.overview', $id) : route('admin.asetrt.overview', $id) }}" class="btn btn-info mr-2">Batal</a>
             <button type="submit" class="btn btn-primary">Simpan</button>
         </div>
     </div>

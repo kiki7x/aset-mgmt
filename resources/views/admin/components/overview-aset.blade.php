@@ -1,12 +1,8 @@
-{{-- @extends('layouts.backsite', [
-    'title' => 'Show Aset RT | SAPA PPL',
-    'welcome' => 'Detail Aset RT',
-    'breadcrumb' => 'Detail Aset RT',
-]) --}}
-
-@extends('layouts.backsite-navtab-asetrt', [
+@extends('layouts.backsite-navtab-aset', [
     'id' => $asset->id,
+    'classification_id' => $asset->classification_id
 ])
+
 @section('content-tab')
     <div class="tab-content" id="assetTabContent">
         {{-- Overview Section --}}

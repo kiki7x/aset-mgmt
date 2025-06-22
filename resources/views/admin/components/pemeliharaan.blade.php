@@ -1,4 +1,7 @@
-@extends('layouts.backsite-navtab-asetrt')
+@extends('layouts.backsite-navtab-aset', [
+    'id' => $asset->id ?? '',
+    'classification_id' => $asset->classification_id ?? ''
+])
 
 @push('script-head')
 @stack('script-head')
@@ -9,7 +12,7 @@
 @section('content-tab')
     <div class="container-fluid">
         <div class="row align-items-center">
-            <p class="col-12 h4 d-flex justify-content-center"><u>{{ $assets->tag }} - {{ $assets->name }}</u></p>
+            <p class="col-12 h4 d-flex justify-content-center"><u>{{ $asset->tag }} - {{ $asset->name }}</u></p>
             <p class="col-8 h4">Jadwal Pemeliharaan</p>
             <div class="col d-flex justify-content-end">
                 {{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalJadwalPemeliharaan" onclick="showModalCreate()"><i class="fa-regular fa-clock"></i> + Jadwal</button> --}}

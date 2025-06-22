@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class StoreAssetRequest extends FormRequest
+class UpdateAssetRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,34 +23,41 @@ class StoreAssetRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'id' => 'required|exists:assets,id',
             'name' => 'required|string|max:255',
-            'category_id' => 'required|integer|exists:assetcategories,id',
+            'category_id' => 'required',
             'manufacturer_id' => 'required|array|min:1|max:1',
             'manufacturer_id.0' => 'required',
             'model_id' => 'required|array|min:1|max:1',
             'model_id.0' => 'required',
             'supplier_id' => 'required|array|min:1|max:1',
             'supplier_id.0' => 'required',
-            'serial' => 'required|unique:assets|string|max:255',
-            'location_id' => 'required|integer|exists:locations,id',
+            'serial' => 'required|unique:assets,serial',
+            'location_id' => 'required',
             'status_id' => 'required|integer|exists:labels,id',
-            'user_id' => 'required|integer|exists:users,id',
+            'user_id' => 'required|exists:users,id',
+            'admin_id' => 'required|exists:users,id',
             'purchase_date' => 'required|date',
             'warranty_months' => 'required|integer|min:0',
             'notes' => 'nullable|string',
+            // 'serial' => [
+            //     'required',
+            //     'string',
+            //     Rule::unique('assets', 'serial')->ignore($this->id),
+            //     'max:255',
+            // ],
         ];
     }
 
     public function messages(): array
     {
         return [
+            'id.required' => 'ID aset wajib diisi.',
             'name.required' => 'Nama aset wajib diisi.',
             'name.string' => 'Nama aset harus berupa teks.',
             'name.max' => 'Nama aset tidak boleh lebih dari :max karakter.',
 
             'category_id.required' => 'Kategori wajib dipilih.',
-            'category_id.integer' => 'Kategori harus berupa angka.',
-            'category_id.exists' => 'Kategori yang dipilih tidak valid.',
 
             'manufacturer_id.required' => 'Merk/Pabrikan wajib dipilih.',
             'manufacturer_id.array' => 'Merk/Pabrikan harus berupa array.',
@@ -77,20 +85,18 @@ class StoreAssetRequest extends FormRequest
 
             'serial.required' => 'Nomor seri wajib diisi.',
             'serial.unique' => 'Nomor seri sudah digunakan.',
-            'serial.string' => 'Nomor seri harus berupa teks.',
-            'serial.max' => 'Nomor seri tidak boleh lebih dari :max karakter.',
 
             'location_id.required' => 'Penempatan wajib dipilih.',
-            'location_id.integer' => 'Penempatan tidak valid.',
-            'location_id.exists' => 'Penempatan yang dipilih tidak ditemukan.',
 
             'status_id.required' => 'Status wajib dipilih.',
             'status_id.integer' => 'Status tidak valid.',
             'status_id.exists' => 'Status yang dipilih tidak ditemukan.',
 
             'user_id.required' => 'Pengguna aset wajib dipilih.',
-            'user_id.integer' => 'Pengguna tidak valid.',
             'user_id.exists' => 'Pengguna yang dipilih tidak ditemukan.',
+
+            'admin_id.required' => 'Pengguna admin wajib dipilih.',
+            'admin_id.exists' => 'Pengguna admin yang dipilih tidak ditemukan.',
 
             'purchase_date.required' => 'Tanggal perolehan wajib diisi.',
             'purchase_date.date' => 'Tanggal perolehan tidak valid.',

@@ -7,7 +7,7 @@ return [
      *
      * Supported: 'jsvalidation::bootstrap', 'jsvalidation::bootstrap4', 'jsvalidation::bootstrap5', 'jsvalidation::uikit'
      */
-    'view' => 'jsvalidation::bootstrap5',
+    'view' => 'jsvalidation::bootstrap4',
 
     /*
      * Default JQuery selector find the form to be validated.

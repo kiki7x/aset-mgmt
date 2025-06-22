@@ -17,9 +17,9 @@
                 <form action="#" id="formJadwalPemeliharaan">
                     {{-- Nama Barang & Hidden Input --}}
                     <div class="form-group">
-                        <p class="h5">{{ $assets->tag }} - {{ $assets->name }}</p>
+                        <p class="h5">{{ $asset->tag }} - {{ $asset->name }}</p>
                         <input type="text" class="form-control d-none" id="asset_id" name="asset_id"
-                            value="{{ $assets->id }}">
+                            value="{{ $asset->id }}">
                         <input type="text" class="form-control d-none" id="status" name="status" value="active">
                     </div>
 
@@ -27,10 +27,10 @@
                     <div class="form-group">
                         <label for="klasifikasi">Klasifikasi</label>
                         <select class="form-control" id="klasifikasi" name="klasifikasi" disabled>
-                            <option value="1" @if ($assets->classification_id == 1) selected @endif>None</option>
-                            <option value="2" @if ($assets->classification_id == 2) selected @endif>TIK</option>
-                            <option value="3" @if ($assets->classification_id == 3) selected @endif>Kendaraan</option>
-                            <option value="4" @if ($assets->classification_id == 4) selected @endif>Mesin/Elektronik
+                            <option value="1" @if ($asset->classification_id == 1) selected @endif>None</option>
+                            <option value="2" @if ($asset->classification_id == 2) selected @endif>TIK</option>
+                            <option value="3" @if ($asset->classification_id == 3) selected @endif>Kendaraan</option>
+                            <option value="4" @if ($asset->classification_id == 4) selected @endif>Mesin/Elektronik
                             </option>
                         </select>
                     </div>
@@ -41,15 +41,15 @@
                         <div class="form-group">
                             <label>Tugas:</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="name" value="cek_kebersihan">
+                                <input class="form-check-input" type="radio" name="name" value="Cek Kebersihan">
                                 <label class="form-check-label" for="cek_kebersihan">1. Cek Kebersihan</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="name" value="cek_fungsi">
+                                <input class="form-check-input" type="radio" name="name" value="Cek Fungsi">
                                 <label class="form-check-label" for="cek_fungsi">2. Cek Fungsi</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="name" value="cek_kondisi">
+                                <input class="form-check-input" type="radio" name="name" value="Cek Kondisi">
                                 <label class="form-check-label" for="cek_kondisi">3. Cek Kondisi</label>
                             </div>
                         </div>
@@ -60,31 +60,31 @@
                             Kendaraan: <span class="text-danger">*</span></label>
                         <p class="text-muted small">Pilih tugas pemeliharaan yang relevan.</p>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="name" value="pajak_stnk">
+                            <input class="form-check-input" type="radio" name="name" value="Pajak STNK">
                             <label class="form-check-label" for="pajak_stnk">1. Pajak STNK</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="name" value="tune_up">
+                            <input class="form-check-input" type="radio" name="name" value="Tune Up">
                             <label class="form-check-label" for="tune_up">2. Tune Up</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="name" value="pelumasan">
+                            <input class="form-check-input" type="radio" name="name" value="Pelumasan">
                             <label class="form-check-label" for="pelumasan">3. Pelumasan</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="name" value="inspeksi_radiator">
+                            <input class="form-check-input" type="radio" name="name" value="Cek Radiator">
                             <label class="form-check-label" for="inspeksi_radiator">4. Inspeksi Radiator</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="name" value="inspeksi_mesin">
+                            <input class="form-check-input" type="radio" name="name" value="Cek Mesin">
                             <label class="form-check-label" for="inspeksi_mesin">5. Inspeksi Mesin</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="name" value="inspeksi_ac">
+                            <input class="form-check-input" type="radio" name="name" value="Cek AC">
                             <label class="form-check-label" for="inspeksi_ac">6. Inspeksi AC</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="name" value="inspeksi_ban">
+                            <input class="form-check-input" type="radio" name="name" value="Cek Ban">
                             <label class="form-check-label" for="inspeksi_ban">7. Inspeksi Ban</label>
                         </div>
                     </div>
@@ -96,15 +96,15 @@
                             <label>Tugas:</label>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="name"
-                                    value="cek_kebersihan">
+                                    value="Cek Kebersihan">
                                 <label class="form-check-label" for="cek_kebersihan">1. Cek Kebersihan</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="name" value="cek_fungsi">
+                                <input class="form-check-input" type="radio" name="name" value="Cek Fungsi">
                                 <label class="form-check-label" for="cek_fungsi">2. Cek Fungsi</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="name" value="cek_kondisi">
+                                <input class="form-check-input" type="radio" name="name" value="Cek Kondisi">
                                 <label class="form-check-label" for="cek_kondisi">3. Cek Kondisi</label>
                             </div>
                         </div>

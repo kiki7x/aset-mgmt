@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreAssetRequest;
+use App\Http\Requests\UpdateAssetRequest;
 use App\Models\AssetcategoriesModel;
 use App\Models\AssetsModel;
 use App\Models\LabelsModel;
@@ -41,7 +42,7 @@ class AssetController extends Controller
         return view('admin.asettik.index', compact('totalAssets', 'categories', 'manufacturers', 'models', 'suppliers', 'locations', 'statuses', 'users'));
     }
 
-    public function index_rt()
+    public function index_rt(): \Illuminate\Contracts\View\View
     {
         $manufacturers = ManufacturersModel::get();
         $models = ModelsModel::get();
@@ -54,7 +55,7 @@ class AssetController extends Controller
 
         $assets = AssetsModel::with('category', 'status', 'model', 'user')->where('classification_id', 2)->latest()->paginate(10);
 
-        $totalAssets = AssetsModel::where('classification_id', 3)->count();
+        $totalAssets = AssetsModel::whereIn('classification_id', [3, 4])->count();
 
         return view('admin.asetrt.index', compact('assets', 'totalAssets', 'categories', 'manufacturers', 'models', 'suppliers', 'locations', 'statuses', 'users'));
     }
@@ -86,16 +87,16 @@ class AssetController extends Controller
                         ->orWhere('serial', 'like', "%{$keyword}%");
                 });
             })
+            ->addColumn('tag', function ($asset) use ($routePrefix) {
+                return '<a href="' . route("admin.$routePrefix.overview", $asset->id) . '">' . e($asset->tag) . '</a>';
+            })
             ->addColumn('name', function ($asset) use ($routePrefix) {
                 return '
-                <a href="' . route("admin.$routePrefix.show", ['id' => $asset->id]) . '" class="font-weight-bold">' . e($asset->name) . '</a><br>
+                <a href="' . route("admin.$routePrefix.overview", ['id' => $asset->id]) . '" class="font-weight-bold">' . e($asset->name) . '</a><br>
                 <span class="text-muted">Serial No: </span>' . e($asset->serial) . '<br>
                 <span class="text-muted">Status: </span>
                 <span class="badge" style="background-color: ' . e($asset->status->color ?? '#999') . '; color: white;">' . e($asset->status->name ?? '-') . '</span>
             ';
-            })
-            ->addColumn('tag', function ($asset) {
-                return '<a href="' . route('admin.asetrt.show', $asset->id) . '">' . e($asset->tag) . '</a>';
             })
             ->addColumn('category', function ($asset) {
                 return '
@@ -127,7 +128,7 @@ class AssetController extends Controller
                             <li>
                     <a class="mx-3" href="' . (
                     $classification === 'tik'
-                    ? route('admin.asettik.show', ['id' => $asset->id, 'section' => 'edit'])
+                    ? route('admin.asettik.edit', ['id' => $asset->id])
                     : route("admin.asetrt.edit", ['id' => $asset->id])
                 ) . '">Edit</a>
                 </li>
@@ -157,8 +158,6 @@ class AssetController extends Controller
             $notificationClass = CreateAsetRT::class;
         }
 
-        $admin_id = auth()->user()->id;
-
         $checkTag = $this->incrementTag($classification);
         $newTag = $prefix . '-' . $checkTag;
 
@@ -176,10 +175,10 @@ class AssetController extends Controller
 
         $data = [
             'classification_id' => (int) $classification_id,
-            'category_id' => (int) $request->category_id,
-            'admin_id' => (int) $admin_id,
-            'client_id' => (int) $this->client_id,
-            'user_id' => (int) $request->user_id,
+            'category_id' => $request->category_id,
+            'admin_id' => $request->admin_id,
+            'client_id' => $this->client_id,
+            'user_id' => $request->user_id,
             'manufacturer_id' => (int) $request->manufacturer_id,
             'model_id' => (int) $request->model_id,
             'supplier_id' => (int) $request->supplier_id,
@@ -195,7 +194,8 @@ class AssetController extends Controller
             'qrvalue' => $request->qrvalue,
         ];
 
-        $aset = AssetsModel::Create($data);
+        // simpan
+        $asset = AssetsModel::Create($data);
 
         // kirim notifikasi
         $users = User::whereHas('roles', function ($query) use ($sendNotificationByRole) {
@@ -203,13 +203,64 @@ class AssetController extends Controller
         })->get();
 
         foreach ($users as $user) {
-            $user->notify(new $notificationClass($aset));
+            $user->notify(new $notificationClass($asset));
         }
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateAssetRequest $request, $id): Illuminate\Http\JsonResponse
     {
-        //
+        // Dapatkan ID pertama dari array multi-select jika maximumSelectionLength: 1
+        // $manufacturerId = $request->input('manufacturer_id')[0] ?? null;
+        // $modelId = $request->input('model_id')[0] ?? null;
+        // $supplierId = $request->input('supplier_id')[0] ?? null;
+
+
+
+        $checkTag = $this->incrementTag($classification);
+        $newTag = $prefix . '-' . $checkTag;
+
+        $ceksupplier = SuppliersModel::firstOrNew(["id" => (int) $request->supplier_id[0]], ["name" => $request->supplier_id[0]]);
+        $ceksupplier->save();
+        $request->merge(["supplier_id" => $ceksupplier->id]);
+
+        $cekmanufacturer = ManufacturersModel::firstOrNew(["id" => (int) $request->manufacturer_id[0]], ["name" => $request->manufacturer_id[0]]);
+        $cekmanufacturer->save();
+        $request->merge(["manufacturer_id" => $cekmanufacturer->id]);
+
+        $cekmodel = ModelsModel::firstOrNew(["id" => (int) $request->model_id[0]], ["name" => $request->model_id[0]]);
+        $cekmodel->save();
+        $request->merge(["model_id" => $cekmodel->id]);
+
+        $asset = AssetsModel::findOrFail($id);
+        $asset->update([
+            'classification_id' => (int) $request->classification_id,
+            'client_id' => (int) $this->client_id,
+            'tag' => $request->tag,
+            'name' => $request->name,
+            'category_id' => $request->category_id,
+            'supplier_id' => $request->supplier_id,
+            'location_id' => $request->location_id,
+            'manufacturer_id' => $request->manufacturer_id,
+            'model_id' => $request->model_id,
+            'serial' => $request->serial,
+            'status_id' => (int) $request->status_id,
+            'user_id' => (int) $request->user_id,
+            'admin_id' => (int) $request->admin_id,
+            'purchase_date' => Carbon::parse($request->purchase_date)->format('Y-m-d'),
+            'warranty_months' => $request->warranty_months,
+            'notes' => $request->notes,
+            'customfields' => $request->customfields,
+            'qrvalue' => $request->qrvalue,
+        ]);
+
+        // kirim notifikasi
+        $users = User::whereHas('roles', function ($query) use ($sendNotificationByRole) {
+            $query->whereIn('name', $sendNotificationByRole);
+        })->get();
+
+        foreach ($users as $user) {
+            $user->notify(new $notificationClass($asset));
+        }
     }
 
     public function destroy($id, $classification)

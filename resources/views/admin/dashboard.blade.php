@@ -6,15 +6,13 @@
 
 
 @section('content')
-    {{-- Rangkum Aset TIK --}}
-    <h2>Aset TIK</h2>
-    {{-- Selamat Datang <strong>{{ auth()->user()->name }}</strong> --}}
+    {{-- Rangkum Aset --}}
     <div class="row">
-        <div class="col-lg-3 col-6">
+        <div class="col-md-2 col-lg-2 col-6">
             <!-- small card -->
             <div class="small-box bg-info">
                 <div class="inner">
-                    <h3>{{ $assets->where('classification_id', '2')->count() }}</h3>
+                    <h3>{{ $totalAssetTik }}</h3>
                     <p>Aset TIK</p>
                 </div>
                 <div class="icon">
@@ -24,9 +22,24 @@
                     Selengkapnya <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-6">
+        </div><!-- ./col -->
+        <div class="col-md-2 col-lg-2 col-6">
+            <!-- small card -->
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>{{ $totalAssetRt }}</h3>
+
+                    <p>Aset Rumah Tangga</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-building"></i>
+                </div>
+                <a href="{{ route('admin.asetrt') }}" class="small-box-footer">
+                    Selengkapnya <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div><!-- ./col -->
+        <div class="col-md-2 col-lg-2 col-6">
             <!-- small card -->
             <div class="small-box bg-success">
                 <div class="inner">
@@ -41,9 +54,8 @@
                     Selengkapnya <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-6">
+        </div><!-- ./col -->
+        <div class="col-md-2 col-lg-2 col-6">
             <!-- small card -->
             <div class="small-box bg-warning">
                 <div class="inner">
@@ -58,9 +70,8 @@
                     Selengkapnya <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-6">
+        </div><!-- ./col -->
+        <div class="col-md-2 col-lg-2 col-6">
             <!-- small card -->
             <div class="small-box bg-danger">
                 <div class="inner">
@@ -75,84 +86,24 @@
                     Selengkapnya <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
-        </div>
-        <!-- ./col -->
-    </div>
-    {{-- /Rangkum Aset TIK --}}
-
-    {{-- Rangkum Aset Rumah Tangga --}}
-    <h2>Aset Rumah Tangga</h2>
-    <div class="row">
-        <div class="col-lg-3 col-6">
-            <!-- small card -->
-            <div class="small-box bg-info">
-                <div class="inner">
-                    <h3>{{ $assets->where('classification_id', '3')->count() }}</h3>
-
-                    <p>Aset Rumah Tangga</p>
-                </div>
-                <div class="icon">
-                    <i class="fas fa-building"></i>
-                </div>
-                <a href="{{ route('admin.asetrt') }}" class="small-box-footer">
-                    Selengkapnya <i class="fas fa-arrow-circle-right"></i>
-                </a>
-            </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-6">
+        </div><!-- ./col -->
+        <div class="col-md-2 col-lg-2 col-6">
             <!-- small card -->
             <div class="small-box bg-success">
                 <div class="inner">
-                    <h3>53<sup style="font-size: 20px">%</sup></h3>
+                    <h3>{{$totalGedung}}</h3>
 
-                    <p>Ruangan</p>
+                    <p>Gedung</p>
                 </div>
                 <div class="icon">
-                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                    <i class="fa-solid fa-location-dot"></i>
                 </div>
                 <a href="#" class="small-box-footer">
                     Selengkapnya <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-6">
-            <!-- small card -->
-            <div class="small-box bg-warning">
-                <div class="inner">
-                    <h3>44</h3>
-
-                    <p>Pemeliharaan</p>
-                </div>
-                <div class="icon">
-                    <i class="fa-solid fa-screwdriver-wrench"></i>
-                </div>
-                <a href="#" class="small-box-footer">
-                    Selengkapnya <i class="fas fa-arrow-circle-right"></i>
-                </a>
-            </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-6">
-            <!-- small card -->
-            <div class="small-box bg-danger">
-                <div class="inner">
-                    <h3>65</h3>
-
-                    <p>Helpdesk Tiket</p>
-                </div>
-                <div class="icon">
-                    <i class="fa-solid fa-headset"></i>
-                </div>
-                <a href="#" class="small-box-footer">
-                    Selengkapnya <i class="fas fa-arrow-circle-right"></i>
-                </a>
-            </div>
-        </div>
-        <!-- ./col -->
-    </div>
-    {{-- /Rangkum Aset Rumah Tangga --}}
+        </div><!-- ./col -->
+    </div>{{-- /Rangkum Aset --}}
 
     <div class="row">
         <div class="col-md-6">
@@ -196,7 +147,7 @@
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="fas fa-bullhorn"></i>
-                        Helpdesk Tiket Masuk
+                        Helpdesk Tiket
                     </h3>
                 </div>
                 <!-- /.card-header -->
@@ -232,15 +183,6 @@
                             </div>
                         </li>
                     </ul>
-                    <script>
-                        // $(function() {
-                        //     $(".presort li").sort(sort_li).appendTo('.presort');
-
-                        //     function sort_li(a, b) {
-                        //         return ($(b).data('date')) < ($(a).data('date')) ? -1 : 1;
-                        //     }
-                        // });
-                    </script>
                 </div><!-- /.card-body -->
             </div><!-- /.card -->
         </div><!-- /.col -->

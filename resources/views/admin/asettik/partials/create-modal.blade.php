@@ -17,7 +17,7 @@
                         <div class="form-group col-md-8">
                             <label for="name">Nama Aset <span class="text-danger">*</span></label>
                             <input type="text" name="name" id="name" class="form-control">
-                            <span class="text-danger" id="error-name"></span>
+                            <span class="text-danger small" id="error-name"></span>
                         </div>
 
                         {{-- Kategori --}}
@@ -29,7 +29,7 @@
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                                 @endforeach
                             </select>
-                            <span class="text-danger" id="error-category_id"></span>
+                            <span class="text-danger small" id="error-category_id"></span>
                         </div>
 
                         {{-- Manufacturer --}}
@@ -41,7 +41,7 @@
                                     <option value="{{ $manufacturer->id }}">{{ $manufacturer->name }}</option>
                                 @endforeach
                             </select>
-                            <span class="text-danger" id="error-manufacturer_id"></span>
+                            <span class="text-danger small" id="error-manufacturer_id"></span>
                         </div>
 
                         {{-- Model --}}
@@ -52,14 +52,14 @@
                                     <option value="{{ $model->id }}">{{ $model->name }}</option>
                                 @endforeach
                             </select>
-                            <span class="text-danger" id="error-model_id"></span>
+                            <span class="text-danger small" id="error-model_id"></span>
                         </div>
 
                         {{-- Serial --}}
                         <div class="form-group col-md-4">
                             <label for="serial">Serial Number <span class="text-danger">*</span></label>
                             <input type="text" name="serial" id="serial" class="form-control" placeholder="Unik">
-                            <span class="text-danger" id="error-serial"></span>
+                            <span class="text-danger small" id="error-serial"></span>
                         </div>
 
                         {{-- Supplier --}}
@@ -70,7 +70,7 @@
                                     <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
                                 @endforeach
                             </select>
-                            <span class="text-danger" id="error-supplier_id"></span>
+                            <span class="text-danger small" id="error-supplier_id"></span>
                         </div>
 
                         {{-- Location --}}
@@ -82,7 +82,7 @@
                                     <option value="{{ $location->id }}">{{ $location->name }}</option>
                                 @endforeach
                             </select>
-                            <span class="text-danger" id="error-location_id"></span>
+                            <span class="text-danger small" id="error-location_id"></span>
                         </div>
 
                         {{-- Status --}}
@@ -94,7 +94,7 @@
                                     <option value="{{ $status->id }}">{{ $status->name }}</option>
                                 @endforeach
                             </select>
-                            <span class="text-danger" id="error-status_id"></span>
+                            <span class="text-danger small" id="error-status_id"></span>
                         </div>
 
                         {{-- User --}}
@@ -106,7 +106,7 @@
                                     <option value="{{ $user->id }}">{{ $user->username }}</option>
                                 @endforeach
                             </select>
-                            <span class="text-danger" id="error-user_id"></span>
+                            <span class="text-danger small" id="error-user_id"></span>
                         </div>
 
                         {{-- Purchase Date --}}
@@ -114,7 +114,7 @@
                             <label for="purchaseDateInput">Tanggal Perolehan <span
                                     class="text-danger">*</span></label>
                             <input type="date" name="purchase_date" id="purchaseDateInput" class="form-control">
-                            <span class="text-danger" id="error-purchase_date"></span>
+                            <span class="text-danger small" id="error-purchase_date"></span>
                         </div>
 
                         {{-- Warranty --}}
@@ -127,17 +127,17 @@
                                     <span class="input-group-text">bulan</span>
                                 </div>
                             </div>
-                            <span class="text-danger" id="error-warranty_months"></span>
+                            <span class="text-danger small" id="error-warranty_months"></span>
                         </div>
 
                         {{-- Notes --}}
                         <div class="form-group col-md-12">
                             <label for="notes">Catatan</label>
                             <textarea name="notes" id="notes" class="form-control" rows="2"></textarea>
-                            <span class="text-danger" id="error-notes"></span>
+                            <span class="text-danger small" id="error-notes"></span>
                         </div>
                     </div>
-                    <small class="text-muted">Tanda (<span class="text-danger">*</span>) wajib diisi</small>
+                    <p class="text-muted">Tanda <span class="text-danger">*</span> wajib diisi</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-info" id="btnResetForm">Reset</button>
