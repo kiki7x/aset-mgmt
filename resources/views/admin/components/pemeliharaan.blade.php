@@ -15,12 +15,8 @@
             <p class="col-12 h4 d-flex justify-content-center"><u>{{ $asset->tag }} - {{ $asset->name }}</u></p>
             <p class="col-8 h4">Jadwal Pemeliharaan</p>
             <div class="col d-flex justify-content-end">
-                {{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalJadwalPemeliharaan" onclick="showModalCreate()"><i class="fa-regular fa-clock"></i> + Jadwal</button> --}}
-                <button type="button" class="btn btn-primary" data-toggle="modal" onclick="showModalJadwalPemeliharaan()" ><i class="fa-regular fa-clock"></i> + Jadwal</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" onclick="showModalAddJadwalPemeliharaan()" ><i class="fa-regular fa-clock"></i> + Jadwal</button>
             </div>
-            {{-- <div class="col d-flex justify-content-start">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalKorektif"><i class="fa-solid fa-screwdriver-wrench"></i> Korektif</button>
-            </div> --}}
         </div>
 
         <div class="table-responsive">
@@ -74,7 +70,7 @@
             </table>
         </div>
 
-        @include('admin.modals.preventif_rt_modal')
+        @include('admin.modals.add_preventif_modal')
         {{-- @include('admin.modals.korektif_rt_modal') --}}
 
 
@@ -87,15 +83,13 @@
             changeMonth: true,
             changeYear: true,
             // format: "dd/mm/yyyy"
-            format: "yyyy/mm/dd"
+            format: "yyyy-mm-dd"
         });
     </script>
 
     <script>
-        function showModalJadwalPemeliharaan() {
-            $('#modalJadwalPemeliharaan').modal('show');
-            // $('#modalJadwalPemeliharaanLabel').text('Jadwalkan Pemeliharaan Preventif');
-            // $('#submitJadwalPemeliharaan').text('Jadwalkan');
+        function showModalAddJadwalPemeliharaan() {
+            $('#modalAddJadwalPemeliharaan').modal('show');
         }
 
         $(document).ready(function() {
@@ -168,7 +162,7 @@
     </script>
 
     <script>
-        function showModalPemeliharaan() {
+        function showModalAddPemeliharaan() {
             $('#modalPemeliharaan').modal('show');
             $('#modalPemeliharaanLabel').text('Tambah Pemeliharaan Korektif');
             $('#submitPemeliharaan').text('Jadwalkan');

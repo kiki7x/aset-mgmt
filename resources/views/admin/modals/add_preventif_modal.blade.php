@@ -1,10 +1,5 @@
-@push('script-head')
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-@endpush
-
 <!-- Modal Pemeliharaan Preventif -->
-<div class="modal fade" id="modalJadwalPemeliharaan" data-backdrop="static" data-keyboard="false" tabindex="-1"
-    aria-labelledby="modalJadwalPemeliharaanLabel" aria-hidden="true">
+<div class="modal fade" id="modalAddJadwalPemeliharaan" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modalJadwalPemeliharaanLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -18,8 +13,7 @@
                     {{-- Nama Barang & Hidden Input --}}
                     <div class="form-group">
                         <p class="h5">{{ $asset->tag }} - {{ $asset->name }}</p>
-                        <input type="text" class="form-control d-none" id="asset_id" name="asset_id"
-                            value="{{ $asset->id }}">
+                        <input type="text" class="form-control d-none" id="asset_id" name="asset_id" value="{{ $asset->id }}">
                         <input type="text" class="form-control d-none" id="status" name="status" value="active">
                     </div>
 
@@ -36,21 +30,22 @@
                     </div>
 
                     <div id="radioTik" class="form-group p-3 border rounded mb-3 bg-light">
-                        <label class="text-primary font-weight-normal">Detail Pemeliharaan TIK: <span
-                                class="text-danger">*</span></label>
+                        <label class="text-primary font-weight-normal">Detail Pemeliharaan TIK: <span class="text-danger">*</span></label>
                         <div class="form-group">
                             <label>Tugas:</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="name" value="Cek Kebersihan">
-                                <label class="form-check-label" for="cek_kebersihan">1. Cek Kebersihan</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="name" value="Cek Fungsi">
-                                <label class="form-check-label" for="cek_fungsi">2. Cek Fungsi</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="name" value="Cek Kondisi">
-                                <label class="form-check-label" for="cek_kondisi">3. Cek Kondisi</label>
+                            <div class="form-group">
+                                <div class="custom-control custom-radio">
+                                    <input class="custom-control-input" type="radio" id="cek_kebersihan" name="name" value="Cek Kebersihan">
+                                    <label for="cek_kebersihan" class="custom-control-label">1. Cek Kebersihan</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input class="custom-control-input" type="radio" id="cek_fungsi" name="name" value="Cek Fungsi">
+                                    <label for="cek_fungsi" class="custom-control-label">2. Cek Fungsi</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input class="custom-control-input" type="radio" id="cek_kondisi" name="name" value="Cek Kondisi">
+                                    <label for="cek_kondisi" class="custom-control-label">3. Cek Kondisi</label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -59,54 +54,35 @@
                         <label for="radioKendaraan" class="text-primary font-weight-normal">Detail Pemeliharaan
                             Kendaraan: <span class="text-danger">*</span></label>
                         <p class="text-muted small">Pilih tugas pemeliharaan yang relevan.</p>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="name" value="Pajak STNK">
-                            <label class="form-check-label" for="pajak_stnk">1. Pajak STNK</label>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="kendaraan_pajak_stnk" name="name" value="Pajak STNK">
+                            <label for="kendaraan_pajak_stnk" class="custom-control-label">1. Pajak STNK</label>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="name" value="Tune Up">
-                            <label class="form-check-label" for="tune_up">2. Tune Up</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="name" value="Pelumasan">
-                            <label class="form-check-label" for="pelumasan">3. Pelumasan</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="name" value="Cek Radiator">
-                            <label class="form-check-label" for="inspeksi_radiator">4. Inspeksi Radiator</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="name" value="Cek Mesin">
-                            <label class="form-check-label" for="inspeksi_mesin">5. Inspeksi Mesin</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="name" value="Cek AC">
-                            <label class="form-check-label" for="inspeksi_ac">6. Inspeksi AC</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="name" value="Cek Ban">
-                            <label class="form-check-label" for="inspeksi_ban">7. Inspeksi Ban</label>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="kendaraan_service_berkala" name="name" value="Service Berkala">
+                            <label for="kendaraan_service_berkala" class="custom-control-label">2. Service Berkala</label>
                         </div>
                     </div>
 
                     <div id="radioMesinElektronik" class="form-group p-3 border rounded mb-3 bg-light">
-                        <label class="text-primary font-weight-normal">Detail Pemeliharaan Elektronik: <span
-                                class="text-danger">*</span></label>
+                        <label class="text-primary font-weight-normal">Detail Pemeliharaan Mesin/Elektronik: <span class="text-danger">*</span></label>
                         <div class="form-group">
                             <label>Tugas:</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="name"
-                                    value="Cek Kebersihan">
-                                <label class="form-check-label" for="cek_kebersihan">1. Cek Kebersihan</label>
+                            <div class="form-group">
+                                <div class="custom-control custom-radio">
+                                    <input class="custom-control-input" type="radio" id="elektronik_cek_kebersihan" name="name" value="Cek Kebersihan">
+                                    <label for="elektronik_cek_kebersihan" class="custom-control-label">1. Cek Kebersihan</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input class="custom-control-input" type="radio" id="elektronik_cek_fungsi" name="name" value="Cek Fungsi">
+                                    <label for="elektronik_cek_fungsi" class="custom-control-label">2. Cek Fungsi</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input class="custom-control-input" type="radio" id="elektronik_cek_kondisi" name="name" value="Cek Kondisi">
+                                    <label for="elektronik_cek_kondisi" class="custom-control-label">3. Cek Kondisi</label>
+                                </div>
                             </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="name" value="Cek Fungsi">
-                                <label class="form-check-label" for="cek_fungsi">2. Cek Fungsi</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="name" value="Cek Kondisi">
-                                <label class="form-check-label" for="cek_kondisi">3. Cek Kondisi</label>
-                            </div>
+                            <span class="text-danger small" id="error-name"></span>
                         </div>
                     </div>
 
@@ -126,16 +102,14 @@
                     <div class="form-group">
                         <label for="start_date">Tanggal Mulai <span class="text-danger">*</span></label>
                         <div>
-                            <input id="start_date" width="276" type="text" class="form-control"
-                                name="start_date" placeholder="dd/mm/yyyy" />
+                            <input id="start_date" width="276" type="text" class="form-control" name="start_date" placeholder="dd/mm/yyyy" />
                         </div>
                     </div>
                     <!-- Tanggal Selanjutnya -->
                     <div class="form-group">
                         <label for="next_date">Tanggal Pemeliharaan Selanjutnya</label>
                         <div>
-                            <input id="next_date" width="276" type="text" class="form-control"
-                                name="next_date" placeholder="dd/mm/yyyy" readonly />
+                            <input id="next_date" width="276" type="text" class="form-control" name="next_date" placeholder="dd/mm/yyyy" readonly />
                         </div>
                         @error('next_date')
                             <span class="text-danger">{{ $message }}</span>
@@ -215,39 +189,69 @@
                             icon: 'success',
                         })
                     },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.log(jqXHR.responseText);
+                    // error: function(jqXHR, textStatus, errorThrown) {
+                    //     console.log(jqXHR.responseText);
+                    // }
+                    error: function(xhr) {
+                        if (xhr.responseJSON?.message === 'The name has already been taken.') {
+                            Swal.fire({
+                                title: 'Gagal',
+                                text: 'Jadwal pemeliharaan ini sudah ada.',
+                                icon: 'info',
+                            });
+                        } else if (xhr.responseJSON?.errors) {
+                            $.each(xhr.responseJSON.errors, function(key, value) {
+                                $(`#error-${key}`).text(value[0]);
+                            });
+                            Swal.fire({
+                                title: 'Gagal',
+                                text: 'Periksa kembali data yang dimasukkan.',
+                                icon: 'warning',
+                            });
+                        } return false;
                     }
                 });
             });
 
+            /**
+             * Disable or enable the start_date input field.
+             * @param {boolean} disable - True to disable, false to enable.
+             */
             function toggleDate(disable) {
                 $('#start_date').prop('disabled', disable)
             }
 
+            // Disable the start_date input field by default
             toggleDate(true)
 
+            // Listen for changes to the frequency select dropdown
             $('#frequency').on('change', function() {
                 const val = parseInt($(this).val());
                 const now = new Date();
 
+                // Enable the start_date input field
                 toggleDate(false)
 
+                // Set the start_date input field to today's date
                 $('#start_date').val(now.toISOString().split('T')[0]);
 
+                // Calculate the next date based on the selected frequency
                 const futureDate = new Date(now);
-
                 futureDate.setMonth(futureDate.getMonth() + val);
 
+                // Set the next_date input field to the calculated date
                 $('#next_date').val(futureDate.toISOString().split('T')[0]);
             });
 
+            // Listen for changes to the start_date input field
             $('#start_date').on('change', function() {
                 const val = new Date($(this).val());
 
+                // Calculate the next date based on the selected frequency
                 const futureDate = new Date(val);
                 futureDate.setMonth(val.getMonth() + parseInt($('#frequency').val()));
 
+                // Set the next_date input field to the calculated date
                 $('#next_date').val(futureDate.toISOString().split('T')[0]);
             });
         });

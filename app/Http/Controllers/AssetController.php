@@ -34,7 +34,7 @@ class AssetController extends Controller
     public $classification_rt_id = "3";
     public $client_id = 1;
 
-    public function index_tik() : View
+    public function index_tik(): View
     {
         $manufacturers = ManufacturersModel::get();
         $models = ModelsModel::get();
@@ -48,7 +48,7 @@ class AssetController extends Controller
         return view('admin.asettik.index', compact('totalAssets', 'categories', 'manufacturers', 'models', 'suppliers', 'locations', 'statuses', 'users'));
     }
 
-    public function index_rt() : View
+    public function index_rt(): View
     {
         $manufacturers = ManufacturersModel::get();
         $models = ModelsModel::get();
@@ -211,6 +211,10 @@ class AssetController extends Controller
         foreach ($users as $user) {
             $user->notify(new $notificationClass($asset));
         }
+
+        return response()->json([
+            'message' => 'Data saved successfully',
+        ]);
     }
 
     public function update(UpdateAssetRequest $request, $id): JsonResponse

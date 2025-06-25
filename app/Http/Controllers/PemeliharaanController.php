@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
 use App\Http\Requests\JadwalPemeliharaanRequest;
 use App\Models\User;
-use App\Notifications\CreatePemeliharaanAsetRT;
+use App\Notifications\CreateJadwalPemeliharaanAsetRT;
 
 class PemeliharaanController extends Controller
 {
@@ -21,7 +23,7 @@ class PemeliharaanController extends Controller
         return view('admin.components.pemeliharaan', compact('id', 'maintenances_schedule', 'asset'));
     }
 
-    public function preventifdataTable(Request $request, $id)
+    public function preventifdataTable(Request $request, $id): JsonResponse
     {
         $assets = \App\Models\AssetsModel::get();
         $maintenances_schedule = \App\Models\Maintenances_scheduleModel::where('asset_id', $request->id)->get(); // Menggunakan model Maintenance::with('item')->latest()->get();
@@ -38,29 +40,34 @@ class PemeliharaanController extends Controller
             ->make();
     }
 
-    public function preventifStore(JadwalPemeliharaanRequest $request, $id)
+    public function preventifStore(JadwalPemeliharaanRequest $request, $id): JsonResponse
     {
+        $request->validate([
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('maintenances_schedule')->where(function ($query) use ($id) {
+                    return $query->where('asset_id', $id);
+                }),
+            ],
+        ]);
         $data = $request->validated();
-        // $maintenance_schedule = new \App\Models\Maintenances_scheduleModel($data);
-        // $maintenance_schedule->asset_id = $id;
-        // $maintenance_schedule->save();
         $maintenance_schedule = \App\Models\Maintenances_scheduleModel::create($data);
 
         // Kirim notifikasi
         $users = User::whereHas('roles', function ($query) {
             $query->whereIn('name', ['superadmin', 'admin_rt']);
         })->get();
-
         foreach ($users as $user) {
-            $user->notify(new CreatePemeliharaanAsetRT($maintenance_schedule));
+            $user->notify(new CreateJadwalPemeliharaanAsetRT($maintenance_schedule));
         }
-
         return response()->json([
             'message' => 'Data saved successfully',
         ]);
     }
 
-    public function korektifdataTable(Request $request, $id)
+    public function korektifdataTable(Request $request, $id): JsonResponse
     {
         $assets = \App\Models\AssetsModel::get();
         $maintenances_schedule = \App\Models\Maintenances_scheduleModel::where('asset_id', $request->id)->get(); // Menggunakan model Maintenance::with('item')->latest()->get();

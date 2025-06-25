@@ -15,27 +15,10 @@ class ShowAsetRtController extends Controller
         // Mengambil data aset beserta relasi user.
         // Jika aset tidak ditemukan, akan otomatis melempar 404.
         $asset = \App\Models\AssetsModel::findOrFail($id);
-        // Ambil data untuk dropdowns
-        $classifications = \App\Models\AssetclassificationsModel::all();
-        $categories = \App\Models\AssetcategoriesModel::where('classification_id', 3)->get();
-        $users = \App\Models\User::all();
-        $manufacturers = \App\Models\ManufacturersModel::all();
-        $models = \App\Models\ModelsModel::all();
-        $suppliers = \App\Models\SuppliersModel::all();
-        $locations = \App\Models\LocationsModel::all();
-        $statuses = \App\Models\LabelsModel::all();
 
         return view('admin.components.overview-aset', compact(
             'id',
-            'asset', 
-            'classifications',
-            'categories',
-            'users',
-            'manufacturers',
-            'models',
-            'suppliers',
-            'locations',
-            'statuses'
+            'asset',
         ));
     }
     // public function getPenjadwalanContent($id)
@@ -92,7 +75,7 @@ class ShowAsetRtController extends Controller
         // Mengambil data aset beserta relasi user.
         // Jika aset tidak ditemukan, akan otomatis melempar 404.
         $asset = \App\Models\AssetsModel::findOrFail($id);
-        
+
         // Ambil data untuk dropdowns
         $classifications = \App\Models\AssetclassificationsModel::all();
 
@@ -112,7 +95,7 @@ class ShowAsetRtController extends Controller
         Log::info("Loading Edit Asset for asset ID: $id");
         return view('admin.components.editaset', compact(
             'id',
-            'asset', 
+            'asset',
             'classifications',
             'categories',
             'users',
@@ -123,5 +106,5 @@ class ShowAsetRtController extends Controller
             'statuses'
         ));
     }
-    
+
 }

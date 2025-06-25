@@ -51,11 +51,11 @@
                                     </tr>
                                     <tr>
                                         <td><strong>Asset Admin:</strong></td>
-                                        <td>{{ $asset->admin->name ?? 'N/A' }}</td>
+                                        <td>{{ $asset->admin->username ?? 'N/A' }}</td>
                                     </tr>
                                     <tr>
                                         <td><strong>Asset User:</strong></td>
-                                        <td>{{ $asset->user->name ?? 'N/A' }}</td>
+                                        <td>{{ $asset->user->username ?? 'N/A' }}</td>
                                     </tr>
                                     <tr>
                                         <td><strong>Purchase Date:</strong></td>

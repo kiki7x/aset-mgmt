@@ -21,7 +21,7 @@ Route::get('/lacak/show/{id}', [App\Http\Controllers\FrontController::class, 'la
 //Admin Area
 Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/', [App\Http\Controllers\AdminController::class, 'index'])->name('admin.index');
-    
+
     // halaman list Aset TIK
     Route::middleware(['role:superadmin|admin_tik|staf_tik'])->group(function () {
         Route::get('/asettik', [App\Http\Controllers\AssetController::class, 'index_tik'])->name('admin.asettik');
