@@ -198,7 +198,7 @@
                             $.each(xhr.responseJSON.errors, function(key, value) {
                                 $(`#error-${key}`).text(value[0]);
                             });
-                        }
+                        } return false;
                     }
                 });
             });

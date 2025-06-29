@@ -53,7 +53,7 @@
                     {{ isset($welcome) ? $welcome : '' }}
                 </x-slot>
                 <x-slot name="breadcrumb">
-                    {{ isset($breadcrumb) ? $breadcrumb : '' }}
+                    {!! isset($breadcrumb) ? $breadcrumb : '' !!}
                 </x-slot>
             </x-backsite.header>
             <section class="content">

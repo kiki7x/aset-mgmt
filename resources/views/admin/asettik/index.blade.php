@@ -1,6 +1,8 @@
 @extends('layouts.backsite', [
-    'title' => 'AsetTIK | SAPA PPL',
+    'title' => 'Aset TIK | SAPA PPL',
     'welcome' => 'Kelola Aset TIK',
+    'breadcrumb' => '
+        <li class="breadcrumb-item active">Aset TIK</li>'
 ])
 
 @push('script-head')
@@ -31,7 +33,7 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-4 mt-auto">
+                                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4 mt-auto">
                                     <div class="px-2 d-flex">
                                         <select id="category" name="jenis" class="ml-0 form-control mr-2">
                                             <option value="">Semua Kategori</option>
@@ -49,7 +51,7 @@
                             </div>
 
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover" id="tableAsettik">
+                                <table class="table table-bordered table-striped table-hover table-sm" id="tableAsettik">
                                     <thead>
                                         <tr>
                                             <th>Tag</th>
@@ -57,7 +59,7 @@
                                             <th>Kategori</th>
                                             <th>Tipe/Model</th>
                                             <th>Pengguna</th>
-                                            <th>Aktivitas Terakhir</th>
+                                            <th>Timestamp</th>
                                             <th>Opsi</th>
                                         </tr>
                                     </thead>
@@ -143,8 +145,16 @@
                             name: 'user'
                         },
                         {
-                            data: 'updated_at',
-                            name: 'updated_at'
+                            // <span class="text-muted">Dibuat: ${moment(data.created_at).format('DD-MM-YYYY HH:mm')} <br>
+                            data: null,
+                            name: 'timestamp',
+                            render: function(data) {
+                                return `
+                                    Tahun Perolehan: ${data.purchase_date ? moment(data.purchase_date).format('YYYY') : '-'} <br>
+                                    <span class="text-muted small">Dibuat: ${moment(data.created_at).format('lll')} <br>
+                                    Diupdate: ${moment(data.updated_at).format('lll')} </span><br>
+                                    `;
+                            }
                         },
                         {
                             data: 'action',

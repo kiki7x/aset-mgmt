@@ -45,7 +45,16 @@ class AssetController extends Controller
         $categories = AssetcategoriesModel::whereIn('classification_id', [2])->get();
         $totalAssets = AssetsModel::where('classification_id', 2)->count();
 
-        return view('admin.asettik.index', compact('totalAssets', 'categories', 'manufacturers', 'models', 'suppliers', 'locations', 'statuses', 'users'));
+        return view('admin.asettik.index', compact(
+            'categories',
+            'manufacturers',
+            'models',
+            'suppliers',
+            'locations',
+            'statuses',
+            'users',
+            'totalAssets'
+            ));
     }
 
     public function index_rt(): View
@@ -63,7 +72,17 @@ class AssetController extends Controller
 
         $totalAssets = AssetsModel::whereIn('classification_id', [3, 4])->count();
 
-        return view('admin.asetrt.index', compact('assets', 'totalAssets', 'categories', 'manufacturers', 'models', 'suppliers', 'locations', 'statuses', 'users'));
+        return view('admin.asetrt.index', compact(
+            'assets',
+            'categories',
+            'manufacturers',
+            'models',
+            'suppliers',
+            'locations',
+            'statuses',
+            'users',
+            'totalAssets'
+            ));
     }
 
     public function get_assets(Request $request) : JsonResponse
@@ -101,7 +120,11 @@ class AssetController extends Controller
                 <a href="' . route("admin.$routePrefix.overview", ['id' => $asset->id]) . '" class="font-weight-bold">' . e($asset->name) . '</a><br>
                 <span class="text-muted">Serial No: </span>' . e($asset->serial) . '<br>
                 <span class="text-muted">Status: </span>
-                <span class="badge" style="background-color: ' . e($asset->status->color ?? '#999') . '; color: white;">' . e($asset->status->name ?? '-') . '</span>
+                <span class="badge" style="background-color: ' . e($asset->status->color ?? '#999') . '; color: white;">' . e($asset->status->name ?? '-') . '</span> <br>
+                <span class="text-muted">Lokasi: </span>
+                ' . e($asset->location->name ?? '-') . '<br>
+                <span class="text-muted">Dikelola oleh: </span>
+                ' . e($asset->admin->fullname ?? '-') . '<br>
             ';
             })
             ->addColumn('category', function ($asset) {

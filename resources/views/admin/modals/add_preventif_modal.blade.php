@@ -1,5 +1,5 @@
 <!-- Modal Pemeliharaan Preventif -->
-<div class="modal fade" id="modalAddJadwalPemeliharaan" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modalJadwalPemeliharaanLabel" aria-hidden="true">
+<div class="modal fade" id="add-schedule" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modalJadwalPemeliharaanLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -14,7 +14,7 @@
                     <div class="form-group">
                         <p class="h5">{{ $asset->tag }} - {{ $asset->name }}</p>
                         <input type="text" class="form-control d-none" id="asset_id" name="asset_id" value="{{ $asset->id }}">
-                        <input type="text" class="form-control d-none" id="status" name="status" value="active">
+                        <input type="text" class="form-control d-none" id="status" name="status" value="aktif">
                     </div>
 
                     {{-- Klasifikasi Aset --}}
@@ -51,7 +51,7 @@
                     </div>
 
                     <div id="radioKendaraan" class="form-group border p-3 bg-light">
-                        <label for="radioKendaraan" class="text-primary font-weight-normal">Detail Pemeliharaan
+                        <label class="text-primary font-weight-normal">Detail Pemeliharaan
                             Kendaraan: <span class="text-danger">*</span></label>
                         <p class="text-muted small">Pilih tugas pemeliharaan yang relevan.</p>
                         <div class="custom-control custom-radio">
@@ -97,6 +97,7 @@
                             <option value="6">Setiap 6 bulan sekali</option>
                             <option value="12">Setiap 12 bulan sekali</option>
                         </select>
+                        <span class="text-danger small" id="error-frequency"></span>
                     </div>
                     <!-- Tanggal Mulai -->
                     <div class="form-group">
@@ -104,6 +105,7 @@
                         <div>
                             <input id="start_date" width="276" type="text" class="form-control" name="start_date" placeholder="dd/mm/yyyy" />
                         </div>
+                        <span class="text-danger small" id="error-start_date"></span>
                     </div>
                     <!-- Tanggal Selanjutnya -->
                     <div class="form-group">
@@ -111,9 +113,7 @@
                         <div>
                             <input id="next_date" width="276" type="text" class="form-control" name="next_date" placeholder="dd/mm/yyyy" readonly />
                         </div>
-                        @error('next_date')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
+                        <span class="text-danger small" id="error-next_date"></span>
                     </div>
             </div>
             <div class="modal-footer">
@@ -127,8 +127,8 @@
 
 @section('script-foot')
     {{-- Laravel javascript Validation --}}
-    <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.min.js') }}"></script>
-    {!! JsValidator::formRequest('App\Http\Requests\JadwalPemeliharaanRequest', '#formJadwalPemeliharaan') !!}
+    {{-- <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.min.js') }}"></script> --}}
+    {{-- {!! JsValidator::formRequest('App\Http\Requests\JadwalPemeliharaanRequest', '#formJadwalPemeliharaan') !!} --}}
 
     <script>
         // Pastikan dokumen siap sebelum menjalankan script jQuery
@@ -180,35 +180,37 @@
                     processData: false,
                     contentType: false,
                     success: function(response) {
-                        $('#modalJadwalPemeliharaan').modal('hide');
+                        $('#add-schedule').modal('hide');
                         $('#tableJadwalPemeliharaan').DataTable().ajax.reload();
 
                         Swal.fire({
+                            icon: 'success',
                             title: 'Berhasil',
                             text: response.message,
-                            icon: 'success',
                         })
                     },
-                    // error: function(jqXHR, textStatus, errorThrown) {
-                    //     console.log(jqXHR.responseText);
-                    // }
                     error: function(xhr) {
                         if (xhr.responseJSON?.message === 'The name has already been taken.') {
+                            $('#error-name').text('');
+                            $('#error-frequency').text('');
+                            $('#error-start_date').text('');
+                            $('#error-next_date').text('');
                             Swal.fire({
+                                icon: 'info',
                                 title: 'Gagal',
                                 text: 'Jadwal pemeliharaan ini sudah ada.',
-                                icon: 'info',
                             });
                         } else if (xhr.responseJSON?.errors) {
                             $.each(xhr.responseJSON.errors, function(key, value) {
                                 $(`#error-${key}`).text(value[0]);
                             });
-                            Swal.fire({
-                                title: 'Gagal',
-                                text: 'Periksa kembali data yang dimasukkan.',
-                                icon: 'warning',
-                            });
-                        } return false;
+                            // Swal.fire({
+                            //     icon: 'warning',
+                            //     title: 'Gagal',
+                            //     text: 'Periksa kembali data yang dimasukkan.',
+                            // });
+                        }
+                        return false;
                     }
                 });
             });

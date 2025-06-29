@@ -10,40 +10,6 @@
                   class="brand-image img-circle img-fluid elevation-3" style="opacity: .8; height: 2rem">
               <span class="brand-text font-weight-light">SAPA PPL</span>
           </a>
-          {{-- <li class="nav-item dropdown {{ request()->RouteIs('admin.aset*') || request()->is('admin/setting*') ? 'active font-weight-bold' : '' }}">
-              <a id="dropdownSubMenuInventaris" href="#inventaris" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle"><i class="nav-icon fas fa-tachometer-alt"></i> Inventaris</a>
-              <ul aria-labelledby="dropdownSubMenuInventaris" class="dropdown-menu border-0 shadow" onclick="event.stopPropagation()">
-                  <li><x-nav-link href="{{ route('admin.asettik') }}" :active="request()->is('admin/asettik')">Aset TIK</x-nav-link></li>
-                  <li><x-nav-link href="{{ route('admin.asetrt') }}" :active="request()->is('admin/asetrt')">Aset Rumah Tangga</x-nav-link></li>
-                  <li class="dropdown-divider"></li>
-                  <!-- Level two dropdown-->
-                  <li class="dropdown-submenu dropdown-hover">
-                      <a id="dropdownSubMenuSettingAttribute" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Setting</a>
-                      <ul aria-labelledby="dropdownSubMenuSettingAttribute" class="dropdown-menu border-0 shadow" onclick="event.stopPropagation()">
-                          <li><a href="{{ route('admin.setting_attr') }}" class="dropdown-item">Atribut Aset</a></li>
-                      </ul>
-                  </li>
-                  <!-- End Level two -->
-              </ul>
-          </li>
-          <li class="nav-item dropdown {{ request()->RouteIs('admin.issues*') ? 'active font-weight-bold' : '' }}">
-              <a id="dropdownSubMenu2" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle"><i class="fa-solid fa-screwdriver-wrench"></i>
-                  Pemeliharaan</a>
-              <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow" onclick="event.stopPropagation()" style="left: 0px; right: inherit;">
-                  <li><x-nav-link href="{{ route('admin.issues') }}" :active="request()->is('admin/issues')">Penugasan</x-nav-link></li>
-                  <li class="nav-link disabled"><a href="#" class="dropdown-item">Tiket</a></li>
-                  <li class="nav-link disabled"><a href="#" class="dropdown-item">Proyek</a></li>
-              </ul>
-          </li>
-          <li class="nav-item" title="Knowledge Base"><x-nav-link href="#" :active="request()->is('admin/knowledge_base')" class="nav-link"><i class="nav-icon fa fa-book"></i> </x-nav-link></li>
-          <li class="nav-item" title="Monitoring"><x-nav-link href="#" :active="request()->is('admin/monitoring')" class="nav-link"><i class="nav-icon fa fa-heartbeat"></i> </x-nav-link></li>
-          <li class="nav-item" title="Laporan"><x-nav-link href="#" :active="request()->is('admin/laporan')" class="nav-link"><i class="nav-icon fa fa-bar-chart"></i> </x-nav-link></li>
-          <li class="nav-item dropdown">
-              <a title="Settings" id="dropdownSubMenuSystem" href="#system" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle"><i class="fa-solid fa-gear nav-icon"></i> </a>
-              <ul aria-labelledby="dropdownSubMenuSystem" class="dropdown-menu border-0 shadow" onclick="event.stopPropagation()">
-                  <li><x-nav-link href="#" :active="request()->is('#')">User</x-nav-link></li>
-              </ul>
-          </li> --}}
       </ul>
 
       <!-- Right navbar links -->
@@ -89,16 +55,6 @@
                               : '' }}
                       </span>
                   </a>
-                  {{-- <div class="dropdown-divider"></div>
-                  <a href="#" class="dropdown-item">
-                      <i class="fas fa-users mr-2"></i> 8 friend requests
-                      <span class="float-right text-muted text-sm">12 hours</span>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <a href="#" class="dropdown-item">
-                      <i class="fas fa-file mr-2"></i> 3 new reports
-                      <span class="float-right text-muted text-sm">2 days</span>
-                  </a> --}}
                   <div class="dropdown-divider"></div>
                   <a href="{{ route('admin.notifikasi') }}" class="dropdown-item dropdown-footer">See All
                       Notifications</a>
@@ -167,7 +123,7 @@
                       </a>
                   </li>
                   <li class="nav-item menu-open">
-                      <a href="#" class="nav-link {{ request()->is('admin/inventaris*') ? 'active' : '' }}">
+                      <a href="#" class="nav-link {{ request()->is('admin/*') ? 'active' : '' }}">
                           <i class="nav-icon fa-solid fa-warehouse"></i>
                           <p>
                               Inventaris
@@ -177,7 +133,7 @@
                       <ul class="nav nav-treeview">
                           <li class="nav-item">
                               <a href="{{ route('admin.asettik') }}"
-                                  class="nav-link {{ request()->is('admin/asettik') ? 'active' : '' }}">
+                                  class="nav-link {{ request()->is('admin/asettik*') ? 'active' : '' }}">
                                   <i class="nav-icon fa-solid fa-computer"></i>
                                   <p>Aset TIK</p>
                               </a>
@@ -213,6 +169,13 @@
                                   class="nav-link {{ request()->is('admin/issues*') ? 'active' : '' }}">
                                   <i class="nav-icon fa-solid fa-list-check"></i>
                                   <p>Penugasan</p>
+                              </a>
+                          </li>
+                          <li class="nav-item">
+                              <a href="{{ route('admin.kalender-pemeliharaan') }}"
+                                  class="nav-link {{ request()->is('admin/kalender-pemeliharaan*') ? 'active' : '' }}">
+                                  <i class="nav-icon fa-solid fa-calendar"></i>
+                                  <p>Kalender Pemeliharaan</p>
                               </a>
                           </li>
                           <li class="nav-item" data-toggle="tooltip" title="coming soon..." data-placement="top">

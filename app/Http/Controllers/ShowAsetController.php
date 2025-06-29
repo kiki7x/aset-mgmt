@@ -8,7 +8,7 @@ use App\Models\AssetsModel;
 
 use Illuminate\Support\Facades\Log;
 
-class ShowAsetRtController extends Controller
+class ShowAsetController extends Controller
 {
     public function getOverviewContent($id)
     {
@@ -16,7 +16,7 @@ class ShowAsetRtController extends Controller
         // Jika aset tidak ditemukan, akan otomatis melempar 404.
         $asset = \App\Models\AssetsModel::findOrFail($id);
 
-        return view('admin.components.overview-aset', compact(
+        return view('admin.detailaset.overview-aset', compact(
             'id',
             'asset',
         ));
@@ -27,21 +27,21 @@ class ShowAsetRtController extends Controller
     //     // $asset = \App\Models\AssetsModel::get(); // Untuk dropdown di form tambah
     //     $asset = \App\Models\AssetsModel::findOrFail($id); // Menggunakan model Maintenance::with('item')->latest()->get();
     //     Log::info("Loading Penjadwalan for asset ID: $id");
-    //     return view('admin.components.pemeliharaan', compact('id', 'maintenances', 'asset'));
+    //     return view('admin.detailaset.pemeliharaan', compact('id', 'maintenances', 'asset'));
     // }
 
     public function getPenugasanContent($id)
     {
         $asset = \App\Models\AssetsModel::findOrFail($id); // Menggunakan model Maintenance::with('item')->latest()->get();
         Log::info("Loading Penugasan for asset ID: $id");
-        return view('admin.components.penugasan', compact('id', 'asset'));
+        return view('admin.detailaset.penugasan', compact('id', 'asset'));
     }
 
     public function getTicketsContent($id)
     {
         $asset = \App\Models\AssetsModel::findOrFail($id);
         Log::info("Loading Tickets for asset ID: $id");
-        return view('admin.components.tickets', compact('id', 'asset'));
+        return view('admin.detailaset.tickets', compact('id', 'asset'));
     }
 
     public function getFilesContent($id)
@@ -54,7 +54,7 @@ class ShowAsetRtController extends Controller
         ];
         $asset = \App\Models\AssetsModel::findOrFail($id);
         Log::info("Loading Files for asset ID: $id");
-        return view('admin.components.files', compact('id', 'files', 'asset'));
+        return view('admin.detailaset.files', compact('id', 'files', 'asset'));
     }
 
     public function getTimeLogContent($id)
@@ -67,7 +67,7 @@ class ShowAsetRtController extends Controller
         ];
         $asset = \App\Models\AssetsModel::findOrFail($id);
         Log::info("Loading Time Log for asset ID: $id");
-        return view('admin.components.timelog', compact('id', 'asset', 'timeLogs'));
+        return view('admin.detailaset.timelog', compact('id', 'asset', 'timeLogs'));
     }
 
     public function getEditAssetContent($id)
@@ -93,7 +93,7 @@ class ShowAsetRtController extends Controller
         $statuses = \App\Models\LabelsModel::all();
 
         Log::info("Loading Edit Asset for asset ID: $id");
-        return view('admin.components.editaset', compact(
+        return view('admin.detailaset.editaset', compact(
             'id',
             'asset',
             'classifications',

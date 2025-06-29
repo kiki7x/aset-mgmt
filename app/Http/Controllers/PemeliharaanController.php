@@ -20,7 +20,7 @@ class PemeliharaanController extends Controller
         // $assets = \App\Models\AssetsModel::findOrFail($id); // Untuk dropdown di form tambah
         $asset = \App\Models\AssetsModel::findOrFail($id);
         Log::info("Loading Penjadwalan for asset ID: $id");
-        return view('admin.components.pemeliharaan', compact('id', 'maintenances_schedule', 'asset'));
+        return view('admin.detailaset.pemeliharaan', compact('id', 'maintenances_schedule', 'asset'));
     }
 
     public function preventifdataTable(Request $request, $id): JsonResponse
@@ -31,11 +31,23 @@ class PemeliharaanController extends Controller
         $maintenances = \App\Models\MaintenancesModel::where('maintenance_schedule_id', $request->id)->get();
         return DataTables::of($maintenances_schedule)
             ->addIndexColumn()
-            ->addColumn('action', function ($row) {
-                return '<div>
-                    <button class="btn btn-primary" data-id="' . $row->id . '"><i class="fa-regular fa-pen-to-square"></i></button>
-                    <button class="btn btn-danger" data-id="' . $row->id . '"><i class="fa-regular fa-trash-can"></i></button>
-                    </div>';
+            ->addColumn('action', function ($row) use ($maintenances_schedule) {
+                return
+                    // '<div>
+                    // <button class="btn btn-primary" data-id="' . $row->id . '"><i class="fa-regular fa-pen-to-square"></i></button>
+                    // <button class="btn btn-danger" data-id="' . $row->id . '"><i class="fa-regular fa-trash-can"></i></button>
+                    // </div>'
+                    // <li><span class="mx-3" onclick="showModalEditJadwalPemeliharaan(' . $row->id . ')" data-id="' . $row->id . '" data-name="' . e($row->name) . '" data-asset="' . $row->asset_id . '" style="cursor: pointer; color: #007bff;">Edit</span></li>
+                    '
+                    <div class="btn-group">
+                    <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" title="More..."></button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li><span class="mx-3" onclick="showModalEditJadwalPemeliharaan(' . $row->id . ')" data-id="' . $row->id . '" data-name="' . e($row->name) . '" data-asset="' . $row->asset_id . '" style="cursor: pointer; color: #007bff;">Edit</span></li>
+                            <li><span class="mx-3" onclick="deleteJadwalPemeliharaan(' . $row->id . ')" data-id="' . $row->id . '" data-name="' . e($row->name) . '" style="cursor: pointer; color: #007bff;">Delete</span></li>
+                        </ul>
+                    </div>
+                    '
+                    ;
             })
             ->make();
     }
@@ -64,6 +76,40 @@ class PemeliharaanController extends Controller
         }
         return response()->json([
             'message' => 'Data saved successfully',
+        ]);
+    }
+
+    public function preventifEdit(Request $request, $id): JsonResponse
+    {
+        $maintenance_schedule = \App\Models\Maintenances_scheduleModel::findOrFail($id);
+        return response()->json($maintenance_schedule);
+    }
+
+    public function preventifUpdate(JadwalPemeliharaanRequest $request, $id): JsonResponse
+    {
+        $maintenance_schedule = \App\Models\Maintenances_scheduleModel::findOrFail($id);
+        $request->validate([
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('maintenances_schedule')->ignore($maintenance_schedule->id)->where(function ($query) use ($maintenance_schedule) {
+                    return $query->where('asset_id', $maintenance_schedule->asset_id);
+                }),
+            ],
+        ]);
+        $maintenance_schedule->update($request->validated());
+        return response()->json([
+            'message' => 'Data updated successfully',
+        ]);
+    }
+
+    public function preventifDelete(Request $request, $id): JsonResponse
+    {
+        $maintenance_schedule = \App\Models\Maintenances_scheduleModel::findOrFail($id);
+        $maintenance_schedule->delete();
+        return response()->json([
+            'message' => 'Data deleted successfully',
         ]);
     }
 

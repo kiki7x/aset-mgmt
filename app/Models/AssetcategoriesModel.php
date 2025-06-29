@@ -29,7 +29,7 @@ class AssetcategoriesModel extends Model
 
     public function classification()
     {
-        return $this->belongsTo(AssetclassificationsModel::class, 'classification_id');
+        return $this->belongsTo(AssetclassificationsModel::class);
     }
 
 }

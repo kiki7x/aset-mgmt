@@ -1,7 +1,8 @@
 @extends('layouts.backsite', [
-    'title' => 'Show Aset ' . ($classification_id == 2 ? 'TIK' : 'RT') . ' | SAPA PPL',
+    'title' => 'Detail Aset ' . ($classification_id == 2 ? 'TIK' : 'RT') . ' | SAPA PPL',
     'welcome' => 'Detail Aset ' . ($classification_id == 2 ? 'TIK' : 'RT'),
-    'breadcrumb' => 'Detail Aset ' . ($classification_id == 2 ? 'TIK' : 'RT'),
+    'breadcrumb' => '<li class="breadcrumb-item"> <a href="' . route($classification_id == 2 ? 'admin.asettik' : 'admin.asetrt') . '">Aset ' . ($classification_id == 2 ? 'TIK' : 'RT') . '</a></li>'
+    . '<li class="breadcrumb-item active">Detail Aset ' . ($classification_id == 2 ? 'TIK' : 'RT') . '</li>'
 ])
 
 @section('script-head')
