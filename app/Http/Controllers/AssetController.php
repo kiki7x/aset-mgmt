@@ -139,7 +139,7 @@ class AssetController extends Controller
             ->addColumn('user', function ($asset) {
                 return e($asset->user->username ?? '-');
             })
-            ->addColumn('updated_at', function ($asset) {
+            ->addColumn('timestamp', function ($asset) {
                 return $asset->updated_at->format('Y-m-d');
             })
             ->addColumn('action', function ($asset) use ($classification) {
@@ -167,7 +167,7 @@ class AssetController extends Controller
                 </div>
             ';
             })
-            ->rawColumns(['tag', 'name', 'category', 'action'])
+            ->rawColumns(['tag', 'name', 'category', 'model', 'user', 'timestamp', 'action'])
             ->make(true);
     }
 
