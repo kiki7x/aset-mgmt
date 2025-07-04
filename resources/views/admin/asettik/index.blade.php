@@ -1,15 +1,14 @@
 @extends('layouts.backsite', [
     'title' => 'Aset TIK | SAPA PPL',
-    'welcome' => 'Kelola Aset TIK',
+    'welcome' => 'Aset TIK',
     'breadcrumb' => '
-        <li class="breadcrumb-item active">Aset TIK</li>'
+        <li class="breadcrumb-item active">Aset TIK</li>',
 ])
 
 @push('script-head')
     <!-- Select2 -->
     <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-
     {{-- DataTable Css --}}
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.1/css/dataTables.bootstrap4.css" />
 @endpush
@@ -20,14 +19,10 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header"
-                            style="display: flex; justify-content: space-between; align-items: center;">
-                            <h3 class="card-title"><i class="fa-solid fa-computer"></i> Kelola Aset TIK <span
-                                    class="badge end-0 mr-3 bg-info text-light">{{ $totalAssets }}</span></h3>
-                            <button type="button" id="btnOpenCreateModal" class="btn btn-primary"
-                                style="margin-left: auto;">
-                                <i class="fas fa-square-plus"></i>
-                                Tambah Data
+                        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3 class="card-title font-weight-bold"><i class="fa-solid fa-computer"></i> Aset TIK <span class="badge end-0 mr-3 bg-info text-light">{{ $totalAssets }}</span></h3>
+                            <button type="button" id="btnOpenCreateModal" class="btn btn-outline-primary" style="margin-left: auto;" data-toggle="tooltip" data-placement="top" title="Tambah Data">
+                                <i class="fas fa-plus"></i>
                             </button>
                         </div>
                         <!-- /.card-header -->
@@ -38,14 +33,12 @@
                                         <select id="category" name="jenis" class="ml-0 form-control mr-2">
                                             <option value="">Semua Kategori</option>
                                             @foreach ($categories as $cat)
-                                                <option value="{{ $cat->id }}"
-                                                    {{ request('category') == $cat->id ? 'selected' : '' }}>
+                                                <option value="{{ $cat->id }}" {{ request('category') == $cat->id ? 'selected' : '' }}>
                                                     {{ $cat->name }}
                                                 </option>
                                             @endforeach
                                         </select>
-                                        <button type="submit" class="ml-0 btn btn-warning btn-sm" data-toggle="tooltip"
-                                            data-placement="top" title="Filter"><i class="fas fa-filter"></i></button>
+                                        <button type="submit" class="ml-0 btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Filter"><i class="fas fa-filter"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -69,7 +62,7 @@
                                 </table>
                             </div>
 
-                            <div class="row">
+                            {{-- <div class="row">
                                 <div class="col-md-12">
                                     <div class="dt-buttons btn-group"><a class="btn btn-default buttons-copy buttons-html5"
                                             tabindex="0" aria-controls="dataTablesFull"
@@ -84,7 +77,7 @@
                                             aria-controls="dataTablesFull" href="#"><span>Print</span></a>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
@@ -109,7 +102,7 @@
                     layout: {
                         topEnd: {
                             search: {
-                                placeholder: 'nama / serial no'
+                                placeholder: 'nama aset / serial no'
                             }
                         }
                     },
@@ -198,11 +191,9 @@
                     var button = $(event.relatedTarget);
                     var id = button.data('id');
                     var name = button.data('name');
-
                     var modal = $(this)
                 });
             });
         </script>
     @endpush
-
 @endsection

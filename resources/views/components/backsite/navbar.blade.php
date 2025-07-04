@@ -15,7 +15,7 @@
       <!-- Right navbar links -->
       <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
           <!-- SEARCH FORM -->
-          <li class="nav-item">
+          <li class="nav-item" data-toggle="tooltip" title="Cari" data-placement="bottom">
               <a class="nav-link" data-widget="navbar-search" href="#" role="button">
                   <i class="fas fa-search"></i>
               </a>
@@ -37,7 +37,7 @@
               </div>
           </li>
           <!-- Notifications Dropdown Menu -->
-          <li class="nav-item dropdown">
+          <li class="nav-item dropdown" data-toggle="tooltip" title="Notifikasi" data-placement="bottom">
               <a class="nav-link" data-toggle="dropdown" href="#">
                   <i class="far fa-bell"></i>
                   <span
@@ -62,6 +62,7 @@
           </li>
 
           <li class="nav-item dropdown user user-menu">
+              <!-- User Account: style can be found in dropdown.less -->
               <a href="#" class="nav-link" data-toggle="dropdown">
                   <img src="{{ asset('assets/dist/img/user1-128x128.jpg') }}" class="user-image img-size-10 img-circle"
                       alt="User Image">

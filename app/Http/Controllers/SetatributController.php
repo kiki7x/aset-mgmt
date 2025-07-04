@@ -21,13 +21,13 @@ class SetatributController extends Controller
         $hitunglabel = \App\Models\LabelsModel::all()->count();
         // $kategorilisensi = \App\Models\LicensecategoriesModel::get();
         $hitunglokasi = \App\Models\LocationsModel::all()->count();
-        return view('admin.setatribut', compact('hitungklasifikasi', 'hitungkategori', 'hitungmerk', 'hitungmodel', 'hitungsupplier', 'hitunglabel', 'hitunglokasi')
+        return view('admin.set-atribut.setatribut', compact('hitungklasifikasi', 'hitungkategori', 'hitungmerk', 'hitungmodel', 'hitungsupplier', 'hitunglabel', 'hitunglokasi')
         );
     }
 
     public function klasifikasi(): View
     {
-        return view('admin.setklasifikasi');
+        return view('admin.set-atribut.setklasifikasi');
     }
 
     public function getKlasifikasi(Request $request): JsonResponse
@@ -94,7 +94,7 @@ class SetatributController extends Controller
     public function kategori(): View
     {
         $klasifikasis = \App\Models\AssetclassificationsModel::get();
-        return view('admin.setkategori', compact('klasifikasis'));
+        return view('admin.set-atribut.setkategori', compact('klasifikasis'));
     }
 
     public function getKategori(Request $request): JsonResponse
@@ -164,24 +164,82 @@ class SetatributController extends Controller
     public function merk()
     {
         $merks = \App\Models\ManufacturersModel::get();
-        return view('admin.setmerk', ['title' => 'Setting Merk'],
+        return view('admin.set-atribut.setmerk', ['title' => 'Setting Merk'],
         compact('merks')
         );
     }
 
     public function tipe()
     {
-        return view('admin.settipe', ['title' => 'Setting Merk']);
+        return view('admin.set-atribut.settipe', ['title' => 'Setting Merk']);
     }
 
     public function supplier()
     {
-        return view('admin.setsupplier', ['title' => 'Setting Supplier']);
+        return view('admin.set-atribut.setsupplier', ['title' => 'Setting Supplier']);
     }
 
-    public function label()
+    public function label(): View
     {
-        return view('admin.setlabel', ['title' => 'Setting Label']);
+        $labels = \App\Models\LabelsModel::get();
+        return view('admin.set-atribut.label', compact('labels'));
+    }
+
+    public function getLabel(Request $request): JsonResponse
+    {
+        $labels = \App\Models\LabelsModel::get();
+        return DataTables::of($labels)
+            ->addIndexColumn()
+            ->addColumn('action', function ($labels) {
+                return
+                    '
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" title="More..."></button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li><span class="mx-3" id="edit-label" data-id="' . $labels->id . '" data-name="' . e($labels->name) . '" style="cursor: pointer; color: #007bff;">Edit</span></li>
+                            <li><span class="mx-3" id="delete-label" data-id="' . $labels->id . '" data-name="' . e($labels->name) . '" style="cursor: pointer; color: #007bff;">Delete</span></li>
+                        </ul>
+                    </div>
+                    '
+                    ;
+            })
+            ->make();
+    }
+
+    public function storeLabel(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'name' => 'required|unique:labels,name|string|max:255'
+        ]);
+        $label = \App\Models\LabelsModel::Create($data);
+
+        return response()->json(['message' => 'Label berhasil ditambahkan.']);
+    }
+
+    public function editLabel($id): JsonResponse
+    {
+        $label = \App\Models\LabelsModel::findOrFail($id);
+        return response()->json($label);
+    }
+
+    public function updateLabel(Request $request, $id): JsonResponse
+    {
+        $label = \App\Models\LabelsModel::findOrFail($id);
+        $data = $request->validate([
+            'name' => 'required|unique:labels,name,' . $label->id . '|string|max:255',
+            'color' => 'required|string|max:7'
+        ]);
+        $label->update($data);
+
+        return response()->json(['message' => 'Label berhasil diperbarui.']);
+    }
+
+    public function deleteLabel($id): JsonResponse
+    {
+        $label = \App\Models\LabelsModel::findOrFail($id);
+        $label->delete();
+
+        return response()->json(['message' => 'Label ' . $label->name . ' berhasil dihapus.']);
     }
 
     public function kategorilisensi()

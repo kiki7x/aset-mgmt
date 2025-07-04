@@ -23,7 +23,7 @@ class PemeliharaanController extends Controller
         return view('admin.detailaset.pemeliharaan', compact('id', 'maintenances_schedule', 'asset'));
     }
 
-    public function preventifdataTable(Request $request, $id): JsonResponse
+    public function scheduleDataTable(Request $request, $id): JsonResponse
     {
         $assets = \App\Models\AssetsModel::get();
         $maintenances_schedule = \App\Models\Maintenances_scheduleModel::where('asset_id', $request->id)->get(); // Menggunakan model Maintenance::with('item')->latest()->get();
@@ -39,6 +39,7 @@ class PemeliharaanController extends Controller
                     // </div>'
                     // <li><span class="mx-3" onclick="showModalEditJadwalPemeliharaan(' . $row->id . ')" data-id="' . $row->id . '" data-name="' . e($row->name) . '" data-asset="' . $row->asset_id . '" style="cursor: pointer; color: #007bff;">Edit</span></li>
                     '
+                    <button class="btn btn-outline-primary btn-sm" onclick="showModalAddTugasPreventif(' . $row->id . ')"><i class="fa-regular fa-circle-check"></i> Selesaikan</button>
                     <div class="btn-group">
                     <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" title="More..."></button>
                         <ul class="dropdown-menu dropdown-menu-right">
@@ -52,7 +53,7 @@ class PemeliharaanController extends Controller
             ->make();
     }
 
-    public function preventifStore(JadwalPemeliharaanRequest $request, $id): JsonResponse
+    public function scheduleStore(JadwalPemeliharaanRequest $request, $id): JsonResponse
     {
         $request->validate([
             'name' => [
@@ -79,13 +80,13 @@ class PemeliharaanController extends Controller
         ]);
     }
 
-    public function preventifEdit(Request $request, $id): JsonResponse
+    public function scheduleEdit(Request $request, $id): JsonResponse
     {
         $maintenance_schedule = \App\Models\Maintenances_scheduleModel::findOrFail($id);
         return response()->json($maintenance_schedule);
     }
 
-    public function preventifUpdate(JadwalPemeliharaanRequest $request, $id): JsonResponse
+    public function scheduleUpdate(JadwalPemeliharaanRequest $request, $id): JsonResponse
     {
         $maintenance_schedule = \App\Models\Maintenances_scheduleModel::findOrFail($id);
         $request->validate([
@@ -104,12 +105,40 @@ class PemeliharaanController extends Controller
         ]);
     }
 
-    public function preventifDelete(Request $request, $id): JsonResponse
+    public function scheduleDelete(Request $request, $id): JsonResponse
     {
         $maintenance_schedule = \App\Models\Maintenances_scheduleModel::findOrFail($id);
         $maintenance_schedule->delete();
         return response()->json([
             'message' => 'Data deleted successfully',
+        ]);
+    }
+
+    public function addPreventif(Request $request, $id): JsonResponse
+    {
+        $maintenance_schedule = \App\Models\Maintenances_scheduleModel::findOrFail($id);
+        $asset = \App\Models\AssetsModel::findOrFail($maintenance_schedule->asset_id);
+        Log::info("Loading Add Preventif for Maintenance Schedule ID: $maintenance_schedule->name");
+        return response()->json(['maintenance_schedule' => $maintenance_schedule, 'asset' => $asset]);
+    }
+
+    public function addPreventifStore(Request $request, $id): JsonResponse
+    {
+        $maintenance_schedule = \App\Models\Maintenances_scheduleModel::findOrFail($id);
+        $maintenance = new \App\Models\MaintenancesModel($request->all());
+        $maintenance->maintenance_schedule_id = $maintenance_schedule->id;
+        $maintenance->asset_id = $maintenance_schedule->asset_id;
+        $maintenance->save();
+
+        // Update next_date in maintenance_schedule
+        if ($maintenance_schedule->frequency) {
+            $nextDate = now()->addMonths($maintenance_schedule->frequency);
+            $maintenance_schedule->next_date = $nextDate;
+            $maintenance_schedule->save();
+        }
+
+        return response()->json([
+            'message' => 'Preventif task added successfully',
         ]);
     }
 

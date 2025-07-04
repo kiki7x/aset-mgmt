@@ -9,9 +9,9 @@
     <!-- Select2 -->
     <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-
     {{-- DataTable Css --}}
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.1/css/dataTables.bootstrap4.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css" />
 @endpush
 
 @section('content')
@@ -21,7 +21,7 @@
                 <div class="card">
                     <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                         <h3 class="card-title">Kelola Penugasan</h3>
-                        <button type="button" class="btn btn-primary" style="margin-left: auto;">
+                        <button type="button" onclick="openModalCreate()" class="btn btn-primary" style="margin-left: auto;">
                             <i class="fas fa-square-plus"></i>
                             Buat Penugasan
                         </button>
@@ -88,6 +88,9 @@
 
     {{-- Komponen Modal/CreateAsetTik --}}
     {{-- @livewire('modal.create-issue') --}}
+    @include('admin.issues.partials.create-issues')
+    @include('admin.issues.partials.edit-issues')
+
 @endsection
 
 @push('script-foot')
@@ -136,4 +139,10 @@
             })
         };
     </script>
+@endpush
+
+@push('script-foot')
+    @stack('script-foot2')
+
+
 @endpush

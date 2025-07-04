@@ -46,11 +46,14 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::get('/asetrt/{id}', [App\Http\Controllers\ShowAsetController::class, 'showDetails'])->name('admin.asetrt.details');
         Route::get('/asetrt/{id}/overview', [App\Http\Controllers\ShowAsetController::class, 'getOverviewContent'])->name('admin.asetrt.overview');
         Route::get('/asetrt/{id}/pemeliharaan', [App\Http\Controllers\PemeliharaanController::class, 'index'])->name('admin.asetrt.pemeliharaan');
-        Route::get('/asetrt/{id}/pemeliharaan/preventifdataTable', [App\Http\Controllers\PemeliharaanController::class, 'preventifdataTable'])->name('admin.asetrt.pemeliharaan.preventifdataTable');
-        Route::post('/asetrt/{id}/pemeliharaan/preventifstore', [App\Http\Controllers\PemeliharaanController::class, 'preventifStore'])->name('admin.asetrt.pemeliharaan.preventifStore');
-        Route::get('/asetrt/{id}/pemeliharaan/preventifEdit/', [App\Http\Controllers\PemeliharaanController::class, 'preventifEdit'])->name('admin.asetrt.pemeliharaan.preventifEdit');
-        Route::patch('/asetrt/{id}/pemeliharaan/preventifUpdate', [App\Http\Controllers\PemeliharaanController::class, 'preventifUpdate'])->name('admin.asetrt.pemeliharaan.preventifUpdate');
-        Route::delete('/asetrt/{id}/pemeliharaan/preventifDelete', [App\Http\Controllers\PemeliharaanController::class, 'preventifDelete'])->name('admin.asetrt.pemeliharaan.preventifDelete');
+        Route::get('/asetrt/{id}/pemeliharaan/scheduleDataTable', [App\Http\Controllers\PemeliharaanController::class, 'scheduledataTable'])->name('admin.asetrt.pemeliharaan.scheduleDataTable');
+        Route::post('/asetrt/{id}/pemeliharaan/schedulestore', [App\Http\Controllers\PemeliharaanController::class, 'scheduleStore'])->name('admin.asetrt.pemeliharaan.scheduleStore');
+        Route::get('/asetrt/{id}/pemeliharaan/scheduleEdit/', [App\Http\Controllers\PemeliharaanController::class, 'scheduleEdit'])->name('admin.asetrt.pemeliharaan.scheduleEdit');
+        Route::patch('/asetrt/{id}/pemeliharaan/scheduleUpdate', [App\Http\Controllers\PemeliharaanController::class, 'scheduleUpdate'])->name('admin.asetrt.pemeliharaan.scheduleUpdate');
+        Route::delete('/asetrt/{id}/pemeliharaan/scheduleDelete', [App\Http\Controllers\PemeliharaanController::class, 'scheduleDelete'])->name('admin.asetrt.pemeliharaan.scheduleDelete');
+        Route::get('/asetrt/{id}/pemeliharaan/addPreventif', [App\Http\Controllers\PemeliharaanController::class, 'addPreventif'])->name('admin.asetrt.pemeliharaan.addPreventif');
+        Route::get('/asetrt/{id}/pemeliharaan/preventifStore', [App\Http\Controllers\PemeliharaanController::class, 'preventifStore'])->name('admin.asetrt.pemeliharaan.preventifStore');
+        Route::get('/asetrt/{id}/pemeliharaan/korektif', [App\Http\Controllers\PemeliharaanController::class, 'korektif'])->name('admin.asetrt.pemeliharaan.korektif');
         Route::get('/asetrt/{id}/pemeliharaan/korektifdataTable', [App\Http\Controllers\PemeliharaanController::class, 'korektifdataTable'])->name('admin.asetrt.pemeliharaan.korektifdataTable');
         Route::get('/asetrt/{id}/pemeliharaan/korektifStore', [App\Http\Controllers\PemeliharaanController::class, 'korektifdataTable'])->name('admin.asetrt.pemeliharaan.korektiStpre');
         Route::get('/asetrt/{id}/penugasan', [App\Http\Controllers\ShowAsetController::class, 'getPenugasanContent'])->name('admin.asetrt.penugasan');
@@ -102,9 +105,15 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::get('/setting_attr/supplier/show/{id}/{section?}', App\Livewire\Assets\ShowSupplier::class)->name('admin.setting_attr.supplier.show');
         Route::get('/setting_attr/supplier/edit/{id}/{section?}', App\Livewire\Assets\EditSupplier::class)->name('admin.setting_attr.supplier.edit');
         // Route Setting Label
-        Route::get('/setting_attr/label', App\Livewire\Assets\IndexAsetLabel::class)->name('admin.setting_attr.label');
-        Route::get('/setting_attr/label/show/{id}/{section?}', App\Livewire\Assets\ShowLabel::class)->name('admin.setting_attr.label.show');
-        Route::get('/setting_attr/label/edit/{id}/{section?}', App\Livewire\Assets\EditLabel::class)->name('admin.setting_attr.label.edit');
+        // Route::get('/setting_attr/label', App\Livewire\Assets\IndexAsetLabel::class)->name('admin.setting_attr.label');
+        // Route::get('/setting_attr/label/show/{id}/{section?}', App\Livewire\Assets\ShowLabel::class)->name('admin.setting_attr.label.show');
+        // Route::get('/setting_attr/label/edit/{id}/{section?}', App\Livewire\Assets\EditLabel::class)->name('admin.setting_attr.label.edit');
+        Route::get('/setting_attr/label/', [App\Http\Controllers\SetatributController::class, 'label'])->name('admin.setting_attr.label');
+        Route::get('/setting_attr/label/get_label', [App\Http\Controllers\SetatributController::class, 'getLabel'])->name('admin.setting_attr.label.get_label');
+        Route::post('/setting_attr/label/store', [App\Http\Controllers\SetatributController::class, 'storeLabel'])->name('admin.setting_attr.label.store');
+        Route::get('/setting_attr/label/edit/{id}', [App\Http\Controllers\SetatributController::class, 'editLabel'])->name('admin.setting_attr.label.edit');
+        Route::patch('/setting_attr/label/update/{id}', [App\Http\Controllers\SetatributController::class, 'updateLabel'])->name('admin.setting_attr.label.update');
+        Route::delete('/setting_attr/label/delete/{id}', [App\Http\Controllers\SetatributController::class, 'deleteLabel'])->name('admin.setting_attr.label.delete');
         // Route Setting Lokasi
         Route::get('/setting_attr/lokasi', App\Livewire\Assets\IndexAsetLokasi::class)->name('admin.setting_attr.lokasi');
         Route::get('/setting_attr/lokasi/show/{id}/{section?}', App\Livewire\Assets\ShowLokasi::class)->name('admin.setting_attr.lokasi.show');

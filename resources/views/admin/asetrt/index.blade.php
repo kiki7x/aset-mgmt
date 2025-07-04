@@ -1,8 +1,8 @@
 @extends('layouts.backsite', [
-    'title' => 'Aset RT | SAPA PPL',
-    'welcome' => 'Kelola Aset RT',
+    'title' => 'Aset Rumah Tangga | SAPA PPL',
+    'welcome' => 'Aset Rumah Tangga',
     'breadcrumb' => '
-        <li class="breadcrumb-item active">Aset RT</li>'
+        <li class="breadcrumb-item active">Aset RT</li>',
 ])
 
 @push('script-head')
@@ -20,14 +20,10 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header"
-                            style="display: flex; justify-content: space-between; align-items: center;">
-                            <h3 class="card-title"><i class="fa-solid fa-computer"></i> Kelola Aset RT <span
-                                    class="badge end-0 mr-3 bg-info text-light">{{ $totalAssets }}</span></h3>
-                            <button type="button" id="btnOpenCreateModal" class="btn btn-primary"
-                                style="margin-left: auto;">
-                                <i class="fas fa-square-plus"></i>
-                                Tambah Data
+                        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3 class="card-title font-weight-bold"><i class="fa-solid fa-building"></i> Aset Rumah Tangga <span class="badge end-0 mr-3 bg-info text-light">{{ $totalAssets }}</span></h3>
+                            <button type="button" id="btnOpenCreateModal" class="btn btn-outline-primary" style="margin-left: auto;" data-toggle="tooltip" data-placement="top" title="Tambah Data">
+                                <i class="fas fa-plus"></i>
                             </button>
                         </div>
                         <!-- /.card-header -->
@@ -38,14 +34,12 @@
                                         <select id="category" name="jenis" class="ml-0 form-control mr-2">
                                             <option value="">Semua Kategori</option>
                                             @foreach ($categories as $cat)
-                                                <option value="{{ $cat->id }}"
-                                                    {{ request('category') == $cat->id ? 'selected' : '' }}>
+                                                <option value="{{ $cat->id }}" {{ request('category') == $cat->id ? 'selected' : '' }}>
                                                     {{ $cat->name }}
                                                 </option>
                                             @endforeach
                                         </select>
-                                        <button type="submit" class="ml-0 btn btn-warning btn-sm" data-toggle="tooltip"
-                                            data-placement="top" title="Filter"><i class="fas fa-filter"></i></button>
+                                        <button type="submit" class="ml-0 btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Filter"><i class="fas fa-filter"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -69,7 +63,7 @@
                                 </table>
                             </div>
 
-                            <div class="row">
+                            {{-- <div class="row">
                                 <div class="col-md-12">
                                     <div class="dt-buttons btn-group"><a class="btn btn-default buttons-copy buttons-html5"
                                             tabindex="0" aria-controls="dataTablesFull"
@@ -84,7 +78,7 @@
                                             aria-controls="dataTablesFull" href="#"><span>Print</span></a>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
@@ -203,5 +197,4 @@
             });
         </script>
     @endpush
-
 @endsection

@@ -36,6 +36,8 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/jquery-ui/jquery-ui.css') }}">
     <!-- Toastr -->
     <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css') }}">
+    {{-- Bootstrap Datepicker --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     {{-- script-head --}}
     @stack('script-head')
     {{-- ./script-head --}}
@@ -84,8 +86,6 @@
     <!-- InputMask -->
     <script src="{{ asset('assets/plugins/moment/moment.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
-    <!-- Bootstrap 4-->
-    {{-- <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.min.js') }}"></script> --}}
     <!-- overlayScrollbars -->
     <script src="{{ asset('assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
     <!-- Tempusdominus Bootstrap 4 -->
@@ -97,9 +97,11 @@
     {{-- Datatables --}}
     <script src="https://cdn.datatables.net/2.3.1/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.3.1/js/dataTables.bootstrap5.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
     {{-- Toastr --}}
     <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
+    {{-- Bootstrap datepicker 1.9.0 --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
     <script>
         window.addEventListener('alert', (e) => {
             const {

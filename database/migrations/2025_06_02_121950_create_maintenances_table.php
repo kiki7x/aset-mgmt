@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('asset_id')->nullable();
             $table->string('name'); // Detail pemeliharaan (e.g., 'Ganti Oli Mesin', 'Pembersihan')
-            // $table->string('type'); // 'preventive' atau 'corrective'
             $table->string('frequency')->nullable(); // 'per_3_bulan', 'per_4_bulan', dst '
             $table->date('start_date')->nullable(); // Tanggal manual untuk Korektif
             $table->date('next_date')->nullable();
@@ -25,14 +24,21 @@ return new class extends Migration
         });
         Schema::create('maintenances', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('maintenance_schedule_id'); // Relasi ke maintenance_schedule
+            $table->foreignId('maintenance_schedule_id')->nullable(); // Relasi ke maintenance_schedule
+            $table->foreignId('asset_id')->nullable(); // Relasi ke asset
+            $table->foreignId('pic_id')->nullable(); // Relasi ke Petugas
+            $table->foreignId('ticketreply_id')->nullable(); // Relasi ke User yang membuat tiket
             $table->string('name')->nullable();
-            $table->foreignId('pic_id')->nullable();
+            $table->string('issuetype')->nullable(); // isian ini jika berdasarkan pada penugasan dan atau korektif
+            $table->string('priority')->nullable(); // isian ini jika berdasarkan pada penugasan dan atau korektif
             $table->string('status')->nullable();
             $table->date('start_date')->nullable();
             $table->date('finish_date')->nullable();
-            $table->string('attachment')->nullable();
-            $table->text('notes')->nullable();
+            $table->integer('timespent')->nullable();
+            $table->date('period')->nullable(); // Rekam Periode pemeliharaan preventif yang sudah dilakukan
+            $table->string('picture')->nullable();
+            $table->string('document')->nullable();
+            $table->text('notes')->nullable(); // Catatan tambahan untuk pemeliharaan
             $table->text('customfields')->nullable();
             $table->timestamps();
         });

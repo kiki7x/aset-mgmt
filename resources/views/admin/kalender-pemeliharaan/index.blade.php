@@ -17,9 +17,8 @@
                 <div class="card">
                     <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                         <h3 class="card-title">Kalender Pemeliharaan</h3>
-                        <button type="button" class="btn btn-primary" style="margin-left: auto;">
-                            <i class="fas fa-square-plus"></i>
-                            Tambah Jadwal Pemeliharaan
+                        <button type="button" class="btn btn-outline-primary" style="margin-left: auto;">
+                            <i class="fas fa-plus"></i>
                         </button>
                     </div>
                     <!-- /.card-header -->

@@ -3,7 +3,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalJadwalPemeliharaanLabel">Jadwalkan Pemeliharaan Preventif</h5>
+                <h5 class="modal-title" id="add-schedule-label">Jadwalkan Pemeliharaan Preventif</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -36,15 +36,19 @@
                             <div class="form-group">
                                 <div class="custom-control custom-radio">
                                     <input class="custom-control-input" type="radio" id="cek_kebersihan" name="name" value="Cek Kebersihan">
-                                    <label for="cek_kebersihan" class="custom-control-label">1. Cek Kebersihan</label>
+                                    <label for="cek_kebersihan" class="custom-control-label">1. Servis Berkala</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input class="custom-control-input" type="radio" id="cek_kebersihan" name="name" value="Cek Kebersihan">
+                                    <label for="cek_kebersihan" class="custom-control-label">2. Cek Kebersihan</label>
                                 </div>
                                 <div class="custom-control custom-radio">
                                     <input class="custom-control-input" type="radio" id="cek_fungsi" name="name" value="Cek Fungsi">
-                                    <label for="cek_fungsi" class="custom-control-label">2. Cek Fungsi</label>
+                                    <label for="cek_fungsi" class="custom-control-label">3. Cek Fungsi</label>
                                 </div>
                                 <div class="custom-control custom-radio">
                                     <input class="custom-control-input" type="radio" id="cek_kondisi" name="name" value="Cek Kondisi">
-                                    <label for="cek_kondisi" class="custom-control-label">3. Cek Kondisi</label>
+                                    <label for="cek_kondisi" class="custom-control-label">4. Cek Kondisi</label>
                                 </div>
                             </div>
                         </div>
@@ -103,7 +107,7 @@
                     <div class="form-group">
                         <label for="start_date">Tanggal Mulai <span class="text-danger">*</span></label>
                         <div>
-                            <input id="start_date" width="276" type="text" class="form-control" name="start_date" placeholder="dd/mm/yyyy" />
+                            <input id="start_date" width="276" type="text" class="form-control" name="start_date" placeholder="yyyy-mm-dd" />
                         </div>
                         <span class="text-danger small" id="error-start_date"></span>
                     </div>
@@ -111,7 +115,7 @@
                     <div class="form-group">
                         <label for="next_date">Tanggal Pemeliharaan Selanjutnya</label>
                         <div>
-                            <input id="next_date" width="276" type="text" class="form-control" name="next_date" placeholder="dd/mm/yyyy" readonly />
+                            <input id="next_date" width="276" type="text" class="form-control" name="next_date" placeholder="yyyy-mm-dd" readonly />
                         </div>
                         <span class="text-danger small" id="error-next_date"></span>
                     </div>
@@ -130,7 +134,20 @@
     {{-- <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.min.js') }}"></script> --}}
     {{-- {!! JsValidator::formRequest('App\Http\Requests\JadwalPemeliharaanRequest', '#formJadwalPemeliharaan') !!} --}}
 
+
     <script>
+        function showModalAddJadwalPemeliharaan() {
+            $('#add-schedule-label').text('Jadwalkan Pemeliharaan Preventif');
+            $('#formJadwalPemeliharaan')[0].reset();
+            $('#add-schedule').modal('show');
+        }
+        $('#start_date').datepicker({
+            format: "yyyy-mm-dd",
+            autoclose: true,
+            todayHighlight: true,
+            orientation: "auto",
+            todayBtn: "linked",
+        });
         // Pastikan dokumen siap sebelum menjalankan script jQuery
         $(document).ready(function() {
 
@@ -174,7 +191,7 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    url: "{{ route('admin.asetrt.pemeliharaan.preventifStore', $id) }}",
+                    url: "{{ route('admin.asetrt.pemeliharaan.scheduleStore', $id) }}",
                     type: "POST",
                     data: formData,
                     processData: false,

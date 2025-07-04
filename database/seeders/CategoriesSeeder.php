@@ -43,6 +43,13 @@ class CategoriesSeeder extends Seeder
             ['id' => 28, 'name' => 'Peripheral PC', 'color' => '#ff0000', 'classification_id' => 2, 'created_at' => now(), 'updated_at' => now()],
             ['id' => 29, 'name' => 'Modem', 'color' => '#ff0000', 'classification_id' => 2, 'created_at' => now(), 'updated_at' => now()],
             ['id' => 30, 'name' => 'Coffee Maker', 'color' => '#ff0000', 'classification_id' => 4, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 31, 'name' => 'Finger Print', 'color' => '#ff0000', 'classification_id' => 2, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 32, 'name' => 'Kamera', 'color' => '#ff0000', 'classification_id' => 2, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 33, 'name' => 'Handphone', 'color' => '#ff0000', 'classification_id' => 2, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 34, 'name' => 'Handy Talky', 'color' => '#ff0000', 'classification_id' => 2, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 35, 'name' => 'Stavolt', 'color' => '#ff0000', 'classification_id' => 4, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 36, 'name' => 'Peralatan Sanitasi', 'color' => '#ff0000', 'classification_id' => 4, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 37, 'name' => 'Peralatan Housekeeping', 'color' => '#ff0000', 'classification_id' => 4, 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 }

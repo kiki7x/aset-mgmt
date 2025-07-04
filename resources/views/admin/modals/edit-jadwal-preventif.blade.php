@@ -3,7 +3,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalEditJadwalPemeliharaanLabel">Edit Jadwal Pemeliharaan Preventif</h5>
+                <h5 class="modal-title" id="edit-schedule-label">Edit Jadwal Pemeliharaan Preventif</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -54,7 +54,7 @@
                     <div class="form-group">
                         <label for="start_date">Tanggal Mulai <span class="text-danger">*</span></label>
                         <div>
-                            <input id="edit_start_date" width="276" type="text" class="form-control" name="start_date" placeholder="dd/mm/yyyy" />
+                            <input id="edit_start_date" width="276" type="text" class="form-control" name="start_date" placeholder="yyyy-mm-dd" />
                         </div>
                         <span class="text-danger small" id="error-start_date"></span>
                     </div>
@@ -62,7 +62,7 @@
                     <div class="form-group">
                         <label for="next_date">Tanggal Pemeliharaan Selanjutnya</label>
                         <div>
-                            <input id="edit_next_date" width="276" type="text" class="form-control" name="next_date" placeholder="dd/mm/yyyy" readonly />
+                            <input id="edit_next_date" width="276" type="text" class="form-control" name="next_date" placeholder="yyyy-mm-dd" readonly />
                         </div>
                         <span class="text-danger small" id="error-next_date"></span>
                     </div>
@@ -78,6 +78,51 @@
 
 @push('script-foot')
     <script>
+        function showModalEditJadwalPemeliharaan(id) {
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "{{ route('admin.asetrt.pemeliharaan.scheduleEdit', ['id' => ':id']) }}".replace(':id', id),
+                type: "GET",
+                dataType: "json",
+                beforeSend: function() {
+                    $('#edit-schedule-label').text('Edit Jadwal Pemeliharaan Preventif');
+                    $('#edit_id').val('');
+                    $('#edit_name').val('');
+                    $('#edit_frequency').val('');
+                    $('#edit_start_date').val('');
+                    $('#edit_next_date').val('');
+                    $('#edit_status').val('');
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: 'Gagal mengambil data jadwal pemeliharaan.',
+                    });
+                },
+                success: function(data) {
+                    $('#edit_id').val(data.id);
+                    $('#edit_name').val(data.name);
+                    $('#edit_frequency').val(data.frequency);
+                    $('#edit_start_date').val(data.start_date);
+                    $('#edit_next_date').val(data.next_date);
+                    $('#edit_status').val(data.status);
+                }
+            });
+            $('#edit-schedule').modal('show');
+        }
+
+        // Inisialisasi datepicker untuk input tanggal
+        $('#edit_start_date').datepicker({
+            format: "yyyy-mm-dd",
+            autoclose: true,
+            todayHighlight: true,
+            orientation: "auto",
+            todayBtn: "linked",
+        });
+
         // Pastikan dokumen siap sebelum menjalankan script jQuery
         $(document).ready(function() {
 
@@ -123,7 +168,7 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    url: "{{ route('admin.asetrt.pemeliharaan.preventifUpdate', ['id' => ':id']) }}".replace(':id', id),
+                    url: "{{ route('admin.asetrt.pemeliharaan.scheduleUpdate', ['id' => ':id']) }}".replace(':id', id),
                     type: "POST",
                     data: formData,
                     processData: false,

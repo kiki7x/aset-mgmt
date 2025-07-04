@@ -12,7 +12,12 @@ class IssuesController extends Controller
     public function index(): View
     {
         $issues = \App\Models\IssuesModel::get();
-        return view('admin.issues.index' , compact('issues'));
+        // untuk dropdown
+        $users = \App\Models\User::whereHas('roles', function($query) {$query->where('name','!=', 'superadmin');})->get();
+        // $users = \App\Models\User::get();
+        $assets = \App\Models\AssetsModel::get();
+        $projects = \App\Models\ProjectsModel::get();
+        return view('admin.issues.index' , compact('issues', 'users', 'assets', 'projects'));
     }
 
     public function getIssues(Request $request): JsonResponse

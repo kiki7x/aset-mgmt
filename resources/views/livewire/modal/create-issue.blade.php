@@ -75,7 +75,7 @@
                             open: false,
                             selectedAsset: @entangle('form.asset_id'),
                             initAsset() {
-                                // inisialisasi select2  
+                                // inisialisasi select2
                                 $(this.$refs.select2assets).on('select2:open', (e) => {
                                     if (!this.open) { // Periksa apakah assets sudah di-load
                                         {{-- $wire.call('loadAssets'); --}}
@@ -92,7 +92,8 @@
                             }
                         }" x-init="initAsset()">
                             <label for="asset_id">Pilih Aset</label>
-                            <select wire:model="form.asset_id" x-on:click="open = true" x-show="open" x-ref="select2assets" name="asset_id" id="asset_id" class="form-control select2tag @error('form.asset_id') is-invalid @enderror" data-placeholder="None" multiple="multiple">
+                            <select wire:model="form.asset_id" x-on:click="open = true" x-show="open" x-ref="select2assets" name="asset_id" id="asset_id" class="form-control select2tag @error('form.asset_id') is-invalid @enderror" data-placeholder="None"
+                                    multiple="multiple">
                                 <option name="asset_id" value="">None</option>
                                 @foreach ($assets as $asset)
                                     <option value="{{ $asset->id }}">{{ $asset->tag }} - {{ $asset->name }}</option>
@@ -107,7 +108,7 @@
                             <div x-data="{
                                 selectedProject: @entangle('form.project_id'),
                                 initProject() {
-                                    // inisialisasi select2                                
+                                    // inisialisasi select2
                                     $(this.$refs.select2project).on('change', (e) => {
                                         // singkronisasi perubahan ke alpinejs
                                         this.selectedProject = $(e.target).val() ? $(e.target).val()[0] : null;
