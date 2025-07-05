@@ -17,21 +17,19 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title"><i class="fa-solid fa-database"></i> Klasifikasi</h3>
-                        <div class="px-2 d-flex justify-content-end">
+                        <h3 class="card-title"><i class="fa-solid fa-database"></i>Daftar Klasifikasi</h3>
+                        <div class="card-tools">
                             <a href="{{ route('admin.setting_attr') }}" class="btn btn-secondary mr-2">
                                 <i class="fas fa-arrow-left"></i>
                                 Kembali
                             </a>
-                            <button type="button" id="btnOpenCreateModal" class="ml-0 btn btn-primary">
-                                <i class="fas fa-square-plus"></i>
-                                Tambah Klasifikasi
+                            <button type="button" id="btnOpenCreateModal" class="btn btn-outline-primary">
+                                <i class="fas fa-plus"></i>
                             </button>
                         </div>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-
                         <div class="table-responsive">
                             <table id="tableKlasifikasi" class="table table-bordered table-striped table-hover table-sm dataTable">
                                 <thead>
@@ -137,8 +135,8 @@
                         data: null,
                         name: 'timestamp',
                         render: function(data) {
-                            return `Dibuat: ${moment(data.created_at).format('lll')} <br>
-                            Diupdate: ${moment(data.updated_at).format('lll')}`
+                            return `<span class="text-muted small">Dibuat: ${moment(data.created_at).format('lll')} <br>
+                            Diupdate: ${moment(data.updated_at).format('lll')}</span>`;
                         }
                     },
                     {
@@ -151,7 +149,6 @@
                 order: [
                     [0, 'asc']
                 ],
-                responsive: true,
             });
         }
         $(document).ready(function() {

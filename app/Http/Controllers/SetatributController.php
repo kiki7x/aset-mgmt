@@ -164,14 +164,124 @@ class SetatributController extends Controller
     public function merk()
     {
         $merks = \App\Models\ManufacturersModel::get();
-        return view('admin.set-atribut.setmerk', ['title' => 'Setting Merk'],
-        compact('merks')
+        return view('admin.set-atribut.setmerk', compact('merks')
         );
     }
 
-    public function tipe()
+    public function getMerk(): JsonResponse
     {
-        return view('admin.set-atribut.settipe', ['title' => 'Setting Merk']);
+        $merks = \App\Models\ManufacturersModel::get();
+        return DataTables::of($merks)
+            ->addIndexColumn()
+            ->addColumn('action', function ($merks) {
+                return
+                    '
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" title="More..."></button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li><span class="mx-3" id="edit-merk" data-id="' . $merks->id . '" data-name="' . e($merks->name) . '" style="cursor: pointer; color: #007bff;">Edit</span></li>
+                            <li><span class="mx-3" id="delete-merk" data-id="' . $merks->id . '" data-name="' . e($merks->name) . '" style="cursor: pointer; color: #007bff;">Delete</span></li>
+                        </ul>
+                    </div>
+                    '
+                    ;
+            })
+            ->make();
+    }
+
+    public function storeMerk(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'name' => 'required|unique:manufacturers,name|string|max:255'
+        ]);
+        $merk = \App\Models\ManufacturersModel::Create($data);
+        return response()->json(['message' => 'Merk berhasil ditambahkan.']);
+    }
+
+    public function editMerk($id): JsonResponse
+    {
+        $merk = \App\Models\ManufacturersModel::findOrFail($id);
+        return response()->json($merk);
+    }
+    public function updateMerk(Request $request, $id): JsonResponse
+    {
+        $merk = \App\Models\ManufacturersModel::findOrFail($id);
+        $data = $request->validate([
+            'name' => 'required|unique:manufacturers,name,' . $merk->id . '|string|max:255',
+        ]);
+        $merk->update($data);
+        return response()->json(['message' => 'Merk berhasil diperbarui.']);
+    }
+
+    public function deleteMerk($id): JsonResponse
+    {
+        $merk = \App\Models\ManufacturersModel::findOrFail($id);
+        $merk->delete();
+
+        return response()->json(['message' => 'Merk ' . $merk->name . ' berhasil dihapus.']);
+    }
+
+    public function model(): View
+    {
+        return view('admin.set-atribut.setmodel');
+    }
+
+    public function getModel(): JsonResponse
+    {
+        $models = \App\Models\ModelsModel::get();
+        return DataTables::of($models)
+        ->addIndexColumn()
+        ->addColumn('hitungAset', function ($models) {
+            $hitungAset = \App\Models\AssetsModel::where('model_id', $models->id)->count();
+            return $hitungAset;
+        })
+        ->addColumn('action', function ($models) {
+            return
+            '
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" title="More..."></button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li><span class="mx-3" id="edit-model" data-id="' . $models->id . '" data-name="' . e($models->name) . '" style="cursor: pointer; color: #007bff;">Edit</span></li>
+                            <li><span class="mx-3" id="delete-model" data-id="' . $models->id . '" data-name="' . e($models->name) . '" style="cursor: pointer; color: #007bff;">Delete</span></li>
+                        </ul>
+                    </div>
+                    '
+                    ;
+            })
+            ->make();
+    }
+
+    public function storeModel(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'name' => 'required|unique:models,name|string|max:255'
+        ]);
+        $model = \App\Models\ModelsModel::Create($data);
+        return response()->json(['message' => 'Model berhasil ditambahkan.']);
+    }
+
+    public function editModel($id): JsonResponse
+    {
+        $model = \App\Models\ModelsModel::findOrFail($id);
+        return response()->json($model);
+    }
+
+    public function updateModel(Request $request, $id): JsonResponse
+    {
+        $model = \App\Models\ModelsModel::findOrFail($id);
+        $data = $request->validate([
+            'name' => 'required|unique:models,name,' . $model->id . '|string|max:255',
+        ]);
+        $model->update($data);
+        return response()->json(['message' => 'Model berhasil diperbarui.']);
+    }
+
+    public function deleteModel($id): JsonResponse
+    {
+        $model = \App\Models\ModelsModel::findOrFail($id);
+        $model->delete();
+
+        return response()->json(['message' => 'Model ' . $model->name . ' berhasil dihapus.']);
     }
 
     public function supplier()

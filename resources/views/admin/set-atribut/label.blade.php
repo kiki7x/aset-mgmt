@@ -23,9 +23,8 @@
                                 <i class="fas fa-arrow-left"></i>
                                 Kembali
                             </a>
-                            <button type="button" id="btnOpenCreateModal" class="ml-0 btn btn-primary">
-                                <i class="fas fa-square-plus"></i>
-                                Tambah Label
+                            <button type="button" id="btnOpenCreateModal" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Tambah Data">
+                                <i class="fas fa-plus"></i>
                             </button>
                         </div>
                     </div>
@@ -115,7 +114,6 @@
             </div>
         </div>
     </div>
-    {{-- @livewire('index-aset-kategori') --}}
 @endsection
 
 @push('script-foot')
@@ -143,8 +141,8 @@
                         data: null,
                         name: 'timestamp',
                         render: function(data) {
-                            return `Dibuat: ${moment(data.created_at).format('lll')} <br>
-                            Diupdate: ${moment(data.updated_at).format('lll')}`
+                            return `<span class="text-muted small">Dibuat: ${moment(data.created_at).format('lll')} <br>
+                            Diupdate: ${moment(data.updated_at).format('lll')}</span>`;
                         }
                     },
                     {
@@ -285,6 +283,7 @@
                 }
             })
         });
+
         // Handle Delete Label
         $('#tableLabel').on('click', '#delete-label', function() {
             const id = $(this).data('id');

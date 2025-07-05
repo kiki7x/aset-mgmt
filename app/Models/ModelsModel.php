@@ -15,6 +15,11 @@ class ModelsModel extends Model
         'name',
     ];
 
+    public function assets()
+    {
+        return $this->hasMany(AssetsModel::class);
+    }
+
     public function scopeSearch($query, $value)
     {
        $query->where('name', 'LIKE', "%{$value}%");

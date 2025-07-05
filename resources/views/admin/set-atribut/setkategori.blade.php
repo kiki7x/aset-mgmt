@@ -17,15 +17,14 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title"><i class="fa-solid fa-database"></i> Kategori</h3>
+                        <h3 class="card-title"><i class="fa-solid fa-database"></i> Daftar Kategori</h3>
                         <div class="px-2 d-flex justify-content-end">
                             <a href="{{ route('admin.setting_attr') }}" class="btn btn-secondary mr-2">
                                 <i class="fas fa-arrow-left"></i>
                                 Kembali
                             </a>
-                            <button type="button" id="btnOpenCreateModal" class="ml-0 btn btn-primary">
-                                <i class="fas fa-square-plus"></i>
-                                Tambah Kategori
+                            <button type="button" id="btnOpenCreateModal" class="ml-0 btn btn-outline-primary">
+                                <i class="fas fa-plus"></i>
                             </button>
                         </div>
                     </div>
@@ -166,8 +165,8 @@
                         data: null,
                         name: 'timestamp',
                         render: function(data) {
-                            return `Dibuat: ${moment(data.created_at).format('lll')} <br>
-                            Diupdate: ${moment(data.updated_at).format('lll')}`
+                            return `<span class="text-muted small">Dibuat: ${moment(data.created_at).format('lll')} <br>
+                            Diupdate: ${moment(data.updated_at).format('lll')}</span>`;
                         }
                     },
                     {

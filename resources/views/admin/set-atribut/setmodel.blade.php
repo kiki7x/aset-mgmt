@@ -1,9 +1,9 @@
 @extends('layouts.backsite', [
-    'title' => 'Setting Merk | SAPA PPL',
-    'welcome' => 'Setting Merk',
+    'title' => 'Setting Model | SAPA PPL',
+    'welcome' => 'Setting Model',
     'breadcrumb' => '
         <li class="breadcrumb-item"><a href="/admin/setting_attr">Setting Atribut</a></li>
-        <li class="breadcrumb-item active">Merk</li>',
+        <li class="breadcrumb-item active">Model</li>',
 ])
 
 @push('script-head')
@@ -16,7 +16,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"><i class="fa-solid fa-database"></i> Daftar Merk</h3>
+                    <h3 class="card-title"><i class="fa-solid fa-database"></i> Daftar Model</h3>
                     <div class="card-tools">
                         <a href="{{ route('admin.setting_attr') }}" class="btn btn-secondary mr-2" data-toggle="tooltip" data-placement="top" title="" data-original-title="Kembali ke Setting Atribut">
                             <i class="fas fa-arrow-left"></i>
@@ -29,11 +29,11 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table id="tableMerk" class="table table-bordered table-striped table-hover table-sm">
+                        <table id="tableModel" class="table table-bordered table-striped table-hover table-sm">
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Nama Merk</th>
+                                    <th>Nama Model</th>
                                     <th>Timestamp</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -48,22 +48,22 @@
     </div>
 
     {{-- Modal Create --}}
-    <div id="createModal" title="Tambah Merk" data-backdrop="static" class="modal fade" tabindex="-1" role="dialog">
+    <div id="createModal" title="Tambah Model" data-backdrop="static" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Merk</h5>
+                    <h5 class="modal-title">Tambah Model</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <!-- Modal body -->
-                <form action="" method="POST" id="formCreateMerk">
+                <form action="" method="POST" id="formCreateModel">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="name">Nama Merk</label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Masukkan nama Merk" required>
+                            <label for="name">Nama Model</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Masukkan nama Model" required>
                         </div>
                         <span id="error-name" class="text-danger small"></span>
                     </div>
@@ -77,22 +77,22 @@
     </div>
 
     {{-- Modal Edit --}}
-    <div id="editModal" title="Edit Merk" data-backdrop="static" class="modal fade" tabindex="-1" role="dialog">
+    <div id="editModal" title="Edit Model" data-backdrop="static" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Merk</h5>
+                    <h5 class="modal-title">Edit Model</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <!-- Modal body -->
-                <form action="" method="POST" id="formEditMerk">
+                <form action="" method="POST" id="formEditModel">
                     @csrf
                     @method('PATCH')
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="edit_name">Nama Merk</label>
+                            <label for="edit_name">Nama Model</label>
                             <input type="text" class="form-control" id="edit_name" name="name" required>
                         </div>
                         <span id="error-edit_name" class="text-danger small"></span>
@@ -109,12 +109,13 @@
 
 @push('script-foot')
     <script>
-        function initTableMerk() {
-            $('#tableMerk').DataTable({
+        // Table Model
+        function initTableModel() {
+            $('#tableModel').DataTable({
                 processing: true,
                 serverSide: true,
                 responsive: true,
-                ajax: "{{ route('admin.setting_attr.merk.get_merk') }}",
+                ajax: `{{ url('admin/setting_attr/model/get_model') }}`,
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
@@ -122,8 +123,14 @@
                         orderable: false
                     },
                     {
-                        data: 'name',
-                        name: 'name'
+                        data: null,
+                        name: 'name',
+                        render: function(data) {
+                            return `
+                                <span>${data.name}</span>
+                                <span class="badge" style="border:1px solid;">${data.hitungAset}</span>
+                            `;
+                        }
                     },
                     {
                         data: null,
@@ -147,33 +154,33 @@
         }
 
         $(document).ready(function() {
-            initTableMerk();
+            initTableModel();
 
-            // Handle Tambah Merk
+            // Handle Tambah Model
             $('#btnOpenCreateModal').on('click', function() {
                 $('#createModal').modal('show');
             });
-            $('#formCreateMerk').on('submit', function(e) {
+            $('#formCreateModel').on('submit', function(e) {
                 e.preventDefault();
                 const formData = new FormData(this);
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    url: "{{ route('admin.setting_attr.merk.store') }}",
+                    url: `{{ url('admin/setting_attr/model/store') }}`,
                     type: 'POST',
                     data: formData,
                     contentType: false,
                     processData: false,
                     success: function(response) {
                         $('#createModal').modal('hide');
-                        $('#tableMerk').DataTable().ajax.reload();
+                        $('#tableModel').DataTable().ajax.reload();
                         Swal.fire({
                             icon: 'success',
                             title: 'Sukses',
-                            text: 'Merk berhasil ditambahkan.',
+                            text: 'Model berhasil ditambahkan.',
                         });
-                        $('#formCreateMerk')[0].reset();
+                        $('#formCreateModel')[0].reset();
                         $('#error-name').text('');
                     },
                     error: function(xhr) {
@@ -193,8 +200,8 @@
             });
         });
 
-        // Handle Edit Merk
-        $('#tableMerk').on('click', '#edit-merk', function() {
+        // Handle Edit Mpdel
+        $('#tableModel').on('click', '#edit-model', function() {
             const id = $(this).data('id');
             const name = $(this).data('name');
             $('#edit_name').attr('placeholder', name);
@@ -202,11 +209,11 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: `{{ url('admin/setting_attr/merk/edit') }}/${id}`,
+                url: `{{ url('admin/setting_attr/model/edit') }}/${id}`,
                 type: 'GET',
                 success: function(response) {
                     $('#edit_name').val(response.name);
-                    $('#formEditMerk').data('id', response.id);
+                    $('#formEditModel').data('id', response.id);
                     $('#editModal').modal('show');
                 },
                 error: function(xhr) {
@@ -215,8 +222,8 @@
             });
         });
 
-        // Handle Update Merk
-        $('#formEditMerk').on('submit', function(e) {
+        // Handle Update Model
+        $('#formEditModel').on('submit', function(e) {
             e.preventDefault();
             const formData = new FormData(this);
             const id = $(this).data('id');
@@ -224,20 +231,20 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: `{{ url('admin/setting_attr/merk/update') }}/${id}`,
+                url: `{{ url('admin/setting_attr/model/update') }}/${id}`,
                 type: 'POST',
                 data: formData,
                 contentType: false,
                 processData: false,
                 success: function(response) {
                     $('#editModal').modal('hide');
-                    $('#tableMerk').DataTable().ajax.reload();
+                    $('#tableModel').DataTable().ajax.reload();
                     Swal.fire({
                         icon: 'success',
                         title: 'Sukses',
-                        text: 'Merk berhasil diperbarui.',
+                        text: 'Model berhasil diperbarui.',
                     });
-                    $('#formEditMerk')[0].reset();
+                    $('#formEditModel')[0].reset();
                     $('#error-edit_name').text('');
                 },
                 error: function(xhr) {
@@ -252,12 +259,12 @@
         });
 
         // Handle Delete Merk
-        $('#tableMerk').on('click', '#delete-merk', function() {
+        $('#tableModel').on('click', '#delete-model', function() {
             const merkId = $(this).data('id');
             const name = $(this).data('name');
             Swal.fire({
                 title: 'Konfirmasi Hapus',
-                text: `Apakah Anda yakin ingin menghapus merk "${name}"?`,
+                text: `Apakah Anda yakin ingin menghapus model "${name}"?`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
@@ -270,21 +277,21 @@
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        url: `{{ url('admin/setting_attr/merk/delete') }}/${merkId}`,
+                        url: `{{ url('admin/setting_attr/model/delete') }}/${merkId}`,
                         type: 'DELETE',
                         success: function(response) {
-                            $('#tableMerk').DataTable().ajax.reload();
+                            $('#tableModel').DataTable().ajax.reload();
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil',
-                                text: 'Merk berhasil dihapus.',
+                                text: 'Model berhasil dihapus.',
                             });
                         },
                         error: function(xhr) {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Gagal',
-                                text: 'Terjadi kesalahan saat menghapus merk.',
+                                text: 'Terjadi kesalahan saat menghapus model.',
                             });
                         }
                     });

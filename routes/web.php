@@ -93,21 +93,24 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::patch('/setting_attr/kategori/update/{id}', [App\Http\Controllers\SetatributController::class, 'updateKategori'])->name('admin.setting_attr.kategori.update');
         Route::delete('/setting_attr/kategori/delete/{id}', [App\Http\Controllers\SetatributController::class, 'deleteKategori'])->name('admin.setting_attr.kategori.delete');
         // Route Setting Merk
-        Route::get('/setting_attr/merk', App\Livewire\Assets\IndexAsetMerk::class)->name('admin.setting_attr.merk');
-        Route::get('/setting_attr/merk/show/{id}/{section?}', App\Livewire\Assets\ShowMerk::class)->name('admin.setting_attr.merk.show');
-        Route::get('/setting_attr/merk/edit/{id}/{section?}', App\Livewire\Assets\EditMerk::class)->name('admin.setting_attr.merk.edit');
+        Route::get('/setting_attr/merk', [App\Http\Controllers\SetatributController::class, 'merk'])->name('admin.setting_attr.merk');
+        Route::get('/setting_attr/merk/get_merk', [App\Http\Controllers\SetatributController::class, 'getMerk'])->name('admin.setting_attr.merk.get_merk');
+        Route::post('/setting_attr/merk/store', [App\Http\Controllers\SetatributController::class, 'storeMerk'])->name('admin.setting_attr.merk.store');
+        Route::get('/setting_attr/merk/edit/{id}', [App\Http\Controllers\SetatributController::class, 'editMerk'])->name('admin.setting_attr.merk.edit');
+        Route::patch('/setting_attr/merk/update/{id}', [App\Http\Controllers\SetatributController::class, 'updateMerk'])->name('admin.setting_attr.merk.update');
+        Route::delete('/setting_attr/merk/delete/{id}', [App\Http\Controllers\SetatributController::class, 'deleteMerk'])->name('admin.setting_attr.merk.delete');
         // Route Setting Model
-        Route::get('/setting_attr/model', App\Livewire\Assets\IndexAsetModel::class)->name('admin.setting_attr.model');
-        Route::get('/setting_attr/model/show/{id}/{section?}', App\Livewire\Assets\ShowModel::class)->name('admin.setting_attr.model.show');
-        Route::get('/setting_attr/model/edit/{id}/{section?}', App\Livewire\Assets\EditModel::class)->name('admin.setting_attr.model.edit');
+        Route::get('/setting_attr/model', [App\Http\Controllers\SetatributController::class, 'model'])->name('admin.setting_attr.model');
+        Route::get('/setting_attr/model/get_model', [App\Http\Controllers\SetatributController::class, 'getModel'])->name('admin.setting_attr.model.get_model');
+        Route::post('/setting_attr/model/store', [App\Http\Controllers\SetatributController::class, 'storeModel'])->name('admin.setting_attr.model.store');
+        Route::get('/setting_attr/model/edit/{id}', [App\Http\Controllers\SetatributController::class, 'editModel'])->name('admin.setting_attr.model.edit');
+        Route::patch('/setting_attr/model/update/{id}', [App\Http\Controllers\SetatributController::class, 'updateModel'])->name('admin.setting_attr.model.update');
+        Route::delete('/setting_attr/model/delete/{id}', [App\Http\Controllers\SetatributController::class, 'deleteModel'])->name('admin.setting_attr.model.delete');
         // Route Setting Supplier
         Route::get('/setting_attr/supplier', App\Livewire\Assets\IndexAsetSupplier::class)->name('admin.setting_attr.supplier');
         Route::get('/setting_attr/supplier/show/{id}/{section?}', App\Livewire\Assets\ShowSupplier::class)->name('admin.setting_attr.supplier.show');
         Route::get('/setting_attr/supplier/edit/{id}/{section?}', App\Livewire\Assets\EditSupplier::class)->name('admin.setting_attr.supplier.edit');
         // Route Setting Label
-        // Route::get('/setting_attr/label', App\Livewire\Assets\IndexAsetLabel::class)->name('admin.setting_attr.label');
-        // Route::get('/setting_attr/label/show/{id}/{section?}', App\Livewire\Assets\ShowLabel::class)->name('admin.setting_attr.label.show');
-        // Route::get('/setting_attr/label/edit/{id}/{section?}', App\Livewire\Assets\EditLabel::class)->name('admin.setting_attr.label.edit');
         Route::get('/setting_attr/label/', [App\Http\Controllers\SetatributController::class, 'label'])->name('admin.setting_attr.label');
         Route::get('/setting_attr/label/get_label', [App\Http\Controllers\SetatributController::class, 'getLabel'])->name('admin.setting_attr.label.get_label');
         Route::post('/setting_attr/label/store', [App\Http\Controllers\SetatributController::class, 'storeLabel'])->name('admin.setting_attr.label.store');
