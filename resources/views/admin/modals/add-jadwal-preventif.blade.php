@@ -3,7 +3,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="add-schedule-label">Jadwalkan Pemeliharaan Preventif</h5>
+                <h5 class="modal-title" id="add-schedule-label"></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -35,20 +35,8 @@
                             <label>Tugas:</label>
                             <div class="form-group">
                                 <div class="custom-control custom-radio">
-                                    <input class="custom-control-input" type="radio" id="cek_kebersihan" name="name" value="Cek Kebersihan">
-                                    <label for="cek_kebersihan" class="custom-control-label">1. Servis Berkala</label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                    <input class="custom-control-input" type="radio" id="cek_kebersihan" name="name" value="Cek Kebersihan">
-                                    <label for="cek_kebersihan" class="custom-control-label">2. Cek Kebersihan</label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                    <input class="custom-control-input" type="radio" id="cek_fungsi" name="name" value="Cek Fungsi">
-                                    <label for="cek_fungsi" class="custom-control-label">3. Cek Fungsi</label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                    <input class="custom-control-input" type="radio" id="cek_kondisi" name="name" value="Cek Kondisi">
-                                    <label for="cek_kondisi" class="custom-control-label">4. Cek Kondisi</label>
+                                    <input class="custom-control-input" type="radio" id="service_berkala" name="name" value="Cek Kondisi & Service Berkala">
+                                    <label for="service_berkala" class="custom-control-label">1. Cek Kondisi & Servis Berkala</label>
                                 </div>
                             </div>
                         </div>
@@ -74,16 +62,8 @@
                             <label>Tugas:</label>
                             <div class="form-group">
                                 <div class="custom-control custom-radio">
-                                    <input class="custom-control-input" type="radio" id="elektronik_cek_kebersihan" name="name" value="Cek Kebersihan">
-                                    <label for="elektronik_cek_kebersihan" class="custom-control-label">1. Cek Kebersihan</label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                    <input class="custom-control-input" type="radio" id="elektronik_cek_fungsi" name="name" value="Cek Fungsi">
-                                    <label for="elektronik_cek_fungsi" class="custom-control-label">2. Cek Fungsi</label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                    <input class="custom-control-input" type="radio" id="elektronik_cek_kondisi" name="name" value="Cek Kondisi">
-                                    <label for="elektronik_cek_kondisi" class="custom-control-label">3. Cek Kondisi</label>
+                                    <input class="custom-control-input" type="radio" id="elektronik_service_berkala" name="name" value="Cek Kondisi & Service Berkala">
+                                    <label for="elektronik_service_berkala" class="custom-control-label">1. Cek Kondisi & Service Berkala</label>
                                 </div>
                             </div>
                             <span class="text-danger small" id="error-name"></span>
@@ -137,7 +117,7 @@
 
     <script>
         function showModalAddJadwalPemeliharaan() {
-            $('#add-schedule-label').text('Jadwalkan Pemeliharaan Preventif');
+            $('#add-schedule-label').text('Setup Jadwal Pemeliharaan');
             $('#formJadwalPemeliharaan')[0].reset();
             $('#add-schedule').modal('show');
         }

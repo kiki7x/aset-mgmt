@@ -23,7 +23,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Nama Tugas</th>
+                        <th>Nama Jadwal/Tugas</th>
                         <th>Frekuensi</th>
                         <th>Periode Sebelumnya</th>
                         <th>Periode Berikutnya</th>
@@ -48,8 +48,8 @@
                     <tr>
                         <th>#</th>
                         <th>Nama</th>
-                        <th>Tanggal Mulai</th>
-                        <th>Petugas</th>
+                        <th>Waktu Pemeliharaan</th>
+                        <th>PIC</th>
                         <th>Status</th>
                         <th>Catatan</th>
                         <th>Aksi</th>
@@ -73,8 +73,8 @@
                     <tr>
                         <th>#</th>
                         <th>Nama</th>
-                        <th>Tanggal Mulai</th>
-                        <th>Petugas</th>
+                        <th>Waktu Pemeliharaan</th>
+                        <th>PIC</th>
                         <th>Status</th>
                         <th>Catatan</th>
                         <th>Aksi</th>
@@ -203,6 +203,56 @@
             });
         }
 
+        function tablePemeliharaanPreventif() {
+            $('#tablePemeliharaanPreventif').DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                ajax: "{{ route('admin.asetrt.pemeliharaan.preventifdataTable', $id) }}",
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex'
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'started_at',
+                        name: 'started_at',
+                        render: function(data, type, row) {
+                            return moment(data).format('ll');
+                        }
+                    },
+                    {
+                        data: 'pic',
+                        name: 'pic'
+                    },
+                    {
+                        data: 'status',
+                        name: 'status'
+                    },
+                    {
+                        data: 'notes',
+                        name: 'notes',
+                        render: function(data, type, row) {
+                            if (data.length > 50) {
+                                return data.substring(0, 50) + '... <a href="#" onclick="showFullNotes(\'' + data.replace(/'/g, "\\'") + '\')">[Lihat Selengkapnya]</a>';
+                            } else {
+                                return data;
+                            }
+                        }
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    },
+                ],
+            });
+        }
+
         function tablePemeliharaanKorektif() {
             $('#tablePemeliharaanKorektif').DataTable({
                 processing: true,
@@ -218,20 +268,23 @@
                         name: 'name'
                     },
                     {
-                        data: 'start_date',
-                        name: 'start_date'
+                        data: 'completed_at',
+                        name: 'completed_at',
+                        render: function(data, type, row) {
+                            return moment(data).format('ll');
+                        }
                     },
                     {
-                        data: 'next_date',
-                        name: 'next_date'
-                    },
-                    {
-                        data: 'technician_id',
-                        name: 'technician_id'
+                        data: 'pic',
+                        name: 'pic'
                     },
                     {
                         data: 'status',
                         name: 'status'
+                    },
+                    {
+                        data: 'notes',
+                        name: 'notes'
                     },
                     {
                         data: 'action',

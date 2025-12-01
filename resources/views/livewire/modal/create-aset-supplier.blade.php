@@ -18,46 +18,46 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                    
-                    <div class="form-group col-md-8">
-                        <label for="address">Alamat <span class="text-danger">*</span></label>
-                        <input wire:model="form.address" type="text" name="address" class="form-control @error('form.address') is-invalid @enderror" id="address" placeholder="Alamat">
-                        @error('form.address')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
+
+                        <div class="form-group col-md-8">
+                            <label for="address">Alamat <span class="text-danger">*</span></label>
+                            <input wire:model="form.address" type="text" name="address" class="form-control @error('form.address') is-invalid @enderror" id="address" placeholder="Alamat">
+                            @error('form.address')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="contactname">Nama Contact <span class="text-danger">*</span></label>
+                            <input wire:model="form.contactname" type="text" name="contactname" class="form-control @error('form.contactname') is-invalid @enderror" id="contactname" placeholder="Nama Contact">
+                            @error('form.contactname')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="phone">Phone <span class="text-danger">*</span></label>
+                            <input wire:model="form.phone" type="text" name="phone" class="form-control @error('form.phone') is-invalid @enderror" id="phone" placeholder="Phone">
+                            @error('form.phone')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="email">Email <span class="text-danger">*</span></label>
+                            <input wire:model="form.email" type="email" name="email" class="form-control @error('form.email') is-invalid @enderror" id="email" placeholder="Email">
+                            @error('form.email')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-8">
+                            <label for="notes">Notes <span class="text-danger">*</span></label>
+                            <input wire:model="form.notes" type="text" name="notes" class="form-control @error('form.notes') is-invalid @enderror" id="notes" placeholder="Notes">
+                            @error('form.notes')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
                     </div>
-                    <div class="form-group col-md-4">
-                        <label for="contactname">Nama Contact <span class="text-danger">*</span></label>
-                        <input wire:model="form.contactname" type="text" name="contactname" class="form-control @error('form.contactname') is-invalid @enderror" id="contactname" placeholder="Nama Contact">
-                        @error('form.contactname')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="phone">Phone <span class="text-danger">*</span></label>
-                        <input wire:model="form.phone" type="text" name="phone" class="form-control @error('form.phone') is-invalid @enderror" id="phone" placeholder="Phone">
-                        @error('form.phone')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="email">Email <span class="text-danger">*</span></label>
-                        <input wire:model="form.email" type="email" name="email" class="form-control @error('form.email') is-invalid @enderror" id="email" placeholder="Email">
-                        @error('form.email')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group col-md-8">
-                        <label for="notes">Notes <span class="text-danger">*</span></label>
-                        <input wire:model="form.notes" type="text" name="notes" class="form-control @error('form.notes') is-invalid @enderror" id="notes" placeholder="Notes">
-                        @error('form.notes')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
                     <span>tanda (<span class="text-danger">*</span>) wajib diisi</span>
                 </div>
-            
+
                 <div class="modal-footer">
                     <!-- Submit Button -->
                     <button wire:click="resetInput" type="button" class="btn btn-info">Reset</button>

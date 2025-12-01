@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('asset_id')->nullable();
             $table->string('name'); // Detail pemeliharaan (e.g., 'Ganti Oli Mesin', 'Pembersihan')
             $table->string('frequency')->nullable(); // 'per_3_bulan', 'per_4_bulan', dst '
-            $table->date('start_date')->nullable(); // Tanggal manual untuk Korektif
+            $table->date('old_date')->nullable(); // Tanggal manual untuk Korektif
             $table->date('next_date')->nullable();
             $table->string('status')->nullable();
             $table->text('customfields')->nullable();
@@ -32,12 +32,11 @@ return new class extends Migration
             $table->string('issuetype')->nullable(); // isian ini jika berdasarkan pada penugasan dan atau korektif
             $table->string('priority')->nullable(); // isian ini jika berdasarkan pada penugasan dan atau korektif
             $table->string('status')->nullable();
-            $table->date('start_date')->nullable();
-            $table->date('finish_date')->nullable();
+            $table->date('started_at')->nullable();
+            $table->date('completed_at')->nullable();
             $table->integer('timespent')->nullable();
             $table->date('period')->nullable(); // Rekam Periode pemeliharaan preventif yang sudah dilakukan
-            $table->string('picture')->nullable();
-            $table->string('document')->nullable();
+            $table->string('attachment')->nullable();
             $table->text('notes')->nullable(); // Catatan tambahan untuk pemeliharaan
             $table->text('customfields')->nullable();
             $table->timestamps();

@@ -70,7 +70,7 @@
                                             <td>
                                                 <div class="">
                                                     <div class="btn-group">
-                                                        <a href="{{ route('admin.setting_attr.lokasi.show', ['id' => $location->id]) }}" class="btn btn-flat btn-primary btn-sm"><i class="fa fa-eye"></i></a>
+                                                        <a href="{{ route('admin.setting_attr.lokasiold.show', ['id' => $location->id]) }}" class="btn btn-flat btn-primary btn-sm"><i class="fa fa-eye"></i></a>
                                                         {{-- <a href="" onclick="event.preventDefault()" wire:click="edit({{ $asset->id }})" class="btn btn-flat btn-success btn-sm"><i class="fa fa-edit"></i></a> --}}
                                                         <div class="btn-group">
                                                             {{-- <button type="button" class="btn btn-default btn-sm btn-flat dropdown-toggle" data-toggle="dropdown"> --}}
@@ -78,7 +78,7 @@
                                                                 <span class="caret"></span><i class="fas fa-ellipsis-vertical"></i>
                                                             </button>
                                                             <ul class="dropdown-menu pull-right">
-                                                                <li><a href="{{ route('admin.setting_attr.lokasi.edit', ['id' => $location->id]) . '/edit' }}"><i class="fa fa-trash-o fa-fw"></i>Edit</a></li>
+                                                                <li><a href="{{ route('admin.setting_attr.lokasiold.edit', ['id' => $location->id]) . '/edit' }}"><i class="fa fa-trash-o fa-fw"></i>Edit</a></li>
                                                                 <li><a href="" wire:click="$dispatch('openModalDelete', { id: {{ $location->id }} })" onclick="event.preventDefault()"><i class="fa fa-trash-o fa-fw"></i>Delete</a></li>
                                                             </ul>
                                                         </div>

@@ -16,7 +16,7 @@
                     {{-- Navigation Tabs --}}
                     <ul class="nav nav-tabs card-header-tabs">
                         <li class="nav-item">
-                            <a wire:click="switchSection('')" href="{{ route('admin.setting_attr.lokasi.show', ['id' => $id, 'section' => '']) }}" class="nav-link {{ $currentSection === '' ? 'active' : '' }}">
+                            <a wire:click="switchSection('')" href="{{ route('admin.setting_attr.lokasiold.show', ['id' => $id, 'section' => '']) }}" class="nav-link {{ $currentSection === '' ? 'active' : '' }}">
                                 Summary
                                 <div wire:loading wire:target="switchSection('')" class="spinner-border spinner-border-sm">
                                     <span class="sr-only">Loading...</span>

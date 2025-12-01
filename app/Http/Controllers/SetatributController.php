@@ -284,9 +284,77 @@ class SetatributController extends Controller
         return response()->json(['message' => 'Model ' . $model->name . ' berhasil dihapus.']);
     }
 
-    public function supplier()
+    public function supplier(): View
     {
-        return view('admin.set-atribut.setsupplier', ['title' => 'Setting Supplier']);
+        return view('admin.set-atribut.setsupplier');
+    }
+
+    public function getSupplier(): JsonResponse
+    {
+        $suppliers = \App\Models\SuppliersModel::get();
+        return DataTables::of($suppliers)
+        ->addIndexColumn()
+        ->addColumn('hitungSupplier', function ($suppliers) {
+            $hitungSupplier = \App\Models\SuppliersModel::count();
+            return $hitungSupplier;
+        })
+        ->addColumn('action', function ($suppliers) {
+            return
+            '
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" title="More..."></button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li><span class="mx-3" id="edit-supplier" data-id="' . $suppliers->id . '" data-name="' . e($suppliers->name) . '" style="cursor: pointer; color: #007bff;">Edit</span></li>
+                            <li><span class="mx-3" id="delete-supplier" data-id="' . $suppliers->id . '" data-name="' . e($suppliers->name) . '" style="cursor: pointer; color: #007bff;">Delete</span></li>
+                        </ul>
+                    </div>
+            '
+            ;
+        })
+        ->make();
+    }
+
+    public function storeSupplier(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'name' => 'required|unique:suppliers,name|string|max:255',
+            'address' => 'required|string|max:255',
+            'contactname' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
+            'notes' => 'nullable|string|max:255',
+        ]);
+        $supplier = \App\Models\SuppliersModel::Create($data);
+        return response()->json(['message' => 'Supplier berhasil ditambahkan.']);
+    }
+
+    public function editSupplier($id): JsonResponse
+    {
+        $supplier = \App\Models\SuppliersModel::findOrFail($id);
+        return response()->json($supplier);
+    }
+
+    public function updateSupplier(Request $request, $id): JsonResponse
+    {
+        $supplier = \App\Models\SuppliersModel::findOrFail($id);
+        $data = $request->validate([
+            'name' => 'required|unique:suppliers,name,' . $supplier->id . '|string|max:255',
+            'address' => 'required|string|max:255',
+            'contactname' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
+            'notes' => 'nullable|string|max:255',
+        ]);
+        $supplier->update($data);
+        return response()->json(['message' => 'Supplier berhasil diperbarui.']);
+    }
+
+    public function deleteSupplier($id): JsonResponse
+    {
+        $supplier = \App\Models\SuppliersModel::findOrFail($id);
+        $supplier->delete();
+
+        return response()->json(['message' => 'Supplier ' . $supplier->name . ' berhasil dihapus.']);
     }
 
     public function label(): View
@@ -359,6 +427,66 @@ class SetatributController extends Controller
 
     public function lokasi()
     {
-        return view('admin.setlokasi', ['title' => 'Setting Lokasi']);
+        return view('admin.set-atribut.setlokasi');
+    }
+
+    public function getLokasi(Request $request): JsonResponse
+    {
+        $lokasis = \App\Models\BuildingsModel::get();
+        return DataTables::of($lokasis)
+            ->addIndexColumn()
+            ->addColumn('ruangan', function ($lokasis) {
+                return $lokasis->locations->pluck('name')->implode(', ');
+            })
+            ->addColumn('action', function ($lokasis) {
+                return
+                    '
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" title="More..."></button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li><span class="mx-3" id="edit-lokasi" data-id="' . $lokasis->id . '" data-name="' . e($lokasis->name) . '" style="cursor: pointer; color: #007bff;">Edit</span></li>
+                            <li><span class="mx-3" id="delete-lokasi" data-id="' . $lokasis->id . '" data-name="' . e($lokasis->name) . '" style="cursor: pointer; color: #007bff;">Delete</span></li>
+                        </ul>
+                    </div>
+                    '
+                    ;
+            })
+            ->make();
+    }
+
+    public function storeLokasi(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'name' => 'required|unique:locations,name|string|max:255'
+        ]);
+        $lokasi = \App\Models\LocationsModel::Create($data);
+
+        return response()->json(['message' => 'Lokasi berhasil ditambahkan.']);
+    }
+
+    public function editLokasi($id): JsonResponse
+    {
+        $lokasi = \App\Models\LocationsModel::findOrFail($id);
+        return response()->json($lokasi);
+    }
+
+    public function updateLokasi(Request $request, $id): JsonResponse
+    {
+        $lokasi = \App\Models\LocationsModel::findOrFail($id);
+        $data = $request->validate([
+            'name' => 'required|unique:locations,name,' . $lokasi->id . '|string|max:255',
+            'color' => 'required|string|max:7'
+        ]);
+        $lokasi->update($data);
+
+        return response()->json(['message' => 'Lokasi berhasil diperbarui.']);
+    }
+
+    public function deleteLokasi($id): JsonResponse
+    {
+        $lokasi = \App\Models\LocationsModel::findOrFail($id);
+        $lokasi->delete();
+
+        return response()->json(['message' => 'Lokasi ' . $lokasi->name . ' berhasil dihapus.']);
     }
 }

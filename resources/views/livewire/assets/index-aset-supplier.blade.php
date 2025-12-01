@@ -86,7 +86,7 @@
                                             <td>
                                                 <div class="">
                                                     <div class="btn-group">
-                                                        <a href="{{ route('admin.setting_attr.supplier.show', ['id' => $supplier->id]) }}" class="btn btn-flat btn-primary btn-sm"><i class="fa fa-eye"></i></a>
+                                                        <a href="{{ route('admin.setting_attr.supplierold.show', ['id' => $supplier->id]) }}" class="btn btn-flat btn-primary btn-sm"><i class="fa fa-eye"></i></a>
                                                         {{-- <a href="" onclick="event.preventDefault()" wire:click="edit({{ $asset->id }})" class="btn btn-flat btn-success btn-sm"><i class="fa fa-edit"></i></a> --}}
                                                         <div class="btn-group">
                                                             {{-- <button type="button" class="btn btn-default btn-sm btn-flat dropdown-toggle" data-toggle="dropdown"> --}}

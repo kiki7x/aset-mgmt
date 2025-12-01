@@ -9,38 +9,18 @@
             </div>
             <form id="formAddTugasPreventif">
                 <div class="modal-body">
-                    <div class="form-row">
-                        <div class="col-8">
-                            <label for="picture">Bukti dukung 1 *</label>
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="picture" name="picture" accept="image/,.jpg,.jpeg,.png,.heic,.heif">
-                                <label class="custom-file-label" for="picture">Upload Gambar</label>
-                            </div>
-                            <span id="error-picture" class="text-danger small"></span>
+                    <div class="form-group">
+                        <label for="attachment">Bukti dukung *</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="attachment" name="attachment" accept="image/,.jpg,.jpeg,.png,.heic,.heif.pdf,.doc,.docx,.xls,.xlsx">
+                            <label class="custom-file-label" for="attachment">Upload bukti dukung</label>
                         </div>
-                        <div class="col-4 d-flex justify-content-center">
-                            <img id="previewImage" src="https://placehold.jp/70x70.png" alt="Preview Gambar" class="img img-thumbnail" height="50">
-                        </div>
-                    </div>
-                    <div class="form-row mt-5">
-                        <div class="col-8">
-                            <label for="document">Bukti dukung 2 *</label>
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="document" name="document" accept=".pdf,.doc,.docx,.xls,.xlsx">
-                                <label class="custom-file-label" for="document">Upload Dokumen</label>
-                            </div>
-                            <span id="error-file" class="text-danger small"></span>
-                        </div>
-                        <div class="col-4 d-flex justify-content-center">
-                            <img id="previewDocument" src="https://placehold.jp/70x70.png" alt="Preview Dokumen" class="img img-thumbnail" height="50">
-                        </div>
+                        <span id="error-attachment" class="text-danger small"></span>
                     </div>
                     <div class="form-group">
-                        <div>
-                            <label for="notes">Catatan *</label>
-                            <textarea class="form-control rows-3" id="notes" name="notes"></textarea>
-                            <span id="error-notes" class="text-danger small"></span>
-                        </div>
+                        <label for="notes">Catatan *</label>
+                        <textarea class="form-control" rows="5" id="notes" name="notes"></textarea>
+                        <span id="error-notes" class="text-danger small"></span>
                     </div>
                     <div class="form-group">
                         <div class="custom-control custom-checkbox">
@@ -74,9 +54,11 @@
                     $('#error-*').text('');
                 },
                 success: function(data) {
-                    $('#add-tugas-preventif').modal('show');
+                    // $('#add-tugas-preventif').modal('show');
+                    $('#add-tugas-preventif').modal('show').data('schedule-id', id); // <--- Simpan ID tugas di modal
                     $('#formAddTugasPreventif')[0].reset();
-                    $('#modalAddTugasPreventiflabel, .modal-title').html('Tindak lanjut Pemeliharaan Preventif untuk: <span class="badge badge-info">' + data.maintenance_schedule.name + '</span><span class="font-weight-bold"> ' + data.asset.name + '</span> periode: <span class="badge badge-info">' + moment(data.maintenance_schedule.next_date).format('ll') + '</span>');
+                    $('#modalAddTugasPreventiflabel, .modal-title').html('Tindak lanjut Pemeliharaan Preventif untuk: <span class="badge badge-info">' + data.maintenance_schedule.name + '</span><span class="font-weight-bold"> ' + data.asset.name +
+                        '</span> periode: <span class="badge badge-info">' + moment(data.maintenance_schedule.next_date).format('ll') + '</span>');
                     $('#error-tugasPreventifName').text('');
                 },
                 error: function(xhr) {
@@ -94,44 +76,17 @@
             })
         }
 
-        // Handle Preview gambar dan dokumen
-        function previewImage() {
-            const file = $('#picture').files[0];
-            const preview = $('#previewImage');
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-        function previewDocument() {
-            const file = $('#document').files[0];
-            const preview = $('#previewDocument');
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-
-        $(document).ready(function() {
-            $('#picture').on('change', function() {
-                previewImage();
-            });
-            $('#document').on('change', function() {
-                previewDocument();
-            });
-        });
-
         // Fungsi Simpan
         $('#formAddTugasPreventif').on('submit', function(e) {
             e.preventDefault();
             var formData = new FormData(this);
+            var scheduleId = $('#add-tugas-preventif').data('schedule-id'); // Ganti dengan ID jadwal yang sesuai
+            var assetId = "{{ $asset->id }}"; // Ganti dengan ID aset yang sesuai
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: "{{ route('admin.asetrt.pemeliharaan.preventifStore', ['id' => ':id']) }}".replace(':id', '{{ $asset->id }}'),
+                url: "{{ route('admin.asetrt.pemeliharaan.preventifStore', ['id' => ':id']) }}".replace(':id', scheduleId),
                 type: "POST",
                 data: formData,
                 contentType: false,
@@ -149,8 +104,7 @@
                 error: function(xhr) {
                     if (xhr.status === 422) {
                         var errors = xhr.responseJSON.errors;
-                        $('#error-picture').text(errors.picture ? errors.picture[0] : '');
-                        $('#error-file').text(errors.document ? errors.document[0] : '');
+                        $('#error-attachment').text(errors.attachment ? errors.attachment[0] : '');
                         $('#error-notes').text(errors.notes ? errors.notes[0] : '');
                     } else {
                         Swal.fire({
@@ -162,6 +116,5 @@
                 }
             });
         });
-
     </script>
 @endpush

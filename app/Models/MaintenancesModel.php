@@ -13,13 +13,52 @@ class MaintenancesModel extends Model
     protected $table = 'maintenances';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'maintenance_schedule_id', 
-        'technician_id',
+        'maintenance_schedule_id',
+        'asset_id',
+        'pic_id',
+        'ticketreply_id',
+        'name',
+        'issuetype',
+        'priority',
         'status',
-        'start_date',
-        'end_date',
+        'period',
+        'started_at',
+        'completed_at',
+        'timespent',
         'attachment',
         'notes',
-        'maintenance_date',
+        'customfields'
     ];
+
+    public function maintenance_schedule(): BelongsTo
+    {
+        return $this->belongsTo(Maintenances_scheduleModel::class, 'maintenance_schedule_id');
+    }
+
+    public function asset(): BelongsTo
+    {
+        return $this->belongsTo(AssetsModel::class, 'asset_id');
+    }
+
+    public function pic(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function ticketreply_id(): BelongsTo
+    {
+        return $this->belongsTo(TicketrepliesModel::class, 'ticketreply_id');
+    }
+
+      /**
+     * Accessor untuk mendapatkan URL publik dari file attachment.
+     */
+    public function getAttachmentUrlAttribute()
+    {
+        if ($this->attachment) {
+            // Menggunakan kolom 'attachment'
+            return \Illuminate\Support\Facades\Storage::url($this->attachment);
+        }
+        return null;
+    }
 }

@@ -52,7 +52,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::patch('/asetrt/{id}/pemeliharaan/scheduleUpdate', [App\Http\Controllers\PemeliharaanController::class, 'scheduleUpdate'])->name('admin.asetrt.pemeliharaan.scheduleUpdate');
         Route::delete('/asetrt/{id}/pemeliharaan/scheduleDelete', [App\Http\Controllers\PemeliharaanController::class, 'scheduleDelete'])->name('admin.asetrt.pemeliharaan.scheduleDelete');
         Route::get('/asetrt/{id}/pemeliharaan/addPreventif', [App\Http\Controllers\PemeliharaanController::class, 'addPreventif'])->name('admin.asetrt.pemeliharaan.addPreventif');
-        Route::get('/asetrt/{id}/pemeliharaan/preventifStore', [App\Http\Controllers\PemeliharaanController::class, 'preventifStore'])->name('admin.asetrt.pemeliharaan.preventifStore');
+        Route::post('/asetrt/{id}/pemeliharaan/preventifStore', [App\Http\Controllers\PemeliharaanController::class, 'preventifStore'])->name('admin.asetrt.pemeliharaan.preventifStore');
+        Route::get('/asetrt/{id}/pemeliharaan/preventifdataTable', [App\Http\Controllers\PemeliharaanController::class, 'preventifdataTable'])->name('admin.asetrt.pemeliharaan.preventifdataTable');
         Route::get('/asetrt/{id}/pemeliharaan/korektif', [App\Http\Controllers\PemeliharaanController::class, 'korektif'])->name('admin.asetrt.pemeliharaan.korektif');
         Route::get('/asetrt/{id}/pemeliharaan/korektifdataTable', [App\Http\Controllers\PemeliharaanController::class, 'korektifdataTable'])->name('admin.asetrt.pemeliharaan.korektifdataTable');
         Route::get('/asetrt/{id}/pemeliharaan/korektifStore', [App\Http\Controllers\PemeliharaanController::class, 'korektifdataTable'])->name('admin.asetrt.pemeliharaan.korektiStpre');
@@ -107,9 +108,12 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::patch('/setting_attr/model/update/{id}', [App\Http\Controllers\SetatributController::class, 'updateModel'])->name('admin.setting_attr.model.update');
         Route::delete('/setting_attr/model/delete/{id}', [App\Http\Controllers\SetatributController::class, 'deleteModel'])->name('admin.setting_attr.model.delete');
         // Route Setting Supplier
-        Route::get('/setting_attr/supplier', App\Livewire\Assets\IndexAsetSupplier::class)->name('admin.setting_attr.supplier');
-        Route::get('/setting_attr/supplier/show/{id}/{section?}', App\Livewire\Assets\ShowSupplier::class)->name('admin.setting_attr.supplier.show');
-        Route::get('/setting_attr/supplier/edit/{id}/{section?}', App\Livewire\Assets\EditSupplier::class)->name('admin.setting_attr.supplier.edit');
+        Route::get('/setting_attr/supplier', [App\Http\Controllers\SetatributController::class, 'supplier'])->name('admin.setting_attr.supplier');
+        Route::get('/setting_attr/supplier/get_supplier', [App\Http\Controllers\SetatributController::class, 'getSupplier'])->name('admin.setting_attr.supplier.get_supplier');
+        Route::post('/setting_attr/supplier/store', [App\Http\Controllers\SetatributController::class, 'storeSupplier'])->name('admin.setting_attr.supplier.store');
+        Route::get('/setting_attr/supplier/edit/{id}', [App\Http\Controllers\SetatributController::class, 'editSupplier'])->name('admin.setting_attr.supplier.edit');
+        Route::patch('/setting_attr/supplier/update/{id}', [App\Http\Controllers\SetatributController::class, 'updateSupplier'])->name('admin.setting_attr.supplier.update');
+        Route::delete('/setting_attr/supplier/delete/{id}', [App\Http\Controllers\SetatributController::class, 'deleteSupplier'])->name('admin.setting_attr.supplier.delete');
         // Route Setting Label
         Route::get('/setting_attr/label/', [App\Http\Controllers\SetatributController::class, 'label'])->name('admin.setting_attr.label');
         Route::get('/setting_attr/label/get_label', [App\Http\Controllers\SetatributController::class, 'getLabel'])->name('admin.setting_attr.label.get_label');
@@ -118,9 +122,15 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::patch('/setting_attr/label/update/{id}', [App\Http\Controllers\SetatributController::class, 'updateLabel'])->name('admin.setting_attr.label.update');
         Route::delete('/setting_attr/label/delete/{id}', [App\Http\Controllers\SetatributController::class, 'deleteLabel'])->name('admin.setting_attr.label.delete');
         // Route Setting Lokasi
-        Route::get('/setting_attr/lokasi', App\Livewire\Assets\IndexAsetLokasi::class)->name('admin.setting_attr.lokasi');
-        Route::get('/setting_attr/lokasi/show/{id}/{section?}', App\Livewire\Assets\ShowLokasi::class)->name('admin.setting_attr.lokasi.show');
-        Route::get('/setting_attr/lokasi/edit/{id}/{section?}', App\Livewire\Assets\EditLokasi::class)->name('admin.setting_attr.lokasi.edit');
+        Route::get('/setting_attr/lokasiold', App\Livewire\Assets\IndexAsetLokasi::class)->name('admin.setting_attr.lokasiold');
+        Route::get('/setting_attr/lokasiold/show/{id}/{section?}', App\Livewire\Assets\ShowLokasi::class)->name('admin.setting_attr.lokasiold.show');
+        Route::get('/setting_attr/lokasiold/edit/{id}/{section?}', App\Livewire\Assets\EditLokasi::class)->name('admin.setting_attr.lokasiold.edit');
+        Route::get('/setting_attr/lokasi', [App\Http\Controllers\SetatributController::class, 'lokasi'])->name('admin.setting_attr.lokasi');
+        Route::get('/setting_attr/lokasi/get_lokasi', [App\Http\Controllers\SetatributController::class, 'getLokasi'])->name('admin.setting_attr.lokasi.get_lokasi');
+        Route::post('/setting_attr/lokasi/store', [App\Http\Controllers\SetatributController::class, 'storeLokasi'])->name('admin.setting_attr.lokasi.store');
+        Route::get('/setting_attr/lokasi/edit/{id}', [App\Http\Controllers\SetatributController::class, 'editLokasi'])->name('admin.setting_attr.lokasi.edit');
+        Route::patch('/setting_attr/lokasi/update/{id}', [App\Http\Controllers\SetatributController::class, 'updateLokasi'])->name('admin.setting_attr.lokasi.update');
+        Route::delete('/setting_attr/lokasi/delete/{id}', [App\Http\Controllers\SetatributController::class, 'deleteLokasi'])->name('admin.setting_attr.lokasi.delete');
     });
 
     // Route Laporan
