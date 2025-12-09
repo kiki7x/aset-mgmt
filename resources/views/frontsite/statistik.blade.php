@@ -1,4 +1,4 @@
-@extends('layouts.front', ['title' => 'Home - SAPA PPL'])
+@extends('layouts.front', ['title' => 'Statistik - SAPA PPL'])
 
 @push('scripts-head')
 @endpush

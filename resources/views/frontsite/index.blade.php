@@ -101,9 +101,7 @@
                         <div class="swiper-slide"><img src="{{ asset('assets/gambar/logo_daihatsu.png') }}" class="img-fluid" alt=""></div>
                     </div>
                 </div>
-
             </div>
-
         </section><!-- /Clients Section -->
     </main>
 @endsection
