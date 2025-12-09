@@ -15,6 +15,11 @@ Route::post('logout', [App\Http\Controllers\Auth\AuthController::class, 'logout'
 // FrontSite landing page
 Route::get('testing', [App\Http\Controllers\FrontController::class, 'testing'])->name('testing');
 Route::get('/', [App\Http\Controllers\FrontController::class, 'index'])->name('/');
+Route::get('/profil', [App\Http\Controllers\FrontController::class, 'profil'])->name('profil');
+Route::get('/layanan', [App\Http\Controllers\FrontController::class, 'layanan'])->name('layanan');
+Route::get('/statistik', [App\Http\Controllers\FrontController::class, 'statistik'])->name('statistik');
+Route::get('/team', [App\Http\Controllers\FrontController::class, 'team'])->name('team');
+Route::get('/faq', [App\Http\Controllers\FrontController::class, 'faq'])->name('faq');
 Route::get('/lacak', [App\Http\Controllers\FrontController::class, 'lacak'])->name('lacak');
 Route::get('/lacak/show/{id}', [App\Http\Controllers\FrontController::class, 'lacak_show'])->name('lacak.show');
 

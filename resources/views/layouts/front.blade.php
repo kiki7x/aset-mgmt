@@ -68,7 +68,7 @@
     <!-- ChartJS -->
     <script src="{{ asset('assets/plugins/chart.js/Chart.min.js') }}"></script>
 
-    
+
     {{-- script tambahan --}}
     @stack('scripts')
     {{-- ./script tambahan --}}
