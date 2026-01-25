@@ -35,7 +35,7 @@
                                     <th>No</th>
                                     <th>Nama Merk</th>
                                     <th>Timestamp</th>
-                                    <th>Aksi</th>
+                                    <th>Opsi</th>
                                 </tr>
                             </thead>
                             <tbody>

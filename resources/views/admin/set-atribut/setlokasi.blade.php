@@ -36,7 +36,7 @@
                                     <th>Nama Gedung</th>
                                     <th>Nama Ruangan</th>
                                     <th>Timestamp</th>
-                                    <th>Aksi</th>
+                                    <th>Opsi</th>
                                 </tr>
                             </thead>
                             <tbody>
