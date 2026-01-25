@@ -11,41 +11,29 @@ class UserController extends Controller
 {
     public function index(Request $request): View
     {
-        return view('admin.usermanager', [
-            'filterUsername' => $request->input('username'),
-            'filterFullname' => $request->input('fullname'),
-            'filterEmail' => $request->input('email'),
-        ]);
+        $totalUsers = \App\Models\User::all()->count();
+        return view('admin.usermanager', compact('totalUsers'));
     }
 
-    public function fetchUsers(Request $request): JsonResponse
+    public function getUsers(Request $request): JsonResponse
     {
-        $query = \App\Models\User::query();
-
-        if ($request->filled('username')) {
-            $query->where('username', 'like', '%' . $request->input('username') . '%');
-        }
-
-        if ($request->filled('fullname')) {
-            $query->where('fullname', 'like', '%' . $request->input('fullname') . '%');
-        }
-
-        if ($request->filled('email')) {
-            $query->where('email', 'like', '%' . $request->input('email') . '%');
-        }
-
-        $query->orderBy('id', 'asc');
-        $users = $query->paginate(3)->withQueryString();
-
-        return response()->json([
-            'data' => $users->items(),
-            'links' => $users->links('pagination::bootstrap-5')->toHtml(),
-            'total' => $users->total(),
-            'current_page' => $users->currentPage(),
-            'per_page' => $users->perPage(),
-            'from' => $users->firstItem(),
-            'to' => $users->lastItem(),
-        ]);
+        $users = \App\Models\User::get();
+        return DataTables::of($users)
+            ->addIndexColumn()
+            ->addColumn('action', function ($users) {
+                return
+                    '
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" title="More..."></button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li><span class="mx-3" id="edit-klasifikasi" data-id="' . $users->id . '" data-name="' . e($users->name) . '" style="cursor: pointer; color: #007bff;">Edit</span></li>
+                            <li><span class="mx-3" id="delete-klasifikasi"  data-id="' . $users->id . '" data-name="' . e($users->name) . '" style="cursor: pointer; color: #007bff;">Delete</span></li>
+                        </ul>
+                    </div>
+                    '
+                    ;
+            })
+            ->make();
     }
 
     public function fetchUser($id): JsonResponse
@@ -53,5 +41,5 @@ class UserController extends Controller
         $user = \App\Models\User::findOrFail($id);
         return response()->json($user);
     }
-    
+
 }

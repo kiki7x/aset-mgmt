@@ -44,7 +44,7 @@
                             </div>
 
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover table-sm" id="tableAsettik">
+                                <table id="tableAsettik" class="table table-bordered table-striped table-hover table-sm">
                                     <thead>
                                         <tr>
                                             <th>Tag</th>
@@ -138,7 +138,6 @@
                             name: 'user'
                         },
                         {
-                            // <span class="text-muted">Dibuat: ${moment(data.created_at).format('DD-MM-YYYY HH:mm')} <br>
                             data: null,
                             name: 'timestamp',
                             render: function(data) {

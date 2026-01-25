@@ -26,7 +26,7 @@
      {{-- SubmitScript --}}
      <script>
          $(document).ready(function() {
-             let id;
+             const id;
 
              $('#deleteModal').on('show.bs.modal', function(event) {
                  const button = $(event.relatedTarget);

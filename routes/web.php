@@ -145,10 +145,14 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
     // Route User Manager
     Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering'])->group(function () {
-        Route::get('usermanager', [App\Http\Controllers\UserController::class, 'index'])->name('admin.usermanager');
-        Route::get('usermanager/profil/{id}', [App\Http\Controllers\UserController::class, 'profil'])->name('admin.usermanager.profil');
-        Route::get('usermanager/create', [App\Http\Controllers\UserController::class, 'create'])->name('admin.usermanager.create');
-        Route::get('usermanager/edit/{id}', [App\Http\Controllers\UserController::class, 'edit'])->name('admin.usermanager.edit');
+        Route::get('settings/usermanager', [App\Http\Controllers\UserController::class, 'index'])->name('admin.settings.usermanager');
+        Route::get('settings/usermanager/get_users', [App\Http\Controllers\UserController::class, 'getUsers'])->name('admin.settings.usermanager.get_users');
+        Route::post('settings/usermanager/store', [App\Http\Controllers\UserController::class, 'store'])->name('admin.settings.usermanager.store');
+        Route::get('settings/usermanager/edit/{id}', [App\Http\Controllers\UserController::class, 'edit'])->name('admin.settings.usermanager.edit');
+        Route::post('settings/usermanager/update/{id}', [App\Http\Controllers\UserController::class, 'update'])->name('admin.settings.usermanager.update');
+        Route::delete('settings/usermanager/delete/{id}', [App\Http\Controllers\UserController::class, 'delete'])->name('admin.settings.usermanager.delete');
+        Route::get('settings/usermanager/profil/{id}', [App\Http\Controllers\UserController::class, 'profil'])->name('admin.settings.usermanager.profil');
+        Route::get('settings/usermanager/edit/{id}', [App\Http\Controllers\UserController::class, 'edit'])->name('admin.settings.usermanager.edit');
     });
 
     // Route Notifikasi

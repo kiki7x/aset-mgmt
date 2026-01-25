@@ -179,9 +179,9 @@
                 order: [
                     [0, 'asc']
                 ],
-                responsive: true,
             });
         }
+
         $(document).ready(function() {
             initTableKategori();
 

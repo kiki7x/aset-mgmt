@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('title', 64)->nullable(); // title column (VARCHAR 64)
             $table->string('mobile', 64)->nullable(); // mobile column (VARCHAR 64)
             $table->boolean('ticketsnotification')->default(0); // ticketsnotification column (integer as boolean, default 0)
-            $table->binary('avatar')->nullable(); // avatar column (MEDIUMBLOB)
+            $table->string('avatar')->nullable(); // avatar column gambar
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

@@ -215,7 +215,7 @@
                       </a>
                   </li>
                   <li class="nav-header">SETTING</li>
-                  <li class="nav-item menu">
+                  <li class="nav-item menu-open">
                       <a href="#" class="nav-link {{ request()->is('admin/setting*') ? 'active' : '' }}">
                           <i class="nav-icon fa-solid fa-gear"></i>
                           <p>
@@ -225,7 +225,7 @@
                       </a>
                       <ul class="nav nav-treeview">
                           <li class="nav-item">
-                              <a href="{{ route('admin.usermanager') }}"
+                              <a href="{{ route('admin.settings.usermanager') }}"
                                   class="nav-link {{ request()->is('admin/setting/usermanager') ? 'active' : '' }}">
                                   <i class="nav-icon fa-solid fa-users-gear"></i>
                                   <p>User Management</p>

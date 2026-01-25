@@ -236,7 +236,7 @@ class AssetController extends Controller
         }
 
         return response()->json([
-            'message' => 'Data saved successfully',
+            'message' => 'Data berhasil disimpan.',
         ]);
     }
 
