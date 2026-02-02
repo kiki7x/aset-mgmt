@@ -70,6 +70,7 @@ class PemeliharaanController extends Controller
         foreach ($users as $user) {
             $user->notify(new CreateJadwalPemeliharaanAsetRT($maintenance_schedule));
         }
+
         return response()->json([
             'message' => 'Data saved successfully',
         ]);
