@@ -29,6 +29,11 @@ class FrontController extends Controller
         return view('frontsite.layanan', compact('assets'));
     }
 
+    public function servicedesk()
+    {
+        return view('frontsite.servicedesk');
+    }
+
     public function statistik()
     {
         $assets = \App\Models\AssetsModel::get();

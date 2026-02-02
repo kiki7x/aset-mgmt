@@ -360,7 +360,7 @@ class SetatributController extends Controller
     public function label(): View
     {
         $labels = \App\Models\LabelsModel::get();
-        return view('admin.set-atribut.label', compact('labels'));
+        return view('admin.set-atribut.setlabel', compact('labels'));
     }
 
     public function getLabel(Request $request): JsonResponse

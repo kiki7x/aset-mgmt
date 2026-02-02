@@ -166,10 +166,10 @@
                       </a>
                       <ul class="nav nav-treeview">
                           <li class="nav-item">
-                              <a href="{{ route('admin.issues') }}"
-                                  class="nav-link {{ request()->is('admin/issues*') ? 'active' : '' }}">
+                              <a href="{{ route('admin.pemeliharaan') }}"
+                                  class="nav-link {{ request()->is('admin/pemeliharaan*') ? 'active' : '' }}">
                                   <i class="nav-icon fa-solid fa-list-check"></i>
-                                  <p>Penugasan</p>
+                                  <p>Pemeliharaan Korektif</p>
                               </a>
                           </li>
                           <li class="nav-item">
@@ -180,15 +180,15 @@
                               </a>
                           </li>
                           <li class="nav-item" data-toggle="tooltip" title="coming soon..." data-placement="top">
-                              <a href="#"
-                                  class="nav-link {{ request()->is('admin/pemeliharaan/tiket') ? 'active' : '' }}">
+                              <a href="{{ route('admin.tiket') }}"
+                                  class="nav-link {{ request()->is('admin/tiket') ? 'active' : '' }}">
                                   <i class="nav-icon fa-solid fa-ticket"></i>
                                   <p>Tiket</p>
                               </a>
                           </li>
                           <li class="nav-item" data-toggle="tooltip" title="coming soon..." data-placement="top">
-                              <a href="#"
-                                  class="nav-link {{ request()->is('admin/pemeliharaan/proyek') ? 'active' : '' }}">
+                              <a href="{{ route('admin.proyek') }}"
+                                  class="nav-link {{ request()->is('admin/proyek') ? 'active' : '' }}">
                                   <i class="nav-icon fa-solid fa-thumbtack"></i>
                                   <p>Proyek</p>
                               </a>
@@ -196,13 +196,13 @@
                       </ul>
                   </li>
                   <li class="nav-item" data-toggle="tooltip" title="coming soon..." data-placement="top">
-                      <a href="#" class="nav-link {{ request()->is('admin/knowledge_base') ? 'active' : '' }}">
+                      <a href="{{ route('admin.knowledge-base') }}" class="nav-link {{ request()->is('admin/knowledge_base') ? 'active' : '' }}">
                           <i class="nav-icon fa-solid fa-book"></i>
                           <p>Knowledge Base</p>
                       </a>
                   </li>
                   <li class="nav-item" data-toggle="tooltip" title="coming soon..." data-placement="top">
-                      <a href="#" class="nav-link {{ request()->is('admin/monitoring') ? 'active' : '' }}">
+                      <a href="{{ route('admin.monitoring') }}" class="nav-link {{ request()->is('admin/monitoring') ? 'active' : '' }}">
                           <i class="nav-icon fa-solid fa-heart-pulse"></i>
                           <p>Monitoring</p>
                       </a>

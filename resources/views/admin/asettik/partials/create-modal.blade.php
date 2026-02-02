@@ -1,5 +1,5 @@
-<!-- Modal -->
-<div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
+<!-- Modal Create -->
+<div class="modal fade" data-backdrop="static" id="createModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">

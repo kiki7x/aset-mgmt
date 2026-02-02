@@ -29,16 +29,20 @@ return new class extends Migration
             $table->foreignId('pic_id')->nullable(); // Relasi ke Petugas
             $table->foreignId('ticketreply_id')->nullable(); // Relasi ke User yang membuat tiket
             $table->string('name')->nullable();
+            $table->string('description')->nullable();
             $table->string('issuetype')->nullable(); // isian ini jika berdasarkan pada penugasan dan atau korektif
             $table->string('priority')->nullable(); // isian ini jika berdasarkan pada penugasan dan atau korektif
             $table->string('status')->nullable();
             $table->date('started_at')->nullable();
             $table->date('completed_at')->nullable();
+            $table->date('duedate')->nullable();
             $table->integer('timespent')->nullable();
             $table->date('period')->nullable(); // Rekam Periode pemeliharaan preventif yang sudah dilakukan
             $table->string('attachment')->nullable();
             $table->text('notes')->nullable(); // Catatan tambahan untuk pemeliharaan
+            $table->decimal('cost', 12, 2)->nullable(); // Biaya dalam Rupiah
             $table->text('customfields')->nullable();
+            $table->foreignId('created_by')->nullable(); // Relasi ke User yang membuat data
             $table->timestamps();
         });
     }

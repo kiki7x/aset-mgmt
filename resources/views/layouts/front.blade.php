@@ -52,7 +52,7 @@
 
     <!-- Vendor JS Files -->
     <script src="{{ asset('arsha/assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('arsha/assets/vendor/aos/aos.js') }}"></script>
+    {{-- <script src="{{ asset('arsha/assets/vendor/aos/aos.js') }}"></script> --}}
     <script src="{{ asset('arsha/assets/vendor/glightbox/js/glightbox.min.js') }}"></script>
     <script src="{{ asset('arsha/assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
     <script src="{{ asset('arsha/assets/vendor/waypoints/noframework.waypoints.js') }}"></script>
@@ -70,7 +70,7 @@
 
 
     {{-- script tambahan --}}
-    @stack('scripts')
+    @stack('script-foot')
     {{-- ./script tambahan --}}
 </body>
 

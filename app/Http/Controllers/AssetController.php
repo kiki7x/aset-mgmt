@@ -312,7 +312,6 @@ class AssetController extends Controller
             $notificationClass = DeleteAsetRT::class;
         }
 
-
         $asset = AssetsModel::findOrFail($id);
 
         // kirim notifikasi

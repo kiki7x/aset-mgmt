@@ -26,7 +26,7 @@
      {{-- SubmitScript --}}
      <script>
          $(document).ready(function() {
-             const id;
+             let id;
 
              $('#deleteModal').on('show.bs.modal', function(event) {
                  const button = $(event.relatedTarget);
@@ -43,7 +43,7 @@
                          .replace('__CLASS__', 'rt'),
                      method: "DELETE",
                      data: form.serialize(),
-                     success: function(res) {
+                     success: function(response) {
                          $('#deleteModal').modal('hide');
 
                          Swal.fire({

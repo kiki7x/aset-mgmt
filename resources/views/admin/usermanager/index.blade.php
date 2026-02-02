@@ -290,7 +290,7 @@
                         }
                     ],
                     order: [
-                        [0, 'asc']
+                        [0, 'desc']
                     ]
                 });
             }
@@ -353,7 +353,7 @@
                 });
             });
 
-            // Handle Edit Klasifikasi
+            // Handle Edit
             $('#tableUsers').on('click', '#edit-user', function() {
                 const id = $(this).data('id');
                 const username = $(this).data('name');
@@ -398,7 +398,8 @@
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#3085d6',
                     confirmButtonText: 'Hapus',
-                    cancelButtonText: 'Batal'
+                    cancelButtonText: 'Batal',
+                    background: 'rgba(255,255,255,0.9)',
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({

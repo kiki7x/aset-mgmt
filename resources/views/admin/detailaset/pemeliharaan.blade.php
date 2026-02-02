@@ -13,9 +13,6 @@
         <div class="row align-items-center">
             <p class="col-12 h4 d-flex justify-content-center"><u>{{ $asset->tag }} - {{ $asset->name }}</u></p>
             <p class="col-12 h4">Jadwal Pemeliharaan <button class="btn btn-outline-primary" onclick="showModalAddJadwalPemeliharaan()" data-toggle="tooltip" data-placement="top" title="Tambah Jadwal"><i class="fa-regular fa-plus"></i></button></p>
-            {{-- <div class="col d-flex justify-content-end">
-                <button type="button" class="btn btn-primary" data-toggle="modal" onclick="showModalAddJadwalPemeliharaan()"><i class="fa-regular fa-clock"></i> + Jadwal</button>
-            </div> --}}
         </div>
 
         <div class="table-responsive">
@@ -23,12 +20,12 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Nama Jadwal/Tugas</th>
+                        <th>Nama Jadwal</th>
                         <th>Frekuensi</th>
-                        <th>Periode Sebelumnya</th>
+                        <th>Periode Berjalan</th>
                         <th>Periode Berikutnya</th>
                         <th>Status</th>
-                        <th>Aksi</th>
+                        <th>Opsi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -40,7 +37,7 @@
         <hr class="my-4" />
 
         <div class="row align-items-center mt-3">
-            <p class="col-8 h4">Daftar Pemeliharaan Preventif</p>
+            <p class="col-8 h4">Pemeliharaan Preventif</p>
         </div>
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover table-sm" id="tablePemeliharaanPreventif">
@@ -49,10 +46,13 @@
                         <th>#</th>
                         <th>Nama</th>
                         <th>Waktu Pemeliharaan</th>
+                        <th>Periode</th>
                         <th>PIC</th>
-                        <th>Status</th>
+                        <th>Biaya</th>
                         <th>Catatan</th>
-                        <th>Aksi</th>
+                        <th>Bukti Dukung</th>
+                        <th>Status</th>
+                        <th>Opsi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -62,10 +62,7 @@
         </div>
 
         <div class="row align-items-center mt-3">
-            <p class="col-12 h4">Daftar Pemeliharaan Korektif <button class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="Tambah Pemeliharaan Korektif" onclick="showModalPemeliharaanKorektif()"><i class="fa-solid fa-plus"></i></button></p>
-            {{-- <div class="col d-flex justify-content-end">
-                <button type="button" class="btn btn-primary" data-toggle="modal" onclick="showModalPemeliharaanKorektif()"><i class="fa-solid fa-screwdriver-wrench"></i> + Pemeliharaan</button>
-            </div> --}}
+            <p class="col-12 h4">Pemeliharaan Korektif <button class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="Tambah Pemeliharaan Korektif" onclick="showModalAddKorektif()"><i class="fa-solid fa-plus"></i></button></p>
         </div>
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover table-sm" id="tablePemeliharaanKorektif">
@@ -77,7 +74,7 @@
                         <th>PIC</th>
                         <th>Status</th>
                         <th>Catatan</th>
-                        <th>Aksi</th>
+                        <th>Opsi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -89,6 +86,8 @@
         @include('admin.modals.add-jadwal-preventif')
         @include('admin.modals.edit-jadwal-preventif')
         @include('admin.modals.add-preventif')
+        @include('admin.modals.edit-preventif')
+        @include('admin.modals.add_korektif')
 
 
     </div>
@@ -171,9 +170,10 @@
                 text: "Apakah Anda yakin ingin menghapus jadwal pemeliharaan dengan ID " + id + "?",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, Hapus!'
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal',
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
@@ -208,7 +208,7 @@
                 processing: true,
                 serverSide: true,
                 responsive: true,
-                ajax: "{{ route('admin.asetrt.pemeliharaan.preventifdataTable', $id) }}",
+                ajax: "{{ route('admin.asetrt.pemeliharaan.preventifDataTable', $id) }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex'
@@ -225,12 +225,22 @@
                         }
                     },
                     {
+                        data: 'period',
+                        name: 'period',
+                        render: function(data, type, row) {
+                            return moment(data).format('ll');
+                        }
+                    },
+                    {
                         data: 'pic',
                         name: 'pic'
                     },
                     {
-                        data: 'status',
-                        name: 'status'
+                        data: 'cost',
+                        name: 'cost',
+                        render: function(data, type, row) {
+                            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(data);
+                        }
                     },
                     {
                         data: 'notes',
@@ -244,6 +254,21 @@
                         }
                     },
                     {
+                        data: 'attachment',
+                        name: 'attachment',
+                        render: function(data, type, row) {
+                            if (data) {
+                                return `<a href="{{ asset('storage') }}/${data}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-file-arrow-down"></i> Unduh</a>`;
+                            } else {
+                                return 'Tidak ada bukti dukung';
+                            }
+                        }
+                    },
+                    {
+                        data: 'status',
+                        name: 'status'
+                    },
+                    {
                         data: 'action',
                         name: 'action',
                         orderable: false,
@@ -253,12 +278,51 @@
             });
         }
 
+        function deletePreventif(id) {
+            Swal.fire({
+                title: 'Hapus Pemeliharaan Preventif',
+                text: "Apakah Anda yakin ingin menghapus pemeliharaan preventif dengan ID " + id + "?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('admin.asetrt.pemeliharaan.preventifDelete', ['id' => ':id']) }}".replace(':id', id),
+                        dataType: "json",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: "DELETE",
+                        success: function(response) {
+                            Swal.fire(
+                                'Terhapus!',
+                                'Jadwal pemeliharaan telah dihapus.',
+                                'success'
+                            );
+                            $('#tableJadwalPemeliharaan').DataTable().ajax.reload();
+                        },
+                        error: function(xhr) {
+                            Swal.fire(
+                                'Gagal!',
+                                'Jadwal pemeliharaan gagal dihapus.',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        }
+
         function tablePemeliharaanKorektif() {
             $('#tablePemeliharaanKorektif').DataTable({
                 processing: true,
                 serverSide: true,
                 responsive: true,
-                ajax: "{{ route('admin.asetrt.pemeliharaan.korektifdataTable', $id) }}",
+                ajax: "{{ route('admin.asetrt.pemeliharaan.korektifDataTable', $id) }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex'

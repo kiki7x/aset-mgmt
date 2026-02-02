@@ -34,10 +34,28 @@
             </div><!-- End Section Title -->
 
             <div class="container">
+                <div class="row gy-4 justify-content-center">
 
+                    <div class="col-lg-6 d-flex justify-content-center align-items-center" data-aos="fade-up">
+                        <div class="team-member d-flex align-items-start">
+                            <div class="pic"><img src="{{ asset('assets/gambar/herry.jpg') }}" class="img-fluid" alt=""></div>
+                            <div class="member-info">
+                                <h4>Herry Sastrawan, S.IP., M.Si.</h4>
+                                <span>Kasubbag Administrasi Umum</span>
+                                <p>Explicabo voluptatem mollitia et repellat qui dolorum quasi</p>
+                                <div class="social">
+                                    <a href=""><i class="bi bi-twitter-x"></i></a>
+                                    <a href=""><i class="bi bi-facebook"></i></a>
+                                    <a href=""><i class="bi bi-instagram"></i></a>
+                                    <a href=""> <i class="bi bi-linkedin"></i> </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- End Team Member -->
+                </div>
+                <hr>
                 <div class="row gy-4">
-
-                    <div class="col-lg-6" data-aos="fade-up">
+                    <div class="col-lg-4" data-aos="fade-up">
                         <div class="team-member d-flex align-items-start">
                             <div class="pic"><img src="{{ asset('assets/gambar/wawan.jpg') }}" class="img-fluid" alt=""></div>
                             <div class="member-info">
@@ -54,7 +72,7 @@
                         </div>
                     </div><!-- End Team Member -->
 
-                    <div class="col-lg-6" data-aos="fade-up">
+                    <div class="col-lg-4" data-aos="fade-up">
                         <div class="team-member d-flex align-items-start">
                             <div class="pic"><img src="{{ asset('assets/gambar/kadek.jpg') }}" class="img-fluid" alt=""></div>
                             <div class="member-info">
@@ -71,7 +89,7 @@
                         </div>
                     </div><!-- End Team Member -->
 
-                    <div class="col-lg-6" data-aos="fade-up">
+                    <div class="col-lg-4" data-aos="fade-up">
                         <div class="team-member d-flex align-items-start">
                             <div class="pic"><img src="{{ asset('assets/gambar/kiki.jpg') }}" class="img-fluid" alt=""></div>
                             <div class="member-info">
@@ -88,12 +106,44 @@
                         </div>
                     </div><!-- End Team Member -->
 
-                    <div class="col-lg-6" data-aos="fade-up">
+                    <div class="col-lg-4" data-aos="fade-up">
                         <div class="team-member d-flex align-items-start">
-                            <div class="pic"><img src="{{ asset('assets/gambar/didik.jpg') }}" class="img-fluid" alt=""></div>
+                            <div class="pic"><img src="{{ asset('assets/gambar/placeholder.jpg') }}" class="img-fluid" alt=""></div>
                             <div class="member-info">
-                                <h4>Didi Irawan, A.Md.</h4>
-                                <span>Tim BMN</span>
+                                <h4>Ramli Morales, S.T.</h4>
+                                <span>Staf Driver</span>
+                                <p>Dolorum tempora officiis odit laborum officiis et et accusamus</p>
+                                <div class="social">
+                                    <a href=""><i class="bi bi-twitter-x"></i></a>
+                                    <a href=""><i class="bi bi-facebook"></i></a>
+                                    <a href=""><i class="bi bi-instagram"></i></a>
+                                    <a href=""> <i class="bi bi-linkedin"></i> </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- End Team Member -->
+                    <div class="col-lg-4" data-aos="fade-up">
+                        <div class="team-member d-flex align-items-start">
+                            <div class="pic"><img src="{{ asset('assets/gambar/placeholder.jpg') }}" class="img-fluid" alt=""></div>
+                            <div class="member-info">
+                                <h4>Zaenal Abidin, S.T.</h4>
+                                <span>Staf MEP</span>
+                                <p>Dolorum tempora officiis odit laborum officiis et et accusamus</p>
+                                <div class="social">
+                                    <a href=""><i class="bi bi-twitter-x"></i></a>
+                                    <a href=""><i class="bi bi-facebook"></i></a>
+                                    <a href=""><i class="bi bi-instagram"></i></a>
+                                    <a href=""> <i class="bi bi-linkedin"></i> </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- End Team Member -->
+                    <div class="col-lg-4" data-aos="fade-up">
+                        <div class="team-member d-flex align-items-start">
+                            <div class="pic"><img src="{{ asset('assets/gambar/placeholder.jpg') }}" class="img-fluid" alt=""></div>
+                            <div class="member-info">
+                                <h4>Rizhki P. Dwi Putra, S.Kom.</h4>
+                                <span>Staf TIK</span>
                                 <p>Dolorum tempora officiis odit laborum officiis et et accusamus</p>
                                 <div class="social">
                                     <a href=""><i class="bi bi-twitter-x"></i></a>

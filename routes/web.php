@@ -5,12 +5,12 @@ use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
 
 
 // Auth Controller
-Route::get('login', [App\Http\Controllers\Auth\AuthController::class, 'index'])->name('login');
-Route::post('post-login', [App\Http\Controllers\Auth\AuthController::class, 'postLogin'])->name('login.post');
-Route::get('register', [App\Http\Controllers\Auth\AuthController::class, 'register'])->name('register');
-Route::post('post-register', [App\Http\Controllers\Auth\AuthController::class, 'postRegister'])->name('register.post');
-Route::get('dashboard', [App\Http\Controllers\Auth\AuthController::class, 'dashboard']);
-Route::post('logout', [App\Http\Controllers\Auth\AuthController::class, 'logout'])->name('logout');
+Route::get(uri: 'login', action: [App\Http\Controllers\Auth\AuthController::class, 'index'])->name('login');
+Route::post(uri: 'post-login', action: [App\Http\Controllers\Auth\AuthController::class, 'postLogin'])->name('login.post');
+Route::get(uri: 'register', action: [App\Http\Controllers\Auth\AuthController::class, 'register'])->name('register');
+Route::post(uri: 'post-register', action: [App\Http\Controllers\Auth\AuthController::class, 'postRegister'])->name('register.post');
+Route::get(uri: 'dashboard', action: [App\Http\Controllers\Auth\AuthController::class, 'dashboard']);
+Route::post(uri: 'logout', action: [App\Http\Controllers\Auth\AuthController::class, 'logout'])->name('logout');
 
 // FrontSite landing page
 Route::get('testing', [App\Http\Controllers\FrontController::class, 'testing'])->name('testing');
@@ -22,6 +22,7 @@ Route::get('/team', [App\Http\Controllers\FrontController::class, 'team'])->name
 Route::get('/faq', [App\Http\Controllers\FrontController::class, 'faq'])->name('faq');
 Route::get('/lacak', [App\Http\Controllers\FrontController::class, 'lacak'])->name('lacak');
 Route::get('/lacak/show/{id}', [App\Http\Controllers\FrontController::class, 'lacak_show'])->name('lacak.show');
+Route::get('servicedesk', [App\Http\Controllers\FrontController::class, 'servicedesk'])->name('servicedesk');
 
 //Admin Area
 Route::prefix('admin')->middleware('auth')->group(function () {
@@ -47,7 +48,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::get('/asetrt', [App\Http\Controllers\AssetController::class, 'index_rt'])->name('admin.asetrt');
         Route::get('/asetrt/get_assets', [App\Http\Controllers\AssetController::class, 'get_assets'])->name('admin.asetrt.get_assets');
         Route::post('/asetrt/store/{classification}', [App\Http\Controllers\AssetController::class, 'store'])->name('admin.asetrt.store');
-        Route::post('/asettik/destroy/{id}/{classification}', [App\Http\Controllers\AssetController::class, 'destroy'])->name('admin.asetrt.destroy');
+        Route::delete('/asetrt/destroy/{id}/{classification}', [App\Http\Controllers\AssetController::class, 'destroy'])->name('admin.asetrt.destroy');
         Route::get('/asetrt/{id}', [App\Http\Controllers\ShowAsetController::class, 'showDetails'])->name('admin.asetrt.details');
         Route::get('/asetrt/{id}/overview', [App\Http\Controllers\ShowAsetController::class, 'getOverviewContent'])->name('admin.asetrt.overview');
         Route::get('/asetrt/{id}/pemeliharaan', [App\Http\Controllers\PemeliharaanController::class, 'index'])->name('admin.asetrt.pemeliharaan');
@@ -56,12 +57,15 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::get('/asetrt/{id}/pemeliharaan/scheduleEdit/', [App\Http\Controllers\PemeliharaanController::class, 'scheduleEdit'])->name('admin.asetrt.pemeliharaan.scheduleEdit');
         Route::patch('/asetrt/{id}/pemeliharaan/scheduleUpdate', [App\Http\Controllers\PemeliharaanController::class, 'scheduleUpdate'])->name('admin.asetrt.pemeliharaan.scheduleUpdate');
         Route::delete('/asetrt/{id}/pemeliharaan/scheduleDelete', [App\Http\Controllers\PemeliharaanController::class, 'scheduleDelete'])->name('admin.asetrt.pemeliharaan.scheduleDelete');
-        Route::get('/asetrt/{id}/pemeliharaan/addPreventif', [App\Http\Controllers\PemeliharaanController::class, 'addPreventif'])->name('admin.asetrt.pemeliharaan.addPreventif');
+        Route::get('/asetrt/{id}/pemeliharaan/preventifAdd', [App\Http\Controllers\PemeliharaanController::class, 'preventifAdd'])->name('admin.asetrt.pemeliharaan.preventifAdd');
         Route::post('/asetrt/{id}/pemeliharaan/preventifStore', [App\Http\Controllers\PemeliharaanController::class, 'preventifStore'])->name('admin.asetrt.pemeliharaan.preventifStore');
-        Route::get('/asetrt/{id}/pemeliharaan/preventifdataTable', [App\Http\Controllers\PemeliharaanController::class, 'preventifdataTable'])->name('admin.asetrt.pemeliharaan.preventifdataTable');
+        Route::get('/asetrt/{id}/pemeliharaan/preventifEdit', [App\Http\Controllers\PemeliharaanController::class, 'preventifEdit'])->name('admin.asetrt.pemeliharaan.preventifEdit');
+        Route::patch('/asetrt/{id}/pemeliharaan/preventifUpdate', [App\Http\Controllers\PemeliharaanController::class, 'preventifUpdate'])->name('admin.asetrt.pemeliharaan.preventifUpdate');
+        Route::delete('/asetrt/{id}/pemeliharaan/preventifDelete', [App\Http\Controllers\PemeliharaanController::class, 'preventifDelete'])->name('admin.asetrt.pemeliharaan.preventifDelete');
+        Route::get('/asetrt/{id}/pemeliharaan/preventifDataTable', [App\Http\Controllers\PemeliharaanController::class, 'preventifDataTable'])->name('admin.asetrt.pemeliharaan.preventifDataTable');
         Route::get('/asetrt/{id}/pemeliharaan/korektif', [App\Http\Controllers\PemeliharaanController::class, 'korektif'])->name('admin.asetrt.pemeliharaan.korektif');
-        Route::get('/asetrt/{id}/pemeliharaan/korektifdataTable', [App\Http\Controllers\PemeliharaanController::class, 'korektifdataTable'])->name('admin.asetrt.pemeliharaan.korektifdataTable');
-        Route::get('/asetrt/{id}/pemeliharaan/korektifStore', [App\Http\Controllers\PemeliharaanController::class, 'korektifdataTable'])->name('admin.asetrt.pemeliharaan.korektiStpre');
+        Route::get('/asetrt/{id}/pemeliharaan/korektifDataTable', [App\Http\Controllers\PemeliharaanController::class, 'korektifDataTable'])->name('admin.asetrt.pemeliharaan.korektifDataTable');
+        Route::get('/asetrt/{id}/pemeliharaan/korektifStore', [App\Http\Controllers\PemeliharaanController::class, 'korektifStore'])->name('admin.asetrt.pemeliharaan.korektifStore');
         Route::get('/asetrt/{id}/penugasan', [App\Http\Controllers\ShowAsetController::class, 'getPenugasanContent'])->name('admin.asetrt.penugasan');
         Route::get('/asetrt/{id}/tickets', [App\Http\Controllers\ShowAsetController::class, 'getTicketsContent'])->name('admin.asetrt.tickets');
         Route::get('/asetrt/{id}/files', [App\Http\Controllers\ShowAsetController::class, 'getFilesContent'])->name('admin.asetrt.files');
@@ -70,10 +74,15 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     });
 
 
-    // Route Penugasan
+    // Route Pemeliharaan Korektif
     Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering'])->group(function () {
-        Route::get('/issues', [App\Http\Controllers\IssuesController::class, 'index'])->name('admin.issues');
-        Route::get('/issues/get_issues', [App\Http\Controllers\IssuesController::class, 'getIssues'])->name('admin.issues.get_issues');
+        Route::get('/pemeliharaan', [App\Http\Controllers\PemeliharaanKorektifController::class, 'index'])->name('admin.pemeliharaan');
+        Route::get('/pemeliharaan/pemeliharaanDataTable', [App\Http\Controllers\PemeliharaanKorektifController::class, 'pemeliharaanDataTable'])->name('admin.pemeliharaan.pemeliharaanDataTable');
+        Route::get('/pemeliharaan/pemeliharaanDataTableSelesai', [App\Http\Controllers\PemeliharaanKorektifController::class, 'pemeliharaanDataTableSelesai'])->name('admin.pemeliharaan.pemeliharaanDataTableSelesai');
+        Route::post('/pemeliharaan/store', [App\Http\Controllers\PemeliharaanKorektifController::class, 'store'])->name('admin.pemeliharaan.store');
+        Route::get('/pemeliharaan/edit/{id}', [App\Http\Controllers\PemeliharaanKorektifController::class, 'edit'])->name('admin.pemeliharaan.edit');
+        Route::patch('/pemeliharaan/ubahstatus/{id}', [App\Http\Controllers\PemeliharaanKorektifController::class, 'ubahStatus'])->name('admin.pemeliharaan.ubahstatus');
+        Route::patch('/pemeliharaan/tindaklanjut/{id}', [App\Http\Controllers\PemeliharaanKorektifController::class, 'tindakLanjut'])->name('admin.pemeliharaan.tindaklanjut');
     });
 
     // Route Kalender Pemeliharaan
@@ -127,15 +136,38 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::patch('/setting_attr/label/update/{id}', [App\Http\Controllers\SetatributController::class, 'updateLabel'])->name('admin.setting_attr.label.update');
         Route::delete('/setting_attr/label/delete/{id}', [App\Http\Controllers\SetatributController::class, 'deleteLabel'])->name('admin.setting_attr.label.delete');
         // Route Setting Lokasi
-        Route::get('/setting_attr/lokasiold', App\Livewire\Assets\IndexAsetLokasi::class)->name('admin.setting_attr.lokasiold');
-        Route::get('/setting_attr/lokasiold/show/{id}/{section?}', App\Livewire\Assets\ShowLokasi::class)->name('admin.setting_attr.lokasiold.show');
-        Route::get('/setting_attr/lokasiold/edit/{id}/{section?}', App\Livewire\Assets\EditLokasi::class)->name('admin.setting_attr.lokasiold.edit');
         Route::get('/setting_attr/lokasi', [App\Http\Controllers\SetatributController::class, 'lokasi'])->name('admin.setting_attr.lokasi');
         Route::get('/setting_attr/lokasi/get_lokasi', [App\Http\Controllers\SetatributController::class, 'getLokasi'])->name('admin.setting_attr.lokasi.get_lokasi');
         Route::post('/setting_attr/lokasi/store', [App\Http\Controllers\SetatributController::class, 'storeLokasi'])->name('admin.setting_attr.lokasi.store');
         Route::get('/setting_attr/lokasi/edit/{id}', [App\Http\Controllers\SetatributController::class, 'editLokasi'])->name('admin.setting_attr.lokasi.edit');
         Route::patch('/setting_attr/lokasi/update/{id}', [App\Http\Controllers\SetatributController::class, 'updateLokasi'])->name('admin.setting_attr.lokasi.update');
         Route::delete('/setting_attr/lokasi/delete/{id}', [App\Http\Controllers\SetatributController::class, 'deleteLokasi'])->name('admin.setting_attr.lokasi.delete');
+    });
+
+    // Route Ticketing System
+    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering'])->group(function () {
+        Route::get('/tiket', [App\Http\Controllers\TiketController::class, 'index'])->name('admin.tiket');
+        Route::get('/tiket/get_tikets', [App\Http\Controllers\TiketController::class, 'tiketDataTable'])->name('admin.tiket.tiketDataTable');
+    });
+
+    // Route Proyek
+    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering'])->group(function () {
+        Route::get('/proyek', [App\Http\Controllers\ProyekController::class, 'index'])->name('admin.proyek');
+        Route::get('/proyek/get_Proyeks', [App\Http\Controllers\ProyekController::class, 'getProyeks'])->name('admin.proyek.get_Proyeks');
+        Route::post('/proyek/store', [App\Http\Controllers\ProyekController::class, 'store'])->name('admin.proyek.store');
+        Route::get('/proyek/edit/{id}', [App\Http\Controllers\ProyekController::class, 'edit'])->name('admin.proyek.edit');
+        Route::patch('/proyek/update/{id}', [App\Http\Controllers\ProyekController::class, 'update'])->name('admin.proyek.update');
+        Route::delete('/proyek/delete/{id}', [App\Http\Controllers\ProyekController::class, 'delete'])->name('admin.proyek.delete');
+    });
+
+    // Route Knowledge Base
+    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering'])->group(function () {
+        Route::get('/knowledge-base', [App\Http\Controllers\KnowledgeBaseController::class, 'index'])->name('admin.knowledge-base');
+    });
+
+    // Route Monitoring
+    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering'])->group(function () {
+        Route::get('/monitoring', [App\Http\Controllers\MonitoringController::class, 'index'])->name('admin.monitoring');
     });
 
     // Route Laporan

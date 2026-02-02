@@ -33,13 +33,8 @@ class PemeliharaanController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($row) use ($maintenances_schedule) {
                 return
-                    // '<div>
-                    // <button class="btn btn-primary" data-id="' . $row->id . '"><i class="fa-regular fa-pen-to-square"></i></button>
-                    // <button class="btn btn-danger" data-id="' . $row->id . '"><i class="fa-regular fa-trash-can"></i></button>
-                    // </div>'
-                    // <li><span class="mx-3" onclick="showModalEditJadwalPemeliharaan(' . $row->id . ')" data-id="' . $row->id . '" data-name="' . e($row->name) . '" data-asset="' . $row->asset_id . '" style="cursor: pointer; color: #007bff;">Edit</span></li>
                     '
-                    <button class="btn btn-outline-primary btn-sm" onclick="showModalAddTugasPreventif(' . $row->id . ')"><i class="fa-regular fa-circle-check"></i> Selesaikan</button>
+                    <button class="btn btn-outline-primary btn-sm" onclick="showModalAddPreventif(' . $row->id . ')" data-toggle="tooltip" data-placement="top" title="Tindak Lanjut"><i class="fa-regular fa-circle-check"></i> TL</button>
                     <div class="btn-group">
                     <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" title="More..."></button>
                         <ul class="dropdown-menu dropdown-menu-right">
@@ -114,7 +109,37 @@ class PemeliharaanController extends Controller
         ]);
     }
 
-    public function addPreventif(Request $request, $id): JsonResponse
+    public function preventifDataTable(Request $request, $id): JsonResponse
+    {
+        $assets = \App\Models\AssetsModel::get();
+        $maintenances_schedule = \App\Models\Maintenances_scheduleModel::where('asset_id', $request->id)->get(); // Menggunakan model Maintenance::with('item')->latest()->get();
+        // perbaiki variable $maintenances agar dapat menampilkan data yang benar dengan klausa maintenance_schedule_id nya yang berisi asset_id dari $request->id
+        $maintenances = \App\Models\MaintenancesModel::whereHas('maintenance_schedule', function ($query) use ($request) {
+            $query->where('asset_id', $request->id);
+        })->get();
+
+        return DataTables::of($maintenances)
+            ->addIndexColumn()
+            ->addColumn('pic', function ($maintenances) {
+                return e($maintenances->pic->username ?? '-');
+            })
+            ->addColumn('action', function ($row) {
+                return
+                    '
+                    <div class="btn-group">
+                    <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" title="More..."></button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li><span class="mx-3" onclick="showModalEditPreventif(' . $row->id . ')" data-id="' . $row->id . '" data-name="' . e($row->name) . '" data-asset="' . $row->asset_id . '" style="cursor: pointer; color: #007bff;">Edit</span></li>
+                            <li><span class="mx-3" onclick="deletePreventif(' . $row->id . ')" data-id="' . $row->id . '" data-name="' . e($row->name) . '" style="cursor: pointer; color: #007bff;">Delete</span></li>
+                        </ul>
+                    </div>
+                    '
+                    ;
+            })
+            ->make();
+    }
+
+    public function preventifAdd(Request $request, $id): JsonResponse
     {
         $maintenance_schedule = \App\Models\Maintenances_scheduleModel::findOrFail($id);
         $asset = \App\Models\AssetsModel::findOrFail($maintenance_schedule->asset_id);
@@ -124,35 +149,28 @@ class PemeliharaanController extends Controller
 
     public function preventifStore(Request $request, $id): JsonResponse
     {
-        // $maintenance_schedule = \App\Models\Maintenances_scheduleModel::findOrFail($id);
-        // $maintenance = new \App\Models\MaintenancesModel($request->all());
-        // $maintenance->maintenance_schedule_id = $maintenance_schedule->id;
-        // $maintenance->asset_id = $maintenance_schedule->asset_id;
-        // $maintenance->save();
-
-        // Update next_date in maintenance_schedule
-        // if ($maintenance_schedule->frequency) {
-        //     $nextDate = now()->addMonths($maintenance_schedule->frequency);
-        //     $maintenance_schedule->next_date = $nextDate;
-        //     $maintenance_schedule->save();
-        // }
-
-        // return response()->json([
-        //     'message' => 'Preventif task added successfully',
-        // ]);
-
+        Log::info("Loading Preventif Store for Maintenance Schedule ID: $id");
+        // tangani cost agar menghilangkan format Rp dan titik koma jika ada
+        if ($request->has('cost')) {
+            $cost = preg_replace('/[^\d]/', '', $request->input('cost'));
+            $request->merge(['cost' => $cost]);
+        }
         // 1. VALIDASI
         $request->validate([
             // 'attachment' adalah nama input file di HTML: <input type="file" name="attachment">
-            'attachment' => 'required|file|mimes:jpg,jpeg,png,heic,heif,pdf,doc,docx,xls,xlsx|max:10240', // Maks 10MB
+            'attachment' => 'required|file|mimes:jpg,jpeg,png,heic,heif,pdf|max:10240', // Maks 10MB
+            'name' => 'required|string', // Untuk checkbox
+            'period' => 'required|string',
+            'cost' => 'required|numeric|min:0',
             'notes' => 'required|string',
-            'name' => 'required|string|in:Pemeliharaan Selesai', // Untuk checkbox
         ], [
             'attachment.required' => 'Bukti dukung wajib diupload.',
             'attachment.mimes' => 'Format file tidak didukung.',
             'attachment.max' => 'Ukuran file maksimal 10MB.',
-            'notes.required' => 'Catatan wajib diisi.',
             'name.required' => 'Wajib mencentang bahwa pemeliharaan selesai.',
+            'period.required' => 'Periode wajib diisi.',
+            'cost.required' => 'Biaya wajib diisi.',
+            'notes.required' => 'Catatan wajib diisi.',
         ]);
 
         // 2. PENANGANAN FILE
@@ -160,7 +178,7 @@ class PemeliharaanController extends Controller
         if ($request->hasFile('attachment')) {
             $file = $request->file('attachment');
             // Tentukan folder penyimpanan, misalnya: 'public/uploads/preventif_attachment'
-            $folder = 'public/uploads/preventif_attachment';
+            $folder = 'preventif_attachment';
 
             // Simpan file ke disk, Laravel akan secara otomatis membuat nama unik
             // dan mengembalikan path relatif ke folder disk.
@@ -171,11 +189,14 @@ class PemeliharaanController extends Controller
         // 3. PENYIMPANAN DATA KE DATABASE
         try {
             $data = [
+                'name' => $request->input('name'),
                 'maintenance_schedule_id' => $id, // Relasi ke jadwal pemeliharaan
                 'pic_id' => auth()->id(), // Siapa yang menyelesaikan
                 'status' => 'Selesai',
                 'started_at' => now(), // Waktu penyelesaian
                 'completed_at' => now(), // Waktu penyelesaian
+                'period' => $request->input('period'),
+                'cost' => $request->input('cost'), // Biaya pemeliharaan
                 'attachment' => $file_path, // Simpan path file
                 'notes' => $request->input('notes'), // Catatan tambahan
             ];
@@ -194,39 +215,32 @@ class PemeliharaanController extends Controller
         }
     }
 
-    public function preventifdataTable(Request $request, $id): JsonResponse
+    public function preventifEdit(Request $request, $id): JsonResponse
     {
-        $assets = \App\Models\AssetsModel::get();
-        $maintenances_schedule = \App\Models\Maintenances_scheduleModel::where('asset_id', $request->id)->get(); // Menggunakan model Maintenance::with('item')->latest()->get();
-        // $maintenances_schedule = \App\Models\Maintenances_scheduleModel::get(); // Menggunakan model Maintenance::with('item')->latest()->get();
-        $maintenances = \App\Models\MaintenancesModel::where('maintenance_schedule_id', $request->id)->get();
-        return DataTables::of($maintenances)
-            ->addIndexColumn()
-            ->addColumn('pic', function ($maintenances) {
-                return e($maintenances->pic->username ?? '-');
-            })
-            ->addColumn('action', function ($row) {
-                return
-                    '
-                    <div class="btn-group">
-                    <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" title="More..."></button>
-                        <ul class="dropdown-menu dropdown-menu-right">
-                            <li><span class="mx-3" onclick="showModalEditJadwalPemeliharaan(' . $row->id . ')" data-id="' . $row->id . '" data-name="' . e($row->name) . '" data-asset="' . $row->asset_id . '" style="cursor: pointer; color: #007bff;">Edit</span></li>
-                            <li><span class="mx-3" onclick="deleteJadwalPemeliharaan(' . $row->id . ')" data-id="' . $row->id . '" data-name="' . e($row->name) . '" style="cursor: pointer; color: #007bff;">Delete</span></li>
-                        </ul>
-                    </div>
-                    '
-                    ;
-            })
-            ->make();
+        $maintenances = \App\Models\MaintenancesModel::findOrFail($id);
+        $asset = \App\Models\AssetsModel::findOrFail($maintenances->maintenance_schedule->asset_id);
+        // bagaimana caranya mengambil data dari maintenance_schedule asset_id untuk ditampilkan nama assetnya di modal edit preventif
+        $maintenances->asset_name = $asset->name;
+        Log::info("Loading Edit Preventif for Maintenance Name: $maintenances->name (ID: $id)");
+        return response()->json($maintenances);
+    }
+
+    public function preventifDelete(Request $request, $id): JsonResponse
+    {
+        $maintenances = \App\Models\MaintenancesModel::findOrFail($id);
+        $maintenances->delete();
+        return response()->json([
+            'message' => 'Data pemeliharaan preventif berhasil dihapus.',
+        ]);
     }
 
     public function korektifdataTable(Request $request, $id): JsonResponse
     {
         $assets = \App\Models\AssetsModel::get();
         $maintenances_schedule = \App\Models\Maintenances_scheduleModel::where('asset_id', $request->id)->get(); // Menggunakan model Maintenance::with('item')->latest()->get();
-        // $maintenances_schedule = \App\Models\Maintenances_scheduleModel::get(); // Menggunakan model Maintenance::with('item')->latest()->get();
-        $maintenances = \App\Models\MaintenancesModel::where('maintenance_schedule_id', $request->id)->get();
+        $maintenances = \App\Models\MaintenancesModel::whereDoesntHave('maintenance_schedule')
+            ->where('asset_id', $request->id)
+            ->get();
         return DataTables::of($maintenances)
             ->addIndexColumn()
             ->addColumn('pic', function ($maintenances) {

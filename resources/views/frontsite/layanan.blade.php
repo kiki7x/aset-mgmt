@@ -69,7 +69,7 @@
                     <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up">
                         <div class="service-item position-relative">
                             <div class="icon"><i class="bi bi-telephone icon"></i></div>
-                            <h4><a href="" class="stretched-link">Service Desk Sarana & Prasarana berbasis Tiket</a></h4>
+                            <h4><a href="{{ route('servicedesk') }}" class="stretched-link">Service Desk Sarana & Prasarana berbasis Tiket</a></h4>
                             <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia</p>
                         </div>
                     </div><!-- End Service Item -->

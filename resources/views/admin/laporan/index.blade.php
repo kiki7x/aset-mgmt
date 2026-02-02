@@ -1,7 +1,7 @@
 @extends('layouts.backsite', [
     'title' => 'Laporan | SAPA PPL',
     'welcome' => 'Laporan',
-    'breadcrumb' => 'Laporan'
+    'breadcrumb' => '<li class="breadcrumb-item active">Laporan</li>'
     ])
 
 

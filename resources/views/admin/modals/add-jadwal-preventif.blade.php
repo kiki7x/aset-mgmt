@@ -102,7 +102,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                <button id="submitJadwalPemeliharaan" type="submit" class="btn btn-primary">Jadwalkan</button>
+                <button id="submitJadwalPemeliharaan" type="submit" class="btn btn-success">Jadwalkan</button>
             </div>
             </form>
         </div>

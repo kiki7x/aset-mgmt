@@ -84,6 +84,7 @@
             </div>
         </div>
 
+        {{-- Komponen Modal --}}
         @include('admin.asettik.partials.create-modal')
         @include('admin.asettik.partials.delete-modal')
         @include('admin.asettik.partials.qrcode-modal')

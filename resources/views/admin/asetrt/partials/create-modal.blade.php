@@ -137,7 +137,7 @@
                             <span class="text-danger small" id="error-notes"></span>
                         </div>
                     </div>
-                    <p class="text-muted">Tanda <span class="text-danger">*</span> wajib diisi</p>
+                    <p class="text-muted font-italic">Tanda <span class="text-danger">*</span> wajib diisi</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-info" id="btnResetForm">Reset</button>

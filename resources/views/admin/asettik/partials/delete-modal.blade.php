@@ -43,7 +43,7 @@
                          .replace('__CLASS__', 'tik'),
                      method: "DELETE",
                      data: form.serialize(),
-                     success: function(res) {
+                     success: function(response) {
                          $('#deleteModal').modal('hide');
 
                          Swal.fire({
