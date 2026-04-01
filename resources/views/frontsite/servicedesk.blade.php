@@ -40,7 +40,7 @@
             <div class="container">
                 <div class="card">
                     <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                        <h5 class="card-title">Tiket Service Desk</h5>
+                        <h5 class="card-title">List Tiket Service Desk</h5>
                         <button class="btn btn-outline-primary" onclick="openModalCreate()" style="margin-left: auto;" data-toggle="tooltip" data-placement="top" title="Buat Tiket"><i class="fa-regular fa-plus"></i> Buat Tiket</button>
                     </div>
                     <div class="card-body">
