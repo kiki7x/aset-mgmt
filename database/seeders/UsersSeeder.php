@@ -44,6 +44,18 @@ class UsersSeeder extends Seeder
             ],
             [
                 // 'id' => '3',
+                'username' => 'roni',
+                'email' => 'sahroni.fajrin@ppl.ac.id',
+                'nickname' => 'roni',
+                'fullname' => 'Sahroni Fajrin',
+                'role_to_assign' => 'superadmin',
+                'client_id' => '1',
+                'title' => 'admin bmn',
+                'mobile' => '082339966007',
+                'password' => Hash::make('password'),
+            ],
+            [
+                // 'id' => '4',
                 'username' => 'kiki',
                 'email' => 'kiki@ppl.ac.id',
                 'nickname' => 'kiki',
@@ -55,7 +67,7 @@ class UsersSeeder extends Seeder
                 'password' => Hash::make('password'),
             ],
             [
-                // 'id' => '4',
+                // 'id' => '5',
                 'username' => 'kadek',
                 'email' => 'kadek@ppl.ac.id',
                 'nickname' => 'kadek',
@@ -67,7 +79,7 @@ class UsersSeeder extends Seeder
                 'password' => Hash::make('password'),
             ],
             [
-                // 'id' => '5', rizhki
+                // 'id' => '6', rizhki
                 'username' => 'rizhki',
                 'email' => 'rizhki@ppl.ac.id',
                 'nickname' => 'rizhki',
@@ -79,7 +91,7 @@ class UsersSeeder extends Seeder
                 'password' => Hash::make('password'),
             ],
             [
-                // 'id' => '6',
+                // 'id' => '7',
                 'username' => 'zakaria',
                 'email' => 'zakaria@ppl.ac.id',
                 'nickname' => 'zakaria',
@@ -91,7 +103,7 @@ class UsersSeeder extends Seeder
                 'password' => Hash::make('password'),
             ],
             [
-                // 'id' => '7',
+                // 'id' => '8',
                 'username' => 'pati',
                 'email' => 'pati@ppl.ac.id',
                 'nickname' => 'pati',
@@ -103,7 +115,7 @@ class UsersSeeder extends Seeder
                 'password' => Hash::make('password'),
             ],
             [
-                // 'id' => '8',
+                // 'id' => '9',
                 'username' => 'zaenal',
                 'email' => 'zaenal@ppl.ac.id',
                 'nickname' => 'zaenal',
@@ -115,7 +127,7 @@ class UsersSeeder extends Seeder
                 'password' => Hash::make('password'),
             ],
             [
-                // 'id' => '9',
+                // 'id' => '10',
                 'username' => 'ramli',
                 'email' => 'ramli@ppl.ac.id',
                 'nickname' => 'ramli',

@@ -231,6 +231,20 @@
                                   <p>User Management</p>
                               </a>
                           </li>
+                          <li class="nav-item">
+                              <a href="{{ route('admin.settings.import') }}"
+                                  class="nav-link {{ request()->is('admin/settings/import') ? 'active' : '' }}">
+                                  <i class="nav-icon fa-solid fa-cloud-arrow-up"></i>
+                                  <p>Import</p>
+                              </a>
+                          </li>
+                          <li class="nav-item">
+                              <a href="{{ route('admin.settings.logs') }}"
+                                  class="nav-link {{ request()->is('admin/settings/logs') ? 'active' : '' }}">
+                                  <i class="nav-icon fa-solid fa-clock-rotate-left"></i>
+                                  <p>Logs</p>
+                              </a>
+                          </li>
                       </ul>
                   </li>
               </ul>

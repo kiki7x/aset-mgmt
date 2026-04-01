@@ -6,17 +6,16 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "asdh/laravel-flatpickr": "^2.2",
         "chillerlan/php-qrcode": "^5.0",
         "gumlet/php-image-resize": "^2.0",
-        "laravel/framework": "^11.9",
+        "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
-        "livewire/livewire": "^3.5",
-        "proengsoft/laravel-jsvalidation": "^4.10",
+        "shuchkin/simplexlsx": "^1.1",
+        "shuchkin/simplexlsxgen": "^1.5",
         "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/laravel-permission": "^6.18",
-        "yajra/laravel-datatables-oracle": "11.0"
+        "yajra/laravel-datatables-oracle": "12.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.14",
@@ -25,7 +24,7 @@
         "laravel/sail": "^1.26",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.0",
-        "phpunit/phpunit": "^11.0.1"
+        "phpunit/phpunit": "^11.0"
     },
     "autoload": {
         "psr-4": {

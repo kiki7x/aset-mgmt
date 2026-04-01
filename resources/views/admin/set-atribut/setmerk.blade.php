@@ -114,6 +114,10 @@
                 processing: true,
                 serverSide: true,
                 responsive: true,
+                lengthMenu: [
+                    [10, 50, 100, -1],
+                    [10, 50, 100, "Semua"]
+                ],
                 ajax: "{{ route('admin.setting_attr.merk.get_merk') }}",
                 columns: [{
                         data: 'DT_RowIndex',

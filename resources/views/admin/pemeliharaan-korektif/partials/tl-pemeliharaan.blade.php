@@ -199,7 +199,7 @@
                 },
                 success: function(data) {
                     $('#modal-tindak-lanjut').modal('show').data('id', id); // <--- Simpan ID tugas di modal
-                    $('#modalAddTugasPreventiflabel, .modal-title').html('Tindak lanjut Pemeliharaan Preventif untuk: <span class="badge badge-info">' + data.name + '</span>');
+                    $('#modalAddTugasPreventiflabel, .modal-title').html('Tindak lanjut Pemeliharaan Korektif untuk: <span class="badge badge-info">' + data.name + '</span>');
                     $('#formAddTugasPreventif input[name="name"]').val(data.maintenance_schedule.name); // Set nilai checkbox sesuai nama tugas
                     $('#formAddTugasPreventif input[name="period"]').val(data.maintenance_schedule.next_date); // Set nilai periode
                     $('#error-tugasPreventifName').text('');

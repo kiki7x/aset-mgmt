@@ -69,7 +69,7 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: "{{ route('admin.asetrt.pemeliharaan.preventifEdit', ['id' => ':id']) }}".replace(':id', id),
+                url: "{{ route('admin.aset.pemeliharaan.preventifEdit', ['id' => ':id']) }}".replace(':id', id),
                 type: "GET",
                 dataType: "json",
                 beforeSend: function() {
@@ -116,7 +116,7 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: "{{ route('admin.asetrt.pemeliharaan.preventifUpdate', ['id' => ':id']) }}".replace(':id', scheduleId),
+                url: "{{ route('admin.aset.pemeliharaan.preventifUpdate', ['id' => ':id']) }}".replace(':id', scheduleId),
                 type: "POST",
                 data: formData,
                 contentType: false,

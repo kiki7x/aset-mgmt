@@ -20,21 +20,21 @@ class LocationsSeeder extends Seeder
             ['id' => 5, 'client_id' => 1,'name' => 'Hotel DBSH', 'created_at' => now(), 'updated_at' => now()],
             ['id' => 6, 'client_id' => 1,'name' => 'Masjid Al-Hanif', 'created_at' => now(), 'updated_at' => now()],
             ['id' => 7, 'client_id' => 1,'name' => 'GKT Rinjani', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 8, 'client_id' => 1,'name' => 'Zona B Praktikum', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 9, 'client_id' => 1,'name' => 'Kantin', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 10, 'client_id' => 1,'name' => 'Gedung Hospitality', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 8, 'client_id' => 1,'name' => 'Kantin', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 9, 'client_id' => 1,'name' => 'Gedung Hospitality', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 10, 'client_id' => 1,'name' => 'Dapur Praktik Kontinental', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 11, 'client_id' => 1,'name' => 'Restaurant Oriental', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 12, 'client_id' => 1,'name' => 'MDK MKP', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 13, 'client_id' => 1,'name' => 'Restaurant Nusantara', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 14, 'client_id' => 1,'name' => 'Dapur Praktik Oriental', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 15, 'client_id' => 1,'name' => 'Restaurant Hotel Praktik', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 16, 'client_id' => 1,'name' => 'Hall TAH', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 17, 'client_id' => 1,'name' => 'Gudang Dapur', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 18, 'client_id' => 1,'name' => 'Kitchen Stadium', 'created_at' => now(), 'updated_at' => now()],
         ]);
         DB::table('locations')->insert([
-            ['id' => 1, 'building_id' => 1, 'name' => 'None', 'lantai' => 'None', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 2, 'building_id' => 2, 'name' => 'Ruang 1 Rektorat', 'lantai' => '1', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 3, 'building_id' => 3, 'name' => 'Ruang 1 Gedung Kuliah 1', 'lantai' => '1', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 4, 'building_id' => 4, 'name' => 'Ruang 1 Gedung Kuliah 2', 'lantai' => '1', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 5, 'building_id' => 5, 'name' => 'Ruang 1 Hotel DBSH', 'lantai' => '1', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 6, 'building_id' => 6, 'name' => 'Ruang 1 Masjid Al-Hanif', 'lantai' => '1', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 7, 'building_id' => 7, 'name' => 'Ruang 1 GKT Rinjani', 'lantai' => '1', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 8, 'building_id' => 8, 'name' => 'Ruang 1 Zona B Praktikum', 'lantai' =>'1', 'created_at' => now(), 'updated_at'=> now()],
-            ['id' => 9, 'building_id' => 9, 'name' => 'Ruang 1 Kantin', 'lantai' => '1', 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 10, 'building_id' => 10, 'name' => 'Ruang 1 Gedung Hospitality', 'lantai' => '1', 'created_at' => now(), 'updated_at' => now()],
+            // None
+            ['building_id' => 1, 'name' => 'None', 'floor' => 'None', 'created_at' => now(), 'updated_at' => now()]
         ]);
     }
 }

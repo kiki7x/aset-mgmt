@@ -454,6 +454,27 @@ class SetatributController extends Controller
             ->make();
     }
 
+    public function getLokasiv2(Request $request): JsonResponse
+    {
+        $lokasis = \App\Models\LocationsModel::with('building')->get();
+        return DataTables::of($lokasis)
+            ->addIndexColumn()
+            ->addColumn('action', function ($lokasis) {
+                return
+                    '
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" title="More..."></button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li><span class="mx-3" id="edit-lokasi" data-id="' . $lokasis->id . '" data-name="' . e($lokasis->name) . '" style="cursor: pointer; color: #007bff;">Edit</span></li>
+                            <li><span class="mx-3" id="delete-lokasi" data-id="' . $lokasis->id . '" data-name="' . e($lokasis->name) . '" style="cursor: pointer; color: #007bff;">Delete</span></li>
+                        </ul>
+                    </div>
+                    '
+                    ;
+            })
+            ->make();
+    }
+
     public function storeLokasi(Request $request): JsonResponse
     {
         $data = $request->validate([

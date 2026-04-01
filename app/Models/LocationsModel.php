@@ -12,11 +12,12 @@ class LocationsModel extends Model
     protected $table = 'locations';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'client_id',
+        'building_id',
         'name',
+        'floor',
     ];
 
-    public function location()
+    public function building()
     {
         return $this->belongsTo(BuildingsModel::class);
     }

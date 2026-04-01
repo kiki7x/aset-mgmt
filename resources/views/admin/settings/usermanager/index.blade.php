@@ -1,7 +1,10 @@
 @extends('layouts.backsite', [
     'title' => 'User Manager | SAPA PPL',
     'welcome' => 'Manajemen Pengguna',
-    'breadcrumb' => '<li class="breadcrumb-item active">User Manager</li>',
+    'breadcrumb' => '
+    <li class="breadcrumb-item">Settings</li>
+    <li class="breadcrumb-item active">User Manager</li>
+    ',
 ])
 
 @push('script-head')

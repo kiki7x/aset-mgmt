@@ -21,7 +21,7 @@ return new class extends Migration
             $table->id(); // id column (AUTO_INCREMENT and PRIMARY KEY)
             $table->unsignedInteger('building_id'); // buildingid column (integer)
             $table->string('name', 255); // name column (VARCHAR 255)
-            $table->string('lantai', 100); // lantai column (VARCHAR 100, nullable)
+            $table->string('floor', 25); // lantai column (VARCHAR 100, nullable)
             $table->timestamps(); // created_at and updated_at columns
         });
     }

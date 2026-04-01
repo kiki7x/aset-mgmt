@@ -1,5 +1,5 @@
 <!-- Modal -->
-<div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="createModal" data-backdrop="static" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -9,7 +9,7 @@
                 </button>
             </div>
 
-            <form id="formCreateAsetRT" method="POST">
+            <form id="formCreateAsetRT" method="POST" autocomplete="off">
                 @csrf
                 <div class="modal-body">
                     <div class="row">
@@ -35,8 +35,7 @@
                         {{-- Manufacturer --}}
                         <div class="form-group col-md-4">
                             <label for="manufacturer_id">Merk/Pabrikan <span class="text-danger">*</span></label>
-                            <select name="manufacturer_id[]" id="manufacturer_id" class="form-control select2tag"
-                                multiple>
+                            <select name="manufacturer_id[]" id="manufacturer_id" class="form-control select2tag" multiple>
                                 @foreach ($manufacturers as $manufacturer)
                                     <option value="{{ $manufacturer->id }}">{{ $manufacturer->name }}</option>
                                 @endforeach
@@ -103,7 +102,7 @@
                             <select name="user_id" id="user_id" class="form-control select2">
                                 <option value="">None</option>
                                 @foreach ($users as $user)
-                                    <option value="{{ $user->id }}">{{ $user->username }}</option>
+                                    <option value="{{ $user->id }}">{{ $user->fullname }}</option>
                                 @endforeach
                             </select>
                             <span class="text-danger small" id="error-user_id"></span>
@@ -111,9 +110,8 @@
 
                         {{-- Purchase Date --}}
                         <div class="form-group col-md-4">
-                            <label for="purchaseDateInput">Tanggal Perolehan <span
-                                    class="text-danger">*</span></label>
-                            <input type="date" name="purchase_date" id="purchaseDateInput" class="form-control">
+                            <label for="purchase_date">Tanggal Perolehan <span class="text-danger">*</span></label>
+                            <input type="text" name="purchase_date" id="purchase_date" class="form-control" placeholder="Select date">
                             <span class="text-danger small" id="error-purchase_date"></span>
                         </div>
 
@@ -121,8 +119,7 @@
                         <div class="form-group col-md-4">
                             <label for="warranty_months">Garansi <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <input type="number" name="warranty_months" id="warranty_months"
-                                    class="form-control">
+                                <input type="number" name="warranty_months" id="warranty_months" class="form-control">
                                 <div class="input-group-append">
                                     <span class="input-group-text">bulan</span>
                                 </div>
@@ -165,6 +162,13 @@
                 width: '100%',
                 maximumSelectionLength: 1,
                 placeholder: 'Pilih atau tambahkan...',
+            });
+            $('#purchase_date').datepicker({
+                format: "yyyy-mm-dd",
+                autoclose: true,
+                todayHighlight: true,
+                orientation: "bottom auto",
+                todayBtn: "linked",
             });
         });
     </script>

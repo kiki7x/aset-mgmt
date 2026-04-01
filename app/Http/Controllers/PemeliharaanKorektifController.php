@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
+use App\Jobs\SendWhatsappNotification;
 
 class PemeliharaanKorektifController extends Controller
 {
@@ -127,13 +128,21 @@ class PemeliharaanKorektifController extends Controller
                 'created_by' => $request->created_by,
                 'notes' => $request->notes,
             ];
-
+            // simpan
             $maintenance = \App\Models\MaintenancesModel::create($data);
+
+            // kirim notifikasi WA
+            $target = env('FONNTE_GROUP_ID');
+            $message = "Halo, Pemeliharaan Korektif baru saja ditambahkan";
+            $message .= "\nAset Tag" . $maintenance->asset->tag;
+            $message .= "\nNama: " . $maintenance->name;
+            SendWhatsappNotification::dispatch($target, $message);
 
             return response()->json(['message' => 'Pemeliharaan korektif berhasil ditambahkan.', 'data' => $maintenance], 201);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Pemeliharaan korektif gagal ditambahkan.'], 500);
+            return response()->json(['message' => 'Pemeliharaan korektif gagal ditambahkan.'] .$e->getMessage(), 500);
         }
+
     }
 
     public function edit(Request $request, $id): JsonResponse

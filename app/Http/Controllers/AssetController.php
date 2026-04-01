@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 use App\Http\Requests\StoreAssetRequest;
 use App\Http\Requests\UpdateAssetRequest;
@@ -23,8 +22,10 @@ use App\Notifications\EditAsetRT;
 use App\Notifications\EditAsetTik;
 use App\Notifications\DeleteAsetRT;
 use App\Notifications\DeleteAsetTik;
-use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
+use Shuchkin\SimpleXLSX;
+use Shuchkin\SimpleXLSXGen;
+use Carbon\Carbon;
 
 class AssetController extends Controller
 {
@@ -54,7 +55,7 @@ class AssetController extends Controller
             'statuses',
             'users',
             'totalAssets'
-            ));
+        ));
     }
 
     public function index_rt(): View
@@ -82,10 +83,10 @@ class AssetController extends Controller
             'statuses',
             'users',
             'totalAssets'
-            ));
+        ));
     }
 
-    public function get_assets(Request $request) : JsonResponse
+    public function get_assets(Request $request): JsonResponse
     {
         $category = $request->category;
         $classification = $request->classification;
@@ -212,7 +213,7 @@ class AssetController extends Controller
             'model_id' => (int) $request->model_id,
             'supplier_id' => (int) $request->supplier_id,
             'status_id' => (int) $request->status_id,
-            'purchase_date' => Carbon::parse($request->purchase_date)->format('Y-m-d'),
+            'purchase_date' => $request->purchase_date,
             'warranty_months' => (int) $request->warranty_months,
             'tag' => $newTag,
             'name' => $request->name,
@@ -245,7 +246,7 @@ class AssetController extends Controller
         $asset = AssetsModel::findOrFail($id);
         $classification_id = $asset->classification_id;
 
-        if ($classification_id === 2 ) {
+        if ($classification_id === 2) {
             $prefix = $this->prefix_tik;
             $sendNotificationByRole = ['superadmin', 'admin_tik', 'staf_tik'];
             $notificationClass = EditAsetTik::class;
@@ -282,7 +283,7 @@ class AssetController extends Controller
             'status_id' => $request->status_id,
             'user_id' => $request->user_id,
             'admin_id' => $request->admin_id,
-            'purchase_date' => Carbon::parse($request->purchase_date)->format('Y-m-d'),
+            'purchase_date' => $request->purchase_date,
             'warranty_months' => $request->warranty_months,
             'notes' => $request->notes,
             'customfields' => $request->customfields,
@@ -326,9 +327,161 @@ class AssetController extends Controller
         $asset->delete();
     }
 
-    public function show($id)
+    public function exportExcelTik()
     {
-        //
+        $assets = AssetsModel::with(
+            'classification',
+            'category',
+            'user',
+            'admin',
+            'manufacturer',
+            'model',
+            'supplier',
+            'status',
+            'location'
+            )
+            ->where('classification_id', 2)
+            ->get();
+            $data = [
+                [
+                    'id',
+                    'Tag',
+                    'Klasifikasi',
+                    'Nama',
+                    'Kategori',
+                    'Pengelola',
+                    'Pengguna',
+                    'Merk/Pabrikan',
+                    'Model',
+                    'Supplier',
+                    'Serial',
+                    'Status',
+                    'Lokasi',
+                    'Tanggal Perolehan',
+                    'Garansi (Month)',
+                    'Serial Number',
+                    'Notes'
+                    ]
+            ];
+
+            foreach ($assets as $asset) {
+                $data[] = [
+                    $asset->id,
+                    $asset->tag,
+                    $asset->classification->name ?? '-',
+                    $asset->name,
+                    $asset->category->name ?? '-',
+                    $asset->admin->fullname ?? '-',
+                    $asset->user->fullname ?? '-',
+                    $asset->manufacturer->name ?? '-',
+                    $asset->model->name ?? '-',
+                    $asset->supplier->name ?? '-',
+                    $asset->serial,
+                    $asset->status->name ?? '-',
+                    $asset->location->name ?? '-',
+                    // format ulang date
+                    Carbon::parse($asset->purchase_date)->format('d-m-Y'),
+                    $asset->warranty_months,
+                    $asset->serial,
+                    $asset->notes
+                ];
+            }
+        // return SimpleXLSXGen::fromArray($data)->downloadAs('asettik.xlsx');
+        $date = Carbon::now()->format('d-m-Y');
+        return SimpleXLSXGen::fromArray($data)->downloadAs("{$date}_sapa-ppl-aset-tik.xlsx");
+    }
+
+    public function exportExcelRt()
+    {
+        $assets = AssetsModel::with(
+            'classification',
+            'category',
+            'user',
+            'admin',
+            'manufacturer',
+            'model',
+            'supplier',
+            'status',
+            'location'
+            )
+            ->where('classification_id' !== 2)
+            ->get();
+            $data = [
+                [
+                    'id',
+                    'Tag',
+                    'Klasifikasi',
+                    'Name',
+                    'Category',
+                    'Pengelola',
+                    'Pengguna',
+                    'Merk/Pabrikan',
+                    'Model',
+                    'Supplier',
+                    'Serial',
+                    'Status',
+                    'Lokasi',
+                    'Tanggal Perolehan',
+                    'Garansi (Month)',
+                    'Serial Number',
+                    'Notes'
+                    ]
+            ];
+
+            foreach ($assets as $asset) {
+                $data[] = [
+                    $asset->id,
+                    $asset->tag,
+                    $asset->classification->name ?? '-',
+                    $asset->name,
+                    $asset->category->name ?? '-',
+                    $asset->admin->fullname ?? '-',
+                    $asset->user->fullname ?? '-',
+                    $asset->manufacturer->name ?? '-',
+                    $asset->model->name ?? '-',
+                    $asset->supplier->name ?? '-',
+                    $asset->serial,
+                    $asset->status->name ?? '-',
+                    $asset->location->name ?? '-',
+                    // format ulang date
+                    Carbon::parse($asset->purchase_date)->format('d-m-Y'),
+                    $asset->warranty_months,
+                    $asset->serial,
+                    $asset->notes
+                ];
+            }
+            $date = Carbon::now()->format('d-m-Y');
+        return SimpleXLSXGen::fromArray($data)->downloadAs( "{$date}_sapa-ppl-asetrt.xlsx");
+    }
+
+    public function importExcelTik(Request $request)
+    {
+        if ($xlsx = SimpleXLSX::parse($request->file('file'))) {
+            $rows = $xlsx->rows();
+            array_shift($rows); // Menghapus baris pertama (header)
+
+            foreach ($rows as $row) {
+                $data = [
+                    'client_id' => $this->client_id,
+                    'tag' => $row[0],
+                    'name' => $row[1],
+                    'category_id' => $row[2],
+                    'supplier_id' => $row[3],
+                    'location_id' => $row[4],
+                    'manufacturer_id' => $row[5],
+                    'model_id' => $row[6],
+                    'serial' => $row[7],
+                    'status_id' => $row[8],
+                    'user_id' => $row[9],
+                    'admin_id' => $row[10],
+                    'purchase_date' => $row[11],
+                    'warranty_months' => $row[12],
+                    'notes' => $row[13],
+                    'customfields' => $row[14],
+                    'qrvalue' => $row[15],
+                ];
+            }
+        }
     }
 
     public function incrementTag($classification)

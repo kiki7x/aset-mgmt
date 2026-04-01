@@ -88,7 +88,7 @@
             }
           }
         </script>
-                    <div class="swiper-wrapper align-items-center">
+                    {{-- <div class="swiper-wrapper align-items-center">
                         <div class="swiper-slide"><img src="{{ asset('assets/gambar/logo_hp.svg') }}" class="img-fluid" alt=""></div>
                         <div class="swiper-slide"><img src="{{ asset('assets/gambar/logo_acer.png') }}" class="img-fluid" alt=""></div>
                         <div class="swiper-slide"><img src="{{ asset('assets/gambar/logo_daikin.png') }}" class="img-fluid" alt=""></div>
@@ -99,7 +99,7 @@
                         <div class="swiper-slide"><img src="{{ asset('assets/gambar/logo_toyota.png') }}" class="img-fluid" alt=""></div>
                         <div class="swiper-slide"><img src="{{ asset('assets/gambar/logo_honda.png') }}" class="img-fluid" alt=""></div>
                         <div class="swiper-slide"><img src="{{ asset('assets/gambar/logo_daihatsu.png') }}" class="img-fluid" alt=""></div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </section><!-- /Clients Section -->
@@ -107,55 +107,55 @@
 @endsection
 
 @push('scripts')
-<script>
-    //-------------
-    //- PIE CHART -
-    //-------------
-    // Get context with jQuery - using jQuery's .get() method.
-    const barChartCanvas = $('#barChart').get(0).getContext('2d')
-    const barData = {
-        labels: ['Aset TIK', 'Aset Rumah Tangga'],
-        datasets: [{
-                label: 'Kondisi baik',
-                data: [150, 350],
-                borderColor: '#00a65a',
-                backgroundColor: '#00a65a33',
-                borderWidth: 1,
-            },
-            {
-                label: 'Kondisi rusak',
-                data: [35, 25],
-                borderColor: '#f56954',
-                backgroundColor: '#f5695433',
-                borderWidth: 1,
-            },
-            {
-                label: 'Kondisi dalam pemeliharaan',
-                data: [25, 18],
-                borderColor: '#f39c12',
-                backgroundColor: '#f39c1233',
-                borderWidth: 1,
-            }
-        ],
-    };
+    <script>
+        //-------------
+        //- PIE CHART -
+        //-------------
+        // Get context with jQuery - using jQuery's .get() method.
+        const barChartCanvas = $('#barChart').get(0).getContext('2d')
+        const barData = {
+            labels: ['Aset TIK', 'Aset Rumah Tangga'],
+            datasets: [{
+                    label: 'Kondisi baik',
+                    data: [150, 350],
+                    borderColor: '#00a65a',
+                    backgroundColor: '#00a65a33',
+                    borderWidth: 1,
+                },
+                {
+                    label: 'Kondisi rusak',
+                    data: [35, 25],
+                    borderColor: '#f56954',
+                    backgroundColor: '#f5695433',
+                    borderWidth: 1,
+                },
+                {
+                    label: 'Kondisi dalam pemeliharaan',
+                    data: [25, 18],
+                    borderColor: '#f39c12',
+                    backgroundColor: '#f39c1233',
+                    borderWidth: 1,
+                }
+            ],
+        };
 
-    const config = {
-        type: 'bar',
-        data: barData,
-        options: {
-            maintainAspectRatio: false,
-            responsive: true,
-            legend: {
-                position: 'top'
-            },
-            title: {
-                display: true,
-                text: 'Statistik Aset'
+        const config = {
+            type: 'bar',
+            data: barData,
+            options: {
+                maintainAspectRatio: false,
+                responsive: true,
+                legend: {
+                    position: 'top'
+                },
+                title: {
+                    display: true,
+                    text: 'Statistik Aset'
+                }
             }
         }
-    }
-    //Create bar chart
-    // You can switch between pie and douhnut using the method below.
-    new Chart(barChartCanvas, config)
-</script>
+        //Create bar chart
+        // You can switch between pie and douhnut using the method below.
+        new Chart(barChartCanvas, config)
+    </script>
 @endpush

@@ -1,7 +1,7 @@
 @extends('layouts.auth', ['title' => 'Login - SAPA PPL'])
 
 @section('content')
-    <div class="col-md-6 text-center">
+    <div class="col-md-12 col-lg-6 text-center">
         <div class="card border-0 shadow rounded">
             <div class="card-body">
                 @if (session('status'))

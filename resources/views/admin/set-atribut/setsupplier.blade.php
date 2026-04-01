@@ -174,6 +174,10 @@
                 processing: true,
                 serverSide: true,
                 responsive: true,
+                lengthMenu: [
+                    [10, 50, 100, -1],
+                    [10, 50, 100, "Semua"]
+                ],
                 ajax: `{{ url('admin/setting_attr/supplier/get_supplier') }}`,
                 columns: [{
                         data: 'DT_RowIndex',

@@ -171,7 +171,7 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    url: "{{ route('admin.asetrt.pemeliharaan.scheduleStore', $id) }}",
+                    url: "{{ route('admin.aset.pemeliharaan.scheduleStore', $id) }}",
                     type: "POST",
                     data: formData,
                     processData: false,

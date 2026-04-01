@@ -19,9 +19,13 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                            <h3 class="card-title font-weight-bold"><i class="fa-solid fa-computer"></i> Aset TIK <span class="badge end-0 mr-3 bg-info text-light">{{ $totalAssets }}</span></h3>
-                            <button type="button" id="btnOpenCreateModal" class="btn btn-outline-primary" style="margin-left: auto;" data-toggle="tooltip" data-placement="top" title="Tambah Data">
+                        <div class="card-header d-flex bd-highlight">
+                            <h3 class="card-title font-weight-bold mr-auto p-2 bd-highlight"><i class="fa-solid fa-computer"></i> Aset TIK <span class="badge end-0 mr-3 bg-info text-light">{{ $totalAssets }}</span></h3>
+                            {{-- buat 2 tombol rata kanan --}}
+                            <a href="javascript:void(0)" id="btnExport" class="btn btn-outline-primary bd-highlight" data-toggle="tooltip" data-placement="top" title="Export">
+                                <i class="fas fa-file-arrow-down"></i> Export
+                            </a>
+                            <button type="button" id="btnOpenCreateModal" class="btn btn-outline-primary bd-highlight" data-toggle="tooltip" data-placement="top" title="Tambah Data">
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
@@ -194,6 +198,58 @@
                     var modal = $(this)
                 });
             });
+
+            // buat fungsi export
+            // $('#btnExport').on('click', function(e) {
+            //     e.preventDefault();
+            //     // alert('export');
+
+            //     // Opsional: Beri loading state pada tombol
+            //     const originalText = $(this).html();
+            //     $(this).html('<i class="fa fa-spinner fa-spin"></i> Menyiapkan Data...').addClass('disabled');
+
+            //     window.location.href = "{{ route('admin.asettik.export') }}";
+            //     // Kembalikan tombol setelah beberapa detik
+            //     setTimeout(() => {
+            //         $(this).html(originalText).removeClass('disabled');
+            //     }, 5000);
+            // });
+
+            //buat fungsi export dengan gaya sweetalert
+            $('#btnExport').on('click', function(e) {
+                e.preventDefault();
+                // alert('export');
+
+                // Opsional: Beri loading state pada tombol
+                const originalText = $(this).html();
+                $(this).html('<i class="fa fa-spinner fa-spin"></i> Menyiapkan Data...').addClass('disabled');
+
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    onOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+
+                Toast.fire({
+                    icon: 'info',
+                    title: 'Menyiapkan Data...'
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        window.location.href = "{{ route('admin.asettik.export') }}";
+                    }
+                    // Kembalikan tombol setelah beberapa detik
+                    setTimeout(() => {
+                        $(this).html(originalText).removeClass('disabled');
+                    });
+                });
+            })
         </script>
     @endpush
 @endsection

@@ -8,13 +8,14 @@
 
 @push('script-head')
     {{-- DataTable Css --}}
-    <link rel="stylesheet" href="{{ asset("https://cdn.datatables.net/2.3.1/css/dataTables.bootstrap4.css") }}">
+    {{-- <link rel="stylesheet" href="{{ asset('https://cdn.datatables.net/2.3.1/css/dataTables.bootstrap4.css') }}"> --}}
+    <link rel="stylesheet" href="{{ asset('assets\plugins\datatables-rowgroup\css\rowGroup.bootstrap4.min.css') }}">
 @endpush
 
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            <div class="card">
+            <div class="card shadow">
                 <div class="card-header">
                     <h3 class="card-title"><i class="fa-solid fa-database"></i> Daftar Lokasi</h3>
                     <div class="card-tools">
@@ -35,6 +36,7 @@
                                     <th>No</th>
                                     <th>Nama Gedung</th>
                                     <th>Nama Ruangan</th>
+                                    <th>Lantai</th>
                                     <th>Timestamp</th>
                                     <th>Opsi</th>
                                 </tr>
@@ -109,14 +111,70 @@
 @endsection
 
 @push('script-foot')
+    <script src="{{ asset('assets/plugins/datatables-rowgroup/js/dataTables.rowGroup.min.js') }}"></script>
     <script>
         // Table Model
+        // function initTableModel() {
+        //     $('#tableLokasi').DataTable({
+        //         processing: true,
+        //         serverSide: true,
+        //         responsive: true,
+        //         lengthMenu: [
+        //             [10, 50, 100, -1],
+        //             [10, 50, 100, "Semua"]
+        //         ],
+        //         ajax: `{{ url('admin/setting_attr/lokasi/get_lokasi') }}`,
+        //         rowGroup: {
+        //             dataSrc: 'name'
+        //         }
+        //         columns: [{
+        //                 data: 'DT_RowIndex',
+        //                 name: 'DT_RowIndex',
+        //                 searchable: false,
+        //                 orderable: false
+        //             },
+        //             {
+        //                 data: 'name',
+        //                 name: 'name',
+        //             },
+        //             {
+        //                 data: 'ruangan',
+        //                 name: 'ruangan',
+        //                 render: function(data, type, row) {
+        //                     return data  ? `<span class="text-primary">${data}</span>` : `<span class="text-muted">Tidak ada ruangan</span>`;
+        //                 }
+        //             },
+        //             {
+        //                 data: null,
+        //                 name: 'timestamp',
+        //                 render: function(data) {
+        //                     return `<span class="text-muted small">Dibuat: ${moment(data.created_at).format('lll')} <br>
+    //                         Diupdate: ${moment(data.updated_at).format('lll')}</span>`;
+        //                 },
+        //             },
+        //             {
+        //                 data: 'action',
+        //                 name: 'action',
+        //                 orderable: false,
+        //                 searchable: false
+        //             }
+        //         ],
+        //         order: [
+        //             [0, 'asc']
+        //         ],
+        //     });
+        // }
+
         function initTableModel() {
             $('#tableLokasi').DataTable({
                 processing: true,
                 serverSide: true,
                 responsive: true,
-                ajax: `{{ url('admin/setting_attr/lokasi/get_lokasi') }}`,
+                lengthMenu: [
+                    [10, 50, 100, -1],
+                    [10, 50, 100, "Semua"]
+                ],
+                ajax: `{{ url('admin/setting_attr/lokasi/get_lokasiv2') }}`,
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
@@ -124,17 +182,19 @@
                         orderable: false
                     },
                     {
+                        data: null,
+                        name: 'building_id',
+                        // render: function(row) {
+                        //     return row ? `<span class="text-primary">${row.building.name}</span>` : `<span class="text-muted">Tidak ada ruangan</span>`;
+                        // },
+                    },
+                    {
                         data: 'name',
                         name: 'name',
                     },
                     {
-                        data: 'ruangan',
-                        name: 'ruangan',
-                        render: function(data, type, row) {
-                            // return data ? data : '<span class="text-muted">Tidak ada ruangan</span>';
-                            return data ? `<span class="badge text-primary">${data}</span>` : `<span class="text-muted">Tidak ada ruangan</span>`;
-
-                        }
+                        data: 'floor',
+                        name: 'floor',
                     },
                     {
                         data: null,
@@ -153,6 +213,18 @@
                 ],
                 order: [
                     [0, 'asc']
+                ],
+                rowGroup: {
+                    dataSrc: function(row) {
+                        return row.building.name;
+                    },
+                    startRender: function(rows, group) {
+                        return `Gedung: <span class="text-primary">${group}</span>` + ` <span class="btn btn-sm btn-outline-primary" id="btnOpenEditModal"><i class="fa-regular fa-pen-to-square"></i></span>`;
+                    },
+                    searchable: true
+                },
+                columnDefs: [
+                    { targets: [1], visible: false } // Sembunyikan kolom asli agar lebih rapi
                 ],
             });
         }

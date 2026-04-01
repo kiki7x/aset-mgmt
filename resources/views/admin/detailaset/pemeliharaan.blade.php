@@ -111,7 +111,7 @@
                 processing: true,
                 serverSide: true,
                 responsive: true,
-                ajax: "{{ route('admin.asetrt.pemeliharaan.scheduleDataTable', $id) }}",
+                ajax: "{{ route('admin.aset.pemeliharaan.scheduleDataTable', $id) }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex'
@@ -177,7 +177,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: "{{ route('admin.asetrt.pemeliharaan.scheduleDelete', ['id' => ':id']) }}".replace(':id', id),
+                        url: "{{ route('admin.aset.pemeliharaan.scheduleDelete', ['id' => ':id']) }}".replace(':id', id),
                         dataType: "json",
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -208,7 +208,7 @@
                 processing: true,
                 serverSide: true,
                 responsive: true,
-                ajax: "{{ route('admin.asetrt.pemeliharaan.preventifDataTable', $id) }}",
+                ajax: "{{ route('admin.aset.pemeliharaan.preventifDataTable', $id) }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex'
@@ -291,7 +291,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: "{{ route('admin.asetrt.pemeliharaan.preventifDelete', ['id' => ':id']) }}".replace(':id', id),
+                        url: "{{ route('admin.aset.pemeliharaan.preventifDelete', ['id' => ':id']) }}".replace(':id', id),
                         dataType: "json",
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -322,7 +322,7 @@
                 processing: true,
                 serverSide: true,
                 responsive: true,
-                ajax: "{{ route('admin.asetrt.pemeliharaan.korektifDataTable', $id) }}",
+                ajax: "{{ route('admin.aset.pemeliharaan.korektifDataTable', $id) }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex'

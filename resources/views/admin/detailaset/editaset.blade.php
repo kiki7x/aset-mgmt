@@ -109,8 +109,8 @@
                     <span id="error-admin_id" class="text-danger small"></span>
                 </div>
                 <div class="form-group col-md-6">
-                    <label for="purchaseDateInput">Tanggal Perolehan:</label>
-                    <input type="text" name="purchase_date" id="purchaseDateInput" class="form-control" placeholder="Select date" value="{{ $asset->purchase_date ?? '' }}">
+                    <label for="purchase_date">Tanggal Perolehan:</label>
+                    <input type="text" name="purchase_date" id="purchase_date" class="form-control" placeholder="Select date" value="{{ $asset->purchase_date ?? '' }}">
                     <span id="error-purchase_date" class="text-danger small"></span>
                 </div>
                 <div class="form-group col-md-6">
@@ -143,11 +143,6 @@
     <script src="{{ asset('assets/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
     {{-- Select2 --}}
     <script src="{{ asset('assets/plugins/select2/js/select2.full.min.js') }}"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    {{-- Laravel javascript Validation --}}
-    {{-- <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.min.js') }}"></script> --}}
-    {{-- {!! JsValidator::formRequest('App\Http\Requests\UpdateAssetRequest', '#formEditAsset') !!} --}}
 
     <script>
         // $(document).ready(function() {
@@ -184,15 +179,13 @@
                 };
             }
         });
-
-        // Inisialisasi Flatpickr
-        flatpickr("#purchaseDateInput", {
-            dateFormat: "Y-m-d",
-            allowInput: true, // Memungkinkan input manual
-            // Anda bisa menambahkan opsi lain di sini, misalnya:
-            // defaultDate: initialAssetData.purchase_date,
-            // enableTime: false,
-        });
+        $('#purchase_date').datepicker({
+                format: "yyyy-mm-dd",
+                autoclose: true,
+                todayHighlight: true,
+                orientation: "bottom auto",
+                todayBtn: "linked",
+            });
     </script>
     <script>
         $(document).ready(function() {

@@ -15,7 +15,7 @@ class UserController extends Controller
     {
         $totalUsers = \App\Models\User::all()->count();
         $roles = \Spatie\Permission\Models\Role::all();
-        return view('admin.usermanager.index', compact('totalUsers', 'roles'));
+        return view('admin.settings.usermanager.index', compact('totalUsers', 'roles'));
     }
 
     public function getUsers(Request $request): JsonResponse

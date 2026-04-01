@@ -1,5 +1,3 @@
-{{-- Ini layout default untuk semua halaman livewire --}}
-
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -36,13 +34,11 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 
-    <!-- date-picker -->
-    <x-flatpickr::style />
+
     {{-- script-head --}}
     @stack('script-head')
     {{-- ./script-head --}}
 
-    @livewireStyles
 </head>
 
 {{-- <body class="hold-transition layout-top-nav layout-fixed layout-navbar-fixed text-sm"> --}}
@@ -112,7 +108,6 @@
     {{-- script tambahan --}}
     @stack('script')
     {{-- ./script tambahan --}}
-    @livewireScripts
 </body>
 
 </html>

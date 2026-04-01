@@ -1,6 +1,6 @@
 @extends('layouts.front', ['title' => 'Statistik - SAPA PPL'])
 
-@push('scripts-head')
+@push('script-head')
 @endpush
 
 @section('content')
@@ -62,7 +62,7 @@
     </main><!-- End #main -->
 @endsection
 
-@push('scripts')
+@push('script-foot')
 <script>
     //-------------
     //- PIE CHART -

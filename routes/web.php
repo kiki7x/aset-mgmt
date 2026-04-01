@@ -35,6 +35,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::get('/asettik/{id}/edit', [App\Http\Controllers\ShowAsetController::class, 'getEditAssetContent'])->name('admin.asettik.edit');
         Route::patch('/asettik/{id}/update', [App\Http\Controllers\AssetController::class, 'update'])->name('admin.asettik.update');
         Route::delete('/asettik/destroy/{id}/{classification}', [App\Http\Controllers\AssetController::class, 'destroy'])->name('admin.asettik.destroy');
+        Route::get('/asettik/export', [App\Http\Controllers\AssetController::class, 'exportExcelTik'])->name('admin.asettik.export');
         Route::get('/asettik/{id}/overview', [App\Http\Controllers\ShowAsetController::class, 'getOverviewContent'])->name('admin.asettik.overview');
         Route::get('/asettik/{id}/pemeliharaan', [App\Http\Controllers\PemeliharaanController::class, 'index'])->name('admin.asettik.pemeliharaan');
         Route::get('/asettik/{id}/penugasan', [App\Http\Controllers\ShowAsetController::class, 'getPenugasanContent'])->name('admin.asettik.penugasan');
@@ -51,27 +52,45 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::delete('/asetrt/destroy/{id}/{classification}', [App\Http\Controllers\AssetController::class, 'destroy'])->name('admin.asetrt.destroy');
         Route::get('/asetrt/{id}', [App\Http\Controllers\ShowAsetController::class, 'showDetails'])->name('admin.asetrt.details');
         Route::get('/asetrt/{id}/overview', [App\Http\Controllers\ShowAsetController::class, 'getOverviewContent'])->name('admin.asetrt.overview');
-        Route::get('/asetrt/{id}/pemeliharaan', [App\Http\Controllers\PemeliharaanController::class, 'index'])->name('admin.asetrt.pemeliharaan');
-        Route::get('/asetrt/{id}/pemeliharaan/scheduleDataTable', [App\Http\Controllers\PemeliharaanController::class, 'scheduledataTable'])->name('admin.asetrt.pemeliharaan.scheduleDataTable');
-        Route::post('/asetrt/{id}/pemeliharaan/schedulestore', [App\Http\Controllers\PemeliharaanController::class, 'scheduleStore'])->name('admin.asetrt.pemeliharaan.scheduleStore');
-        Route::get('/asetrt/{id}/pemeliharaan/scheduleEdit/', [App\Http\Controllers\PemeliharaanController::class, 'scheduleEdit'])->name('admin.asetrt.pemeliharaan.scheduleEdit');
-        Route::patch('/asetrt/{id}/pemeliharaan/scheduleUpdate', [App\Http\Controllers\PemeliharaanController::class, 'scheduleUpdate'])->name('admin.asetrt.pemeliharaan.scheduleUpdate');
-        Route::delete('/asetrt/{id}/pemeliharaan/scheduleDelete', [App\Http\Controllers\PemeliharaanController::class, 'scheduleDelete'])->name('admin.asetrt.pemeliharaan.scheduleDelete');
-        Route::get('/asetrt/{id}/pemeliharaan/preventifAdd', [App\Http\Controllers\PemeliharaanController::class, 'preventifAdd'])->name('admin.asetrt.pemeliharaan.preventifAdd');
-        Route::post('/asetrt/{id}/pemeliharaan/preventifStore', [App\Http\Controllers\PemeliharaanController::class, 'preventifStore'])->name('admin.asetrt.pemeliharaan.preventifStore');
-        Route::get('/asetrt/{id}/pemeliharaan/preventifEdit', [App\Http\Controllers\PemeliharaanController::class, 'preventifEdit'])->name('admin.asetrt.pemeliharaan.preventifEdit');
-        Route::patch('/asetrt/{id}/pemeliharaan/preventifUpdate', [App\Http\Controllers\PemeliharaanController::class, 'preventifUpdate'])->name('admin.asetrt.pemeliharaan.preventifUpdate');
-        Route::delete('/asetrt/{id}/pemeliharaan/preventifDelete', [App\Http\Controllers\PemeliharaanController::class, 'preventifDelete'])->name('admin.asetrt.pemeliharaan.preventifDelete');
-        Route::get('/asetrt/{id}/pemeliharaan/preventifDataTable', [App\Http\Controllers\PemeliharaanController::class, 'preventifDataTable'])->name('admin.asetrt.pemeliharaan.preventifDataTable');
-        Route::get('/asetrt/{id}/pemeliharaan/korektif', [App\Http\Controllers\PemeliharaanController::class, 'korektif'])->name('admin.asetrt.pemeliharaan.korektif');
-        Route::get('/asetrt/{id}/pemeliharaan/korektifDataTable', [App\Http\Controllers\PemeliharaanController::class, 'korektifDataTable'])->name('admin.asetrt.pemeliharaan.korektifDataTable');
-        Route::get('/asetrt/{id}/pemeliharaan/korektifStore', [App\Http\Controllers\PemeliharaanController::class, 'korektifStore'])->name('admin.asetrt.pemeliharaan.korektifStore');
+        // Route::get('/asetrt/{id}/pemeliharaan', [App\Http\Controllers\PemeliharaanController::class, 'index'])->name('admin.asetrt.pemeliharaan');
+        // Route::get('/asetrt/{id}/pemeliharaan/scheduleDataTable', [App\Http\Controllers\PemeliharaanController::class, 'scheduledataTable'])->name('admin.asetrt.pemeliharaan.scheduleDataTable');
+        // Route::post('/asetrt/{id}/pemeliharaan/schedulestore', [App\Http\Controllers\PemeliharaanController::class, 'scheduleStore'])->name('admin.asetrt.pemeliharaan.scheduleStore');
+        // Route::get('/asetrt/{id}/pemeliharaan/scheduleEdit/', [App\Http\Controllers\PemeliharaanController::class, 'scheduleEdit'])->name('admin.asetrt.pemeliharaan.scheduleEdit');
+        // Route::patch('/asetrt/{id}/pemeliharaan/scheduleUpdate', [App\Http\Controllers\PemeliharaanController::class, 'scheduleUpdate'])->name('admin.asetrt.pemeliharaan.scheduleUpdate');
+        // Route::delete('/asetrt/{id}/pemeliharaan/scheduleDelete', [App\Http\Controllers\PemeliharaanController::class, 'scheduleDelete'])->name('admin.asetrt.pemeliharaan.scheduleDelete');
+        // Route::get('/asetrt/{id}/pemeliharaan/preventifAdd', [App\Http\Controllers\PemeliharaanController::class, 'preventifAdd'])->name('admin.asetrt.pemeliharaan.preventifAdd');
+        // Route::post('/asetrt/{id}/pemeliharaan/preventifStore', [App\Http\Controllers\PemeliharaanController::class, 'preventifStore'])->name('admin.asetrt.pemeliharaan.preventifStore');
+        // Route::get('/asetrt/{id}/pemeliharaan/preventifEdit', [App\Http\Controllers\PemeliharaanController::class, 'preventifEdit'])->name('admin.asetrt.pemeliharaan.preventifEdit');
+        // Route::patch('/asetrt/{id}/pemeliharaan/preventifUpdate', [App\Http\Controllers\PemeliharaanController::class, 'preventifUpdate'])->name('admin.asetrt.pemeliharaan.preventifUpdate');
+        // Route::delete('/asetrt/{id}/pemeliharaan/preventifDelete', [App\Http\Controllers\PemeliharaanController::class, 'preventifDelete'])->name('admin.asetrt.pemeliharaan.preventifDelete');
+        // Route::get('/asetrt/{id}/pemeliharaan/preventifDataTable', [App\Http\Controllers\PemeliharaanController::class, 'preventifDataTable'])->name('admin.asetrt.pemeliharaan.preventifDataTable');
+        // Route::get('/asetrt/{id}/pemeliharaan/korektif', [App\Http\Controllers\PemeliharaanController::class, 'korektif'])->name('admin.asetrt.pemeliharaan.korektif');
+        // Route::get('/asetrt/{id}/pemeliharaan/korektifDataTable', [App\Http\Controllers\PemeliharaanController::class, 'korektifDataTable'])->name('admin.asetrt.pemeliharaan.korektifDataTable');
+        // Route::get('/asetrt/{id}/pemeliharaan/korektifStore', [App\Http\Controllers\PemeliharaanController::class, 'korektifStore'])->name('admin.asetrt.pemeliharaan.korektifStore');
+
         Route::get('/asetrt/{id}/penugasan', [App\Http\Controllers\ShowAsetController::class, 'getPenugasanContent'])->name('admin.asetrt.penugasan');
         Route::get('/asetrt/{id}/tickets', [App\Http\Controllers\ShowAsetController::class, 'getTicketsContent'])->name('admin.asetrt.tickets');
         Route::get('/asetrt/{id}/files', [App\Http\Controllers\ShowAsetController::class, 'getFilesContent'])->name('admin.asetrt.files');
         Route::get('/asetrt/{id}/timelog', [App\Http\Controllers\ShowAsetController::class, 'getTimeLogContent'])->name('admin.asetrt.timelog');
         Route::get('/asetrt/{id}/edit', [App\Http\Controllers\ShowAsetController::class, 'getEditAssetContent'])->name('admin.asetrt.edit');
     });
+
+    // Route Individual Pemeliharaan Aset
+    Route::get('/aset/{id}/pemeliharaan', [App\Http\Controllers\PemeliharaanController::class, 'index'])->name('admin.asetrt.pemeliharaan');
+    Route::get('/aset/{id}/pemeliharaan/scheduleDataTable', [App\Http\Controllers\PemeliharaanController::class, 'scheduledataTable'])->name('admin.aset.pemeliharaan.scheduleDataTable');
+    Route::post('/aset/{id}/pemeliharaan/schedulestore', [App\Http\Controllers\PemeliharaanController::class, 'scheduleStore'])->name('admin.aset.pemeliharaan.scheduleStore');
+    Route::get('/aset/{id}/pemeliharaan/scheduleEdit/', [App\Http\Controllers\PemeliharaanController::class, 'scheduleEdit'])->name('admin.aset.pemeliharaan.scheduleEdit');
+    Route::patch('/aset/{id}/pemeliharaan/scheduleUpdate', [App\Http\Controllers\PemeliharaanController::class, 'scheduleUpdate'])->name('admin.aset.pemeliharaan.scheduleUpdate');
+    Route::delete('/aset/{id}/pemeliharaan/scheduleDelete', [App\Http\Controllers\PemeliharaanController::class, 'scheduleDelete'])->name('admin.aset.pemeliharaan.scheduleDelete');
+    Route::get('/aset/{id}/pemeliharaan/preventifAdd', [App\Http\Controllers\PemeliharaanController::class, 'preventifAdd'])->name('admin.aset.pemeliharaan.preventifAdd');
+    Route::post('/aset/{id}/pemeliharaan/preventifStore', [App\Http\Controllers\PemeliharaanController::class, 'preventifStore'])->name('admin.aset.pemeliharaan.preventifStore');
+    Route::get('/aset/{id}/pemeliharaan/preventifEdit', [App\Http\Controllers\PemeliharaanController::class, 'preventifEdit'])->name('admin.aset.pemeliharaan.preventifEdit');
+    Route::patch('/aset/{id}/pemeliharaan/preventifUpdate', [App\Http\Controllers\PemeliharaanController::class, 'preventifUpdate'])->name('admin.aset.pemeliharaan.preventifUpdate');
+    Route::delete('/aset/{id}/pemeliharaan/preventifDelete', [App\Http\Controllers\PemeliharaanController::class, 'preventifDelete'])->name('admin.aset.pemeliharaan.preventifDelete');
+    Route::get('/aset/{id}/pemeliharaan/preventifDataTable', [App\Http\Controllers\PemeliharaanController::class, 'preventifDataTable'])->name('admin.aset.pemeliharaan.preventifDataTable');
+    Route::get('/aset/{id}/pemeliharaan/korektif', [App\Http\Controllers\PemeliharaanController::class, 'korektif'])->name('admin.aset.pemeliharaan.korektif');
+    Route::get('/aset/{id}/pemeliharaan/korektifDataTable', [App\Http\Controllers\PemeliharaanController::class, 'korektifDataTable'])->name('admin.aset.pemeliharaan.korektifDataTable');
+    Route::get('/aset/{id}/pemeliharaan/korektifStore', [App\Http\Controllers\PemeliharaanController::class, 'korektifStore'])->name('admin.aset.pemeliharaan.korektifStore');
 
 
     // Route Pemeliharaan Korektif
@@ -138,6 +157,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         // Route Setting Lokasi
         Route::get('/setting_attr/lokasi', [App\Http\Controllers\SetatributController::class, 'lokasi'])->name('admin.setting_attr.lokasi');
         Route::get('/setting_attr/lokasi/get_lokasi', [App\Http\Controllers\SetatributController::class, 'getLokasi'])->name('admin.setting_attr.lokasi.get_lokasi');
+        Route::get('/setting_attr/lokasi/get_lokasiv2', [App\Http\Controllers\SetatributController::class, 'getLokasiv2'])->name('admin.setting_attr.lokasi.get_lokasiv2');
         Route::post('/setting_attr/lokasi/store', [App\Http\Controllers\SetatributController::class, 'storeLokasi'])->name('admin.setting_attr.lokasi.store');
         Route::get('/setting_attr/lokasi/edit/{id}', [App\Http\Controllers\SetatributController::class, 'editLokasi'])->name('admin.setting_attr.lokasi.edit');
         Route::patch('/setting_attr/lokasi/update/{id}', [App\Http\Controllers\SetatributController::class, 'updateLokasi'])->name('admin.setting_attr.lokasi.update');
@@ -172,11 +192,12 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
     // Route Laporan
     Route::middleware(['role:superadmin|admin_tik|admin_rt'])->group(function () {
-    Route::get('/laporan', [App\Http\Controllers\LaporanController::class, 'index'])->name('admin.laporan');
+        Route::get('/laporan', [App\Http\Controllers\LaporanController::class, 'index'])->name('admin.laporan');
     });
 
-    // Route User Manager
-    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering'])->group(function () {
+    // Route Settings
+    Route::middleware(['role:superadmin|admin_tik|admin_rt'])->group(function () {
+        // Route User Manager
         Route::get('settings/usermanager', [App\Http\Controllers\UserController::class, 'index'])->name('admin.settings.usermanager');
         Route::get('settings/usermanager/get_users', [App\Http\Controllers\UserController::class, 'getUsers'])->name('admin.settings.usermanager.get_users');
         Route::post('settings/usermanager/store', [App\Http\Controllers\UserController::class, 'store'])->name('admin.settings.usermanager.store');
@@ -185,7 +206,14 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::delete('settings/usermanager/delete/{id}', [App\Http\Controllers\UserController::class, 'delete'])->name('admin.settings.usermanager.delete');
         Route::get('settings/usermanager/profil/{id}', [App\Http\Controllers\UserController::class, 'profil'])->name('admin.settings.usermanager.profil');
         Route::get('settings/usermanager/edit/{id}', [App\Http\Controllers\UserController::class, 'edit'])->name('admin.settings.usermanager.edit');
-    });
+        // Route Import
+        Route::get('settings/import', [App\Http\Controllers\ImportController::class, 'index'])->name('admin.settings.import');
+        Route::post('settings/import/storelokasi', [App\Http\Controllers\ImportController::class, 'storeLokasi'])->name('admin.settings.import.storelokasi');
+        Route::post('settings/import/storeasettik', [App\Http\Controllers\ImportController::class, 'storeAsetTik'])->name('admin.settings.import.storeasettik');
+        Route::post('settings/import/storeasetrt', [App\Http\Controllers\ImportController::class, 'storeAsetRt'])->name('admin.settings.import.storeasetrt');
+        // Route Logs
+        Route::get('settings/logs', [App\Http\Controllers\LogsController::class, 'index'])->name('admin.settings.logs');
+        });
 
     // Route Notifikasi
     Route::get('/notifikasi', [App\Http\Controllers\NotifikasiController::class, 'index'])->name('admin.notifikasi');
@@ -218,3 +246,6 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         return back();
     })->name('admin.tandai-notifikasi-telah-dibaca');
 });
+
+// Route fetch untuk mengambil id whatsapp group, dipakai cukup hanya sekali saja
+// Route::get('/fetch-whatsapp-groups', [App\Http\Controllers\WhatsappGroupController::class, 'getGroups']);

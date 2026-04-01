@@ -1,5 +1,4 @@
 <?php
-// app/Http/Requests/AsettikRequest.php
 
 namespace App\Http\Requests;
 

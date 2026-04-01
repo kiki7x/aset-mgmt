@@ -9,7 +9,7 @@
                 </button>
             </div>
 
-            <form id="formCreateAsetTIK" method="POST">
+            <form id="formCreateAsetTIK" method="POST" autocomplete="off">
                 @csrf
                 <div class="modal-body">
                     <div class="row">
@@ -103,7 +103,7 @@
                             <select name="user_id" id="user_id" class="form-control select2">
                                 <option value="">None</option>
                                 @foreach ($users as $user)
-                                    <option value="{{ $user->id }}">{{ $user->username }}</option>
+                                    <option value="{{ $user->id }}">{{ $user->fullname }}</option>
                                 @endforeach
                             </select>
                             <span class="text-danger small" id="error-user_id"></span>
@@ -111,9 +111,9 @@
 
                         {{-- Purchase Date --}}
                         <div class="form-group col-md-4">
-                            <label for="purchaseDateInput">Tanggal Perolehan <span
+                            <label for="purchase_date">Tanggal Perolehan <span
                                     class="text-danger">*</span></label>
-                            <input type="date" name="purchase_date" id="purchaseDateInput" class="form-control">
+                            <input type="text" name="purchase_date" id="purchase_date" class="form-control" placeholder="Select date">
                             <span class="text-danger small" id="error-purchase_date"></span>
                         </div>
 
@@ -165,6 +165,13 @@
                 width: '100%',
                 maximumSelectionLength: 1,
                 placeholder: 'Pilih atau tambahkan...',
+            });
+            $('#purchase_date').datepicker({
+                format: "yyyy-mm-dd",
+                autoclose: true,
+                todayHighlight: true,
+                orientation: "bottom auto",
+                todayBtn: "linked",
             });
         });
     </script>

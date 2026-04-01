@@ -12,7 +12,7 @@
                 @csrf
                 <div class="modal-body">
                     <div class="row">
-                        <!-- Asset Name -->
+                        <!-- Judul -->
                         <div class="form-group col-md-12">
                             <label for="name">Judul Penugasan / Tindakan Korektif<span class="text-danger">*</span></label>
                             <input type="text" name="name" class="form-control" id="name" placeholder="Contoh: 'Install software MS Office' / 'Perbaikan Kendaraan ABC atau Mesin XYZ'">
