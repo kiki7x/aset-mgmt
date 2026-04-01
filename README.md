@@ -93,16 +93,6 @@ Ensure you have the following installed:
    php artisan migrate
    ```
 
-8. Build frontend assets:
-   ```bash
-   npm run dev
-   ```
-
-9. Start the development server:
-   ```bash
-   php artisan serve
-   ```
-
 Visit `http://localhost:8000` in your browser to access the application.
 
 ---
