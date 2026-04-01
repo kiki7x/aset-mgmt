@@ -22,7 +22,7 @@ Route::get('/team', [App\Http\Controllers\FrontController::class, 'team'])->name
 Route::get('/faq', [App\Http\Controllers\FrontController::class, 'faq'])->name('faq');
 Route::get('/lacak', [App\Http\Controllers\FrontController::class, 'lacak'])->name('lacak');
 Route::get('/lacak/show/{id}', [App\Http\Controllers\FrontController::class, 'lacak_show'])->name('lacak.show');
-Route::get('servicedesk', [App\Http\Controllers\FrontController::class, 'servicedesk'])->name('servicedesk');
+Route::get('/servicedesk', [App\Http\Controllers\FrontController::class, 'servicedesk'])->name('servicedesk');
 
 //Admin Area
 Route::prefix('admin')->middleware('auth')->group(function () {
