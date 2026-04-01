@@ -50,10 +50,9 @@
                                     <tr>
                                         <th>Tiket</th>
                                         <th>Pemohon</th>
-                                        <th>Jenis</th>
+                                        <th>Jenis & Bidang</th>
                                         <th>Judul</th>
                                         <th>Deskripsi</th>
-                                        <th>Bidang</th>
                                         <th class="text-center">Prioritas</th>
                                         <th class="text-center">Status</th>
                                         <th class="text-center">Tanggal</th>
