@@ -80,112 +80,106 @@
             });
 
             function tablePemeliharaan() {
-                $('#tablePemeliharaan').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    responsive: true,
-                    ajax: "{{ route('admin.pemeliharaan.pemeliharaanDataTable') }}",
-                    columns: [{
-                            data: 'id',
-                            name: 'id'
-                        },
-                        {
-                            data: 'pemohon',
-                            name: 'pemohon'
-                        },
-                        {
-                            data: 'name',
-                            name: 'name',
-                            render: function(data, type, row) {
-                                let html = '';
-                                if (row.issuetype == "Tugas") html += "<i class='fa-regular fa-square-check fa-fw text-info' data-toggle='tooltip' title='Tugas'></i>&nbsp;";
-                                if (row.issuetype == "Perbaikan") html += "<i class='fa-solid fa-screwdriver-wrench fa-fw text-warning' data-toggle='tooltip' title='Perbaikan'></i>&nbsp;";
-                                if (row.issuetype == "Peningkatan") html += "<i class='fa-solid fa-arrow-up-right-dots fa-fw text-teal' data-toggle='tooltip' title='Peningkatan'></i>&nbsp;";
-                                if (row.issuetype == "Celah") html += "<i class='fa-solid fa-bug fa-fw text-danger' data-toggle='tooltip' title='Celah'></i>&nbsp;";
-                                if (row.issuetype == "Fitur Baru") html += "<i class='fa-regular fa-plus-square fa-fw text-success' data-toggle='tooltip' title='Fitur Baru'></i>&nbsp;";
-                                if (row.issuetype == "Informasi") html += "<i class='fa-solid fa-circle-info text-danger' data-toggle='tooltip' title='Informasi'></i>&nbsp;";
 
-                                return html + row.name;
-                            }
-                        },
-                        {
-                            data: 'description',
-                            name: 'description',
-                            render: function(data, type, row) {
-                                return data;
-                            }
-                        },
-                        {
-                            data: 'pic',
-                            name: 'pic',
-                            render: function(data, type, row) {
-                                let html = '';
-                                if (row.pic.avatar != null) {
-                                    html += "<img src='" + row.pic.avatar + "' alt='Avatar' class='img-circle' width='25' height='25'>&nbsp;";
-                                } else {
-                                    html += "<img src='{{ asset('storage/avatar/default-avatar.jpg') }}' alt='Avatar' class='img-circle' width='25' height='25'>&nbsp;";
-                                }
-                                return html + row.pic;
-                            }
-                        },
-                        {
-                            data: 'asset',
-                            name: 'asset',
-                            render: function(data, type, row) {
-                                return '<a href="/admin/asettik/' + row.asset_id + '/overview" target="_blank">' + row.asset.tag + ' - ' + row.asset.name + '</a>';
-                            }
-                        },
-                        {
-                            data: 'priority',
-                            name: 'priority',
-                            render: function(data, type, row) {
-                                let priorityBadge = '';
-                                if (data === 'Tinggi') {
-                                    priorityBadge = '<span class="badge" style="border:1px solid #dc3545; color:#dc3545;"><i class="fa fa-flag fa-fw text-danger" data-toggle="tooltip" title="Tinggi"></i>&nbsp;Tinggi</span>';
-                                } else if (data === 'Sedang') {
-                                    priorityBadge = '<span class="badge" style="border:1px solid #ffc107; color:#ffc107;"><i class="fa fa-flag fa-fw text-warning" data-toggle="tooltip" title="Sedang"></i>&nbsp;Sedang</span>';
-                                } else if (data === 'Rendah') {
-                                    priorityBadge = '<span class="badge" style="border:1px solid #6c757d; color:#6c757d;"><i class="fa fa-flag fa-fw text-secondary" data-toggle="tooltip" title="Rendah"></i>&nbsp;Rendah</span>';
-                                } else {
-                                    priorityBadge = '<span class="badge badge-secondary">' + data + '</span>';
-                                }
-                                return '<div style="text-align: center;">' + priorityBadge + '</div>';
-                            }
-                        },
-                        {
-                            data: 'status',
-                            name: 'status',
-                            render: function(data, type, row) {
-                                let statusBadge = '';
-                                if (data === 'Segera Kerjakan') {
-                                    statusBadge = '<span class="badge badge-danger">Segera Kerjakan</span>';
-                                } else if (data === 'Sedang Dikerjakan') {
-                                    statusBadge = '<span class="badge badge-warning">Sedang Dikerjakan</span>';
-                                } else if (data === 'Ditahan') {
-                                    statusBadge = '<span class="badge badge-secondary">Ditahan</span>' + (row.notes ? ' <br> <span class="text-muted">alasan tertahan: ' + row.notes : '</span>');
-                                } else if (data === 'Selesai') {
-                                    statusBadge = '<span class="badge badge-success">Selesai</span>';
-                                } else {
-                                    statusBadge = '<span class="badge badge-secondary">' + data + '</span>';
-                                }
-                                return '<div style="text-align: center;">' + statusBadge + '</div>';
-                            }
-                        },
-                        {
-                            data: 'duedate',
-                            name: 'duedate',
-                            render: function(data, type, row) {
-                                return '<div style="text-align: center;">' + data + '</div>';
-                            }
-                        },
-                        {
-                            data: 'action',
-                            name: 'action',
-                            orderable: false,
-                            searchable: false
-                        }
-                    ],
-                })
+            $('#tablePemeliharaan').DataTable({
+
+            processing:true,
+            serverSide:true,
+            responsive:true,
+
+            ajax:"{{ route('servicedesk.data') }}",
+
+            columns:[
+
+            {
+            data:'ticket',
+            name:'ticket'
+            },
+
+            {
+            data:'nama',
+            name:'nama'
+            },
+
+            {
+            data:null,
+            render:function(data,type,row){
+
+            return row.issuetype + " - " + row.department;
+
+            }
+            },
+
+            {
+            data:'subject',
+            name:'subject'
+            },
+
+            {
+            data:'description',
+            name:'description'
+            },
+
+            {
+            data:'priority',
+            name:'priority',
+            render:function(data){
+
+            if(data == 'High'){
+            return '<span style="color: rgb(255,0,0); font-weight:600;">Tinggi</span>';
+            }
+
+            if(data == 'Medium'){
+            return '<span style="color: rgb(255,255,0); font-weight:600;">Sedang</span>';
+            }
+
+            if(data == 'Low'){
+            return '<span style="color: rgb(0,128,0); font-weight:600;">Rendah</span>';
+            }
+
+            return data;
+
+            }
+            },
+
+            {
+            data:'status',
+            name:'status',
+            render:function(data){
+
+            if(data == 'Open'){
+            return '<span class="badge badge-danger">Segera Kerjakan</span>';
+            }
+
+            if(data == 'Progress'){
+            return '<span class="badge badge-warning">Sedang Dikerjakan</span>';
+            }
+
+            if(data == 'Done'){
+            return '<span class="badge badge-success">Selesai</span>';
+            }
+
+            return data;
+
+            }
+            },
+
+            {
+            data:'duedate',
+            name:'duedate'
+            },
+
+            {
+            data:'action',
+            name:'action',
+            orderable:false,
+            searchable:false
+            }
+
+            ]
+
+            })
+
             };
         </script>
     @endpush

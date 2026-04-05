@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
+use App\Http\Controllers\ServiceDeskController;
 
 
 // Auth Controller
@@ -23,6 +24,11 @@ Route::get('/faq', [App\Http\Controllers\FrontController::class, 'faq'])->name('
 Route::get('/lacak', [App\Http\Controllers\FrontController::class, 'lacak'])->name('lacak');
 Route::get('/lacak/show/{id}', [App\Http\Controllers\FrontController::class, 'lacak_show'])->name('lacak.show');
 Route::get('/servicedesk', [App\Http\Controllers\FrontController::class, 'servicedesk'])->name('servicedesk');
+
+//service desk tiketing system
+Route::get('/servicedesk', [ServiceDeskController::class,'index'])->name('servicedesk');
+Route::get('/servicedesk/data', [ServiceDeskController::class,'data'])->name('servicedesk.data');
+Route::post('/servicedesk/store', [ServiceDeskController::class,'store'])->name('servicedesk.store');
 
 //Admin Area
 Route::prefix('admin')->middleware('auth')->group(function () {
