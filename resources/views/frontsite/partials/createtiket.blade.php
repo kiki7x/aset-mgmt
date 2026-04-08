@@ -8,11 +8,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
-            <form action="{{ route('servicedesk.store') }}" method="POST" enctype="multipart/form-data" id="formCreateTicket">
-
-                <div class="modal-body">
-
-                    @csrf
+            <form id="formCreateTicket" method="POST" enctype="multipart/form-data">
+`               @csrf
+                <div class="modal-body" id="modalCreateTicket">
 
                     <div class="form-group row mb-3">
                         <label class="col-3 col-form-label"><strong>Nama</strong></label>

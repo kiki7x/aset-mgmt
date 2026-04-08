@@ -3,6 +3,8 @@
 @push('script-head')
     @stack('script-head')
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.1/css/dataTables.bootstrap4.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 @endpush
 
 @section('content')
@@ -56,7 +58,6 @@
                                         <th class="text-center">Prioritas</th>
                                         <th class="text-center">Status</th>
                                         <th class="text-center">Tanggal</th>
-                                        <th>Opsi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -74,113 +75,109 @@
 
 
     @push('script-foot')
+
         <script>
-            $(document).ready(function() {
-                tablePemeliharaan();
-            });
 
-            function tablePemeliharaan() {
+        $(document).ready(function(){
+            tablePemeliharaan();
+        });
 
-            $('#tablePemeliharaan').DataTable({
+        function tablePemeliharaan(){
 
-            processing:true,
-            serverSide:true,
-            responsive:true,
+        $('#tablePemeliharaan').DataTable({
 
-            ajax:"{{ route('servicedesk.data') }}",
+        processing:true,
+        serverSide:true,
+        responsive:true,
 
-            columns:[
+        ajax:"{{ route('servicedesk.data') }}",
 
-            {
-            data:'ticket',
-            name:'ticket'
-            },
+        columns:[
+        {data:'ticket',name:'ticket'},
+        {data:'nama',name:'nama'},
+        {
+        data:null,
+        render:function(data,type,row){
+        return row.issuetype + " - " + row.department;
+        }
+        },
+        {data:'subject',name:'subject'},
+        {data:'description',name:'description'},
+        {
+        data:'priority',
+        name:'priority',
+        render:function(data){
 
-            {
-            data:'nama',
-            name:'nama'
-            },
+        if(data == 'Low'){
+        return '<span style="color:#6c757d;"><i class="fa-solid fa-flag"></i> Rendah</span>';
+        }
 
-            {
-            data:null,
-            render:function(data,type,row){
+        if(data == 'Medium'){
+        return '<span style="color:#f4b400;"><i class="fa-solid fa-flag"></i> Sedang</span>';
+        }
 
-            return row.issuetype + " - " + row.department;
+        if(data == 'High'){
+        return '<span style="color:#dc3545;"><i class="fa-solid fa-flag"></i> Tinggi</span>';
+        }
 
-            }
-            },
+        return data;
 
-            {
-            data:'subject',
-            name:'subject'
-            },
+        }
+        },
+        {
+        data:'status',
+        name:'status'
+        },
+        {data:'duedate',name:'duedate'},
+        ]
 
-            {
-            data:'description',
-            name:'description'
-            },
+        });
 
-            {
-            data:'priority',
-            name:'priority',
-            render:function(data){
+        }
 
-            if(data == 'High'){
-            return '<span style="color: rgb(255,0,0); font-weight:600;">Tinggi</span>';
-            }
+        $(document).on('submit','#formCreateTicket',function(e){
 
-            if(data == 'Medium'){
-            return '<span style="color: rgb(255,255,0); font-weight:600;">Sedang</span>';
-            }
+        e.preventDefault();
 
-            if(data == 'Low'){
-            return '<span style="color: rgb(0,128,0); font-weight:600;">Rendah</span>';
-            }
+        let formData = new FormData(this);
 
-            return data;
+        $.ajax({
 
-            }
-            },
+        url:"{{ route('servicedesk.store') }}",
+        type:"POST",
+        data:formData,
+        processData:false,
+        contentType:false,
 
-            {
-            data:'status',
-            name:'status',
-            render:function(data){
+        success:function(response){
 
-            if(data == 'Open'){
-            return '<span class="badge badge-danger">Segera Kerjakan</span>';
-            }
+        if(response.success){
 
-            if(data == 'Progress'){
-            return '<span class="badge badge-warning">Sedang Dikerjakan</span>';
-            }
+        Swal.fire({
+        icon:'success',
+        title:'Berhasil',
+        text:response.message,
+        confirmButtonColor:'#3085d6'
+        }).then(()=>{
 
-            if(data == 'Done'){
-            return '<span class="badge badge-success">Selesai</span>';
-            }
+        $('#modalCreateTicket').modal('hide');
 
-            return data;
+        $('#formCreateTicket')[0].reset();
 
-            }
-            },
+        $('#tablePemeliharaan').DataTable().ajax.reload();
 
-            {
-            data:'duedate',
-            name:'duedate'
-            },
+        });
 
-            {
-            data:'action',
-            name:'action',
-            orderable:false,
-            searchable:false
-            }
+        }
 
-            ]
+        }
 
-            })
+        });
 
-            };
+        });
+
         </script>
-    @endpush
+
+        @endpush
+
 @endsection
