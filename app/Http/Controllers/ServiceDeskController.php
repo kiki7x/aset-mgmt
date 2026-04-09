@@ -126,7 +126,7 @@ class ServiceDeskController extends Controller
 
             'attachments' => $fileName,
 
-            'status' => 'Segera Kerjakan'
+            'status' => 'Open'
 
         ]);
 

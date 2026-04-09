@@ -30,9 +30,9 @@ return new class extends Migration
 
             $table->text('description');
 
-            $table->string('attachments')->nullable();
+            $table->text('attachments')->nullable();
 
-            $table->string('status')->default('Segera Kerjakan');
+            $table->string('status')->default('Open');
 
             $table->timestamps();
 
