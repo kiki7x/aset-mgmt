@@ -105,8 +105,14 @@ class ServiceDeskController extends Controller
         } elseif ($request->issuetype == 'Keluhan') {
             $prefix = 'KEL';
         }
+        $prefix1 = '';
 
-        $ticketNumber = 'TCK-' . $prefix . '-' . rand(100000,999999);
+        if ($request->department == 'TIK') {
+            $prefix1 = 'TIK';
+        } elseif ($request->department == 'Rumah Tangga') {
+            $prefix1 = 'RT';
+        }
+        $ticketNumber = 'TCK-' . $prefix . '-' .$prefix1 . '-' . rand(100000,999999);
 
         $fileName = null;
 
