@@ -25,7 +25,7 @@ class ServiceDeskController extends Controller
 
         ->addColumn('ticket', function ($row) {
 
-            return '<a href="#" class="lihat-tiket"
+            return '<a href="javascript:void(0)" class="lihat-tiket"
                 data-ticket="'.$row->ticket.'"
                 data-nama="'.$row->nama.'"
                 data-email="'.$row->email.'"
@@ -45,16 +45,20 @@ class ServiceDeskController extends Controller
             return $row->nama;
         })
 
-        ->addColumn('whatsapp', function ($row) {
+       ->addColumn('whatsapp', function ($row) {
 
-            if ($row->whatsapp_number) {
+        if ($row->whatsapp_number) {
 
-                // sensor 3 angka terakhir
-                return substr($row->whatsapp_number, 0, -3) . '***';
+        $wa = $row->whatsapp_number;
 
-            }
+        if(strlen($wa) > 3){
+            return substr($wa, 0, strlen($wa)-3) . '***';
+        }
 
-            return '-';
+        return '***';
+        }
+
+        return '-';
 
         })
 

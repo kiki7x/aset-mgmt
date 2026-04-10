@@ -70,6 +70,78 @@
             </div>
 
             @include('frontsite.partials.createtiket')
+            <div class="modal fade" id="modalDetailTicket">
+            <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+            <div class="modal-header">
+            <h5 class="modal-title">Detail Tiket</h5>
+            &nbsp;
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+            <table class="table table-bordered">
+
+            <tr>
+            <th>Nomor Tiket</th>
+            <td id="d_ticket"></td>
+            </tr>
+
+            <tr>
+            <th>Nama</th>
+            <td id="d_nama"></td>
+            </tr>
+
+            <tr>
+            <th>Email</th>
+            <td id="d_email"></td>
+            </tr>
+
+            <tr>
+            <th>WhatsApp</th>
+            <td id="d_whatsapp"></td>
+            </tr>
+
+            <tr>
+            <th>Jenis</th>
+            <td id="d_issuetype"></td>
+            </tr>
+
+            <tr>
+            <th>Department</th>
+            <td id="d_department"></td>
+            </tr>
+
+            <tr>
+            <th>Subject</th>
+            <td id="d_subject"></td>
+            </tr>
+
+            <tr>
+            <th>Priority</th>
+            <td id="d_priority"></td>
+            </tr>
+
+            <tr>
+            <th>Status</th>
+            <td id="d_status"></td>
+            </tr>
+
+            <tr>
+            <th>Description</th>
+            <td id="d_description"></td>
+            </tr>
+
+            </table>
+
+            </div>
+
+            </div>
+            </div>
+            </div>
+
         </section><!-- /Services Section -->
     </main><!-- End #main -->
 
@@ -77,6 +149,34 @@
     @push('script-foot')
 
         <script>
+        $(document).on('click','.lihat-tiket',function(e){
+
+        e.preventDefault()
+        var wa = $(this).data('wa')
+
+        // sensor 3 angka terakhir
+        if(wa){
+            wa = wa.toString()
+            if(wa.length > 3){
+                wa = wa.substring(0, wa.length-3) + '***'
+            }
+        }
+
+        $('#d_ticket').text($(this).data('ticket'))
+        $('#d_nama').text($(this).data('nama'))
+        $('#d_email').text($(this).data('email'))
+        $('#d_whatsapp').text(wa)
+        $('#d_issuetype').text($(this).data('issuetype'))
+        $('#d_department').text($(this).data('department'))
+        $('#d_subject').text($(this).data('subject'))
+        $('#d_priority').text($(this).data('priority'))
+        $('#d_status').text($(this).data('status'))
+        $('#d_description').text($(this).data('description'))
+
+        $('#modalDetailTicket').modal('show')
+
+        })
+
 
         $(document).ready(function(){
             tablePemeliharaan();
