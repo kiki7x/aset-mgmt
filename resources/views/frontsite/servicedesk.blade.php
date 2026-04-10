@@ -190,7 +190,24 @@
         $('#d_issuetype').text($(this).data('issuetype'))
         $('#d_department').text($(this).data('department'))
         $('#d_subject').text($(this).data('subject'))
-        $('#d_priority').text($(this).data('priority'))
+        let priority = $(this).data('priority')
+
+let label = priority
+
+if(priority == 'Low'){
+    label = '<span style="color:#6c757d;"><i class="fa-solid fa-flag"></i> Rendah</span>'
+}
+
+if(priority == 'Medium'){
+    label = '<span style="color:#f4b400;"><i class="fa-solid fa-flag"></i> Sedang</span>'
+}
+
+if(priority == 'High'){
+    label = '<span style="color:#dc3545;"><i class="fa-solid fa-flag"></i> Tinggi</span>'
+}
+
+$('#d_priority').html(label)
+
         $('#d_status').text($(this).data('status'))
         $('#d_description').text($(this).data('description'))
 
