@@ -110,17 +110,17 @@
                             </tr>
 
                             <tr>
-                                <th>Department</th>
+                                <th>Bidang</th>
                                 <td id="d_department"></td>
                             </tr>
 
                             <tr>
-                                <th>Subject</th>
+                                <th>Judul</th>
                                 <td id="d_subject"></td>
                             </tr>
 
                             <tr>
-                                <th>Priority</th>
+                                <th>Prioritas</th>
                                 <td id="d_priority"></td>
                             </tr>
 
@@ -130,7 +130,7 @@
                             </tr>
 
                             <tr>
-                                <th>Description</th>
+                                <th>Deskripsi</th>
                                 <td id="d_description"></td>
                             </tr>
 
