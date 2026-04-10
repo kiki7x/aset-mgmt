@@ -19,73 +19,70 @@ class ServiceDeskController extends Controller
     public function data()
     {
 
-    $tickets = TicketFront::latest();
+        $tickets = TicketFront::latest();
 
-    return DataTables::of($tickets)
+        return DataTables::of($tickets)
 
-        ->addColumn('ticket', function ($row) {
+            ->addColumn('ticket', function ($row) {
 
-            return '<a href="javascript:void(0)" class="lihat-tiket"
-                data-ticket="'.$row->ticket.'"
-                data-nama="'.$row->nama.'"
-                data-email="'.$row->email.'"
-                data-wa="'.$row->whatsapp_number.'"
-                data-subject="'.$row->subject.'"
-                data-issuetype="'.$row->issuetype.'"
-                data-department="'.$row->department.'"
-                data-priority="'.$row->priority.'"
-                data-description="'.$row->description.'"
-                data-status="'.$row->status.'"
-                data-attachments="'.$row->attachments.'"
-            >'.$row->ticket.'</a>';
+                return '<a href="javascript:void(0)" class="lihat-tiket"
+                data-ticket="' . $row->ticket . '"
+                data-nama="' . $row->nama . '"
+                data-email="' . $row->email . '"
+                data-wa="' . $row->whatsapp_number . '"
+                data-subject="' . $row->subject . '"
+                data-issuetype="' . $row->issuetype . '"
+                data-department="' . $row->department . '"
+                data-priority="' . $row->priority . '"
+                data-description="' . $row->description . '"
+                data-status="' . $row->status . '"
+                data-attachments="' . $row->attachments . '"
+            >' . $row->ticket . '</a>';
+            })
 
-        })
+            ->addColumn('pemohon', function ($row) {
+                return $row->nama;
+            })
 
-        ->addColumn('pemohon', function ($row) {
-            return $row->nama;
-        })
+            ->addColumn('whatsapp', function ($row) {
 
-       ->addColumn('whatsapp', function ($row) {
+                if ($row->whatsapp_number) {
 
-        if ($row->whatsapp_number) {
+                    $wa = $row->whatsapp_number;
 
-        $wa = $row->whatsapp_number;
+                    if (strlen($wa) > 3) {
+                        return substr($wa, 0, strlen($wa) - 3) . '***';
+                    }
 
-        if(strlen($wa) > 3){
-            return substr($wa, 0, strlen($wa)-3) . '***';
-        }
+                    return '***';
+                }
 
-        return '***';
-        }
+                return '-';
+            })
 
-        return '-';
+            ->addColumn('name', function ($row) {
+                return $row->department;
+            })
 
-        })
+            ->addColumn('description', function ($row) {
+                return $row->description;
+            })
 
-        ->addColumn('name', function ($row) {
-            return $row->department;
-        })
+            ->addColumn('priority', function ($row) {
+                return $row->priority;
+            })
 
-        ->addColumn('description', function ($row) {
-            return $row->description;
-        })
+            ->addColumn('status', function ($row) {
+                return $row->status;
+            })
 
-        ->addColumn('priority', function ($row) {
-            return $row->priority;
-        })
+            ->addColumn('duedate', function ($row) {
+                return $row->created_at->format('d M Y');
+            })
 
-        ->addColumn('status', function ($row) {
-            return $row->status;
-        })
+            ->rawColumns(['ticket'])
 
-        ->addColumn('duedate', function ($row) {
-            return $row->created_at->format('d M Y');
-        })
-
-        ->rawColumns(['ticket'])
-
-        ->make(true);
-
+            ->make(true);
     }
 
 
@@ -102,7 +99,7 @@ class ServiceDeskController extends Controller
             'description' => 'required'
         ]);
 
-       $prefix = '';
+        $prefix = '';
 
         if ($request->issuetype == 'Permintaan') {
             $prefix = 'PER';
@@ -116,7 +113,7 @@ class ServiceDeskController extends Controller
         } elseif ($request->department == 'Rumah Tangga') {
             $prefix1 = 'RT';
         }
-        $ticketNumber = 'TCK-' . $prefix . '-' .$prefix1 . '-' . rand(100000,999999);
+        $ticketNumber = 'TCK-' . $prefix . '-' . $prefix1 . '-' . rand(100000, 999999);
 
         $fileName = null;
 
@@ -124,7 +121,7 @@ class ServiceDeskController extends Controller
 
             $file = $request->file('attachments');
 
-            $fileName = time().'_'.$file->getClientOriginalName();
+            $fileName = time() . '_' . $file->getClientOriginalName();
 
             $file->move(public_path('attachments'), $fileName);
         }
@@ -159,7 +156,5 @@ class ServiceDeskController extends Controller
             'success' => true,
             'message' => 'Tiket berhasil dibuat'
         ]);
-
     }
-
 }

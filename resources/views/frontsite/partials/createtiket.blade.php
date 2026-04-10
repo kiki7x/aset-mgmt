@@ -9,7 +9,7 @@
             </div>
 
             <form id="formCreateTicket" method="POST" enctype="multipart/form-data">
-`               @csrf
+                ` @csrf
                 <div class="modal-body" id="modalCreateTicket">
 
                     <div class="form-group row mb-3">
@@ -159,13 +159,11 @@
 @push('script-foot')
 
 <script>
+    function openModalCreate() {
 
-function openModalCreate(){
+        $('#form-tiket').modal('show');
 
-$('#form-tiket').modal('show');
-
-}
-
+    }
 </script>
 
 @endpush

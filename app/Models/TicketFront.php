@@ -24,5 +24,4 @@ class TicketFront extends Model
         'status'
 
     ];
-
 }

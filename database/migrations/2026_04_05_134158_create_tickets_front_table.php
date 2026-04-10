@@ -35,7 +35,6 @@ return new class extends Migration
             $table->string('status')->default('Open');
 
             $table->timestamps();
-
         });
     }
 
