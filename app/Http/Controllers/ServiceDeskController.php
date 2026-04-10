@@ -96,7 +96,8 @@ class ServiceDeskController extends Controller
             'issuetype' => 'required',
             'department' => 'required',
             'priority' => 'required',
-            'description' => 'required'
+            'description' => 'required',
+            'attachments' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
         $prefix = '';
@@ -123,7 +124,7 @@ class ServiceDeskController extends Controller
 
             $fileName = time() . '_' . $file->getClientOriginalName();
 
-            $file->move(public_path('attachments'), $fileName);
+            $file->storeAs('attachments', $fileName, 'public');
         }
 
         TicketFront::create([

@@ -130,10 +130,21 @@
 
                     {{-- Attachment --}}
                     <div class="form-group row mb-3">
-                        <label class="col-3 col-form-label"><strong>Lampiran</strong></label>
+
+                        <label class="col-3 col-form-label">
+                            <strong>Lampiran</strong>
+                        </label>
+
                         <div class="col-9">
-                            <input type="file" name="attachments[]" class="form-control" multiple>
+
+                            <input
+                                type="file"
+                                name="attachments"
+                                class="form-control"
+                                accept="image/*">
+
                         </div>
+
                     </div>
 
                 </div>

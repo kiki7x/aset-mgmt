@@ -135,6 +135,27 @@
                             </tr>
 
                         </table>
+                        <div class="form-group row mb-3">
+                            <label class="col-3 col-form-label"><strong>Lampiran</strong></label>
+                            <div class="col-9">
+
+                                <img id="d_attachments" src="" width="200" style="cursor:pointer; " display:none">
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modalImage" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+
+                    <div class="modal-body text-center">
+
+                        <img id="imgPreview" src="" style="width:100%">
 
                     </div>
 
@@ -173,7 +194,26 @@
         $('#d_status').text($(this).data('status'))
         $('#d_description').text($(this).data('description'))
 
+        let gambar = $(this).data('attachments')
+
+        if (gambar) {
+            $('#d_attachments')
+                .attr('src', 'storage/attachments/' + gambar)
+                .show()
+        } else {
+            $('#d_attachments').hide()
+        }
+
         $('#modalDetailTicket').modal('show')
+
+    })
+    $('#d_attachments').on('click', function() {
+
+        let src = $(this).attr('src')
+
+        $('#imgPreview').attr('src', src)
+
+        $('#modalImage').modal('show')
 
     })
 
