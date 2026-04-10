@@ -17,14 +17,45 @@ class ServiceDeskController extends Controller
 
 
     public function data()
-{
+    {
 
     $tickets = TicketFront::latest();
 
     return DataTables::of($tickets)
 
+        ->addColumn('ticket', function ($row) {
+
+            return '<a href="#" class="lihat-tiket"
+                data-ticket="'.$row->ticket.'"
+                data-nama="'.$row->nama.'"
+                data-email="'.$row->email.'"
+                data-wa="'.$row->whatsapp_number.'"
+                data-subject="'.$row->subject.'"
+                data-issuetype="'.$row->issuetype.'"
+                data-department="'.$row->department.'"
+                data-priority="'.$row->priority.'"
+                data-description="'.$row->description.'"
+                data-status="'.$row->status.'"
+                data-attachments="'.$row->attachments.'"
+            >'.$row->ticket.'</a>';
+
+        })
+
         ->addColumn('pemohon', function ($row) {
             return $row->nama;
+        })
+
+        ->addColumn('whatsapp', function ($row) {
+
+            if ($row->whatsapp_number) {
+
+                // sensor 3 angka terakhir
+                return substr($row->whatsapp_number, 0, -3) . '***';
+
+            }
+
+            return '-';
+
         })
 
         ->addColumn('name', function ($row) {
@@ -35,23 +66,6 @@ class ServiceDeskController extends Controller
             return $row->description;
         })
 
-        ->addColumn('pic', function ($row) {
-
-            return [
-                'avatar' => null
-            ];
-
-        })
-
-        ->addColumn('asset', function ($row) {
-
-            return [
-                'tag' => '-',
-                'name' => '-'
-            ];
-
-        })
-
         ->addColumn('priority', function ($row) {
             return $row->priority;
         })
@@ -60,22 +74,15 @@ class ServiceDeskController extends Controller
             return $row->status;
         })
 
-       ->addColumn('duedate', function ($row) {
+        ->addColumn('duedate', function ($row) {
             return $row->created_at->format('d M Y');
         })
 
-
-        ->addColumn('action', function ($row) {
-
-            return '<button class="btn btn-sm btn-info">Detail</button>';
-
-        })
-
-        ->rawColumns(['action'])
+        ->rawColumns(['ticket'])
 
         ->make(true);
 
-}
+    }
 
 
     public function store(Request $request)
@@ -91,7 +98,15 @@ class ServiceDeskController extends Controller
             'description' => 'required'
         ]);
 
-        $ticketNumber = 'TCK-' . rand(100000,999999);
+       $prefix = '';
+
+        if ($request->issuetype == 'Permintaan') {
+            $prefix = 'PER';
+        } elseif ($request->issuetype == 'Keluhan') {
+            $prefix = 'KEL';
+        }
+
+        $ticketNumber = 'TCK-' . $prefix . '-' . rand(100000,999999);
 
         $fileName = null;
 
