@@ -21,7 +21,8 @@ class TicketFront extends Model
         'priority',
         'description',
         'attachments',
-        'status'
+        'status',
+        'reason'
 
     ];
 }

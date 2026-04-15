@@ -36,6 +36,7 @@ class ServiceDeskController extends Controller
                 data-priority="' . $row->priority . '"
                 data-description="' . $row->description . '"
                 data-status="' . $row->status . '"
+                data-reason="'.e($row->reason).'"
                 data-attachments="' . $row->attachments . '"
             >' . $row->ticket . '</a>';
             })
@@ -156,6 +157,27 @@ class ServiceDeskController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Tiket berhasil dibuat'
+        ]);
+    }
+
+    public function updateStatus(Request $request)
+    {
+        $request->validate([
+            'ticket' => 'required|exists:tickets_front,ticket',
+            'status' => 'required|in:Open,Pending,Proses,Close',
+            'reason' => 'required|string'
+        ]);
+
+        $ticket = TicketFront::where('ticket', $request->ticket)->first();
+
+        $ticket->update([
+            'status' => $request->status,
+            'reason' => $request->reason
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Status tiket berhasil diperbarui'
         ]);
     }
 }

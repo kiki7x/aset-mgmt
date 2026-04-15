@@ -130,6 +130,11 @@
                             </tr>
 
                             <tr>
+                                <th>Alasan</th>
+                                <td id="d_reason"></td>
+                            </tr>
+
+                            <tr>
                                 <th>Deskripsi</th>
                                 <td id="d_description"></td>
                             </tr>
@@ -209,13 +214,14 @@
         $('#d_priority').html(label)
 
         $('#d_status').text($(this).data('status'))
+        $('#d_reason').text($(this).data('reason') || '-')
         $('#d_description').text($(this).data('description'))
 
         let gambar = $(this).data('attachments')
 
         if (gambar) {
             $('#d_attachments')
-                .attr('src', 'storage/attachments/' + gambar)
+                .attr('src', '{{ asset("storage/attachments") }}/' + gambar)
                 .show()
         } else {
             $('#d_attachments').hide()
