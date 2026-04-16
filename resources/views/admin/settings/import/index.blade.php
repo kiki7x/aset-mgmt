@@ -25,29 +25,32 @@
                         <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                             <h3 class="card-title font-weight-bold"><i class="fa-solid fa-building"></i> Import Aset Rumah Tangga <span class="badge end-0 mr-3 bg-info text-light"></span></h3>
                         </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-auto">
-                                    <div class="form-group">
-                                        <label for="attachment">Import Aset Rumah Tangga <span class="text-danger">*</span></label>
-                                        <div class="custom-file">
-                                            <input type="file" class="form-control custom-file-input" id="importasetrt" name="attachment" accept=".xlsx">
-                                            <label class="custom-file-label" for="attachment">Import Aset Rumah Tangga</label>
-                                            <small class="form-text text-muted">Format: XLSX (Max: 2MB)</small>
+                        <form id="formImportAsetRt" method="POST" autocomplete="off" enctype="multipart/form-data">
+                            @csrf
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-auto">
+                                        <div class="form-group">
+                                            <label for="attachment">Import Aset Rumah Tangga <span class="text-danger">*</span></label>
+                                            <div class="custom-file">
+                                                <input type="file" class="form-control custom-file-input" id="importasetrt" name="attachment" accept=".xlsx" required>
+                                                <label class="custom-file-label" for="attachment">Import Aset Rumah Tangga</label>
+                                                <small class="form-text text-muted">Format: XLSX (Max: 2MB)</small>
+                                            </div>
+                                            <span id="error-attachment" class="text-danger small"></span>
                                         </div>
-                                        <span id="error-attachment" class="text-danger small"></span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="card-footer d-flex justify-content-end">
-                            <a href="javascript:void(0)" id="btnTemplateAsetRt" class="btn btn-secondary mr-2">
-                                <i class="fas fa-file-download"></i> Download Template
-                            </a>
-                            <a class="btn btn-primary">
-                                <i class="fas fa-file-import"></i> Import
-                            </a>
-                        </div>
+                            <div class="card-footer d-flex justify-content-end">
+                                <a href="javascript:void(0)" id="btnTemplateAsetRt" class="btn btn-secondary mr-2">
+                                    <i class="fas fa-file-download"></i> Download Template
+                                </a>
+                                <button type="submit" id="btnImportAsetRt" class="btn btn-primary">
+                                    <i class="fas fa-file-import"></i> Import
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -60,7 +63,7 @@
                         <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                             <h3 class="card-title font-weight-bold"><i class="fa-solid fa-computer"></i> Import Aset TIK <span class="badge end-0 mr-3 bg-info text-light"></span></h3>
                         </div>
-                        <form id="formImportAsetTik" method="POST" autocomplete="off">
+                        <form id="formImportAsetTik" method="POST" autocomplete="off" enctype="multipart/form-data">
                             @csrf
                             <div class="card-body">
                                 <div class="row">
@@ -68,7 +71,7 @@
                                         <div class="form-group">
                                             <label for="fileasettik">Import Aset TIK <span class="text-danger">*</span></label>
                                             <div class="custom-file">
-                                                <input type="file" class="form-control custom-file-input" id="fileasettik" name="fileasettik" accept=".xlsx">
+                                                <input type="file" class="form-control custom-file-input" id="fileasettik" name="fileasettik" accept=".xlsx" required>
                                                 <label class="custom-file-label" for="fileasettik">Import Aset TIK</label>
                                                 <small class="form-text text-muted">Format: XLSX (Max: 2MB)</small>
                                             </div>
@@ -95,29 +98,32 @@
                         <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                             <h3 class="card-title font-weight-bold"><i class="fa-solid fa-mouse"></i> Import Komponen TIK <span class="badge end-0 mr-3 bg-info text-light"></span></h3>
                         </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-auto">
-                                    <div class="form-group">
-                                        <label for="attachment">Import Komponen TIK <span class="text-danger">*</span></label>
-                                        <div class="custom-file">
-                                            <input type="file" class="form-control custom-file-input" id="importkomponentik" name="attachment" accept=".xlsx">
-                                            <label class="custom-file-label" for="attachment">Import Komponen TIK</label>
-                                            <small class="form-text text-muted">Format: XLSX (Max: 2MB)</small>
+                        <form id="formImportKomponentTik" method="POST" autocomplete="off" enctype="multipart/form-data">
+                            @csrf
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-auto">
+                                        <div class="form-group">
+                                            <label for="filekomponentik">Import Komponen TIK <span class="text-danger">*</span></label>
+                                            <div class="custom-file">
+                                                <input type="file" class="form-control custom-file-input" id="filekomponentik" name="filekomponentik" accept=".xlsx" required>
+                                                <label class="custom-file-label" for="filekomponentik">Import Komponen TIK</label>
+                                                <small class="form-text text-muted">Format: XLSX (Max: 2MB)</small>
+                                            </div>
+                                            <span id="error-filekomponentik" class="text-danger small"></span>
                                         </div>
-                                        <span id="error-attachment" class="text-danger small"></span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="card-footer d-flex justify-content-end">
-                            <a href="javascript:void(0)" id="btnTemplateKomponenTik" class="btn btn-secondary mr-2">
-                                <i class="fas fa-file-download"></i> Download Template
-                            </a>
-                            <a class="btn btn-primary">
-                                <i class="fas fa-file-import"></i> Import
-                            </a>
-                        </div>
+                            <div class="card-footer d-flex justify-content-end">
+                                <a href="javascript:void(0)" id="btnTemplateKomponenTik" class="btn btn-secondary mr-2">
+                                    <i class="fas fa-file-download"></i> Download Template
+                                </a>
+                                <button type="submit" id="btnImportKomponenTik" class="btn btn-primary">
+                                    <i class="fas fa-file-import"></i> Import
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
                 {{-- Import Lisensi TIK --}}
@@ -126,29 +132,32 @@
                         <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                             <h3 class="card-title font-weight-bold"><i class="fa-solid fa-key"></i> Import Lisensi TIK <span class="badge end-0 mr-3 bg-info text-light"></span></h3>
                         </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-auto">
-                                    <div class="form-group">
-                                        <label for="attachment">Import Lisensi TIK <span class="text-danger">*</span></label>
-                                        <div class="custom-file">
-                                            <input type="file" class="form-control custom-file-input" id="importlisensitik" name="attachment" accept=".xlsx">
-                                            <label class="custom-file-label" for="attachment">Import Lisensi TIK</label>
-                                            <small class="form-text text-muted">Format: XLSX (Max: 2MB)</small>
+                        <form id="formImportLisensitTik" method="POST" autocomplete="off" enctype="multipart/form-data">
+                            @csrf
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-auto">
+                                        <div class="form-group">
+                                            <label for="attachment">Import Lisensi TIK <span class="text-danger">*</span></label>
+                                            <div class="custom-file">
+                                                <input type="file" class="form-control custom-file-input" id="importlisensitik" name="attachment" accept=".xlsx" required>
+                                                <label class="custom-file-label" for="attachment">Import Lisensi TIK</label>
+                                                <small class="form-text text-muted">Format: XLSX (Max: 2MB)</small>
+                                            </div>
+                                            <span id="error-attachment" class="text-danger small"></span>
                                         </div>
-                                        <span id="error-attachment" class="text-danger small"></span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="card-footer d-flex justify-content-end">
-                            <a href="javascript:void(0)" id="btnTemplateLisensiTik" class="btn btn-secondary mr-2">
-                                <i class="fas fa-file-download"></i> Download Template
-                            </a>
-                            <a class="btn btn-primary">
-                                <i class="fas fa-file-import"></i> Import
-                            </a>
-                        </div>
+                            <div class="card-footer d-flex justify-content-end">
+                                <a href="javascript:void(0)" id="btnTemplateLisensiTik" class="btn btn-secondary mr-2">
+                                    <i class="fas fa-file-download"></i> Download Template
+                                </a>
+                                <button type="submit" id="btnImportLisensiTik" class="btn btn-primary">
+                                    <i class="fas fa-file-import"></i> Import
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -169,7 +178,7 @@
                                         <div class="form-group">
                                             <label for="filelokasi">Import Lokasi Ruangan <span class="text-danger">*</span></label>
                                             <div class="custom-file">
-                                                <input type="file" class="form-control custom-file-input" id="filelokasi" name="filelokasi" accept=".xlsx">
+                                                <input type="file" class="form-control custom-file-input" id="filelokasi" name="filelokasi" accept=".xlsx" required>
                                                 <label class="custom-file-label" for="attachment">Import Lokasi Ruangan</label>
                                                 <small class="form-text text-muted">Format: XLSX (Max: 2MB)</small>
                                             </div>
@@ -205,6 +214,8 @@
             $('#formImportLokasi').submit(function(e) {
                 e.preventDefault();
                 const formData = new FormData(this);
+                formData.append('filelokasi', $('#filelokasi')[0].files[0]);
+
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -230,12 +241,12 @@
                             $('#btnImportLokasi').html('<i class="fas fa-file-import"></i> Import');
                         });
                     },
-                    error: function(xhr) {
-                        if (xhr.responseJSON?.errors) {
-                            $.each(xhr.responseJSON.errors, function(key, value) {
-                                $(`#error-${key}`).text(value[0]);
-                            });
-                        }
+                    error: function() {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Terjadi kesalahan. Periksa kembali data unggahan.',
+                        })
                     }
                 });
             });
@@ -245,6 +256,7 @@
             $('#formImportAsetTik').submit(function(e) {
                 e.preventDefault();
                 const formData = new FormData(this);
+                formData.append('fileasettik', $('#fileasettik')[0].files[0]);
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -270,12 +282,12 @@
                             $('#btnImportAsetTik').html('<i class="fas fa-file-import"></i> Import');
                         });
                     },
-                    error: function(xhr) {
-                        if (xhr.responseJSON?.errors) {
-                            $.each(xhr.responseJSON.errors, function(key, value) {
-                                $(`#error-${key}`).text(value[0]);
-                            });
-                        }
+                    error: function() {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Terjadi kesalahan. Periksa kembali data unggahan.',
+                        })
                     }
                 });
             });

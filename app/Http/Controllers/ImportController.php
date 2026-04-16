@@ -34,6 +34,10 @@ class ImportController extends Controller
 
     public function storeLokasi(Request $request): JsonResponse
     {
+        $request->validate([
+            'filelokasi' => 'required|mimes:xlsx',
+        ]);
+
         if ($xlsx = SimpleXLSX::parse($request->file('filelokasi'))) {
             $rows = $xlsx->rows();
             array_shift($rows); // Menghapus baris pertama (header)
