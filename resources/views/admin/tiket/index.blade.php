@@ -332,7 +332,7 @@
                         btn.setAttribute('data-ticket', row.ticket);
                         btn.setAttribute('data-status', row.status);
                         btn.setAttribute('data-reason', row.reason || '');
-                        btn.textContent = 'edit status';
+                        btn.textContent = 'Edit';
                         return btn.outerHTML;
                     }
                 }
