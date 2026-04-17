@@ -79,7 +79,8 @@ class ServiceDeskController extends Controller
                         ->orWhere('issuetype', 'like', "%{$searchTerm}%")
                         ->orWhere('department', 'like', "%{$searchTerm}%")
                         ->orWhere('priority', 'like', "%{$searchTerm}%")
-                        ->orWhere('status', 'like', "%{$searchTerm}%");
+                        ->orWhere('status', 'like', "%{$searchTerm}%")
+                        ->orWhereRaw("DATE_FORMAT(created_at, '%d %b %Y') LIKE ?", ["%{$searchTerm}%"]);
                 }
             })
 
