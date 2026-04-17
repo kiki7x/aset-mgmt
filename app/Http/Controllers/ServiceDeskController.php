@@ -41,28 +41,16 @@ class ServiceDeskController extends Controller
             >' . $row->ticket . '</a>';
             })
 
-            ->addColumn('pemohon', function ($row) {
+            ->addColumn('nama', function ($row) {
                 return $row->nama;
             })
 
-            ->addColumn('whatsapp', function ($row) {
-
-                if ($row->whatsapp_number) {
-
-                    $wa = $row->whatsapp_number;
-
-                    if (strlen($wa) > 3) {
-                        return substr($wa, 0, strlen($wa) - 3) . '***';
-                    }
-
-                    return '***';
-                }
-
-                return '-';
+            ->addColumn('department', function ($row) {
+                return $row->issuetype . ' - ' . $row->department;
             })
 
-            ->addColumn('name', function ($row) {
-                return $row->department;
+            ->addColumn('subject', function ($row) {
+                return $row->subject;
             })
 
             ->addColumn('description', function ($row) {
@@ -79,6 +67,20 @@ class ServiceDeskController extends Controller
 
             ->addColumn('duedate', function ($row) {
                 return $row->created_at->format('d M Y');
+            })
+
+            ->filter(function ($query) {
+                if (request()->has('search') && !empty(request('search')['value'])) {
+                    $searchTerm = request('search')['value'];
+                    $query->where('ticket', 'like', "%{$searchTerm}%")
+                        ->orWhere('nama', 'like', "%{$searchTerm}%")
+                        ->orWhere('subject', 'like', "%{$searchTerm}%")
+                        ->orWhere('description', 'like', "%{$searchTerm}%")
+                        ->orWhere('issuetype', 'like', "%{$searchTerm}%")
+                        ->orWhere('department', 'like', "%{$searchTerm}%")
+                        ->orWhere('priority', 'like', "%{$searchTerm}%")
+                        ->orWhere('status', 'like', "%{$searchTerm}%");
+                }
             })
 
             ->rawColumns(['ticket'])

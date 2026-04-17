@@ -277,29 +277,36 @@
             ajax: "{{ route('servicedesk.data') }}",
             columns: [{
                     data: 'ticket',
-                    name: 'ticket'
+                    name: 'ticket',
+                    searchable: true
                 },
                 {
                     data: 'nama',
-                    name: 'nama'
+                    name: 'nama',
+                    searchable: true
                 },
                 {
-                    data: null,
+                    data: 'department',
+                    name: 'department',
+                    searchable: true,
                     render: function(data, type, row) {
                         return row.issuetype + ' - ' + row.department;
                     }
                 },
                 {
                     data: 'subject',
-                    name: 'subject'
+                    name: 'subject',
+                    searchable: true
                 },
                 {
                     data: 'description',
-                    name: 'description'
+                    name: 'description',
+                    searchable: true
                 },
                 {
                     data: 'priority',
                     name: 'priority',
+                    searchable: true,
                     render: function(data) {
                         if (data == 'Low') {
                             return '<span style="color:#6c757d;"><i class="fa-solid fa-flag"></i> Rendah</span>';
@@ -315,11 +322,13 @@
                 },
                 {
                     data: 'status',
-                    name: 'status'
+                    name: 'status',
+                    searchable: true
                 },
                 {
                     data: 'duedate',
-                    name: 'duedate'
+                    name: 'duedate',
+                    searchable: true
                 },
                 {
                     data: null,
