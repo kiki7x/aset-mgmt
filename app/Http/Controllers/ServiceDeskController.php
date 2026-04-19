@@ -36,7 +36,7 @@ class ServiceDeskController extends Controller
                 data-priority="' . $row->priority . '"
                 data-description="' . $row->description . '"
                 data-status="' . $row->status . '"
-                data-reason="'.e($row->reason).'"
+                data-reason="' . e($row->reason) . '"
                 data-attachments="' . $row->attachments . '"
             >' . $row->ticket . '</a>';
             })

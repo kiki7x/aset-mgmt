@@ -217,7 +217,7 @@
         var status = $(this).data('status')
         var reason = $(this).data('reason') || ''
 
-      
+
         ticket = $('<div>').html(ticket).text()
 
         $('#edit_ticket').val(ticket)
