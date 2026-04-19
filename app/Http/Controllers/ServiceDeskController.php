@@ -89,6 +89,31 @@ class ServiceDeskController extends Controller
             ->make(true);
     }
 
+    public function print(Request $request)
+    {
+        $search = trim($request->query('search', ''));
+        $tickets = TicketFront::latest();
+
+        if ($search !== '') {
+            $tickets->where(function ($query) use ($search) {
+                $query->where('ticket', 'like', "%{$search}%")
+                    ->orWhere('nama', 'like', "%{$search}%")
+                    ->orWhere('subject', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%")
+                    ->orWhere('issuetype', 'like', "%{$search}%")
+                    ->orWhere('department', 'like', "%{$search}%")
+                    ->orWhere('priority', 'like', "%{$search}%")
+                    ->orWhere('status', 'like', "%{$search}%")
+                    ->orWhereRaw("DATE_FORMAT(created_at, '%d %b %Y') LIKE ?", ["%{$search}%"]);
+            });
+        }
+
+        return view('admin.tiket.print', [
+            'tickets' => $tickets->get(),
+            'search' => $search,
+        ]);
+    }
+
 
     public function store(Request $request)
     {

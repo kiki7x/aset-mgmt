@@ -7,8 +7,11 @@
 
 @section('content')
 <div class="card">
-    <div class="card-header">
+    <div class="card-header d-flex align-items-center justify-content-between">
         <h5 class="card-title mb-0">List Tiket Service Desk</h5>
+        <button class="btn btn-success btn-sm" onclick="printTicketReport()">
+            <i class="fa fa-print"></i> Cetak PDF
+        </button>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -265,12 +268,29 @@
         });
     });
 
+    let tiketTable;
+
     $(document).ready(function() {
         tablePemeliharaan();
     });
 
+    function printTicketReport() {
+        if (!tiketTable) {
+            return;
+        }
+
+        let search = tiketTable.search() || '';
+        let url = "{{ route('servicedesk.print') }}";
+
+        if (search) {
+            url += '?search=' + encodeURIComponent(search);
+        }
+
+        window.open(url, '_blank');
+    }
+
     function tablePemeliharaan() {
-        $('#tablePemeliharaan').DataTable({
+        tiketTable = $('#tablePemeliharaan').DataTable({
             processing: true,
             serverSide: true,
             responsive: true,

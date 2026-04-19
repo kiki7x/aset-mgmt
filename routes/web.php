@@ -28,6 +28,7 @@ Route::get('/servicedesk', [App\Http\Controllers\FrontController::class, 'servic
 //service desk tiketing system
 Route::get('/servicedesk', [ServiceDeskController::class,'index'])->name('servicedesk');
 Route::get('/servicedesk/data', [ServiceDeskController::class,'data'])->name('servicedesk.data');
+Route::get('/servicedesk/print', [ServiceDeskController::class,'print'])->name('servicedesk.print');
 Route::post('/servicedesk/store', [ServiceDeskController::class,'store'])->name('servicedesk.store');
 Route::post('/servicedesk/update-status', [ServiceDeskController::class,'updateStatus'])->name('servicedesk.updateStatus');
 
