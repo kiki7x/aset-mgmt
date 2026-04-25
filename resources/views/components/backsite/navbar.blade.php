@@ -179,7 +179,7 @@
                                   <p>Kalender Pemeliharaan</p>
                               </a>
                           </li>
-                          <li class="nav-item" data-toggle="tooltip" title="coming soon..." data-placement="top">
+                            <li class="nav-item">
                               <a href="{{ route('admin.tiket') }}"
                                   class="nav-link {{ request()->is('admin/tiket') ? 'active' : '' }}">
                                   <i class="nav-icon fa-solid fa-ticket"></i>
