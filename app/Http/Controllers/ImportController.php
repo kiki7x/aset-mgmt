@@ -19,8 +19,35 @@ class ImportController extends Controller
             $rows = $xlsx->rows();
             array_shift($rows); // Menghapus baris pertama (header)
 
-            foreach ($rows as $row) {
+            $errors = []; // Tempat menampung log error
+            $successCount = 0;
 
+            foreach ($rows as $index => $row) {
+                $rowNumber = $index + 2; // Baris dimulai dari 2
+
+                // 1. Validasi kolom kosong
+                if (empty($row[0])) $errors[] = "Baris $rowNumber: Kolom 'Tag' tidak boleh kosong.";
+                if (empty($row[1])) $errors[] = "Baris $rowNumber: Kolom 'Serial' tidak boleh kosong.";
+
+                // 2. Lookup Relasi (Validasi Dropdown)
+                $category = \App\Models\Category::where('name', $row[3])->first();
+                $location = \App\Models\Location::where('name', $row[4])->first();
+
+                if (!$category) $errors[] = "Baris $rowNumber: Kategori '{$row[3]}' tidak terdaftar di sistem.";
+                if (!$location) $errors[] = "Baris $rowNumber: Lokasi '{$row[4]}' tidak terdaftar di sistem.";
+
+                // 3. Jika tidak ada error di baris ini, simpan ke Database
+                if (empty($errors)) {
+                    \App\Models\Asset::updateOrCreate(
+                        ['serial' => $row[1]],
+                        [
+                            'tag'         => $row[0],
+                            'name'        => $row[2],
+                            'category_id' => $category->id,
+                            'location_id' => $location->id,
+                        ]
+                    );
+                    $successCount++;
             }
             return response()->json(['message' => 'Data aset tik berhasil diimport.']);
         }
@@ -56,8 +83,8 @@ class ImportController extends Controller
                     ]);
                 }
             }
-            return response()->json(['message' => 'Data lokasi berhasil diimport.']);
+            return response()->json(['status' => 'success','message' => 'Data lokasi berhasil diimport.']);
         }
-        return response()->json(['message' => 'Gagal mengimport data.']);
+        return response()->json(['status' => 'error', 'message' => 'Gagal mengimport data.']);
     }
 }
