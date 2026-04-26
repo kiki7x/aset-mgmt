@@ -46,7 +46,7 @@ class CategoriesSeeder extends Seeder
             ['id' => 31, 'name' => 'Finger Print', 'color' => '#28a745', 'classification_id' => 2, 'created_at' => now(), 'updated_at' => now()],
             ['id' => 32, 'name' => 'Kamera', 'color' => '#28a745', 'classification_id' => 2, 'created_at' => now(), 'updated_at' => now()],
             ['id' => 33, 'name' => 'Handphone', 'color' => '#28a745', 'classification_id' => 2, 'created_at' => now(), 'updated_at' => now()],
-            ['id' => 34, 'name' => 'Handy Talky', 'color' => '#28a745', 'classification_id' => 2, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 34, 'name' => 'Handy Talky', 'color' => '#28a745', 'classification_id' => 4, 'created_at' => now(), 'updated_at' => now()],
             ['id' => 35, 'name' => 'Stavolt', 'color' => '#28a745', 'classification_id' => 2, 'created_at' => now(), 'updated_at' => now()],
             ['id' => 36, 'name' => 'Peralatan Sanitasi', 'color' => '#007bff', 'classification_id' => 4, 'created_at' => now(), 'updated_at' => now()],
             ['id' => 37, 'name' => 'Peralatan Housekeeping', 'color' => '#007bff', 'classification_id' => 4, 'created_at' => now(), 'updated_at' => now()],
