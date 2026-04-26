@@ -271,11 +271,11 @@
                         $('#btnImportAsetTik').addClass('disabled').attr('disabled', true);
                         $('#btnImportAsetTik').html('<i class="fa fa-spinner fa-spin"></i> Mengunggah Data...');
                     },
-                    success: function(response) {
+                    success: function(res) {
                         Swal.fire({
                             icon: 'success',
                             title: 'Berhasil!',
-                            text: 'Data Aset TIk berhasil disimpan!',
+                            text: 'Semua data (' + res.success_count + ') berhasil disimpan!',
                         }).then(() => {
                             $('#formImportAsetTik')[0].reset(); // Reset form fields
                             $('#btnImportAsetTik').removeClass('disabled').attr('disabled', false);
@@ -286,9 +286,12 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: 'Terjadi kesalahan. Periksa kembali data unggahan.',
-                        })
-                    }
+                            // text: 'Terjadi kesalahan. Periksa kembali data unggahan.',
+                            text: res.errors.forEach(function(err) {
+                                errorHtml += '<li>' + err + '</li>' + '<br>'
+                            }),
+                        });
+                    },
                 });
             });
         </script>

@@ -26,37 +26,66 @@ class ImportController extends Controller
                 $rowNumber = $index + 2; // Baris dimulai dari 2
 
                 // 1. Validasi kolom kosong
-                if (empty($row[0])) $errors[] = "Baris $rowNumber: Kolom 'Tag' tidak boleh kosong.";
-                if (empty($row[1])) $errors[] = "Baris $rowNumber: Kolom 'Serial' tidak boleh kosong.";
+                if (empty($row[0]))
+                    $errors[] = "Baris $rowNumber: Kolom 'Tag' tidak boleh kosong.";
+                if (empty($row[14]))
+                    $errors[] = "Baris $rowNumber: Kolom 'Serial' tidak boleh kosong.";
 
                 // 2. Lookup Relasi (Validasi Dropdown)
-                $category = \App\Models\Category::where('name', $row[3])->first();
-                $location = \App\Models\Location::where('name', $row[4])->first();
+                $classification = \App\Models\AssetclassificationsModel::where('name', $row[1])->first();
+                $category = \App\Models\AssetcategoriesModel::firstOrCreate(['name' => trim($row[3])], ['classification_id' => $classification->id]);
+                $location = \App\Models\LocationsModel::where('name', $row[11])->first();
+                $admin = \App\Models\User::where('username', $row[4])->first();
+                $client = \App\Models\ClientsModel::where('name', $row[5])->first();
+                $user = \App\Models\User::where('username', $row[6])->first();
+                $supplier = \App\Models\SuppliersModel::where('name', $row[9])->first();
+                $status = \App\Models\LabelsModel::where('name', $row[10])->first();
+                $manufacturer = \App\Models\ManufacturersModel::firstOrCreate(['name' => trim($row[7])]);
+                $model = \App\Models\ModelsModel::firstOrCreate(['name' => trim($row[8])]);
+                $supplier = \App\Models\SuppliersModel::firstOrCreate(['name' => trim($row[9])]);
 
-                if (!$category) $errors[] = "Baris $rowNumber: Kategori '{$row[3]}' tidak terdaftar di sistem.";
-                if (!$location) $errors[] = "Baris $rowNumber: Lokasi '{$row[4]}' tidak terdaftar di sistem.";
+
+                if (!$category)
+                    $errors[] = "Baris $rowNumber: Kategori '{$row[3]}' tidak terdaftar di sistem.";
+                if (!$location)
+                    $errors[] = "Baris $rowNumber: Lokasi '{$row[11]}' tidak terdaftar di sistem.";
 
                 // 3. Jika tidak ada error di baris ini, simpan ke Database
                 if (empty($errors)) {
-                    \App\Models\Asset::updateOrCreate(
-                        ['serial' => $row[1]],
+                    \App\Models\AssetsModel::updateOrCreate(
+                        ['serial' => $row[14]],
                         [
-                            'tag'         => $row[0],
-                            'name'        => $row[2],
+                            'tag' => $row[0],
+                            'classification_id' => $classification->id,
+                            'name' => $row[2],
                             'category_id' => $category->id,
+                            'admin_id' => $admin->id,
+                            'client_id' => $client->id,
+                            'user_id' => $user->id,
+                            'manufacturer_id' => $manufacturer->id,
+                            'model_id' => $model->id,
+                            'supplier_id' => $supplier->id,
+                            'status_id' => $status->id,
                             'location_id' => $location->id,
+                            'purchase_date' => $row[12],
+                            'warranty_months' => $row[13],
+                            'notes' => $row[15],
                         ]
                     );
                     $successCount++;
+                }
             }
-            return response()->json(['message' => 'Data aset tik berhasil diimport.']);
+            // Kirim respon balik
+            return response()->json([
+                'status' => count($errors) > 0 ? 'partial_error' : 'success',
+                'success_count' => $successCount,
+                'errors' => $errors //Berisi daftar error spesifik
+            ]);
         }
-        return response()->json(['message' => 'Gagal mengimport data.']);
-    }
-
-    public function storeAsetRt(Request $request): JsonResponse
-    {
-        //
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Gagal mengimport data.'
+        ], 400);
     }
 
     public function storeLokasi(Request $request): JsonResponse
@@ -83,7 +112,7 @@ class ImportController extends Controller
                     ]);
                 }
             }
-            return response()->json(['status' => 'success','message' => 'Data lokasi berhasil diimport.']);
+            return response()->json(['status' => 'success', 'message' => 'Data lokasi berhasil diimport.']);
         }
         return response()->json(['status' => 'error', 'message' => 'Gagal mengimport data.']);
     }
