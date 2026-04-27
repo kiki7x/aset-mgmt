@@ -12,12 +12,9 @@
                 <div class="modal-body">
                     {{-- Bukti dukung --}}
                     <div class="form-group">
-                        <label for="attachment">Bukti dukung <span class="text-danger">*</span></label>
-                        <div class="custom-file">
-                            <input type="file" class="form-control custom-file-input" id="attachment" name="attachment" accept=".jpg, .jpeg, .png, .heic, .heif, .pdf">
-                            <label class="custom-file-label" for="attachment">Upload bukti dukung</label>
-                            <small class="form-text text-muted">Format: JPG, JPEG, PNG, HEIC, HEIF, PDF (Max: 2MB)</small>
-                        </div>
+                        <label for="attachment">Link Bukti Dukung Google Drive <span class="text-danger">*</span></label>
+                        <input type="url" class="form-control" id="attachment" name="attachment" placeholder="https://drive.google.com/..." required>
+                        <small class="form-text text-muted">Masukkan tautan Google Drive hasil bukti pemeliharaan.</small>
                         <span id="error-attachment" class="text-danger small"></span>
                     </div>
                     {{-- Biaya --}}
@@ -31,11 +28,6 @@
                         <label for="notes">Catatan <span class="text-danger">*</span></label>
                         <textarea class="form-control" rows="5" id="notes" name="notes"></textarea>
                         <span id="error-notes" class="text-danger small"></span>
-                    </div>
-                    {{-- Periode --}}
-                    <div class="form-group">
-                        <input type="hidden" id="period" name="period" value="">
-                        <span id="error-period" class="text-danger small"></span>
                     </div>
                     {{-- Checkbox --}}
                     <div class="form-group">
@@ -56,11 +48,7 @@
 </div>
 
 @push('script-foot')
-    <!-- ini untuk custom file input agar berfungsi reaktif -->
     <script>
-        $(function() {
-            bsCustomFileInput.init();
-        });
         // buat script front end untuk memanipulasi tampilan id cost dalam format Rp
         $('#cost').on('input', function() {
             var value = $(this).val();
@@ -98,7 +86,6 @@
                     $('#modalAddTugasPreventiflabel, .modal-title').html('Tindak lanjut Pemeliharaan Preventif untuk: <span class="badge badge-info">' + data.maintenance_schedule.name + '</span><span class="font-weight-bold"> ' + data.asset.name +
                         '</span> periode: <span class="badge badge-info">' + moment(data.maintenance_schedule.next_date).format('ll') + '</span>');
                     $('#formAddTugasPreventif input[name="name"]').val(data.maintenance_schedule.name); // Set nilai checkbox sesuai nama tugas
-                    $('#formAddTugasPreventif input[name="period"]').val(data.maintenance_schedule.next_date); // Set nilai periode
                     $('#error-tugasPreventifName').text('');
                 },
                 error: function(xhr) {

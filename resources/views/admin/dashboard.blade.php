@@ -106,6 +106,49 @@
     </div>{{-- /Rangkum Aset --}}
 
     <div class="row">
+        <div class="col-md-3 col-lg-3 col-6">
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <h3>{{ $assetsMaintained }}</h3>
+                    <p>Aset Sudah Dipelihara</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <a href="#" class="small-box-footer">
+                    Detail <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-3 col-lg-3 col-6">
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3>{{ $assetsNotMaintained }}</h3>
+                    <p>Aset Belum Dipelihara</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <a href="#" class="small-box-footer">
+                    Detail <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-6 col-12">
+            <div class="card card-outline card-primary shadow-sm">
+                <div class="card-header bg-white">
+                    <h3 class="card-title text-primary"><i class="fas fa-chart-pie mr-2"></i>Status Pemeliharaan Aset</h3>
+                </div>
+                <div class="card-body">
+                    <div style="position: relative; height: 300px;">
+                        <canvas id="maintenanceStatusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-md-6">
             <div class="card card-default">
                 <div class="card-header">
@@ -229,3 +272,73 @@
 
     </div>
 @endsection
+
+@push('script-foot')
+    <script src="{{ asset('assets/plugins/chart.js/Chart.min.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var ctx = document.getElementById('maintenanceStatusChart');
+            if (!ctx) {
+                return;
+            }
+            new Chart(ctx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Aset Terpelihara', 'Menunggu Pemeliharaan'],
+                    datasets: [{
+                        label: 'Jumlah Aset',
+                        data: [{{ $assetsMaintained }}, {{ $assetsNotMaintained }}],
+                        backgroundColor: [
+                            'rgba(40, 167, 69, 0.8)', // Green
+                            'rgba(255, 193, 7, 0.8)'  // Amber
+                        ],
+                        borderColor: ['#28a745', '#ffc107'],
+                        borderWidth: 2,
+                        borderRadius: 5,
+                        borderSkipped: false,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + context.parsed.y + ' aset';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            ticks: {
+                                stepSize: 1
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 2000,
+                        easing: 'easeOutBounce'
+                    }
+                }
+            });
+        });
+    </script>
+@endpush

@@ -83,8 +83,16 @@
                     $('#formEditPreventif input[name="edit_name"]').val(data.name);
                     $('#formEditPreventif input[name="edit_aset"]').val(data.asset_name);
                     // Tampilkan attachment saat ini
-                    var currentAttachmentHtml = data.attachment ?
-                        `<a href="{{ asset('storage') }}/${data.attachment}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-file-arrow-down"></i> Lihat ${data.attachment}</a>` :
+                    var attachmentUrl = data.attachment_url || data.attachment;
+                    if (attachmentUrl) {
+                        attachmentUrl = attachmentUrl.trim(); // Remove any whitespace
+                        // Check if it's already a full URL (contains :// protocol)
+                        if (!attachmentUrl.includes('://')) {
+                            attachmentUrl = `{{ asset('storage') }}/${attachmentUrl}`;
+                        }
+                    }
+                    var currentAttachmentHtml = attachmentUrl ?
+                        `<a href="${attachmentUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-file-arrow-down"></i> Buka Bukti Dukung</a>` :
                         'Tidak ada bukti dukung';
                     $('#current-attachment').html(currentAttachmentHtml);
                     $('#formEditPreventif input[name="edit_period"]').val(data.period); // Set nilai periode

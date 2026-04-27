@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use App\Http\Requests\JadwalPemeliharaanRequest;
 use App\Models\User;
@@ -158,18 +159,14 @@ class PemeliharaanController extends Controller
         }
         // 1. VALIDASI
         $request->validate([
-            // 'attachment' adalah nama input file di HTML: <input type="file" name="attachment">
-            'attachment' => 'required|file|mimes:jpg,jpeg,png,heic,heif,pdf|max:10240', // Maks 10MB
+            'attachment' => 'required|url',
             'name' => 'required|string', // Untuk checkbox
-            'period' => 'required|string',
             'cost' => 'required|numeric|min:0',
             'notes' => 'required|string',
         ], [
-            'attachment.required' => 'Bukti dukung wajib diupload.',
-            'attachment.mimes' => 'Format file tidak didukung.',
-            'attachment.max' => 'Ukuran file maksimal 10MB.',
+            'attachment.required' => 'Link Google Drive bukti dukung wajib diisi.',
+            'attachment.url' => 'Masukkan URL Google Drive yang valid.',
             'name.required' => 'Wajib mencentang bahwa pemeliharaan selesai.',
-            'period.required' => 'Periode wajib diisi.',
             'cost.required' => 'Biaya wajib diisi.',
             'notes.required' => 'Catatan wajib diisi.',
         ]);
@@ -189,19 +186,44 @@ class PemeliharaanController extends Controller
 
         // 3. PENYIMPANAN DATA KE DATABASE
         try {
+            $maintenance_schedule = \App\Models\Maintenances_scheduleModel::findOrFail($id);
+            $driveLink = $request->input('attachment');
+
+            // Gunakan tanggal nyata penyelesaian untuk pencatatan selesainya tugas
+            $completionDate = now();
+            $frequencyMonths = intval($maintenance_schedule->frequency) ?: 1;
+            $isStnk = $maintenance_schedule->name && stripos($maintenance_schedule->name, 'stnk') !== false;
+
+            if ($isStnk) {
+                // STNK tahunan: tanggal jatuh tempo tetap berdasarkan jadwal, tidak bergeser karena selesai terlambat
+                $currentPeriod = $maintenance_schedule->next_date ? Carbon::parse($maintenance_schedule->next_date)->format('Y-m-d') : $completionDate->format('Y-m-d');
+                $scheduleBaseDate = $maintenance_schedule->next_date ? Carbon::parse($maintenance_schedule->next_date) : $completionDate;
+            } else {
+                // Pemeliharaan rutin lain: periode berjalan dan periode berikutnya dihitung dari tanggal selesai riil
+                $currentPeriod = $completionDate->format('Y-m-d');
+                $scheduleBaseDate = $completionDate;
+            }
+
             $data = [
                 'name' => $request->input('name'),
                 'maintenance_schedule_id' => $id, // Relasi ke jadwal pemeliharaan
                 'pic_id' => auth()->id(), // Siapa yang menyelesaikan
                 'status' => 'Selesai',
-                'started_at' => now(), // Waktu penyelesaian
-                'completed_at' => now(), // Waktu penyelesaian
-                'period' => $request->input('period'),
+                'started_at' => $completionDate, // Waktu penyelesaian
+                'completed_at' => $completionDate, // Waktu penyelesaian
+                'period' => $currentPeriod, // Periode yang sedang diselesaikan
                 'cost' => $request->input('cost'), // Biaya pemeliharaan
-                'attachment' => $file_path, // Simpan path file
+                'attachment' => $driveLink, // Simpan link Google Drive
                 'notes' => $request->input('notes'), // Catatan tambahan
             ];
             $maintenance = \App\Models\MaintenancesModel::create($data);
+
+            // Update jadwal untuk periode berikutnya
+            $maintenance_schedule->update([
+                'old_date' => $scheduleBaseDate->toDateString(),
+                'next_date' => $scheduleBaseDate->copy()->addMonths($frequencyMonths)->toDateString(),
+                'status' => 'Terjadwal',
+            ]);
 
             // 4. RESPON BERHASIL
             return response()->json([

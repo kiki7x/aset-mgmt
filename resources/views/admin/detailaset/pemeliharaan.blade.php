@@ -258,7 +258,12 @@
                         name: 'attachment',
                         render: function(data, type, row) {
                             if (data) {
-                                return `<a href="{{ asset('storage') }}/${data}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-file-arrow-down"></i> Unduh</a>`;
+                                var attachmentUrl = data.trim();
+                                // Check if it's already a full URL
+                                if (!attachmentUrl.includes('://')) {
+                                    attachmentUrl = `{{ asset('storage') }}/${attachmentUrl}`;
+                                }
+                                return `<a href="${attachmentUrl}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-file-arrow-down"></i> Unduh</a>`;
                             } else {
                                 return 'Tidak ada bukti dukung';
                             }

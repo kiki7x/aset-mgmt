@@ -59,10 +59,14 @@ class MaintenancesModel extends Model
      */
     public function getAttachmentUrlAttribute()
     {
-        if ($this->attachment) {
-            // Menggunakan kolom 'attachment'
-            return \Illuminate\Support\Facades\Storage::url($this->attachment);
+        if (! $this->attachment) {
+            return null;
         }
-        return null;
+
+        if (filter_var($this->attachment, FILTER_VALIDATE_URL)) {
+            return $this->attachment;
+        }
+
+        return \Illuminate\Support\Facades\Storage::url($this->attachment);
     }
 }
