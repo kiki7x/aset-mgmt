@@ -140,6 +140,20 @@
                               </a>
                           </li>
                           <li class="nav-item">
+                              <a href="#"
+                                  class="nav-link {{ request()->is('admin/asettik*') ? 'active' : '' }}">
+                                  <i class="nav-icon fa-regular fa-file-code"></i>
+                                  <p>Lisensi</p>
+                              </a>
+                          </li>
+                          <li class="nav-item">
+                              <a href="#"
+                                  class="nav-link {{ request()->is('admin/asettik*') ? 'active' : '' }}">
+                                  <i class="nav-icon fa-regular fa-keyboard"></i>
+                                  <p>Komponen</p>
+                              </a>
+                          </li>
+                          <li class="nav-item">
                               <a href="{{ route('admin.asetrt') }}"
                                   class="nav-link {{ request()->is('admin/asetrt*') ? 'active' : '' }}">
                                   <i class="nav-icon fa-solid fa-building"></i>

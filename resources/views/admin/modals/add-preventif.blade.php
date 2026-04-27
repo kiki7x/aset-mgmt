@@ -12,13 +12,16 @@
                 <div class="modal-body">
                     {{-- Bukti dukung --}}
                     <div class="form-group">
-                        <label for="attachment">Bukti dukung <span class="text-danger">*</span></label>
-                        <div class="custom-file">
-                            <input type="file" class="form-control custom-file-input" id="attachment" name="attachment" accept=".jpg, .jpeg, .png, .heic, .heif, .pdf">
-                            <label class="custom-file-label" for="attachment">Upload bukti dukung</label>
-                            <small class="form-text text-muted">Format: JPG, JPEG, PNG, HEIC, HEIF, PDF (Max: 2MB)</small>
-                        </div>
-                        <span id="error-attachment" class="text-danger small"></span>
+                        <label for="attachment_name">Nama Bukti dukung <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="attachment_name" name="attachment_name">
+                        <span id="error-attachment_name" class="text-danger small"></span>
+                    </div>
+                    {{-- Bukti dukung --}}
+                    <div class="form-group">
+                        <label for="attachment_link">Link Bukti dukung <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="attachment_link" name="attachment_link">
+                        <small class="form-text text-muted">Masukkan link google drive</small>
+                        <span id="error-attachment_link" class="text-danger small"></span>
                     </div>
                     {{-- Biaya --}}
                     <div class="form-group">
@@ -41,7 +44,8 @@
                     <div class="form-group">
                         <div class="custom-control custom-checkbox">
                             <input class="custom-control-input" type="checkbox" id="customCheckbox1" name="name" value="" required>
-                            <label for="customCheckbox1" class="custom-control-label font-weight-normal">Saya telah menyelesaikan tugas pemeliharaan ini <span class="text-danger">*</span></label>
+                            <label for="customCheckbox1" class="custom-control-label font-weight-normal">Saya telah menyelesaikan tugas pemeliharaan ini, periode pemeliharaan berikutnya akan diset pada : <span id="future_period"></span> <span
+                                      class="text-danger">*</span></label>
                         </div>
                     </div>
                     <p class="text-muted font-italic">Tanda <span class="text-danger">*</span> wajib diisi</p>
@@ -99,6 +103,19 @@
                         '</span> periode: <span class="badge badge-info">' + moment(data.maintenance_schedule.next_date).format('ll') + '</span>');
                     $('#formAddTugasPreventif input[name="name"]').val(data.maintenance_schedule.name); // Set nilai checkbox sesuai nama tugas
                     $('#formAddTugasPreventif input[name="period"]').val(data.maintenance_schedule.next_date); // Set nilai periode
+
+                    const frequency = parseInt(data.maintenance_schedule.frequency);
+                    const futureDate = new Date(data.maintenance_schedule.next_date);
+                    const originalDay = futureDate.getDate();
+                    // tambahkan bulan
+                    futureDate.setMonth(futureDate.getMonth() + frequency);
+                    // Cek apakah tanggalnya "tumpah" (overflow) Jika tanggal di futureDate tidak sama dengan originalDay, artinya kita masuk ke bulan berikutnya lagi.
+                    if (futureDate.getDate() !== originalDay) {
+                        // Set ke tanggal 0 dari bulan hasil (ini akan memberikan hari terakhir bulan sebelumnya)
+                        futureDate.setDate(0);
+                    }
+                    $('#future_period').html('<span class="badge badge-info">' + moment(futureDate).format('ll') + '</span>');
+
                     $('#error-tugasPreventifName').text('');
                 },
                 error: function(xhr) {
@@ -144,7 +161,8 @@
                 error: function(xhr) {
                     if (xhr.status === 422) {
                         var errors = xhr.responseJSON.errors;
-                        $('#error-attachment').text(errors.attachment ? errors.attachment[0] : '');
+                        $('#error-attachment_name').text(errors.attachment_name ? errors.attachment_name[0] : '');
+                        $('#error-attachment_link').text(errors.attachment_link ? errors.attachment_link[0] : '');
                         $('#error-cost').text(errors.cost ? errors.cost[0] : '');
                         $('#error-notes').text(errors.notes ? errors.notes[0] : '');
                     } else {

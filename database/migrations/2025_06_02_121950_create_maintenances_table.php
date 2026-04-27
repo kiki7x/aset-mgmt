@@ -38,7 +38,8 @@ return new class extends Migration
             $table->date('duedate')->nullable();
             $table->integer('timespent')->nullable();
             $table->date('period')->nullable(); // Rekam Periode pemeliharaan preventif yang sudah dilakukan
-            $table->string('attachment')->nullable();
+            $table->string('attachment_name')->nullable();
+            $table->string('attachment_link')->nullable();
             $table->text('notes')->nullable(); // Catatan tambahan untuk pemeliharaan
             $table->decimal('cost', 12, 2)->nullable(); // Biaya dalam Rupiah
             $table->text('customfields')->nullable();

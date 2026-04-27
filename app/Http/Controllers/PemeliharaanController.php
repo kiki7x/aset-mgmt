@@ -159,15 +159,15 @@ class PemeliharaanController extends Controller
         // 1. VALIDASI
         $request->validate([
             // 'attachment' adalah nama input file di HTML: <input type="file" name="attachment">
-            'attachment' => 'required|file|mimes:jpg,jpeg,png,heic,heif,pdf|max:10240', // Maks 10MB
+            'attachment_name' => 'required|string', //
+            'attachment_link' => 'required|string',
             'name' => 'required|string', // Untuk checkbox
             'period' => 'required|string',
             'cost' => 'required|numeric|min:0',
             'notes' => 'required|string',
         ], [
-            'attachment.required' => 'Bukti dukung wajib diupload.',
-            'attachment.mimes' => 'Format file tidak didukung.',
-            'attachment.max' => 'Ukuran file maksimal 10MB.',
+            'attachment_name.required' => 'Nama bukti dukung wajib diisi.',
+            'attachment_link.required' => 'Link bukti dukung wajib diisi.',
             'name.required' => 'Wajib mencentang bahwa pemeliharaan selesai.',
             'period.required' => 'Periode wajib diisi.',
             'cost.required' => 'Biaya wajib diisi.',
@@ -175,17 +175,17 @@ class PemeliharaanController extends Controller
         ]);
 
         // 2. PENANGANAN FILE
-        $file_path = null;
-        if ($request->hasFile('attachment')) {
-            $file = $request->file('attachment');
+        // $file_path = null;
+        // if ($request->hasFile('attachment')) {
+            // $file = $request->file('attachment');
             // Tentukan folder penyimpanan, misalnya: 'public/uploads/preventif_attachment'
-            $folder = 'preventif_attachment';
+            // $folder = 'preventif_attachment';
 
             // Simpan file ke disk, Laravel akan secara otomatis membuat nama unik
             // dan mengembalikan path relatif ke folder disk.
             // Gunakan 'public' disk untuk file yang bisa diakses publik
-            $file_path = $file->store($folder, 'public');
-        }
+            // $file_path = $file->store($folder, 'public');
+        // }
 
         // 3. PENYIMPANAN DATA KE DATABASE
         try {
@@ -198,10 +198,19 @@ class PemeliharaanController extends Controller
                 'completed_at' => now(), // Waktu penyelesaian
                 'period' => $request->input('period'),
                 'cost' => $request->input('cost'), // Biaya pemeliharaan
-                'attachment' => $file_path, // Simpan path file
+                // 'attachment' => $file_path, // Simpan path file
+                'attachment_name' => $request->input('attachment_name'),
+                'attachment_link' => $request->input('attachment_link'),
                 'notes' => $request->input('notes'), // Catatan tambahan
             ];
+            // Simpan data ke database
             $maintenance = \App\Models\MaintenancesModel::create($data);
+
+            // Update jadwal periode berikutnya
+            $maintenance_schedule = \App\Models\Maintenances_scheduleModel::findOrFail($id);
+            $maintenance_schedule->old_date = $request->input('period');
+            $maintenance_schedule->next_date = $request->input('period');
+            $maintenance_schedule->save();
 
             // 4. RESPON BERHASIL
             return response()->json([
