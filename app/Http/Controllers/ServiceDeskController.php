@@ -143,7 +143,7 @@ class ServiceDeskController extends Controller
         } elseif ($request->department == 'Rumah Tangga') {
             $prefix1 = 'RT';
         }
-        $ticketNumber = 'TCK-' . $prefix . '-' . $prefix1 . '-' . rand(100000, 999999);
+        $ticketNumber = "TCK-{$prefix}-{$prefix1}-" . rand(100000, 999999) . "-" . now()->year;
 
         $fileName = null;
 

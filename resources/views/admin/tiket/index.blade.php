@@ -9,7 +9,7 @@
 <div class="card">
     <div class="card-header d-flex align-items-center justify-content-between">
         <h5 class="card-title mb-0">List Tiket Service Desk</h5>
-        <button class="btn btn-success btn-sm" onclick="printTicketReport()">
+        <button class="btn btn-success btn-sm"style="margin-left: auto;" onclick="printTicketReport()">
             <i class="fa fa-print"></i> Cetak PDF
         </button>
     </div>
