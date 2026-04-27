@@ -81,7 +81,7 @@ Ensure you have the following installed:
 6. Configure your database in the `.env` file:
    ```env
    DB_CONNECTION=mysql
-   DB_HOST=127.0.0.1
+   DB_HOST=127.0.0.1 or localhost
    DB_PORT=3306
    DB_DATABASE=your_database_name
    DB_USERNAME=your_database_user
@@ -90,7 +90,7 @@ Ensure you have the following installed:
 
 7. Run database migrations:
    ```bash
-   php artisan migrate
+   php artisan migrate:fresh --seed
    ```
 
 Visit `http://localhost:8000` in your browser to access the application.
