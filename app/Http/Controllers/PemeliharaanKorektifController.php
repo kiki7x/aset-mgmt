@@ -77,24 +77,40 @@ class PemeliharaanKorektifController extends Controller
             ->get();
         return DataTables::of($maintenancesSelesai)
             ->addIndexColumn()
-            ->addColumn('pic', function ($maintenancesSelesai) {
-                return e($maintenancesSelesai->pic->fullname ?? '-');
+            ->addColumn('asset_display', function ($row) {
+                if ($row->asset) {
+                    return $row->asset->tag . ' - ' . $row->asset->name;
+                }
+                return '-';
+            })
+            ->addColumn('pic_display', function ($row) {
+                return e($row->pic->fullname ?? '-');
+            })
+            ->addColumn('notes_display', function ($row) {
+                return $row->notes ?? '-';
+            })
+            ->addColumn('completed_at_display', function ($row) {
+                return $row->completed_at ? \Carbon\Carbon::parse($row->completed_at)->format('d M Y H:i') : '-';
+            })
+            ->addColumn('attachment_display', function ($row) {
+                return $row->attachment ? '<a href="' . $row->attachment . '" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-link"></i> Lihat</a>' : '-';
+            })
+            ->addColumn('cost_display', function ($row) {
+                return $row->cost ? 'Rp ' . number_format($row->cost, 0, ',', '.') : '-';
             })
             ->addColumn('action', function ($row) {
                 return
                     '
                     <div class="btn-group">
-
-                        <div class="btn-group">
                         <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" title="More..."></button>
-                            <ul class="dropdown-menu dropdown-menu-right">
-                                <li><span class="mx-3" onclick="showModalEditPemeliharaan(' . $row->id . ')" data-id="' . $row->id . '" data-name="' . e($row->name) . '" data-asset="' . $row->asset_id . '" style="cursor: pointer; color: #007bff;">Edit</span></li>
-                                <li><span class="mx-3" onclick="deletePemeliharaan(' . $row->id . ')" data-id="' . $row->id . '" data-name="' . e($row->name) . '" style="cursor: pointer; color: #007bff;">Delete</span></li>
-                            </ul>
-                        </div>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li><span class="mx-3" onclick="showModalEditPemeliharaan(' . $row->id . ')" data-id="' . $row->id . '" data-name="' . e($row->name) . '" data-asset="' . $row->asset_id . '" style="cursor: pointer; color: #007bff;">Edit</span></li>
+                            <li><span class="mx-3" onclick="deletePemeliharaan(' . $row->id . ')" data-id="' . $row->id . '" data-name="' . e($row->name) . '" style="cursor: pointer; color: #007bff;">Delete</span></li>
+                        </ul>
                     </div>
-                        ';
+                    ';
             })
+            ->rawColumns(['attachment_display', 'action'])
             ->make();
     }
 

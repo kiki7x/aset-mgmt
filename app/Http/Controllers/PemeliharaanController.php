@@ -248,6 +248,54 @@ class PemeliharaanController extends Controller
         return response()->json($maintenances);
     }
 
+    public function preventifUpdate(Request $request, $id): JsonResponse
+    {
+        Log::info("Loading Preventif Update for Maintenance ID: $id");
+        // tangani cost agar menghilangkan format Rp dan titik koma jika ada
+        if ($request->has('cost')) {
+            $cost = preg_replace('/[^\d]/', '', $request->input('cost'));
+            $request->merge(['cost' => $cost]);
+        }
+        // 1. VALIDASI
+        $request->validate([
+            'attachment' => 'required|url',
+            'name' => 'required|string', // Untuk checkbox
+            'cost' => 'required|numeric|min:0',
+            'notes' => 'required|string',
+        ], [
+            'attachment.required' => 'Link Google Drive bukti dukung wajib diisi.',
+            'attachment.url' => 'Masukkan URL Google Drive yang valid.',
+            'name.required' => 'Wajib mencentang bahwa pemeliharaan selesai.',
+            'cost.required' => 'Biaya wajib diisi.',
+            'notes.required' => 'Catatan wajib diisi.',
+        ]);
+
+        // 2. PENANGANAN FILE (jika ada, tapi untuk update mungkin tidak perlu)
+        $driveLink = $request->input('attachment');
+
+        // 3. PENYIMPANAN DATA KE DATABASE
+        try {
+            $maintenance = \App\Models\MaintenancesModel::findOrFail($id);
+            $maintenance->update([
+                'name' => $request->input('name'),
+                'cost' => $request->input('cost'), // Biaya pemeliharaan
+                'attachment' => $driveLink, // Simpan link Google Drive
+                'notes' => $request->input('notes'), // Catatan tambahan
+            ]);
+
+            // 4. RESPON BERHASIL
+            return response()->json([
+                'message' => 'Data pemeliharaan preventif berhasil diperbarui.'
+            ]);
+
+        } catch (\Exception $e) {
+            // 5. RESPON GAGAL
+            return response()->json([
+                'message' => 'Gagal memperbarui data: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function preventifDelete(Request $request, $id): JsonResponse
     {
         $maintenances = \App\Models\MaintenancesModel::findOrFail($id);

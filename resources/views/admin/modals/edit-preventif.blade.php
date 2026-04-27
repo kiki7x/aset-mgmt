@@ -129,11 +129,17 @@
                 data: formData,
                 contentType: false,
                 processData: false,
+                beforeSend: function() {
+                    // Add _method for PATCH
+                    if (!formData.has('_method')) {
+                        formData.append('_method', 'PATCH');
+                    }
+                },
                 success: function(response) {
                     Swal.fire({
                         icon: 'success',
                         title: 'Berhasil',
-                        text: 'Pemeliharaan preventif berhasil ditindak lanjuti.',
+                        text: 'Pemeliharaan preventif berhasil diperbarui.',
                     }).then(() => {
                         $('#modal-edit-preventif').modal('hide');
                         // Reload or update the relevant section of the page

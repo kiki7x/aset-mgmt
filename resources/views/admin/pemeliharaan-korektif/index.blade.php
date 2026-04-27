@@ -286,90 +286,16 @@
                     serverSide: true,
                     responsive: true,
                     ajax: "{{ route('admin.pemeliharaan.pemeliharaanDataTableSelesai') }}",
-                    columns: [{
-                            data: 'id',
-                            name: 'id'
-                        },
-                        {
-                            data: 'name',
-                            name: 'name',
-                            render: function(data, type, row) {
-                                let html = '';
-                                if (row.priority == "High") html += "<i class='fa fa-flag fa-fw text-danger' data-toggle='tooltip' title='High priority'></i>&nbsp;";
-                                if (row.priority == "Medium") html += "<i class='fa fa-flag fa-fw text-warning' data-toggle='tooltip' title='Medium priority'></i>&nbsp;";
-                                if (row.priority == "Low") html += "<i class='fa fa-flag fa-fw text-info' data-toggle='tooltip' title='Low priority'></i>&nbsp;";
-
-                                if (row.type == "Tugas") html += "<i class='fa fa-check-square fa-fw text-info' data-toggle='tooltip' title='Task'></i>&nbsp;";
-                                if (row.type == "Perbaikan") html += "<i class='fa fa-minus-square fa-fw text-warning' data-toggle='tooltip' title='Maintenance'></i>&nbsp;";
-                                if (row.type == "Celah") html += "<i class='fa fa-bug fa-fw text-danger' data-toggle='tooltip' title='Bug'></i>&nbsp;";
-                                if (row.type == "Peningkatan") html += "<i class='fa fa-external-link fa-fw text-teal' data-toggle='tooltip' title='Improvement'></i>&nbsp;";
-                                if (row.type == "Fitur Baru") html += "<i class='fa fa-plus-square fa-fw text-success' data-toggle='tooltip' title='New Feature'></i>&nbsp;";
-                                if (row.type == "Informasi") html += "<i class='fa fa-circle fa-fw text-danger' data-toggle='tooltip' title='Story'></i>&nbsp;";
-
-                                return html + row.name;
-                            }
-                        },
-                        {
-                            data: 'asset',
-                            name: 'asset',
-                            render: function(data, type, row) {
-                                if (row.asset.classification_id == 2) {
-                                    return '<a href="/admin/asettik/' + row.asset_id + '/overview" target="_blank">' + row.asset.tag + ' - ' + row.asset.name + '</a>';;
-                                } else {
-                                    return '<a href="/admin/asetrt/' + row.asset_id + '/overview" target="_blank">' + row.asset.tag + ' - ' + row.asset.name + '</a>';
-                                }
-                                // return '<a href="/admin/asettik/' + row.asset_id + '/overview" target="_blank">' + row.asset.tag + ' - ' + row.asset.name + '</a>';
-                            }
-                        },
-                        {
-                            data: 'pic',
-                            name: 'pic',
-                            render: function(data, type, row) {
-                                let html = '';
-                                if (row.pic.avatar != null) {
-                                    html += "<img src='" + row.pic.avatar + "' alt='Avatar' class='img-circle' width='25' height='25'>&nbsp;";
-                                } else {
-                                    html += "<img src='{{ asset('storage/avatar/default-avatar.jpg') }}' alt='Avatar' class='img-circle' width='25' height='25'>&nbsp;";
-                                }
-                                return html + row.pic;
-                            }
-                        },
-                        {
-                            data: 'notes',
-                            name: 'notes'
-                        },
-                        {
-                            data: 'completed_at',
-                            name: 'completed_at'
-                        },
-                        {
-                            data: 'attachment',
-                            name: 'attachment',
-                            render: function(data, type, row) {
-                                if (data) {
-                                    return `<a href="{{ asset('storage') }}/${data}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-file-arrow-down"></i> Unduh</a>`;
-                                } else {
-                                    return 'Tidak ada bukti dukung';
-                                }
-                            }
-                        },
-                        {
-                            data: 'cost',
-                            name: 'cost',
-                            render: function(data, type, row) {
-                                return new Intl.NumberFormat('id-ID', {
-                                    style: 'currency',
-                                    currency: 'IDR',
-                                    maximumFractionDigits: 0
-                                }).format(data);
-                            }
-                        },
-                        {
-                            data: 'action',
-                            name: 'action',
-                            orderable: false,
-                            searchable: false
-                        }
+                    columns: [
+                        { data: 'id', name: 'id' },
+                        { data: 'name', name: 'name' },
+                        { data: 'asset_display', name: 'asset_display' },
+                        { data: 'pic_display', name: 'pic_display' },
+                        { data: 'notes_display', name: 'notes_display' },
+                        { data: 'completed_at_display', name: 'completed_at_display' },
+                        { data: 'attachment_display', name: 'attachment_display' },
+                        { data: 'cost_display', name: 'cost_display' },
+                        { data: 'action', name: 'action', orderable: false, searchable: false }
                     ],
                 })
             };
