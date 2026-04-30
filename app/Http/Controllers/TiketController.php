@@ -7,7 +7,7 @@ use App\Models\TicketFront;
 use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
 
-class ServiceDeskController extends Controller
+class TiketController extends Controller
 {
 
     public function index()
