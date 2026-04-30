@@ -12,7 +12,7 @@ class TiketController extends Controller
 
     public function index()
     {
-        return view('frontsite.servicedesk');
+        return view('admin.tiket.index');
     }
 
 

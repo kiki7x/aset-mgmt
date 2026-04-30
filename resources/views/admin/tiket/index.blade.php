@@ -1,7 +1,7 @@
 @extends('layouts.backsite', [
-    'title' => 'Tiket Bantuan | SAPA PPL',
-    'welcome' => 'Tiket Bantuan',
-    'breadcrumb' => '<li class="breadcrumb-item active">Tiket Bantuan</li>'
+    'title' => 'Tiket | SAPA PPL',
+    'welcome' => 'Tiket',
+    'breadcrumb' => '<li class="breadcrumb-item active">Tiket</li>'
     ])
 
 
