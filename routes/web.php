@@ -24,6 +24,7 @@ Route::get('/faq', [App\Http\Controllers\FrontController::class, 'faq'])->name('
 Route::get('/lacak', [App\Http\Controllers\FrontController::class, 'lacak'])->name('lacak');
 Route::get('/lacak/show/{id}', [App\Http\Controllers\FrontController::class, 'lacak_show'])->name('lacak.show');
 Route::get('/servicedesk', [App\Http\Controllers\FrontController::class, 'servicedesk'])->name('servicedesk');
+Route::post('/servicedesk', [TiketController::class, 'store']);
 //service desk tiketing system
 Route::get('/servicedesk/data', [TiketController::class, 'data'])->name('servicedesk.data');
 Route::get('/servicedesk/print', [TiketController::class, 'print'])->name('servicedesk.print');
