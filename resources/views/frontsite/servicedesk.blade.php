@@ -213,8 +213,13 @@
 
         $('#d_priority').html(label)
 
-        $('#d_status').text($(this).data('status'))
-        $('#d_reason').text($(this).data('reason') || '-')
+        var status = $(this).data('status')
+        var reason = $(this).data('reason') || ''
+        var notes = $(this).data('notes') || ''
+        var detailText = status === 'Close' ? (notes || reason) : reason
+
+        $('#d_status').text(status)
+        $('#d_reason').text(detailText || '-')
         $('#d_description').text($(this).data('description'))
 
         let gambar = $(this).data('attachments')
@@ -343,7 +348,7 @@
                         confirmButtonColor: '#3085d6'
                     }).then(() => {
 
-                        $('#modalCreateTicket').modal('hide');
+                        $('#form-tiket').modal('hide');
 
                         $('#formCreateTicket')[0].reset();
 
@@ -353,6 +358,21 @@
 
                 }
 
+            },
+            error: function(xhr) {
+                let errorMsg = 'Gagal menyimpan tiket';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMsg = xhr.responseJSON.message;
+                } else if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    errorMsg = Object.values(xhr.responseJSON.errors).flat().join(', ');
+                }
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: errorMsg,
+                    confirmButtonColor: '#3085d6'
+                });
+                console.log('Error Response:', xhr.responseJSON);
             }
 
         });

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class TicketFront extends Model
 {
 
-    protected $table = 'tickets_front';
+    protected $table = 'tickets';
 
     protected $fillable = [
 
@@ -22,7 +22,8 @@ class TicketFront extends Model
         'description',
         'attachments',
         'status',
-        'reason'
+        'reason',
+        'notes'
 
     ];
 }

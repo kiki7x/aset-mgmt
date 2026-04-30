@@ -140,9 +140,17 @@
                             <option value="Close">Close</option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="field_reason">
                         <label for="edit_reason">Alasan</label>
                         <textarea class="form-control" id="edit_reason" name="reason" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group d-none" id="field_close_note">
+                        <label for="edit_notes">Catatan</label>
+                        <textarea class="form-control" id="edit_notes" name="notes" rows="3"></textarea>
+                    </div>
+                    <div class="form-group form-check d-none" id="field_close_confirm">
+                        <input type="checkbox" class="form-check-input" id="edit_confirm_close" name="confirm_close" value="1">
+                        <label class="form-check-label" for="edit_confirm_close">Saya yakin ingin menutup tiket ini</label>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -190,8 +198,13 @@
         }
 
         $('#d_priority').html(label);
-        $('#d_status').text($(this).data('status'));
-        $('#d_reason').text($(this).data('reason') || '-');
+        var status = $(this).data('status');
+        var reason = $(this).data('reason') || '';
+        var notes = $(this).data('notes') || '';
+        var detailText = status === 'Close' ? (notes || reason) : reason;
+
+        $('#d_status').text(status);
+        $('#d_reason').text(detailText || '-');
         $('#d_description').text($(this).data('description'));
 
         let gambar = $(this).data('attachments');
@@ -211,19 +224,46 @@
         $('#modalImage').modal('show');
     });
 
+    function toggleEditStatusFields(status) {
+        if (status === 'Pending') {
+            $('#field_reason').removeClass('d-none')
+            $('#edit_reason').attr('required', true)
+            $('#field_close_note, #field_close_confirm').addClass('d-none')
+            $('#edit_notes').removeAttr('required').val('')
+            $('#edit_confirm_close').prop('checked', false).removeAttr('required')
+        } else if (status === 'Close') {
+            $('#field_reason').addClass('d-none')
+            $('#edit_reason').removeAttr('required').val('')
+            $('#field_close_note, #field_close_confirm').removeClass('d-none')
+            $('#edit_notes').attr('required', true)
+            $('#edit_confirm_close').attr('required', true)
+        } else {
+            $('#field_reason, #field_close_note, #field_close_confirm').addClass('d-none')
+            $('#edit_reason, #edit_notes').removeAttr('required').val('')
+            $('#edit_confirm_close').prop('checked', false).removeAttr('required')
+        }
+    }
+
+    $(document).on('change', '#edit_status', function() {
+        toggleEditStatusFields($(this).val())
+    })
+
     $(document).on('click', '.edit-status', function() {
 
         var ticket = $(this).data('ticket')
         var status = $(this).data('status')
         var reason = $(this).data('reason') || ''
-
+        var notes = $(this).data('notes') || ''
 
         ticket = $('<div>').html(ticket).text()
 
         $('#edit_ticket').val(ticket)
         $('#edit_status').val(status)
-        $('#edit_reason').val(reason)
+        $('#edit_reason').val(status === 'Pending' ? reason : '')
+        $('#edit_notes').val(status === 'Close' ? notes : '')
+        $('#edit_confirm_close').prop('checked', false)
 
+        toggleEditStatusFields(status)
         $('#modalEditStatus').modal('show')
     });
 
@@ -233,17 +273,25 @@
 
         var ticket = $('#edit_ticket').val();
         var status = $('#edit_status').val();
-        var reason = $('#edit_reason').val();
+        var data = {
+            ticket: ticket,
+            status: status,
+            _token: "{{ csrf_token() }}"
+        };
+
+        if (status === 'Pending') {
+            data.reason = $('#edit_reason').val();
+        }
+
+        if (status === 'Close') {
+            data.notes = $('#edit_notes').val();
+            data.confirm_close = $('#edit_confirm_close').is(':checked') ? 'on' : '';
+        }
 
         $.ajax({
             url: "{{ route('servicedesk.updateStatus') }}",
             type: 'POST',
-            data: {
-                ticket: ticket,
-                status: status,
-                reason: reason,
-                _token: "{{ csrf_token() }}"
-            },
+            data: data,
             success: function(response) {
                 if (response.success) {
                     Swal.fire({
@@ -258,10 +306,26 @@
                 }
             },
             error: function(xhr) {
+                console.error(xhr.responseJSON || xhr.responseText);
+                var message = 'Terjadi kesalahan saat memperbarui status';
+
+                if (xhr.responseJSON) {
+                    if (xhr.responseJSON.message) {
+                        message = xhr.responseJSON.message;
+                    }
+                    if (xhr.responseJSON.errors) {
+                        var errors = xhr.responseJSON.errors;
+                        var firstError = Object.values(errors)[0];
+                        if (firstError && firstError.length) {
+                            message = firstError[0];
+                        }
+                    }
+                }
+
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'Terjadi kesalahan saat memperbarui status',
+                    text: message,
                     confirmButtonColor: '#d33'
                 });
             }
@@ -361,6 +425,7 @@
                         btn.setAttribute('data-ticket', row.ticket);
                         btn.setAttribute('data-status', row.status);
                         btn.setAttribute('data-reason', row.reason || '');
+                        btn.setAttribute('data-notes', row.notes || '');
                         btn.textContent = 'Edit';
                         return btn.outerHTML;
                     }

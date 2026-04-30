@@ -37,6 +37,7 @@ class TiketController extends Controller
                 data-description="' . $row->description . '"
                 data-status="' . $row->status . '"
                 data-reason="' . e($row->reason) . '"
+                data-notes="' . e($row->notes) . '"
                 data-attachments="' . $row->attachments . '"
             >' . $row->ticket . '</a>';
             })
@@ -117,91 +118,127 @@ class TiketController extends Controller
 
     public function store(Request $request)
     {
+        try {
+            $validated = $request->validate([
+                'nama' => 'required',
+                'email' => 'required|email',
+                'subject' => 'required',
+                'issuetype' => 'required',
+                'department' => 'required',
+                'priority' => 'required',
+                'description' => 'required',
+                'whatsapp_number' => 'nullable',
+                'attachments' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+            ]);
 
-        $request->validate([
-            'nama' => 'required',
-            'email' => 'required|email',
-            'subject' => 'required',
-            'issuetype' => 'required',
-            'department' => 'required',
-            'priority' => 'required',
-            'description' => 'required',
-            'attachments' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
-        ]);
+            $prefix = '';
 
-        $prefix = '';
+            if ($request->issuetype == 'Permintaan') {
+                $prefix = 'PER';
+            } elseif ($request->issuetype == 'Keluhan') {
+                $prefix = 'KEL';
+            }
+            $prefix1 = '';
 
-        if ($request->issuetype == 'Permintaan') {
-            $prefix = 'PER';
-        } elseif ($request->issuetype == 'Keluhan') {
-            $prefix = 'KEL';
+            if ($request->department == 'TIK') {
+                $prefix1 = 'TIK';
+            } elseif ($request->department == 'Rumah Tangga') {
+                $prefix1 = 'RT';
+            }
+            $ticketNumber = "TCK-{$prefix}-{$prefix1}-" . rand(100000, 999999) . "-" . now()->year;
+
+            $fileName = null;
+
+            if ($request->hasFile('attachments')) {
+
+                $file = $request->file('attachments');
+
+                $fileName = time() . '_' . $file->getClientOriginalName();
+
+                $file->storeAs('attachments', $fileName, 'public');
+            }
+
+            TicketFront::create([
+
+                'ticket' => $ticketNumber,
+
+                'nama' => $request->nama,
+
+                'email' => $request->email,
+
+                'whatsapp_number' => $request->whatsapp_number,
+
+                'subject' => $request->subject,
+
+                'issuetype' => $request->issuetype,
+
+                'department' => $request->department,
+
+                'priority' => $request->priority,
+
+                'description' => $request->description,
+
+                'attachments' => $fileName,
+
+                'status' => 'Open',
+
+                'notes' => $request->description ?? 'Tiket baru dibuat',
+
+                'reason' => null
+
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Tiket berhasil dibuat'
+            ], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
         }
-        $prefix1 = '';
-
-        if ($request->department == 'TIK') {
-            $prefix1 = 'TIK';
-        } elseif ($request->department == 'Rumah Tangga') {
-            $prefix1 = 'RT';
-        }
-        $ticketNumber = "TCK-{$prefix}-{$prefix1}-" . rand(100000, 999999) . "-" . now()->year;
-
-        $fileName = null;
-
-        if ($request->hasFile('attachments')) {
-
-            $file = $request->file('attachments');
-
-            $fileName = time() . '_' . $file->getClientOriginalName();
-
-            $file->storeAs('attachments', $fileName, 'public');
-        }
-
-        TicketFront::create([
-
-            'ticket' => $ticketNumber,
-
-            'nama' => $request->nama,
-
-            'email' => $request->email,
-
-            'whatsapp_number' => $request->whatsapp_number,
-
-            'subject' => $request->subject,
-
-            'issuetype' => $request->issuetype,
-
-            'department' => $request->department,
-
-            'priority' => $request->priority,
-
-            'description' => $request->description,
-
-            'attachments' => $fileName,
-
-            'status' => 'Open'
-
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Tiket berhasil dibuat'
-        ]);
     }
 
     public function updateStatus(Request $request)
     {
+        if ($request->has('notes') && is_array($request->notes)) {
+            $request->merge(['notes' => implode("\n", $request->notes)]);
+        }
+
+        if ($request->has('reason') && is_array($request->reason)) {
+            $request->merge(['reason' => implode("\n", $request->reason)]);
+        }
+
         $request->validate([
-            'ticket' => 'required|exists:tickets_front,ticket',
+            'ticket' => 'required|exists:tickets,ticket',
             'status' => 'required|in:Open,Pending,Proses,Close',
-            'reason' => 'required|string'
+            'reason' => 'sometimes|required_if:status,Pending',
+            'notes' => 'sometimes|required_if:status,Close',
+            'confirm_close' => 'sometimes|required_if:status,Close|in:on,yes,1,true'
         ]);
 
-        $ticket = TicketFront::where('ticket', $request->ticket)->first();
+        $ticket = TicketFront::where('ticket', $request->ticket)->firstOrFail();
 
-        $ticket->update([
+        $updateData = [
             'status' => $request->status,
-            'reason' => $request->reason
-        ]);
+            'reason' => null,
+            'notes' => $ticket->notes
+        ];
+
+        if ($request->status === 'Pending') {
+            $updateData['reason'] = $request->reason;
+        } elseif ($request->status === 'Close') {
+            $updateData['notes'] = $request->notes;
+        }
+
+        $ticket->update($updateData);
 
         return response()->json([
             'success' => true,
