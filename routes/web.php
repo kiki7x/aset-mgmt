@@ -107,6 +107,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     // Route Kalender Pemeliharaan
     Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering'])->group(function () {
         Route::get('/kalender-pemeliharaan', [App\Http\Controllers\KalenderPemeliharaan::class, 'index'])->name('admin.kalender-pemeliharaan');
+        Route::get('/kalender-pemeliharaan/get_maintenance_schedules', [App\Http\Controllers\KalenderPemeliharaan::class, 'getMaintenanceSchedules'])->name('admin.kalender-pemeliharaan.get_maintenance_schedules');
     });
 
     // Route Setting Atribut / Master Data
@@ -213,7 +214,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::post('settings/import/storeasetrt', [App\Http\Controllers\ImportController::class, 'storeAsetRt'])->name('admin.settings.import.storeasetrt');
         // Route Logs
         Route::get('settings/logs', [App\Http\Controllers\LogsController::class, 'index'])->name('admin.settings.logs');
-        });
+    });
 
     // Route Notifikasi
     Route::get('/notifikasi', [App\Http\Controllers\NotifikasiController::class, 'index'])->name('admin.notifikasi');

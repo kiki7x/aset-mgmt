@@ -31,7 +31,7 @@
                             <!-- Isi akan diisi secara dinamis melalui JavaScript -->
                         </div>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="attachment"></label>
                         <div class="custom-file">
                             <input type="file" class="form-control custom-file-input" id="attachment" name="attachment" accept=".jpg, .jpeg, .png, .heic, .heif, .pdf">
@@ -39,6 +39,17 @@
                             <small class="form-text text-muted">Format: JPG, JPEG, PNG, HEIC, HEIF, PDF (Max: 2MB)</small>
                         </div>
                         <span id="error-attachment" class="text-danger small"></span>
+                    </div> -->
+                    <div class="form-group">
+                        <label for="edit_attachment_link">Link Bukti Dukung</label>
+                        <input type="text" class="form-control" id="edit_attachment_link" name="edit_attachment_link">
+                        <small class="form-text text-muted"></small>
+                        <span id="error-edit_attachment_link" class="text-danger small"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_cost">Biaya</label>
+                        <input type="string" class="form-control" id="edit_cost" name="edit_cost" min="0">
+                        <span id="error-edit_cost" class="text-danger small"></span>
                     </div>
                     <div class="form-group">
                         <label for="edit_notes">Catatan *</label>
@@ -56,96 +67,131 @@
 </div>
 
 @push('script-foot')
-    <!-- ini untuk custom file input agar berfungsi reaktif -->
-    <script>
-        $(function() {
-            bsCustomFileInput.init();
-        });
-    </script>
-    <script>
-        // Fungsi tampilkan modal untuk Edit preventif
-        function showModalEditPreventif(id) {
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: "{{ route('admin.aset.pemeliharaan.preventifEdit', ['id' => ':id']) }}".replace(':id', id),
-                type: "GET",
-                dataType: "json",
-                beforeSend: function() {
-                    $('#formEditPreventif')[0].reset();
-                    $('#error-*').text('');
-                },
-                success: function(data) {
-                    $('#formEditPreventif')[0].reset();
-                    $('#modal-edit-preventif').modal('show').data('schedule-id', id); // <--- Simpan ID tugas di modal
-                    $('#modalEditPreventifLabel, .modal-title').html('Form Edit Pemeliharaan Preventif');
-                    $('#formEditPreventif input[name="edit_name"]').val(data.name);
-                    $('#formEditPreventif input[name="edit_aset"]').val(data.asset_name);
-                    // Tampilkan attachment saat ini
-                    var currentAttachmentHtml = data.attachment ?
-                        `<a href="{{ asset('storage') }}/${data.attachment}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-file-arrow-down"></i> Lihat ${data.attachment}</a>` :
-                        'Tidak ada bukti dukung';
-                    $('#current-attachment').html(currentAttachmentHtml);
-                    $('#formEditPreventif input[name="edit_period"]').val(data.period); // Set nilai periode
-                    $('#formEditPreventif textarea[name="edit_notes"]').val(data.notes);
-                    $('#error-tugasPreventifName').text('');
-                },
-                error: function(xhr) {
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.errors;
-                        $('#error-tugasPreventifName').text(errors.name ? errors.name[0] : '');
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Terjadi kesalahan saat memuat data. Silakan coba lagi.',
-                        });
-                    }
-                }
-            })
-        }
+<!-- ini untuk custom file input agar berfungsi reaktif -->
+<script>
+    $(document).ready(function() {
+        // 1. Fungsi untuk memformat angka menjadi Rupiah
+        function formatRupiah(element) {
+            var value = element.val();
 
-        // Handle Update
-        $('#formEditTugasPreventif').on('submit', function(e) {
-            e.preventDefault();
-            var formData = new FormData(this);
-            var scheduleId = $('#modal-edit-preventif').data('schedule-id'); // Ganti dengan ID jadwal yang sesuai
-            var assetId = "{{ $asset->id }}"; // Ganti dengan ID aset yang sesuai
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: "{{ route('admin.aset.pemeliharaan.preventifUpdate', ['id' => ':id']) }}".replace(':id', scheduleId),
-                type: "POST",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil',
-                        text: 'Pemeliharaan preventif berhasil ditindak lanjuti.',
-                    }).then(() => {
-                        $('#modal-edit-preventif').modal('hide');
-                        // Reload or update the relevant section of the page
-                        $('#tablePemeliharaanPreventif').DataTable().ajax.reload();
-                    });
-                },
-                error: function(xhr) {
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.errors;
-                        $('#error-attachment').text(errors.attachment ? errors.attachment[0] : '');
-                        $('#error-notes').text(errors.notes ? errors.notes[0] : '');
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.',
-                        });
-                    }
-                }
-            });
+            // Hapus semua karakter non-digit (termasuk 'Rp' dan titik)
+            var numericValue = value.replace(/\D/g, '');
+
+            if (numericValue) {
+                var formattedValue = new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                    minimumFractionDigits: 0
+                }).format(numericValue);
+
+                element.val(formattedValue);
+            }
+        }
+        // 2. Jalankan fungsi saat ada input (saat user mengetik)
+        $('#edit_cost').on('input', function() {
+            formatRupiah($(this));
         });
-    </script>
+    });
+</script>
+<script>
+    // Fungsi tampilkan modal untuk Edit preventif
+    function showModalEditPreventif(id) {
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: "{{ route('admin.aset.pemeliharaan.preventifEdit', ['id' => ':id']) }}".replace(':id', id),
+            type: "GET",
+            dataType: "json",
+            beforeSend: function() {
+                $('#formEditPreventif')[0].reset();
+                $('#error-*').text('');
+            },
+            success: function(data) {
+                $('#formEditPreventif')[0].reset();
+                $('#modal-edit-preventif').modal('show').data('schedule-id', id); // <--- Simpan ID tugas di modal
+                $('#modalEditPreventifLabel, .modal-title').html('Form Edit Pemeliharaan Preventif');
+                $('#formEditPreventif input[name="edit_name"]').val(data.name);
+                $('#formEditPreventif input[name="edit_aset"]').val(data.asset_name);
+                // Tampilkan attachment saat ini
+                // var currentAttachmentHtml = data.attachment ?
+                //     `<a href="{{ asset('storage') }}/${data.attachment}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-file-arrow-down"></i> Lihat ${data.attachment}</a>` :
+                //     'Tidak ada bukti dukung';
+                var currentAttachmentHtml = data.attachment_link ?
+                    `<a href="${data.attachment_link}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-file-arrow-down"></i> Lihat </br> ${data.attachment_link}</a>` :
+                    'Tidak ada bukti dukung';
+                $('#current-attachment').html(currentAttachmentHtml);
+                $('#formEditPreventif input[name="edit_attachment_link"]').val(data.attachment_link); // Set nilai link bukti dukung
+                $('#formEditPreventif input[name="edit_period"]').val(data.period); // Set nilai periode
+                // format nilai biaya dalam format Rupiah
+                if (data.cost) {
+                    var formattedCost = new Intl.NumberFormat('id-ID', {
+                        style: 'currency',
+                        currency: 'IDR',
+                        minimumFractionDigits: 0
+                    }).format(data.cost);
+                    $('#formEditPreventif input[name="edit_cost"]').val(formattedCost);
+                } else {
+                    $('#formEditPreventif input[name="edit_cost"]').val('');
+                }
+                $('#formEditPreventif textarea[name="edit_notes"]').val(data.notes);
+                $('#error-tugasPreventifName').text('');
+            },
+            error: function(xhr) {
+                if (xhr.status === 422) {
+                    var errors = xhr.responseJSON.errors;
+                    $('#error-tugasPreventifName').text(errors.name ? errors.name[0] : '');
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan saat memuat data. Silakan coba lagi.',
+                    });
+                }
+            }
+        })
+    }
+
+    // Handle Update
+    $('#formEditTugasPreventif').on('submit', function(e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+        var scheduleId = $('#modal-edit-preventif').data('schedule-id'); // Ganti dengan ID jadwal yang sesuai
+        var assetId = "{{ $asset->id }}"; // Ganti dengan ID aset yang sesuai
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: "{{ route('admin.aset.pemeliharaan.preventifUpdate', ['id' => ':id']) }}".replace(':id', scheduleId),
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: 'Pemeliharaan preventif berhasil ditindak lanjuti.',
+                }).then(() => {
+                    $('#modal-edit-preventif').modal('hide');
+                    // Reload or update the relevant section of the page
+                    $('#tablePemeliharaanPreventif').DataTable().ajax.reload();
+                });
+            },
+            error: function(xhr) {
+                if (xhr.status === 422) {
+                    var errors = xhr.responseJSON.errors;
+                    $('#error-attachment').text(errors.attachment ? errors.attachment[0] : '');
+                    $('#error-notes').text(errors.notes ? errors.notes[0] : '');
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.',
+                    });
+                }
+            }
+        });
+    });
+</script>
 @endpush

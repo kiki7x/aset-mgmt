@@ -25,7 +25,7 @@ class JadwalPemeliharaanRequest extends FormRequest
             'asset_id' => 'required',
             'name' => 'required|min:3',
             'frequency' => 'required',
-            'start_date' => 'required|date',
+            'old_date' => 'required|date',
             'next_date' => 'required|date',
             'status' => 'required',
             'customfields' => 'nullable|string',

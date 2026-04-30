@@ -41,9 +41,7 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css') }}">
     {{-- Bootstrap Datepicker --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw=="
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- fullCalendar -->
-    <link rel="stylesheet" href="{{ asset('assets/plugins/fullcalendar/main.css') }}">
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     {{-- script-head --}}
     @stack('script-head')
     {{-- ./script-head --}}
@@ -99,8 +97,6 @@
     <script src="{{ asset('assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('assets/dist/js/adminlte.js?v=3.2.0') }}"></script>
-    <!-- fullCalendar 2.2.5 -->
-    <script src="{{ asset('assets/plugins/fullcalendar/main.js') }} "></script>
     <!-- init bootstrap tooltip -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     {{-- Datatables --}}

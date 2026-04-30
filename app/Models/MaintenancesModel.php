@@ -29,7 +29,7 @@ class MaintenancesModel extends Model
         'completed_at',
         'timespent',
         'cost',
-        'attachment',
+        'attachment_link',
         'notes',
         'customfields'
     ];
@@ -54,7 +54,7 @@ class MaintenancesModel extends Model
         return $this->belongsTo(TicketrepliesModel::class, 'ticketreply_id');
     }
 
-      /**
+    /**
      * Accessor untuk mendapatkan URL publik dari file attachment.
      */
     public function getAttachmentUrlAttribute()

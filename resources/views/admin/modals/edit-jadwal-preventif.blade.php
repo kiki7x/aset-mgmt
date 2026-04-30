@@ -52,11 +52,11 @@
                     </div>
                     <!-- Tanggal Mulai -->
                     <div class="form-group">
-                        <label for="start_date">Tanggal Mulai <span class="text-danger">*</span></label>
+                        <label for="old_date">Tanggal Mulai <span class="text-danger">*</span></label>
                         <div>
-                            <input id="edit_start_date" width="276" type="text" class="form-control" name="start_date" placeholder="yyyy-mm-dd" />
+                            <input id="edit_old_date" width="276" type="text" class="form-control" name="old_date" placeholder="yyyy-mm-dd" />
                         </div>
-                        <span class="text-danger small" id="error-start_date"></span>
+                        <span class="text-danger small" id="error-old_date"></span>
                     </div>
                     <!-- Tanggal Selanjutnya -->
                     <div class="form-group">
@@ -77,166 +77,166 @@
 </div>
 
 @push('script-foot')
-    <script>
-        function showModalEditJadwalPemeliharaan(id) {
+<script>
+    function showModalEditJadwalPemeliharaan(id) {
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: "{{ route('admin.aset.pemeliharaan.scheduleEdit', ['id' => ':id']) }}".replace(':id', id),
+            type: "GET",
+            dataType: "json",
+            beforeSend: function() {
+                $('#edit-schedule-label').text('Edit Jadwal Pemeliharaan Preventif');
+                $('#edit_id').val('');
+                $('#edit_name').val('');
+                $('#edit_frequency').val('');
+                $('#edit_old_date').val('');
+                $('#edit_next_date').val('');
+                $('#edit_status').val('');
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: 'Gagal mengambil data jadwal pemeliharaan.',
+                });
+            },
+            success: function(data) {
+                $('#edit_id').val(data.id);
+                $('#edit_name').val(data.name);
+                $('#edit_frequency').val(data.frequency);
+                $('#edit_old_date').val(data.old_date);
+                $('#edit_next_date').val(data.next_date);
+                $('#edit_status').val(data.status);
+            }
+        });
+        $('#edit-schedule').modal('show');
+    }
+
+    // Inisialisasi datepicker untuk input tanggal
+    $('#edit_old_date').datepicker({
+        format: "yyyy-mm-dd",
+        autoclose: true,
+        todayHighlight: true,
+        orientation: "auto",
+        todayBtn: "linked",
+    });
+
+    // Pastikan dokumen siap sebelum menjalankan script jQuery
+    $(document).ready(function() {
+
+        function toggleRadioGroups(selectedValue) {
+            // Sembunyikan semua bagian form detail terlebih dahulu
+            $('#editRadioTik').hide();
+            $('#editRadioKendaraan').hide();
+            $('#editRadioMesinElektronik').hide();
+
+            // Tampilkan bagian form yang sesuai berdasarkan pilihan
+            if (selectedValue === '2') {
+                $('#editRadioTik').removeClass('d-none').show();
+                $('input[name="edit_name"]').prop('checked', false);
+            } else if (selectedValue === '3') {
+                $('#editRadioKendaraan').removeClass('d-none').show();
+                $('input[name="edit_name"]').prop('checked', false);
+            } else if (selectedValue === '4') {
+                $('#editRadioMesinElektronik').removeClass('d-none').show();
+                $('input[name="edit_name"]').prop('checked', false);
+            }
+        }
+
+        const initialSelectedValue = $('#edit_klasifikasi').val();
+        if (initialSelectedValue) {
+            toggleRadioGroups(initialSelectedValue);
+        }
+        $('#edit_klasifikasi').on('change', function() {
+            const selectedValue = $(this).val();
+            toggleRadioGroups(selectedValue);
+        });
+
+        // Event listener untuk submit form pemeliharaan preventif
+        $('#formEditJadwalPemeliharaan').on('submit', function(e) {
+            e.preventDefault();
+
+            // Serialize semua data form menjadi string URL-encoded
+            const formData = new FormData(this)
+            // Ambil ID dari input tersembunyi
+            const id = $('#edit_id').val();
+
+            // Lakukan permintaan Ajax POST ke endpoint Laravel
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: "{{ route('admin.aset.pemeliharaan.scheduleEdit', ['id' => ':id']) }}".replace(':id', id),
-                type: "GET",
-                dataType: "json",
-                beforeSend: function() {
-                    $('#edit-schedule-label').text('Edit Jadwal Pemeliharaan Preventif');
-                    $('#edit_id').val('');
-                    $('#edit_name').val('');
-                    $('#edit_frequency').val('');
-                    $('#edit_start_date').val('');
-                    $('#edit_next_date').val('');
-                    $('#edit_status').val('');
+                url: "{{ route('admin.aset.pemeliharaan.scheduleUpdate', ['id' => ':id']) }}".replace(':id', id),
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    $('#modalEditJadwalPemeliharaan').modal('hide');
+                    $('#tableJadwalPemeliharaan').DataTable().ajax.reload();
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: response.message,
+                    })
                 },
                 error: function(xhr) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal',
-                        text: 'Gagal mengambil data jadwal pemeliharaan.',
-                    });
-                },
-                success: function(data) {
-                    $('#edit_id').val(data.id);
-                    $('#edit_name').val(data.name);
-                    $('#edit_frequency').val(data.frequency);
-                    $('#edit_start_date').val(data.start_date);
-                    $('#edit_next_date').val(data.next_date);
-                    $('#edit_status').val(data.status);
-                }
-            });
-            $('#edit-schedule').modal('show');
-        }
-
-        // Inisialisasi datepicker untuk input tanggal
-        $('#edit_start_date').datepicker({
-            format: "yyyy-mm-dd",
-            autoclose: true,
-            todayHighlight: true,
-            orientation: "auto",
-            todayBtn: "linked",
-        });
-
-        // Pastikan dokumen siap sebelum menjalankan script jQuery
-        $(document).ready(function() {
-
-            function toggleRadioGroups(selectedValue) {
-                // Sembunyikan semua bagian form detail terlebih dahulu
-                $('#editRadioTik').hide();
-                $('#editRadioKendaraan').hide();
-                $('#editRadioMesinElektronik').hide();
-
-                // Tampilkan bagian form yang sesuai berdasarkan pilihan
-                if (selectedValue === '2') {
-                    $('#editRadioTik').removeClass('d-none').show();
-                    $('input[name="edit_name"]').prop('checked', false);
-                } else if (selectedValue === '3') {
-                    $('#editRadioKendaraan').removeClass('d-none').show();
-                    $('input[name="edit_name"]').prop('checked', false);
-                } else if (selectedValue === '4') {
-                    $('#editRadioMesinElektronik').removeClass('d-none').show();
-                    $('input[name="edit_name"]').prop('checked', false);
-                }
-            }
-
-            const initialSelectedValue = $('#edit_klasifikasi').val();
-            if (initialSelectedValue) {
-                toggleRadioGroups(initialSelectedValue);
-            }
-            $('#edit_klasifikasi').on('change', function() {
-                const selectedValue = $(this).val();
-                toggleRadioGroups(selectedValue);
-            });
-
-            // Event listener untuk submit form pemeliharaan preventif
-            $('#formEditJadwalPemeliharaan').on('submit', function(e) {
-                e.preventDefault();
-
-                // Serialize semua data form menjadi string URL-encoded
-                const formData = new FormData(this)
-                // Ambil ID dari input tersembunyi
-                const id = $('#edit_id').val();
-
-                // Lakukan permintaan Ajax POST ke endpoint Laravel
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: "{{ route('admin.aset.pemeliharaan.scheduleUpdate', ['id' => ':id']) }}".replace(':id', id),
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        $('#modalEditJadwalPemeliharaan').modal('hide');
-                        $('#tableJadwalPemeliharaan').DataTable().ajax.reload();
-
+                    if (xhr.responseJSON?.message === 'The name has already been taken.') {
+                        $('#error-name').text('');
+                        $('#error-frequency').text('');
+                        $('#error-old_date').text('');
+                        $('#error-next_date').text('');
                         Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil',
-                            text: response.message,
-                        })
-                    },
-                    error: function(xhr) {
-                        if (xhr.responseJSON?.message === 'The name has already been taken.') {
-                            $('#error-name').text('');
-                            $('#error-frequency').text('');
-                            $('#error-start_date').text('');
-                            $('#error-next_date').text('');
-                            Swal.fire({
-                                icon: 'info',
-                                title: 'Gagal',
-                                text: 'Jadwal pemeliharaan ini sudah ada.',
-                            });
-                        } else if (xhr.responseJSON?.errors) {
-                            $.each(xhr.responseJSON.errors, function(key, value) {
-                                $(`#error-${key}`).text(value[0]);
-                            });
-                            // Swal.fire({
-                            //     icon: 'warning',
-                            //     title: 'Gagal',
-                            //     text: 'Periksa kembali data yang dimasukkan.',
-                            // });
-                        }
-                        return false;
+                            icon: 'info',
+                            title: 'Gagal',
+                            text: 'Jadwal pemeliharaan ini sudah ada.',
+                        });
+                    } else if (xhr.responseJSON?.errors) {
+                        $.each(xhr.responseJSON.errors, function(key, value) {
+                            $(`#error-${key}`).text(value[0]);
+                        });
+                        // Swal.fire({
+                        //     icon: 'warning',
+                        //     title: 'Gagal',
+                        //     text: 'Periksa kembali data yang dimasukkan.',
+                        // });
                     }
-                });
-            });
-
-
-            // Listen for changes to the frequency select dropdown
-            $('#edit_frequency').on('change', function() {
-                const val = parseInt($(this).val());
-                const now = new Date();
-
-                // Set the start_date input field to today's date
-                $('#edit_start_date').val(now.toISOString().split('T')[0]);
-
-                // Calculate the next date based on the selected frequency
-                const futureDate = new Date(now);
-                futureDate.setMonth(futureDate.getMonth() + val);
-
-                // Set the next_date input field to the calculated date
-                $('#edit_next_date').val(futureDate.toISOString().split('T')[0]);
-            });
-
-            // Listen for changes to the start_date input field
-            $('#edit_start_date').on('change', function() {
-                const val = new Date($(this).val());
-
-                // Calculate the next date based on the selected frequency
-                const futureDate = new Date(val);
-                futureDate.setMonth(val.getMonth() + parseInt($('#edit_frequency').val()));
-
-                // Set the next_date input field to the calculated date
-                $('#edit_next_date').val(futureDate.toISOString().split('T')[0]);
+                    return false;
+                }
             });
         });
-    </script>
+
+
+        // Listen for changes to the frequency select dropdown
+        $('#edit_frequency').on('change', function() {
+            const val = parseInt($(this).val());
+            const now = new Date();
+
+            // Set the old_date input field to today's date
+            $('#edit_old_date').val(now.toISOString().split('T')[0]);
+
+            // Calculate the next date based on the selected frequency
+            const futureDate = new Date(now);
+            futureDate.setMonth(futureDate.getMonth() + val);
+
+            // Set the next_date input field to the calculated date
+            $('#edit_next_date').val(futureDate.toISOString().split('T')[0]);
+        });
+
+        // Listen for changes to the old_date input field
+        $('#edit_old_date').on('change', function() {
+            const val = new Date($(this).val());
+
+            // Calculate the next date based on the selected frequency
+            const futureDate = new Date(val);
+            futureDate.setMonth(val.getMonth() + parseInt($('#edit_frequency').val()));
+
+            // Set the next_date input field to the calculated date
+            $('#edit_next_date').val(futureDate.toISOString().split('T')[0]);
+        });
+    });
+</script>
 @endpush
