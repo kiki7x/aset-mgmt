@@ -65,6 +65,21 @@ return new class extends Migration
             $table->unsignedInteger('timespent'); // timespent column (integer)
             $table->timestamps(); // created_at and updated_at columns
         });
+        Schema::create('tickets_front', function (Blueprint $table) {
+            $table->id(); // id column (AUTO_INCREMENT and PRIMARY KEY)
+            $table->string('ticket', 255)->unique(); // ticket column (VARCHAR 255, UNIQUE)
+            $table->string('nama', 255); // nama column (VARCHAR 255)
+            $table->string('email', 255); // email column (VARCHAR 255)
+            $table->string('whatsapp_number', 20)->nullable(); // whatsapp_number column (VARCHAR 20, nullable)
+            $table->string('subject', 255); // subject column (VARCHAR 255)
+            $table->string('issuetype', 255); // issuetype column (VARCHAR 255)
+            $table->string('department', 255); // department column (VARCHAR 255)
+            $table->string('priority', 50); // priority column (VARCHAR 50)
+            $table->text('description'); // description column (TEXT)
+            $table->text('attachments')->nullable(); // attachments column (TEXT, nullable)
+            $table->string('status', 50)->default('Open'); // status column (VARCHAR 50, default 'Open')
+            $table->timestamps(); // created_at and updated_at columns
+        });
     }
 
     /**
@@ -77,5 +92,6 @@ return new class extends Migration
         Schema::dropIfExists('tickets_replies');
         Schema::dropIfExists('tickets_rules');
         Schema::dropIfExists('tickets');
+        Schema::dropIfExists('tickets_front');
     }
 };
