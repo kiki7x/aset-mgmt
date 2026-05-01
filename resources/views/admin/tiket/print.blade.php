@@ -3,55 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Tiket Service Desk</title>
+    <title></title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 24px;
-            color: #222;
+            font-family: 'Times New Roman', Times, serif;
+            margin: 20px;
+            color: #000;
+            line-height: 1.5;
         }
 
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 16px;
+            gap: 20px;
+            padding: 12px 0 16px;
+            border-bottom: 2px solid #000;
+            margin-bottom: 18px;
         }
 
-        .header-left {
+        .header-left,
+        .header-right {
+            width: 110px;
+            min-width: 110px;
+        }
+
+        .header-left img,
+        .header-right img {
+            max-width: 110px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .header-center {
             text-align: center;
-            width: 100%;
+            flex: 1;
+            padding: 0 12px;
         }
 
-        .header-left h1,
-        .header-left h2,
-        .header-left p {
+        .header-center h1,
+        .header-center h2,
+        .header-center p {
             margin: 0;
             line-height: 1.2;
         }
 
-        .header-left h1 {
-            font-size: 18px;
+        .line1 {
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
-        .header-left h2 {
+        .line2 {
             font-size: 16px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            margin-top: 8px;
+            text-transform: uppercase;
         }
 
-        .header-left p {
+        .header-center p,
+        .line3,
+        .line4,
+        .line5 {
             font-size: 12px;
+            margin: 0;
         }
 
-        .header-right img {
-            max-width: 140px;
-            height: auto;
-            display: block;
+        .header-center p a {
+            color: #000;
+            text-decoration: none;
         }
 
         .divider {
-            border-top: 2px solid #000;
-            margin: 12px 0 20px;
+            display: none;
         }
+        
+        .badge {
+            display: inline;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            padding: 0;
+            background: transparent;
+            border-radius: 0;
+        }
+
+        .badge.priority-low { color: #6c757d; }
+        .badge.priority-medium { color: #d39e00; }
+        .badge.priority-high { color: #dc3545; }
+
+        .badge.status-pending,
+        .badge.status-proses,
+        .badge.status-process { color: #d39e00; }
+        .badge.status-open { color: #0d6efd; }
+        .badge.status-in-progress { color: #0d6efd; }
+        .badge.status-close,
+        .badge.status-closed { color: #198754; }
+        .badge.status-rejected,
+        .badge.status-tolak { color: #dc3545; }
+        .badge.status-completed,
+        .badge.status-selesai { color: #198754; }
 
         .report-title {
             text-align: center;
@@ -107,24 +162,34 @@
 </head>
 <body>
     <div class="header">
-        <div class="header-left">
-            <h1>KEMENTERIAN PARIWISATA REPUBLIK INDONESIA</h1>
-            <h2>POLITEKNIK PARIWISATA LOMBOK</h2>
-            <p>Jalan Raden Puguh No. 1, Puyung, Jonggat, Praya, Lombok Tengah, Provinsi Nusa Tenggara Barat 83561</p>
-            <p>Telp. (+62-0370) 6158029; Faksimile (+62 0370) 6158030</p>
-            <p>Laman: www.ppl.ac.id • Posel: info@ppl.ac.id</p>
+    <div class="header-left">
+        <img src="{{ asset('menpar.png') }}">
+    </div>
+
+    <div class="header-center">
+        <div class="line1">KEMENTERIAN PARIWISATA REPUBLIK INDONESIA</div>
+        <div class="line2">POLITEKNIK PARIWISATA LOMBOK</div>
+        <div class="line3">
+            Jalan Raden Puguh No. 1, Puyung, Jonggat,<br>
+            Praya, Lombok Tengah, Provinsi Nusa Tenggara Barat 83561
         </div>
-        <div class="header-right">
-            <img src="{{ asset('ppl-icon.png') }}" alt="Politeknik Pariwisata Lombok">
+        <div class="line4">
+            Telepon (+62-0370) 6158029; Faksimile (+62 0370) 6158030
+        </div>
+        <div class="line5">
+            Laman: <span class="link">www.ppl.ac.id</span> Posel: <span class="link">info@ppl.ac.id</span>
         </div>
     </div>
+
+    <div class="header-right">
+        <img src="{{ asset('ppl-icon.png') }}">
+    </div>
+</div>
+
+<div class="garis"></div>
+
 
     <div class="divider"></div>
-
-    <div class="report-title">
-        <h2>Laporan Tiket Service Desk</h2>
-        <p class="small">Dicetak pada: {{ now()->format('d M Y H:i') }}</p>
-    </div>
 
     @if(!empty($search))
         <div class="report-info">
@@ -149,14 +214,18 @@
         <tbody>
             @forelse($tickets as $ticket)
                 <tr>
+                    @php
+                        $priorityClass = strtolower($ticket->priority);
+                        $statusClass = strtolower(str_replace(' ', '-', $ticket->status));
+                    @endphp
                     <td class="text-center">{{ $loop->iteration }}</td>
                     <td>{{ $ticket->ticket }}</td>
                     <td>{{ $ticket->nama }}</td>
                     <td>{{ $ticket->issuetype }} - {{ $ticket->department }}</td>
                     <td>{{ $ticket->subject }}</td>
                     <td>{{ $ticket->description }}</td>
-                    <td class="text-center">{{ $ticket->priority }}</td>
-                    <td class="text-center">{{ $ticket->status }}</td>
+                    <td class="text-center"><span class="badge priority-{{ $priorityClass }}">{{ $ticket->priority }}</span></td>
+                    <td class="text-center"><span class="badge status-{{ $statusClass }}">{{ $ticket->status }}</span></td>
                     <td class="text-center">{{ $ticket->created_at->format('d M Y') }}</td>
                 </tr>
             @empty
@@ -167,7 +236,7 @@
         </tbody>
     </table>
 
-    <div class="small">Ini adalah laporan hasil cetak. Gunakan opsi Save as PDF atau Print di browser Anda untuk menyimpan sebagai file PDF.</div>
+   
 
     <script>
         window.addEventListener('load', function() {
