@@ -83,9 +83,13 @@
                         <th>Status</th>
                         <td id="d_status"></td>
                     </tr>
-                    <tr>
+                    <tr id="row_reason" style="display: none;">
                         <th>Alasan</th>
                         <td id="d_reason"></td>
+                    </tr>
+                    <tr id="row_notes" style="display: none;">
+                        <th>Catatan</th>
+                        <td id="d_notes"></td>
                     </tr>
                     <tr>
                         <th>Deskripsi</th>
@@ -201,11 +205,22 @@
         var status = $(this).data('status');
         var reason = $(this).data('reason') || '';
         var notes = $(this).data('notes') || '';
-        var detailText = status === 'Close' ? (notes || reason) : reason;
 
         $('#d_status').text(status);
-        $('#d_reason').text(detailText || '-');
         $('#d_description').text($(this).data('description'));
+
+        if (status === 'Pending') {
+            $('#row_reason').show();
+            $('#row_notes').hide();
+            $('#d_reason').text(reason || '-');
+        } else if (status === 'Close') {
+            $('#row_reason').hide();
+            $('#row_notes').show();
+            $('#d_notes').text(notes || '-');
+        } else {
+            $('#row_reason').hide();
+            $('#row_notes').hide();
+        }
 
         let gambar = $(this).data('attachments');
 
