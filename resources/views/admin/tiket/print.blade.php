@@ -50,16 +50,14 @@
         }
 
         .line1 {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 800;
-            letter-spacing: 1px;
             text-transform: uppercase;
         }
 
         .line2 {
             font-size: 16px;
             font-weight: 900;
-            letter-spacing: 1px;
             margin-top: 8px;
             text-transform: uppercase;
         }
