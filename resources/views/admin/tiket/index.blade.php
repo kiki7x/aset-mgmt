@@ -464,10 +464,7 @@
                 {
                     data: 'department',
                     name: 'department',
-                    searchable: true,
-                    render: function(data, type, row) {
-                        return row.issuetype + ' - ' + row.department;
-                    }
+                    searchable: true
                 },
                 {
                     data: 'subject',
