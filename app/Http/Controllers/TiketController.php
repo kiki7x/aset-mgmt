@@ -15,6 +15,12 @@ class TiketController extends Controller
         return view('admin.tiket.index');
     }
 
+    public function show($id)
+    {
+        $ticketToOpen = TicketFront::findOrFail($id);
+        return view('admin.tiket.index', compact('ticketToOpen'));
+    }
+
 
     public function data()
     {

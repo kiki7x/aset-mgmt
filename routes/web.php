@@ -174,6 +174,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     // Route Ticketing System
     Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering'])->group(function () {
         Route::get('/tiket', [App\Http\Controllers\TiketController::class, 'index'])->name('admin.tiket');
+        Route::get('/tiket/{id}', [App\Http\Controllers\TiketController::class, 'show'])->name('admin.tiket.show');
         Route::get('/tiket/get_tikets', [App\Http\Controllers\TiketController::class, 'tiketDataTable'])->name('admin.tiket.tiketDataTable');
     });
 

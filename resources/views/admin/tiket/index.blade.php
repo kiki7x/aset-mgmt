@@ -170,6 +170,70 @@
 
 @push('script-foot')
 <script>
+    window.ticketToOpen = @json($ticketToOpen ?? null);
+
+    function openTicketDetail(ticket) {
+        if (!ticket) {
+            return;
+        }
+
+        var wa = ticket.whatsapp_number || '';
+        if (wa.length > 3) {
+            wa = wa.substring(0, wa.length - 3) + '***';
+        }
+
+        $('#d_ticket').text(ticket.ticket);
+        $('#d_nama').text(ticket.nama);
+        $('#d_email').text(ticket.email);
+        $('#d_whatsapp').text(wa);
+        $('#d_issuetype').text(ticket.issuetype);
+        $('#d_department').text(ticket.department);
+        $('#d_subject').text(ticket.subject);
+
+        let priority = ticket.priority;
+        let label = priority;
+
+        if (priority === 'Low') {
+            label = '<span style="color:#6c757d;"><i class="fa-solid fa-flag"></i> Rendah</span>';
+        }
+        if (priority === 'Medium') {
+            label = '<span style="color:#f4b400;"><i class="fa-solid fa-flag"></i> Sedang</span>';
+        }
+        if (priority === 'High') {
+            label = '<span style="color:#dc3545;"><i class="fa-solid fa-flag"></i> Tinggi</span>';
+        }
+
+        $('#d_priority').html(label);
+        $('#d_status').text(ticket.status);
+        $('#d_description').text(ticket.description);
+
+        var status = ticket.status;
+        var reason = ticket.reason || '';
+        var notes = ticket.notes || '';
+
+        if (status === 'Pending') {
+            $('#row_reason').show();
+            $('#row_notes').hide();
+            $('#d_reason').text(reason || '-');
+        } else if (status === 'Close') {
+            $('#row_reason').hide();
+            $('#row_notes').show();
+            $('#d_notes').text(notes || '-');
+        } else {
+            $('#row_reason').hide();
+            $('#row_notes').hide();
+        }
+
+        var gambar = ticket.attachments;
+        if (gambar) {
+            $('#d_attachments').attr('src', '{{ asset("storage/attachments") }}/' + gambar).show();
+        } else {
+            $('#d_attachments').hide();
+        }
+
+        $('#modalDetailTicket').modal('show');
+    }
+
     $(document).on('click', '.lihat-tiket', function(e) {
         e.preventDefault();
         var wa = $(this).data('wa');
@@ -353,6 +417,17 @@
         tablePemeliharaan();
     });
 
+    function maybeOpenTicketOnLoad() {
+        if (!window.ticketToOpen || !tiketTable) {
+            return;
+        }
+
+        tiketTable.one('draw', function() {
+            openTicketDetail(window.ticketToOpen);
+            window.ticketToOpen = null;
+        });
+    }
+
     function printTicketReport() {
         if (!tiketTable) {
             return;
@@ -447,6 +522,8 @@
                 }
             ]
         });
+
+        maybeOpenTicketOnLoad();
     }
 </script>
 @endpush
