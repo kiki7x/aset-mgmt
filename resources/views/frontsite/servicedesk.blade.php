@@ -274,6 +274,8 @@
             processing: true,
             serverSide: true,
             responsive: true,
+            pageLength: 10,
+            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
 
             ajax: "{{ route('servicedesk.data') }}",
 
