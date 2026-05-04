@@ -75,7 +75,7 @@
             <!-- small card -->
             <div class="small-box bg-danger">
                 <div class="inner">
-                    <h3>65</h3>
+                    <h3>{{ $totalTickets }}</h3>
 
                     <p>Helpdesk Tiket</p>
                 </div>
@@ -107,46 +107,48 @@
 
     <div class="row">
         <div class="col-md-6">
-            <div class="card card-default">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-bullhorn"></i>
+            <div class="card card-default shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-ticket-alt me-2"></i>
                         Tiket Helpdesk Terbaru
                     </h3>
                 </div>
                 <!-- /.card-header -->
-                <div class="card-body">
-                    <ul class="todo-list presort ui-sortable">
-                        <li data-date="2024-07-15 10:56:02 ">
-                            <span class="text"><a href="?route=tickets/manage&amp;id=2">#856929 Internet gangguan di GKT</a></span>
-
-                            <!-- Emphasis label -->
-                            <small class="badge bg-navy">In Progress</small>
-                            <small>2 months ago</small>
-
-                            <!-- General tools such as edit or delete-->
-                            <div class="tools">
-                                <a href="?route=tickets/manage&amp;id=2" class="btn-right text-dark"><i class="fa fa-eye"></i></a>&nbsp; <a href="#"
-                                   onclick="showM(&quot;index.php?modal=tickets/edit&amp;reroute=dashboard&amp;routeid=&amp;id=2&amp;section=&quot;);return false" class="btn-right text-dark"><i class="fa fa-edit"></i></a>&nbsp; <a href="#"
-                                   onclick="showM(&quot;index.php?modal=tickets/delete&amp;reroute=dashboard&amp;routeid=&amp;id=2&amp;section=&quot;);return false" class="btn-right text-red"><i class="fa fa-trash-o"></i></a>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        @foreach($latestTickets as $ticket)
+                        <div class="list-group-item d-flex justify-content-between align-items-center px-3 py-3 border-0">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar avatar-sm me-3">
+                                    <span class="avatar-initial rounded-circle bg-info text-white">{{ substr($ticket->nama ?? $ticket->subject, 0, 1) }}</span>
+                                </div>
+                                <div>
+                                    <a href="?route=tickets/manage&amp;id={{ $ticket->id }}" class="text-decoration-none fw-bold text-dark">#{{ $ticket->ticket }} {{ $ticket->subject }}</a>
+                                    <div class="text-muted small">{{ $ticket->created_at->diffForHumans() }}</div>
+                                </div>
                             </div>
-
-                        </li>
-                        <li data-date="2024-07-10 15:22:19 ">
-                            <span class="text"><a href="?route=tickets/manage&amp;id=1">#810656 mohon bantu perbaikan pc</a></span>
-
-                            <!-- Emphasis label -->
-                            <small class="badge bg-teal">Answered</small>
-                            <small>2 months ago</small>
-
-                            <!-- General tools such as edit or delete-->
-                            <div class="tools">
-                                <a href="?route=tickets/manage&amp;id=1" class="btn-right text-dark"><i class="fa fa-eye"></i></a>&nbsp; <a href="#"
-                                   onclick="showM(&quot;index.php?modal=tickets/edit&amp;reroute=dashboard&amp;routeid=&amp;id=1&amp;section=&quot;);return false" class="btn-right text-dark"><i class="fa fa-edit"></i></a>&nbsp; <a href="#"
-                                   onclick="showM(&quot;index.php?modal=tickets/delete&amp;reroute=dashboard&amp;routeid=&amp;id=1&amp;section=&quot;);return false" class="btn-right text-red"><i class="fa fa-trash-o"></i></a>
+                            <div class="d-flex align-items-center">
+                                <span class="badge 
+                                    @if($ticket->status == 'In Progress') bg-warning text-dark
+                                    @elseif($ticket->status == 'Answered') bg-success
+                                    @elseif($ticket->status == 'Closed') bg-secondary
+                                    @else bg-primary
+                                    @endif me-2">{{ $ticket->status }}</span>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="?route=tickets/manage&amp;id={{ $ticket->id }}"><i class="fas fa-eye me-2"></i>Lihat</a></li>
+                                        <li><a class="dropdown-item" href="#" onclick="showM(&quot;index.php?modal=tickets/edit&amp;reroute=dashboard&amp;routeid=&amp;id={{ $ticket->id }}&amp;section=&quot;);return false"><i class="fas fa-edit me-2"></i>Edit</a></li>
+                                        <li><a class="dropdown-item text-danger" href="#" onclick="showM(&quot;index.php?modal=tickets/delete&amp;reroute=dashboard&amp;routeid=&amp;id={{ $ticket->id }}&amp;section=&quot;);return false"><i class="fas fa-trash me-2"></i>Hapus</a></li>
+                                    </ul>
+                                </div>
                             </div>
-                        </li>
-                    </ul>
+                        </div>
+                        @endforeach
+                    </div>
                 </div><!-- /.card-body -->
             </div><!-- /.card -->
         </div><!-- /.col -->
