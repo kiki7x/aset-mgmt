@@ -173,22 +173,34 @@ class ImportController extends Controller
             $rows = $xlsx->rows();
             array_shift($rows); // Menghapus baris pertama (header)
 
+            $errors = []; // Tempat menampung log error
+            $successCount = 0;
+
             foreach ($rows as $row) {
                 // logika pencarian building_id
                 $building_id = \App\Models\BuildingsModel::where('name', $row[0])->first();
                 // logika batalkan jika building tidak ditemukan
                 if (!$building_id) {
-                    return response()->json(['message' => 'Building ' . $row[0] . ' tidak ditemukan.']);
+                    $errors[] = "Baris " . $row[0] . ": Building tidak ditemukan.";
                 } else {
                     \App\Models\LocationsModel::create([
                         'building_id' => $building_id->id,
                         'name' => $row[1],
                         'floor' => $row[2],
                     ]);
+                    $successCount++;
                 }
             }
-            return response()->json(['status' => 'success', 'message' => 'Data lokasi berhasil diimport.']);
+            return response()->json([
+                'status' => 'success',
+                'success_count' => $successCount,
+                'errors' => $errors,
+                'message' => 'Data lokasi berhasil diimport.'
+            ]);
         }
-        return response()->json(['status' => 'error', 'message' => 'Gagal mengimport data.']);
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Gagal mengimport data.'
+        ], 400);
     }
 }

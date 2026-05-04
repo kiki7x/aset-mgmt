@@ -8,9 +8,9 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
-use App\Http\Requests\JadwalPemeliharaanRequest;
 use App\Models\User;
 use App\Notifications\CreateJadwalPemeliharaanAsetRT;
+use Illuminate\Support\Carbon;
 
 class PemeliharaanController extends Controller
 {
@@ -47,8 +47,9 @@ class PemeliharaanController extends Controller
             ->make();
     }
 
-    public function scheduleStore(JadwalPemeliharaanRequest $request, $id): JsonResponse
+    public function scheduleStore(Request $request, $id): JsonResponse
     {
+        // 1. VALIDASI
         $request->validate([
             'name' => [
                 'required',
@@ -58,9 +59,36 @@ class PemeliharaanController extends Controller
                     return $query->where('asset_id', $id);
                 }),
             ],
+            'frequency' => 'required|string',
+            'start' => 'required|date',
+            'end' => 'required|date|after_or_equal:start',
+            'reminder' => 'required|integer|min:0',
         ]);
-        $data = $request->validated();
-        $maintenance_schedule = \App\Models\Maintenances_scheduleModel::create($data);
+        // $data = $request->validated();
+
+        // 2. PENYIMPANAN DATA KE DATABASE
+        try {
+            $data = [
+                'asset_id' => $id,
+                'name' => $request->input('name'),
+                'frequency' => $request->input('frequency'),
+                'start' => Carbon::parse($request->input('start'))->format('Y-m-d H:i:s'), // Set waktu ke awal hari
+                'end' => Carbon::parse($request->input('end'))->format('Y-m-d H:i:s'), // Default end sama dengan start, akan dihitung ulang jika frequency dan start valid
+                'reminder' => $request->input('reminder'),
+                'status' => 'Aktif',
+            ];
+
+            $maintenance_schedule = \App\Models\Maintenances_scheduleModel::create($data);
+
+            return response()->json([
+                'message' => 'Data saved successfully',
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error saving data: ' . $e->getMessage(),
+            ], 500);
+        }
 
         // Kirim notifikasi
         $users = User::whereHas('roles', function ($query) {
@@ -81,7 +109,7 @@ class PemeliharaanController extends Controller
         return response()->json($maintenance_schedule);
     }
 
-    public function scheduleUpdate(JadwalPemeliharaanRequest $request, $id): JsonResponse
+    public function scheduleUpdate(Request $request, $id): JsonResponse
     {
         $maintenance_schedule = \App\Models\Maintenances_scheduleModel::findOrFail($id);
         $request->validate([
@@ -94,10 +122,24 @@ class PemeliharaanController extends Controller
                 }),
             ],
         ]);
-        $maintenance_schedule->update($request->validated());
-        return response()->json([
-            'message' => 'Data updated successfully',
-        ]);
+        try {
+            $data = [
+                'name' => $request->input('name'),
+                'frequency' => $request->input('frequency'),
+                'start' => Carbon::parse($request->input('start'))->format('Y-m-d H:i:s'), // Set waktu ke awal hari
+                'end' => Carbon::parse($request->input('end'))->format('Y-m-d H:i:s'), // Default end sama dengan start, akan dihitung ulang jika frequency dan start valid
+                'reminder' => (int) $request->input('reminder'),
+                'status' => $request->input('status'),
+            ];
+            $maintenance_schedule->update($data);
+            return response()->json([
+                'message' => 'Data updated successfully',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error updating data: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function scheduleDelete(Request $request, $id): JsonResponse
@@ -161,6 +203,8 @@ class PemeliharaanController extends Controller
             // 'attachment_name' => 'required|string',
             'attachment_link' => 'required|string',
             'name' => 'required|string', // Untuk checkbox
+            // 'start' => 'required|date',
+            // 'end' => 'required|date|after:start',
             'period' => 'required|string',
             'cost' => 'required|numeric|min:0',
             'notes' => 'required|string',
@@ -193,8 +237,8 @@ class PemeliharaanController extends Controller
                 'maintenance_schedule_id' => $id, // Relasi ke jadwal pemeliharaan
                 'pic_id' => auth()->id(), // Siapa yang menyelesaikan
                 'status' => 'Selesai',
-                'started_at' => now(), // Waktu penyelesaian
-                'completed_at' => now(), // Waktu penyelesaian
+                'start' => now(), // Waktu penyelesaian
+                'end' => now(), // Waktu penyelesaian
                 'period' => $request->input('period'),
                 'cost' => $request->input('cost'), // Biaya pemeliharaan
                 // 'attachment' => $file_path, // Simpan path file
@@ -207,8 +251,8 @@ class PemeliharaanController extends Controller
 
             // 4. UPDATE JADWAL PEMELIHARAAN SELANJUTNYA
             $maintenance_schedule = \App\Models\Maintenances_scheduleModel::findOrFail($id);
-            $maintenance_schedule->old_date = $request->input('period');
-            $maintenance_schedule->next_date = $request->input('future_period');
+            $maintenance_schedule->start = $request->input('future_period');
+            $maintenance_schedule->end = $request->input('future_period');
             $maintenance_schedule->save();
 
             // 5. RESPON BERHASIL
@@ -237,22 +281,30 @@ class PemeliharaanController extends Controller
     {
         $maintenances = \App\Models\MaintenancesModel::findOrFail($id);
         // tangani cost agar menghilangkan format Rp dan titik koma jika ada
-        if ($request->has('cost')) {
-            $cost = preg_replace('/[^\d]/', '', $request->input('cost'));
-            $request->merge(['cost' => $cost]);
+        if ($request->has('edit_cost')) {
+            $cost = preg_replace('/[^\d]/', '', $request->input('edit_cost'));
+            $request->merge(['edit_cost' => $cost]);
         }
         $request->validate([
-            'name' => 'required|string',
-            'cost' => 'required|numeric|min:0',
-            'notes' => 'required|string',
+            'edit_name' => 'required|string',
+            'edit_attachment_link' => 'required',
+            'edit_cost' => 'required|numeric|min:0',
+            'edit_notes' => 'required|string',
         ], [
-            'name.required' => 'Wajib mencentang bahwa pemeliharaan selesai.',
-            'cost.required' => 'Biaya wajib diisi.',
-            'notes.required' => 'Catatan wajib diisi.',
+            'edit_name.required' => 'Wajib mencentang bahwa pemeliharaan selesai.',
+            'edit_attachment_link' => 'Link bukti dukung wajib diisi',
+            'edit_cost.required' => 'Biaya wajib diisi.',
+            'edit_notes.required' => 'Catatan wajib diisi.',
         ]);
 
         try {
-            $maintenances->update($request->only('name', 'cost', 'notes', 'attachment_link'));
+            $data = [
+                'name' => $request->input('edit_name'),
+                'attachment_link' => $request->input('edit_attachment_link'),
+                'cost' => $request->input('edit_cost'), // Biaya pemeliharaan
+                'notes' => $request->input('edit_notes'), // Catatan tambahan
+            ];
+            $maintenances->update($data);
             return response()->json([
                 'message' => 'Data pemeliharaan preventif berhasil diperbarui.',
             ]);

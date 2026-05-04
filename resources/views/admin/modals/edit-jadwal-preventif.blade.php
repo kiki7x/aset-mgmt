@@ -51,20 +51,21 @@
                         <span class="text-danger small" id="error-frequency"></span>
                     </div>
                     <!-- Tanggal Mulai -->
-                    <div class="form-group">
-                        <label for="old_date">Tanggal Mulai <span class="text-danger">*</span></label>
+                    <input type="hidden" id="edit_start" width="276" class="form-control" name="start" placeholder="yyyy-mm-dd" />
+                    {{-- <div class="form-group">
+                        <label for="start">Waktu Pemeliharaan <span class="text-danger">*</span></label>
                         <div>
-                            <input id="edit_old_date" width="276" type="text" class="form-control" name="old_date" placeholder="yyyy-mm-dd" />
+                            <input id="edit_start" width="276" type="text" class="form-control" name="start" placeholder="yyyy-mm-dd" />
                         </div>
-                        <span class="text-danger small" id="error-old_date"></span>
-                    </div>
+                        <span class="text-danger small" id="error-start"></span>
+                    </div> --}}
                     <!-- Tanggal Selanjutnya -->
                     <div class="form-group">
-                        <label for="next_date">Tanggal Pemeliharaan Selanjutnya</label>
+                        <label for="end">Waktu Pemeliharaan</label>
                         <div>
-                            <input id="edit_next_date" width="276" type="text" class="form-control" name="next_date" placeholder="yyyy-mm-dd" readonly />
+                            <input id="edit_end" width="276" type="text" class="form-control" name="end" placeholder="DD MMM YYYY" />
                         </div>
-                        <span class="text-danger small" id="error-next_date"></span>
+                        <span class="text-danger small" id="error-end"></span>
                     </div>
             </div>
             <div class="modal-footer">
@@ -91,8 +92,8 @@
                 $('#edit_id').val('');
                 $('#edit_name').val('');
                 $('#edit_frequency').val('');
-                $('#edit_old_date').val('');
-                $('#edit_next_date').val('');
+                $('#edit_start').val('');
+                $('#edit_end').val('');
                 $('#edit_status').val('');
             },
             error: function(xhr) {
@@ -106,8 +107,10 @@
                 $('#edit_id').val(data.id);
                 $('#edit_name').val(data.name);
                 $('#edit_frequency').val(data.frequency);
-                $('#edit_old_date').val(data.old_date);
-                $('#edit_next_date').val(data.next_date);
+                // $('#edit_start').val(data.start ? new Date(data.start).toISOString().split('T')[0] : '');
+                // $('#edit_end').val(data.end ? new Date(data.end).toISOString().split('T')[0] : '');
+                $('#edit_start').val(data.end ? moment(data.end).format('DD-MM-YYYY') : '');
+                $('#edit_end').val(data.end ? moment(data.end).format('DD MMM YYYY') : '');
                 $('#edit_status').val(data.status);
             }
         });
@@ -115,8 +118,8 @@
     }
 
     // Inisialisasi datepicker untuk input tanggal
-    $('#edit_old_date').datepicker({
-        format: "yyyy-mm-dd",
+    $('#edit_end').datepicker({
+        format: "dd M yyyy",
         autoclose: true,
         todayHighlight: true,
         orientation: "auto",
@@ -154,7 +157,7 @@
             toggleRadioGroups(selectedValue);
         });
 
-        // Event listener untuk submit form pemeliharaan preventif
+        // Handle update
         $('#formEditJadwalPemeliharaan').on('submit', function(e) {
             e.preventDefault();
 
@@ -182,13 +185,15 @@
                         title: 'Berhasil',
                         text: response.message,
                     })
+                    // tutup modal setelah submit
+                    $('#edit-schedule').modal('hide');
                 },
                 error: function(xhr) {
                     if (xhr.responseJSON?.message === 'The name has already been taken.') {
                         $('#error-name').text('');
                         $('#error-frequency').text('');
-                        $('#error-old_date').text('');
-                        $('#error-next_date').text('');
+                        $('#error-start').text('');
+                        $('#error-end').text('');
                         Swal.fire({
                             icon: 'info',
                             title: 'Gagal',
@@ -211,32 +216,32 @@
 
 
         // Listen for changes to the frequency select dropdown
-        $('#edit_frequency').on('change', function() {
-            const val = parseInt($(this).val());
-            const now = new Date();
+        // $('#edit_frequency').on('change', function() {
+        //     const val = parseInt($(this).val());
+        //     const now = new Date();
 
-            // Set the old_date input field to today's date
-            $('#edit_old_date').val(now.toISOString().split('T')[0]);
+        //     // Set the start input field to today's date
+        //     $('#edit_start').val(now.toISOString().split('T')[0]);
 
-            // Calculate the next date based on the selected frequency
-            const futureDate = new Date(now);
-            futureDate.setMonth(futureDate.getMonth() + val);
+        //     // Calculate the end date based on the selected frequency
+        //     const futureDate = new Date(now);
+        //     futureDate.setMonth(futureDate.getMonth() + val);
 
-            // Set the next_date input field to the calculated date
-            $('#edit_next_date').val(futureDate.toISOString().split('T')[0]);
-        });
+        //     // Set the end input field to the calculated date
+        //     $('#edit_end').val(futureDate.toISOString().split('T')[0]);
+        // });
 
-        // Listen for changes to the old_date input field
-        $('#edit_old_date').on('change', function() {
-            const val = new Date($(this).val());
+        // Listen for changes to the start input field
+        // $('#edit_start').on('change', function() {
+        //     const val = new Date($(this).val());
 
-            // Calculate the next date based on the selected frequency
-            const futureDate = new Date(val);
-            futureDate.setMonth(val.getMonth() + parseInt($('#edit_frequency').val()));
+        //     // Calculate the end date based on the selected frequency
+        //     const futureDate = new Date(val);
+        //     futureDate.setMonth(val.getMonth() + parseInt($('#edit_frequency').val()));
 
-            // Set the next_date input field to the calculated date
-            $('#edit_next_date').val(futureDate.toISOString().split('T')[0]);
-        });
+        //     // Set the end input field to the calculated date
+        //     $('#edit_end').val(futureDate.toISOString().split('T')[0]);
+        // });
     });
 </script>
 @endpush

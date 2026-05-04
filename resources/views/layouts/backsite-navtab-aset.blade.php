@@ -32,12 +32,12 @@
                                     Pemeliharaan
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a class="nav-link {{ request()->routeIs('admin.asetrt.penugasan') || request()->routeIs('admin.asettik.penugasan') ? 'active' : '' }}" id="issues-tab" role="tab" aria-controls="issues" aria-selected="false"
                                     href="{{ $classification_id == 2 ? route('admin.asettik.penugasan', $id) : route('admin.asetrt.penugasan', $id) }}">
                                     Penugasan
                                 </a>
-                            </li>
+                            </li> --}}
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->routeIs('admin.asetrt.tickets') || request()->routeIs('admin.asettik.tickets') ? 'active' : '' }}" id="tickets-tab" role="tab" aria-controls="tickets" aria-selected="false"
                                     href="{{ $classification_id == 2 ? route('admin.asettik.tickets', $id) : route('admin.asetrt.tickets', $id) }}">

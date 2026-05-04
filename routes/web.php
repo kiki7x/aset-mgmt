@@ -38,7 +38,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::get('/asettik/export', [App\Http\Controllers\AssetController::class, 'exportExcelTik'])->name('admin.asettik.export');
         Route::get('/asettik/{id}/overview', [App\Http\Controllers\ShowAsetController::class, 'getOverviewContent'])->name('admin.asettik.overview');
         Route::get('/asettik/{id}/pemeliharaan', [App\Http\Controllers\PemeliharaanController::class, 'index'])->name('admin.asettik.pemeliharaan');
-        Route::get('/asettik/{id}/penugasan', [App\Http\Controllers\ShowAsetController::class, 'getPenugasanContent'])->name('admin.asettik.penugasan');
+        // Route::get('/asettik/{id}/penugasan', [App\Http\Controllers\ShowAsetController::class, 'getPenugasanContent'])->name('admin.asettik.penugasan');
         Route::get('/asettik/{id}/tickets', [App\Http\Controllers\ShowAsetController::class, 'getTicketsContent'])->name('admin.asettik.tickets');
         Route::get('/asettik/{id}/files', [App\Http\Controllers\ShowAsetController::class, 'getFilesContent'])->name('admin.asettik.files');
         Route::get('/asettik/{id}/timelog', [App\Http\Controllers\ShowAsetController::class, 'getTimeLogContent'])->name('admin.asettik.timelog');
@@ -52,23 +52,6 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::delete('/asetrt/destroy/{id}/{classification}', [App\Http\Controllers\AssetController::class, 'destroy'])->name('admin.asetrt.destroy');
         Route::get('/asetrt/{id}', [App\Http\Controllers\ShowAsetController::class, 'showDetails'])->name('admin.asetrt.details');
         Route::get('/asetrt/{id}/overview', [App\Http\Controllers\ShowAsetController::class, 'getOverviewContent'])->name('admin.asetrt.overview');
-        // Route::get('/asetrt/{id}/pemeliharaan', [App\Http\Controllers\PemeliharaanController::class, 'index'])->name('admin.asetrt.pemeliharaan');
-        // Route::get('/asetrt/{id}/pemeliharaan/scheduleDataTable', [App\Http\Controllers\PemeliharaanController::class, 'scheduledataTable'])->name('admin.asetrt.pemeliharaan.scheduleDataTable');
-        // Route::post('/asetrt/{id}/pemeliharaan/schedulestore', [App\Http\Controllers\PemeliharaanController::class, 'scheduleStore'])->name('admin.asetrt.pemeliharaan.scheduleStore');
-        // Route::get('/asetrt/{id}/pemeliharaan/scheduleEdit/', [App\Http\Controllers\PemeliharaanController::class, 'scheduleEdit'])->name('admin.asetrt.pemeliharaan.scheduleEdit');
-        // Route::patch('/asetrt/{id}/pemeliharaan/scheduleUpdate', [App\Http\Controllers\PemeliharaanController::class, 'scheduleUpdate'])->name('admin.asetrt.pemeliharaan.scheduleUpdate');
-        // Route::delete('/asetrt/{id}/pemeliharaan/scheduleDelete', [App\Http\Controllers\PemeliharaanController::class, 'scheduleDelete'])->name('admin.asetrt.pemeliharaan.scheduleDelete');
-        // Route::get('/asetrt/{id}/pemeliharaan/preventifAdd', [App\Http\Controllers\PemeliharaanController::class, 'preventifAdd'])->name('admin.asetrt.pemeliharaan.preventifAdd');
-        // Route::post('/asetrt/{id}/pemeliharaan/preventifStore', [App\Http\Controllers\PemeliharaanController::class, 'preventifStore'])->name('admin.asetrt.pemeliharaan.preventifStore');
-        // Route::get('/asetrt/{id}/pemeliharaan/preventifEdit', [App\Http\Controllers\PemeliharaanController::class, 'preventifEdit'])->name('admin.asetrt.pemeliharaan.preventifEdit');
-        // Route::patch('/asetrt/{id}/pemeliharaan/preventifUpdate', [App\Http\Controllers\PemeliharaanController::class, 'preventifUpdate'])->name('admin.asetrt.pemeliharaan.preventifUpdate');
-        // Route::delete('/asetrt/{id}/pemeliharaan/preventifDelete', [App\Http\Controllers\PemeliharaanController::class, 'preventifDelete'])->name('admin.asetrt.pemeliharaan.preventifDelete');
-        // Route::get('/asetrt/{id}/pemeliharaan/preventifDataTable', [App\Http\Controllers\PemeliharaanController::class, 'preventifDataTable'])->name('admin.asetrt.pemeliharaan.preventifDataTable');
-        // Route::get('/asetrt/{id}/pemeliharaan/korektif', [App\Http\Controllers\PemeliharaanController::class, 'korektif'])->name('admin.asetrt.pemeliharaan.korektif');
-        // Route::get('/asetrt/{id}/pemeliharaan/korektifDataTable', [App\Http\Controllers\PemeliharaanController::class, 'korektifDataTable'])->name('admin.asetrt.pemeliharaan.korektifDataTable');
-        // Route::get('/asetrt/{id}/pemeliharaan/korektifStore', [App\Http\Controllers\PemeliharaanController::class, 'korektifStore'])->name('admin.asetrt.pemeliharaan.korektifStore');
-
-        Route::get('/asetrt/{id}/penugasan', [App\Http\Controllers\ShowAsetController::class, 'getPenugasanContent'])->name('admin.asetrt.penugasan');
         Route::get('/asetrt/{id}/tickets', [App\Http\Controllers\ShowAsetController::class, 'getTicketsContent'])->name('admin.asetrt.tickets');
         Route::get('/asetrt/{id}/files', [App\Http\Controllers\ShowAsetController::class, 'getFilesContent'])->name('admin.asetrt.files');
         Route::get('/asetrt/{id}/timelog', [App\Http\Controllers\ShowAsetController::class, 'getTimeLogContent'])->name('admin.asetrt.timelog');
@@ -95,19 +78,21 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
     // Route Pemeliharaan Korektif
     Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering'])->group(function () {
-        Route::get('/pemeliharaan', [App\Http\Controllers\PemeliharaanKorektifController::class, 'index'])->name('admin.pemeliharaan');
-        Route::get('/pemeliharaan/pemeliharaanDataTable', [App\Http\Controllers\PemeliharaanKorektifController::class, 'pemeliharaanDataTable'])->name('admin.pemeliharaan.pemeliharaanDataTable');
-        Route::get('/pemeliharaan/pemeliharaanDataTableSelesai', [App\Http\Controllers\PemeliharaanKorektifController::class, 'pemeliharaanDataTableSelesai'])->name('admin.pemeliharaan.pemeliharaanDataTableSelesai');
-        Route::post('/pemeliharaan/store', [App\Http\Controllers\PemeliharaanKorektifController::class, 'store'])->name('admin.pemeliharaan.store');
-        Route::get('/pemeliharaan/edit/{id}', [App\Http\Controllers\PemeliharaanKorektifController::class, 'edit'])->name('admin.pemeliharaan.edit');
-        Route::patch('/pemeliharaan/ubahstatus/{id}', [App\Http\Controllers\PemeliharaanKorektifController::class, 'ubahStatus'])->name('admin.pemeliharaan.ubahstatus');
-        Route::patch('/pemeliharaan/tindaklanjut/{id}', [App\Http\Controllers\PemeliharaanKorektifController::class, 'tindakLanjut'])->name('admin.pemeliharaan.tindaklanjut');
+        Route::get('/pemeliharaan-korektif', [App\Http\Controllers\PemeliharaanKorektifController::class, 'index'])->name('admin.pemeliharaan-korektif');
+        Route::get('/pemeliharaan-korektif/pemeliharaanDataTable', [App\Http\Controllers\PemeliharaanKorektifController::class, 'pemeliharaanKorektifDataTable'])->name('admin.pemeliharaan-korektif.pemeliharaanDataTable');
+        Route::get('/pemeliharaan-korektif/pemeliharaanDataTableSelesai', [App\Http\Controllers\PemeliharaanKorektifController::class, 'pemeliharaanKorektifDataTableSelesai'])->name('admin.pemeliharaan-korektif.pemeliharaanDataTableSelesai');
+        Route::post('/pemeliharaan-korektif/store', [App\Http\Controllers\PemeliharaanKorektifController::class, 'store'])->name('admin.pemeliharaan-korektif.store');
+        Route::get('/pemeliharaan-korektif/edit/{id}', [App\Http\Controllers\PemeliharaanKorektifController::class, 'edit'])->name('admin.pemeliharaan-korektif.edit');
+        Route::patch('/pemeliharaan-korektif/ubahstatus/{id}', [App\Http\Controllers\PemeliharaanKorektifController::class, 'ubahStatus'])->name('admin.pemeliharaan-korektif.ubahstatus');
+        Route::patch('/pemeliharaan-korektif/tindaklanjut/{id}', [App\Http\Controllers\PemeliharaanKorektifController::class, 'tindakLanjut'])->name('admin.pemeliharaan-korektif.tindaklanjut');
     });
 
-    // Route Kalender Pemeliharaan
+    // Route Pemeliharaan Preventif
     Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering'])->group(function () {
-        Route::get('/kalender-pemeliharaan', [App\Http\Controllers\KalenderPemeliharaan::class, 'index'])->name('admin.kalender-pemeliharaan');
-        Route::get('/kalender-pemeliharaan/get_maintenance_schedules', [App\Http\Controllers\KalenderPemeliharaan::class, 'getMaintenanceSchedules'])->name('admin.kalender-pemeliharaan.get_maintenance_schedules');
+        Route::get('/pemeliharaan-preventif', [App\Http\Controllers\PemeliharaanPreventifController::class, 'index'])->name('admin.pemeliharaan-preventif');
+        Route::get('/pemeliharaan-preventif/get-maintenance-schedules', [App\Http\Controllers\PemeliharaanPreventifController::class, 'getMaintenanceSchedules'])->name('admin.pemeliharaan-preventif.get-maintenance-schedules');
+        Route::get('/pemeliharaan-preventif/preventif-add/{id}', [App\Http\Controllers\PemeliharaanPreventifController::class, 'preventifAdd'])->name('admin.pemeliharaan-preventif.preventif-add');
+        Route::post('/pemeliharaan-preventif/preventif-store/{id}', [App\Http\Controllers\PemeliharaanPreventifController::class, 'preventifStore'])->name('admin.pemeliharaan-preventif.preventif-store');
     });
 
     // Route Setting Atribut / Master Data

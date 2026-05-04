@@ -16,8 +16,9 @@ class Maintenances_scheduleModel extends Model
         'asset_id',
         'name', // nama pemeliharaan berupa 'Ganti Oli Mesin', 'Pembersihan', dll
         'frequency',
-        'old_date',
-        'next_date',
+        'start',
+        'end',
+        'reminder',
         'status',
         'customfields'
     ];

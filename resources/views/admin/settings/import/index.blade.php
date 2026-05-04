@@ -230,11 +230,12 @@
                         $('#btnImportLokasi').addClass('disabled').attr('disabled', true);
                         $('#btnImportLokasi').html('<i class="fa fa-spinner fa-spin"></i> Mengunggah Data...');
                     },
-                    success: function(response) {
+                    success: function(res) {
                         Swal.fire({
                             icon: 'success',
                             title: 'Berhasil!',
-                            text: 'Data Lokasi berhasil disimpan!',
+                            // text: 'Data Lokasi berhasil disimpan!',
+                            text: 'Semua data sebanyak (' + res.success_count + ') berhasil disimpan!',
                         }).then(() => {
                             $('#formImportLokasi')[0].reset(); // Reset form fields
                             $('#btnImportLokasi').removeClass('disabled').attr('disabled', false);

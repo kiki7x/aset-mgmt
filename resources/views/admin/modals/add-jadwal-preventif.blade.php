@@ -1,6 +1,5 @@
-<!-- Modal Pemeliharaan Preventif -->
-<div class="modal fade" id="add-schedule" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modalJadwalPemeliharaanLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<div class="modal fade" id="add-schedule" data-backdrop="static" tabindex="-1" aria-labelledby="add-schedule-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="add-schedule-label"></h5>
@@ -69,8 +68,6 @@
                             <span class="text-danger small" id="error-name"></span>
                         </div>
                     </div>
-
-
                     {{-- Frekuensi Pemeliharaan --}}
                     <div class="form-group">
                         <label for="frequency">Frekuensi Pemeliharaan: <span class="text-danger">*</span></label>
@@ -83,176 +80,229 @@
                         </select>
                         <span class="text-danger small" id="error-frequency"></span>
                     </div>
-                    <!-- Tanggal Mulai -->
-                    <div class="form-group">
-                        <label for="old_date">Tanggal Mulai <span class="text-danger">*</span></label>
+                    {{-- <div class="form-group">
+                        <label for="start">Waktu Pemeliharaan <span class="text-danger">*</span></label>
                         <div>
-                            <input id="old_date" width="276" type="text" class="form-control" name="old_date" placeholder="yyyy-mm-dd" />
+                            <input type="text" id="start" width="276" type="text" class="form-control" name="start" placeholder="yyyy-mm-dd" />
                         </div>
-                        <span class="text-danger small" id="error-old_date"></span>
-                    </div>
+                        <span class="text-danger small" id="error-start"></span>
+                    </div> --}}
                     <!-- Tanggal Selanjutnya -->
                     <div class="form-group">
-                        <label for="next_date">Tanggal Pemeliharaan Selanjutnya</label>
+                        <label for="end">Waktu Pemeliharaan</label>
                         <div>
-                            <input id="next_date" width="276" type="text" class="form-control" name="next_date" placeholder="yyyy-mm-dd" readonly />
+                            <input id="end" width="276" type="text" class="form-control" name="end" placeholder="DD MMM YYYY" />
                         </div>
-                        <span class="text-danger small" id="error-next_date"></span>
+                        <span class="text-danger small" id="error-end"></span>
                     </div>
+                    {{-- Reminder day --}}
+                    <div class="form-group">
+                        <label for="reminder">Pengingat Sebelum Pemeliharaan (hari)</label>
+                        <input type="number" id="reminder" name="reminder" class="form-control" value="7" min="0">
+                        <small class="form-text text-muted">Masukkan jumlah hari sebelum tanggal pemeliharaan untuk menerima pengingat.</small>
+                        <span class="text-danger small" id="error-reminder"></span>
+                    </div>
+                    {{-- Hidden Input --}}
+                    <!-- Tanggal Mulai -->
+                    <input type="hidden" id="start" width="276" type="text" class="form-control" name="start" placeholder="yyyy-mm-dd" />
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                        <button id="submitJadwalPemeliharaan" type="submit" class="btn btn-success">Jadwalkan</button>
+                    </div>
+                </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                <button id="submitJadwalPemeliharaan" type="submit" class="btn btn-success">Jadwalkan</button>
-            </div>
-            </form>
         </div>
     </div>
 </div>
 
 @section('script-foot')
-{{-- Laravel javascript Validation --}}
-{{-- <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.min.js') }}"></script> --}}
-{{-- {!! JsValidator::formRequest('App\Http\Requests\JadwalPemeliharaanRequest', '#formJadwalPemeliharaan') !!} --}}
-
-
-<script>
-    function showModalAddJadwalPemeliharaan() {
-        $('#add-schedule-label').text('Setup Jadwal Pemeliharaan');
-        $('#formJadwalPemeliharaan')[0].reset();
-        $('#add-schedule').modal('show');
-    }
-    $('#old_date').datepicker({
-        format: "yyyy-mm-dd",
-        autoclose: true,
-        todayHighlight: true,
-        orientation: "auto",
-        todayBtn: "linked",
-    });
-    // Pastikan dokumen siap sebelum menjalankan script jQuery
-    $(document).ready(function() {
-
-        function toggleRadioGroups(selectedValue) {
-            // Sembunyikan semua bagian form detail terlebih dahulu
-            $('#radioTik').hide();
-            $('#radioKendaraan').hide();
-            $('#radioMesinElektronik').hide();
-
-            // Tampilkan bagian form yang sesuai berdasarkan pilihan
-            if (selectedValue === '2') {
-                $('#radioTik').removeClass('d-none').show();
-                $('input[name="name"]').prop('checked', false);
-            } else if (selectedValue === '3') {
-                $('#radioKendaraan').removeClass('d-none').show();
-                $('input[name="name"]').prop('checked', false);
-            } else if (selectedValue === '4') {
-                $('#radioMesinElektronik').removeClass('d-none').show();
-                $('input[name="name"]').prop('checked', false);
-            }
+    <script>
+        function showModalAddJadwalPemeliharaan() {
+            $('#add-schedule-label').text('Setup Jadwal Pemeliharaan');
+            $('#formJadwalPemeliharaan')[0].reset();
+            $('#add-schedule').modal('show');
         }
-
-        const initialSelectedValue = $('#klasifikasi').val();
-        if (initialSelectedValue) {
-            toggleRadioGroups(initialSelectedValue);
-        }
-        $('#klasifikasi').on('change', function() {
-            const selectedValue = $(this).val();
-            toggleRadioGroups(selectedValue);
+        $('#end').datepicker({
+            format: "dd M yyyy",
+            autoclose: true,
+            todayHighlight: true,
+            orientation: "auto",
+            todayBtn: "linked",
         });
 
-        // Event listener untuk submit form pemeliharaan preventif
-        $('#formJadwalPemeliharaan').on('submit', function(e) {
-            e.preventDefault();
+        // dengarkan perubahan pada input start dan copy nilainya ke input end
+        $('#end').on('change', function() {
+            $('#start').val($(this).val());
+        });
 
-            // Serialize semua data form menjadi string URL-encoded
-            const formData = new FormData(this)
+        // Pastikan dokumen siap sebelum menjalankan script jQuery
+        $(document).ready(function() {
 
-            // Lakukan permintaan Ajax POST ke endpoint Laravel
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: "{{ route('admin.aset.pemeliharaan.scheduleStore', $id) }}",
-                type: "POST",
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    $('#add-schedule').modal('hide');
-                    $('#tableJadwalPemeliharaan').DataTable().ajax.reload();
+            function toggleRadioGroups(selectedValue) {
+                // Sembunyikan semua bagian form detail terlebih dahulu
+                $('#radioTik').hide();
+                $('#radioKendaraan').hide();
+                $('#radioMesinElektronik').hide();
 
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil',
-                        text: response.message,
-                    })
-                },
-                error: function(xhr) {
-                    if (xhr.responseJSON?.message === 'The name has already been taken.') {
-                        $('#error-name').text('');
-                        $('#error-frequency').text('');
-                        $('#error-old_date').text('');
-                        $('#error-next_date').text('');
-                        Swal.fire({
-                            icon: 'info',
-                            title: 'Gagal',
-                            text: 'Jadwal pemeliharaan ini sudah ada.',
-                        });
-                    } else if (xhr.responseJSON?.errors) {
-                        $.each(xhr.responseJSON.errors, function(key, value) {
-                            $(`#error-${key}`).text(value[0]);
-                        });
-                        // Swal.fire({
-                        //     icon: 'warning',
-                        //     title: 'Gagal',
-                        //     text: 'Periksa kembali data yang dimasukkan.',
-                        // });
-                    }
-                    return false;
+                // Tampilkan bagian form yang sesuai berdasarkan pilihan
+                if (selectedValue === '2') {
+                    $('#radioTik').removeClass('d-none').show();
+                    $('input[name="name"]').prop('checked', false);
+                } else if (selectedValue === '3') {
+                    $('#radioKendaraan').removeClass('d-none').show();
+                    $('input[name="name"]').prop('checked', false);
+                } else if (selectedValue === '4') {
+                    $('#radioMesinElektronik').removeClass('d-none').show();
+                    $('input[name="name"]').prop('checked', false);
                 }
+            }
+
+            const initialSelectedValue = $('#klasifikasi').val();
+            if (initialSelectedValue) {
+                toggleRadioGroups(initialSelectedValue);
+            }
+            $('#klasifikasi').on('change', function() {
+                const selectedValue = $(this).val();
+                toggleRadioGroups(selectedValue);
             });
+
+            // Event listener untuk submit form pemeliharaan preventif
+            $('#formJadwalPemeliharaan').on('submit', function(e) {
+                e.preventDefault();
+
+                // Serialize semua data form menjadi string URL-encoded
+                const formData = new FormData(this)
+
+                // Lakukan permintaan Ajax POST ke endpoint Laravel
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: "{{ route('admin.aset.pemeliharaan.scheduleStore', $id) }}",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        $('#add-schedule').modal('hide');
+                        $('#tableJadwalPemeliharaan').DataTable().ajax.reload();
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.message,
+                        })
+                    },
+                    error: function(xhr) {
+                        // if (xhr.responseJSON?.message === 'The name has already been taken.') {
+                        //     $('#error-name').text('');
+                        //     $('#error-frequency').text('');
+                        //     $('#error-start').text('');
+                        //     $('#error-end').text('');
+                        //     $('#error-reminder').text('');
+                        //     Swal.fire({
+                        //         icon: 'info',
+                        //         title: 'Gagal',
+                        //         text: 'Error 422: Jadwal pemeliharaan ini sudah ada.',
+                        //     });
+                        // } else if (xhr.status === 422) {
+                        //     Swal.fire({
+                        //         icon: 'info',
+                        //         title: 'Gagal',
+                        //         text: 'Error ' + xhr.status + ': ' + (xhr.responseJSON.message || 'Validasi gagal. Periksa kembali input Anda.'),
+                        //     });
+                        //     $.each(xhr.responseJSON.errors, function(key, value) {
+                        //         $(`#error-${key}`).text(value[0]);
+                        //     });
+                        // } else if (xhr.status === 500) {
+                        //     Swal.fire({
+                        //         icon: 'error',
+                        //         title: 'Gagal',
+                        //         text: 'Terjadi kesalahan pada server.',
+                        //     });
+                        // } else {
+                        //     Swal.fire({
+                        //         icon: 'error',
+                        //         title: 'Gagal',
+                        //         text: 'Terjadi kesalahan yang tidak diketahui.',
+                        //     });
+                        // }
+                        const res = xhr.responseJSON;
+
+                        // Reset pesan error text
+                        $('.text-danger').text('');
+
+                        if (xhr.status === 422) {
+                            let errorMsg = res?.message || 'Data tidak valid';
+
+                            if (res?.message === 'The name has already been taken.') {
+                                errorMsg = 'Jadwal pemeliharaan ini sudah ada.';
+                            }
+
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Perhatian',
+                                text: errorMsg,
+                            });
+
+                            // Loop error validasi jika ada
+                            if (res?.errors) {
+                                $.each(res.errors, function(key, value) {
+                                    $(`#error-${key}`).text(value[0]);
+                                });
+                            }
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Kesalahan Sistem',
+                                text: xhr.status === 500 ? 'Terjadi kesalahan pada server.' : 'Terjadi kesalahan yang tidak diketahui.',
+                            });
+                        }
+                    },
+                });
+            });
+
+            /**
+             * Disable or enable the start date input field.
+             * @param {boolean} disable - True to disable, false to enable.
+             */
+            // function toggleDate(disable) {
+            //     $('#start').prop('disabled', disable)
+            // }
+
+            // // Disable the start input field by default
+            // toggleDate(true)
+
+            // // Listen for changes to the frequency select dropdown
+            // $('#frequency').on('change', function() {
+            //     const val = parseInt($(this).val());
+            //     const now = new Date();
+
+            //     // Enable the start input field
+            //     toggleDate(false)
+
+            //     // Set the start input field to today's date
+            //     $('#start').val(now.toISOString().split('T')[0]);
+
+            //     // Calculate the end date based on the selected frequency
+            //     const futureDate = new Date(now);
+            //     futureDate.setMonth(futureDate.getMonth() + val);
+
+            //     // Set the end input field to the calculated date
+            //     $('#end').val(futureDate.toISOString().split('T')[0]);
+            // });
+
+            // // Listen for changes to the start input field
+            // $('#start').on('change', function() {
+            //     const val = new Date($(this).val());
+
+            //     // Calculate the end date based on the selected frequency
+            //     const futureDate = new Date(val);
+            //     futureDate.setMonth(val.getMonth() + parseInt($('#frequency').val()));
+
+            //     // Set the end input field to the calculated date
+            //     $('#end').val(futureDate.toISOString().split('T')[0]);
+            // });
         });
-
-        /**
-         * Disable or enable the old_date input field.
-         * @param {boolean} disable - True to disable, false to enable.
-         */
-        function toggleDate(disable) {
-            $('#old_date').prop('disabled', disable)
-        }
-
-        // Disable the old_date input field by default
-        toggleDate(true)
-
-        // Listen for changes to the frequency select dropdown
-        $('#frequency').on('change', function() {
-            const val = parseInt($(this).val());
-            const now = new Date();
-
-            // Enable the old_date input field
-            toggleDate(false)
-
-            // Set the old_date input field to today's date
-            $('#old_date').val(now.toISOString().split('T')[0]);
-
-            // Calculate the next date based on the selected frequency
-            const futureDate = new Date(now);
-            futureDate.setMonth(futureDate.getMonth() + val);
-
-            // Set the next_date input field to the calculated date
-            $('#next_date').val(futureDate.toISOString().split('T')[0]);
-        });
-
-        // Listen for changes to the old_date input field
-        $('#old_date').on('change', function() {
-            const val = new Date($(this).val());
-
-            // Calculate the next date based on the selected frequency
-            const futureDate = new Date(val);
-            futureDate.setMonth(val.getMonth() + parseInt($('#frequency').val()));
-
-            // Set the next_date input field to the calculated date
-            $('#next_date').val(futureDate.toISOString().split('T')[0]);
-        });
-    });
-</script>
+    </script>
 @endsection

@@ -1,8 +1,8 @@
-<div class="modal fade" id="add-tugas-preventif" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalAddTugasPreventifLabel" aria-hidden="true">
+<div class="modal fade" id="preventif-add" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="preventif-add-label" aria-hidden="true">
     <div class="modal-dialog modal-l" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalAddTugasPreventifLabel"></h5>
+                <h5 class="modal-title" id="preventif-add-label"></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -92,7 +92,8 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            url: "{{ route('admin.aset.pemeliharaan.preventifAdd', ['id' => ':id']) }}".replace(':id', id),
+            // url: "{{ route('admin.pemeliharaan-preventif', ['id' => ':id']) }}".replace(':id', id),
+            url: `{{ url('/admin/pemeliharaan-preventif/preventif-add') }}/${id}`,
             type: "GET",
             dataType: "json",
             beforeSend: function() {
@@ -100,10 +101,10 @@
                 $('#error-*').text('');
             },
             success: function(data) {
-                // $('#add-tugas-preventif').modal('show');
-                $('#add-tugas-preventif').modal('show').data('schedule-id', id); // <--- Simpan ID tugas di modal
+                // $('#preventif-add').modal('show');
+                $('#preventif-add').modal('show').data('schedule-id', id); // <--- Simpan ID tugas di modal
                 $('#formAddTugasPreventif')[0].reset();
-                $('#modalAddTugasPreventiflabel, .modal-title').html('Tindak lanjut Pemeliharaan Preventif untuk: <span class="badge badge-info">' + data.maintenance_schedule.name + '</span><span class="font-weight-bold"> ' + data.asset.name +
+                $('#modalAddTugasPreventiflabel, .modal-title').html('Tindak lanjut Pemeliharaan Preventif untuk: <span class="badge badge-info">' + data.maintenance_schedule.name + '</span><span class="font-weight-bold"> ' + data.asset.tag + ' ' + data.asset.name +
                     '</span> periode: <span class="badge badge-info">' + moment(data.maintenance_schedule.end).format('DD MMM YYYY') + '</span>');
                 $('#formAddTugasPreventif input[name="name"]').val(data.maintenance_schedule.name); // Set nilai checkbox sesuai nama tugas
                 $('#formAddTugasPreventif input[name="period"]').val(data.maintenance_schedule.end); // Set nilai periode
@@ -132,7 +133,8 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'Terjadi kesalahan saat memuat data. Silakan coba lagi.',
+                        // text: 'Terjadi kesalahan saat memuat data. Silakan coba lagi.',
+                        text: xhr.responseJSON.message || 'Terjadi kesalahan saat memuat data. Silakan coba lagi.',
                     });
                 }
             }
@@ -143,13 +145,12 @@
     $('#formAddTugasPreventif').on('submit', function(e) {
         e.preventDefault();
         var formData = new FormData(this);
-        var scheduleId = $('#add-tugas-preventif').data('schedule-id'); // Ganti dengan ID jadwal yang sesuai
-        var assetId = "{{ $asset->id }}"; // Ganti dengan ID aset yang sesuai
+        var scheduleId = $('#preventif-add').data('schedule-id'); // Ganti dengan ID jadwal yang sesuai
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            url: "{{ route('admin.aset.pemeliharaan.preventifStore', ['id' => ':id']) }}".replace(':id', scheduleId),
+            url: "{{ route('admin.pemeliharaan-preventif.preventif-store', ['id' => ':id']) }}".replace(':id', scheduleId),
             type: "POST",
             data: formData,
             contentType: false,
@@ -160,7 +161,7 @@
                     title: 'Berhasil',
                     text: 'Pemeliharaan preventif berhasil ditindak lanjuti.',
                 }).then(() => {
-                    $('#add-tugas-preventif').modal('hide');
+                    $('#preventif-add').modal('hide');
                     $('#tablePemeliharaanPreventif').DataTable().ajax.reload();
                     $('#tableJadwalPemeliharaan').DataTable().ajax.reload();
                 });
