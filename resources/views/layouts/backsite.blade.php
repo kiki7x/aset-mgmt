@@ -41,9 +41,7 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css') }}">
     {{-- Bootstrap Datepicker --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw=="
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- fullCalendar -->
-    <link rel="stylesheet" href="{{ asset('assets/plugins/fullcalendar/main.css') }}">
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     {{-- script-head --}}
     @stack('script-head')
     {{-- ./script-head --}}
@@ -90,8 +88,10 @@
     <script type="text/javascript" src="{{ asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <!-- bs-custom-file-input -->
     <script src="{{ asset('assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
-    <!-- InputMask -->
+    {{-- Moment.js --}}
     <script src="{{ asset('assets/plugins/moment/moment.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/moment/locale/id.js') }}"></script>
+    <!-- InputMask -->
     <script src="{{ asset('assets/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
     <!-- overlayScrollbars -->
     <script src="{{ asset('assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
@@ -99,8 +99,6 @@
     <script src="{{ asset('assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('assets/dist/js/adminlte.js?v=3.2.0') }}"></script>
-    <!-- fullCalendar 2.2.5 -->
-    <script src="{{ asset('assets/plugins/fullcalendar/main.js') }} "></script>
     <!-- init bootstrap tooltip -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     {{-- Datatables --}}

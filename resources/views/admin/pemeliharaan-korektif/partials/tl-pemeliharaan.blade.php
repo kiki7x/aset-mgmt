@@ -53,13 +53,10 @@
                 <div class="modal-body">
                     {{-- Bukti dukung --}}
                     <div class="form-group">
-                        <label for="attachment">Bukti dukung <span class="text-danger">*</span></label>
-                        <div class="custom-file">
-                            <input type="file" class="form-control custom-file-input" id="attachment" name="attachment" accept=".jpg, .jpeg, .png, .heic, .heif, .pdf">
-                            <label class="custom-file-label" for="attachment">Upload bukti dukung</label>
-                            <small class="form-text text-muted">Format: JPG, JPEG, PNG, HEIC, HEIF, PDF (Max: 2MB)</small>
-                        </div>
-                        <span id="error-attachment" class="text-danger small"></span>
+                        <label for="attachment_link">Bukti dukung <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="attachment_link" name="attachment_link">
+                        <small class="form-text text-muted">Masukkan link bukti dukung</small>
+                        <span id="error-attachment_link" class="text-danger small"></span>
                     </div>
                     {{-- Biaya --}}
                     <div class="form-group">
@@ -136,16 +133,16 @@
         $('#notes').parent().show();
         $('#ubahstatus').on('change', function() {
             if ($(this).val() === 'Ditahan') {
-                    $('#notes').parent().show();
-                    // tambahkan required pada textarea alasan ditahan
-                    $('#notes').prop('required', true);
-                } else {
-                    $('#notes').parent().hide();
-                    $('#notes').val('');
-                    // hapus required pada textarea alasan ditahan
-                    $('#notes').prop('required', false);
-                }
-            });
+                $('#notes').parent().show();
+                // tambahkan required pada textarea alasan ditahan
+                $('#notes').prop('required', true);
+            } else {
+                $('#notes').parent().hide();
+                $('#notes').val('');
+                // hapus required pada textarea alasan ditahan
+                $('#notes').prop('required', false);
+            }
+        });
 
         // Fungsi tampilkan modal untuk menyelesaikan tugas preventif
         function showModalUbahStatus(id) {
@@ -153,7 +150,7 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: "{{ route('admin.pemeliharaan.edit', ['id' => ':id']) }}".replace(':id', id),
+                url: "{{ route('admin.pemeliharaan-korektif.edit', ['id' => ':id']) }}".replace(':id', id),
                 type: "GET",
                 dataType: "json",
                 beforeSend: function() {
@@ -190,7 +187,7 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: "{{ route('admin.pemeliharaan.edit', ['id' => ':id']) }}".replace(':id', id),
+                url: "{{ route('admin.pemeliharaan-korektif.edit', ['id' => ':id']) }}".replace(':id', id),
                 type: "GET",
                 dataType: "json",
                 beforeSend: function() {
@@ -228,7 +225,7 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: "{{ route('admin.pemeliharaan.ubahstatus', ['id' => ':id']) }}".replace(':id', id),
+                url: "{{ route('admin.pemeliharaan-korektif.ubahstatus', ['id' => ':id']) }}".replace(':id', id),
                 type: "POST",
                 data: formData,
                 contentType: false,
@@ -267,7 +264,7 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: "{{ route('admin.pemeliharaan.tindaklanjut', ['id' => ':id']) }}".replace(':id', id),
+                url: "{{ route('admin.pemeliharaan-korektif.tindaklanjut', ['id' => ':id']) }}".replace(':id', id),
                 type: "POST",
                 data: formData,
                 contentType: false,

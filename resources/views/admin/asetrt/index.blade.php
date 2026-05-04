@@ -144,8 +144,8 @@
                             render: function(data) {
                                 return `
                                     Tahun Perolehan: ${data.purchase_date ? moment(data.purchase_date).format('YYYY') : '-'} <br>
-                                    <span class="text-muted small">Dibuat: ${moment(data.created_at).format('lll')} <br>
-                                    Diupdate: ${moment(data.updated_at).format('lll')} </span><br>
+                                    <span class="text-muted small">
+                                    Dimodifikasi: ${moment(data.updated_at).format('lll')} </span><br>
                                     `;
                             }
                         },

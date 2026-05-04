@@ -151,7 +151,7 @@
         }
 
         $('#duedate').datepicker({
-            format: "yyyy-mm-dd",
+            format: "dd M yyyy",
             autoclose: true,
             todayHighlight: true,
             orientation: "bottom auto",
@@ -215,7 +215,7 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: "{{ route('admin.pemeliharaan.store') }}",
+                url: "{{ route('admin.pemeliharaan-korektif.store') }}",
                 type: "POST",
                 data: formData,
                 processData: false,

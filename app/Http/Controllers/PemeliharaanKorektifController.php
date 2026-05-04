@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 use App\Jobs\SendWhatsappNotification;
+use Illuminate\Support\Carbon;
 
 class PemeliharaanKorektifController extends Controller
 {
@@ -25,7 +26,7 @@ class PemeliharaanKorektifController extends Controller
         return view('admin.pemeliharaan-korektif.index', compact('maintenances', 'totalPemeliharaan', 'totalPemeliharaanSelesai', 'users', 'assets', 'projects'));
     }
 
-    public function pemeliharaanDataTable(Request $request): JsonResponse
+    public function pemeliharaanKorektifDataTable(Request $request): JsonResponse
     {
         // relasi ke user agar bisa menampilkan nama PIC
         $maintenances = \App\Models\MaintenancesModel::with('pic', 'asset')
@@ -68,7 +69,7 @@ class PemeliharaanKorektifController extends Controller
             })
             ->make();
     }
-    public function pemeliharaanDataTableSelesai(Request $request): JsonResponse
+    public function pemeliharaanKorektifDataTableSelesai(Request $request): JsonResponse
     {
         // buatdatatable yang hanya statusnya selesai
         $maintenancesSelesai = \App\Models\MaintenancesModel::with('pic', 'asset')
@@ -124,7 +125,7 @@ class PemeliharaanKorektifController extends Controller
                 'project_id' => $request->project_id,
                 'status' => $request->status,
                 'priority' => $request->priority,
-                'duedate' => $request->duedate,
+                'duedate' => Carbon::parse($request->duedate)->format('Y-m-d'),
                 'created_by' => $request->created_by,
                 'notes' => $request->notes,
             ];
@@ -140,7 +141,7 @@ class PemeliharaanKorektifController extends Controller
 
             return response()->json(['message' => 'Pemeliharaan korektif berhasil ditambahkan.', 'data' => $maintenance], 201);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Pemeliharaan korektif gagal ditambahkan.'] .$e->getMessage(), 500);
+            return response()->json(['message' => 'Pemeliharaan korektif gagal ditambahkan.', 'error' => $e->getMessage()], 500);
         }
 
     }
@@ -178,32 +179,32 @@ class PemeliharaanKorektifController extends Controller
             $request->merge(['cost' => $cost]);
         }
         $request->validate([
-            'attachment' => 'required|file|mimes:jpg,jpeg,png,heic,heif,pdf|max:2048', // max 2MB
+            'attachment_link' => 'required|string',
             'cost' => 'required|numeric|min:0',
             'status' => 'required|string|max:50',
             'notes' => 'required|string',
             'completed_at' => 'nullable|date',
         ]);
 
-        // PENANGANAN FILE
-        $file_path = null;
-        if ($request->hasFile('attachment')) {
-            $file = $request->file('attachment');
-            // Tentukan folder penyimpanan, misalnya: 'public/uploads/korektif_attachment'
-            $folder = 'korektif_attachment';
+        // // PENANGANAN FILE
+        // $file_path = null;
+        // if ($request->hasFile('attachment_link')) {
+        //     $file = $request->file('attachment_link');
+        //     // Tentukan folder penyimpanan, misalnya: 'public/uploads/korektif_attachment'
+        //     $folder = 'korektif_attachment';
 
-            // Simpan file ke disk, Laravel akan secara otomatis membuat nama unik
-            // dan mengembalikan path relatif ke folder disk.
-            // Gunakan 'public' disk untuk file yang bisa diakses publik
-            $file_path = $file->store($folder, 'public');
-        }
+        //     // Simpan file ke disk, Laravel akan secara otomatis membuat nama unik
+        //     // dan mengembalikan path relatif ke folder disk.
+        //     // Gunakan 'public' disk untuk file yang bisa diakses publik
+        //     $file_path = $file->store($folder, 'public');
+        // }
 
         try {
             $data = [
-                'attachment' => $file_path,
+                'attachment_link' => $request->attachment_link,
                 'cost' => $request->cost,
-                'status' => $request->status,
                 'notes' => $request->notes,
+                'status' => $request->status,
                 'completed_at' => now(),
             ];
             $maintenance->update($data);
@@ -214,17 +215,17 @@ class PemeliharaanKorektifController extends Controller
             ], 500);
         }
 
-        if ($file_path) {
-            $maintenance->update([
-                'attachment' => $file_path
-            ]);
-        } else {
-            $maintenance->update([
-                'attachment' => null
-            ]);
-        }
+        // if ($file_path) {
+        //     $maintenance->update([
+        //         'attachment' => $file_path
+        //     ]);
+        // } else {
+        //     $maintenance->update([
+        //         'attachment' => null
+        //     ]);
+        // }
 
-        $maintenance->update($data);
+        // $maintenance->update($data);
 
         return response()->json(['message' => 'Status pemeliharaan berhasil diubah.', 'data' => $maintenance], 200);
     }

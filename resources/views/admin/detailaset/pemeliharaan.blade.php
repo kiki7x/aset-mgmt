@@ -22,8 +22,8 @@
                         <th>#</th>
                         <th>Nama Jadwal</th>
                         <th>Frekuensi</th>
-                        <th>Periode Berjalan</th>
-                        <th>Periode Berikutnya</th>
+                        <th>Periode Selanjutnya</th>
+                        <th>Reminder</th>
                         <th>Status</th>
                         <th>Opsi</th>
                     </tr>
@@ -44,8 +44,8 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Nama</th>
-                        <th>Waktu Pemeliharaan</th>
+                        <th>Nama Pemeliharaan</th>
+                        <!-- <th>Waktu Pemeliharaan</th> -->
                         <th>Periode</th>
                         <th>PIC</th>
                         <th>Biaya</th>
@@ -133,21 +133,36 @@
                             return arr[data];
                         }
                     },
+                    // {
+                    //     data: 'start',
+                    //     name: 'start',
+                    //     render: function(data, type, row) {
+                    //         if (!data) {
+                    //             return '<span class="text-muted">Belum ada periode berjalan</span>';
+                    //         }
+                    //         return moment(data).format('ll');
+                    //     }
+                    // },
                     {
-                        data: 'start_date',
-                        name: 'start_date',
+                        data: 'end',
+                        name: 'end',
                         render: function(data, type, row) {
-                            let date = new Date(data);
-                            return moment(data).format('ll');
+                            // let date = new Date(data);
+                            // let sisaHari = Math.ceil((new Date(data) - new Date()) / (1000 * 60 * 60 * 24));
+                            // return moment(data).format('DD MMM YYYY') + ` <span class="badge badge-info"><i class="fa-solid fa-stopwatch"></i> ${sisaHari} hari lagi</span>`;
+                            if (!data) {
+                                return '<span class="text-muted">Belum ada periode berjalan</span>';
+                            }
+                            else {
+                            return moment(data).format('DD MMM YYYY') + ' <span class="badge badge-info"><i class="fa-solid fa-stopwatch"></i>' + moment(data).fromNow() + '</span>';
+                            }
                         }
                     },
                     {
-                        data: 'next_date',
-                        name: 'next_date',
-                        render: function(data, type, row) {
-                            let date = new Date(data);
-                            let sisaHari = Math.ceil((new Date(data) - new Date()) / (1000 * 60 * 60 * 24));
-                            return moment(data).format('ll') + ` <span class="badge badge-info"><i class="fa-solid fa-stopwatch"></i> ${sisaHari} hari lagi</span>`;
+                        data: 'reminder',
+                        name: 'reminder',
+                        render: function(data) {
+                            return data + ' hari sebelum jatuh tempo';
                         }
                     },
                     {
@@ -217,18 +232,18 @@
                         data: 'name',
                         name: 'name'
                     },
-                    {
-                        data: 'started_at',
-                        name: 'started_at',
-                        render: function(data, type, row) {
-                            return moment(data).format('ll');
-                        }
-                    },
+                    // {
+                    //     data: 'started_at',
+                    //     name: 'started_at',
+                    //     render: function(data, type, row) {
+                    //         return moment(data).format('ll');
+                    //     }
+                    // },
                     {
                         data: 'period',
                         name: 'period',
                         render: function(data, type, row) {
-                            return moment(data).format('ll');
+                            return moment(data).format('DD MMM YYYY');
                         }
                     },
                     {
@@ -239,7 +254,11 @@
                         data: 'cost',
                         name: 'cost',
                         render: function(data, type, row) {
-                            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(data);
+                            return new Intl.NumberFormat('id-ID', {
+                                style: 'currency',
+                                currency: 'IDR',
+                                maximumFractionDigits: 0
+                            }).format(data);
                         }
                     },
                     {
@@ -253,14 +272,25 @@
                             }
                         }
                     },
+                    // {
+                    //     data: 'attachment',
+                    //     name: 'attachment',
+                    //     render: function(data, type, row) {
+                    //         if (data) {
+                    //             return `<a href="{{ asset('storage') }}/${data}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-file-arrow-down"></i> Unduh</a>`;
+                    //         } else {
+                    //             return 'Tidak ada bukti dukung';
+                    //         }
+                    //     }
+                    // },
                     {
-                        data: 'attachment',
-                        name: 'attachment',
+                        data: 'attachment_link',
+                        name: 'attachment_link',
                         render: function(data, type, row) {
                             if (data) {
-                                return `<a href="{{ asset('storage') }}/${data}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-file-arrow-down"></i> Unduh</a>`;
+                                return `<a href="${data}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-file-arrow-down"></i> Unduh</a>`;
                             } else {
-                                return 'Tidak ada bukti dukung';
+                                return '-';
                             }
                         }
                     },
@@ -303,7 +333,7 @@
                                 'Jadwal pemeliharaan telah dihapus.',
                                 'success'
                             );
-                            $('#tableJadwalPemeliharaan').DataTable().ajax.reload();
+                            $('#tablePemeliharaanPreventif').DataTable().ajax.reload();
                         },
                         error: function(xhr) {
                             Swal.fire(
@@ -334,8 +364,16 @@
                     {
                         data: 'completed_at',
                         name: 'completed_at',
+                        // render: function(data, type, row) {
+                        //     return moment(data).format('DD MMM YYYY');
+                        // }
+                        // buat fallback kalau completed_at null
                         render: function(data, type, row) {
-                            return moment(data).format('ll');
+                            if (data) {
+                                return moment(data).format('DD MMM YYYY');
+                            } else {
+                                return '<span class="text-muted">Belum selesai</span>';
+                            }
                         }
                     },
                     {

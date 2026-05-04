@@ -11,7 +11,9 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
     {{-- DataTable Css --}}
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.1/css/dataTables.bootstrap4.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css" />
+    {{-- Datepicker --}}
+    {{-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css" /> --}}
+    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw=="crossorigin="anonymous" referrerpolicy="no-referrer" /></div> --}}
 @endpush
 
 @section('content')
@@ -176,7 +178,7 @@
                     processing: true,
                     serverSide: true,
                     responsive: true,
-                    ajax: "{{ route('admin.pemeliharaan.pemeliharaanDataTable') }}",
+                    ajax: "{{ route('admin.pemeliharaan-korektif.pemeliharaanDataTable') }}",
                     columns: [{
                             data: 'id',
                             name: 'id'
@@ -186,16 +188,13 @@
                             name: 'name',
                             render: function(data, type, row) {
                                 let html = '';
-                                // if (row.priority == "Rendah") html += "<i class='fa fa-flag fa-fw text-info' data-toggle='tooltip' title='Rendah'></i>&nbsp;";
-                                // if (row.priority == "Sedang") html += "<i class='fa fa-flag fa-fw text-warning' data-toggle='tooltip' title='Sedang'></i>&nbsp;";
-                                // if (row.priority == "Tinggi") html += "<i class='fa fa-flag fa-fw text-danger' data-toggle='tooltip' title='Tinggi'></i>&nbsp;";
 
-                                if (row.issuetype == "Tugas") html += "<i class='fa-regular fa-square-check fa-fw text-info' data-toggle='tooltip' title='Tugas'></i>&nbsp;";
-                                if (row.issuetype == "Perbaikan") html += "<i class='fa-solid fa-screwdriver-wrench fa-fw text-warning' data-toggle='tooltip' title='Perbaikan'></i>&nbsp;";
-                                if (row.issuetype == "Peningkatan") html += "<i class='fa-solid fa-arrow-up-right-dots fa-fw text-teal' data-toggle='tooltip' title='Peningkatan'></i>&nbsp;";
-                                if (row.issuetype == "Celah") html += "<i class='fa-solid fa-bug fa-fw text-danger' data-toggle='tooltip' title='Celah'></i>&nbsp;";
-                                if (row.issuetype == "Fitur Baru") html += "<i class='fa-regular fa-plus-square fa-fw text-success' data-toggle='tooltip' title='Fitur Baru'></i>&nbsp;";
-                                if (row.issuetype == "Informasi") html += "<i class='fa-solid fa-circle-info text-danger' data-toggle='tooltip' title='Informasi'></i>&nbsp;";
+                                if (row.issuetype == "Tugas") html += "<i class='fa-regular fa-square-check fa-fw text-info' data-toggle='tooltip' title='Tugas'></i><span class='badge'>Tugas</span> </br>";
+                                if (row.issuetype == "Perbaikan") html += "<i class='fa-solid fa-screwdriver-wrench fa-fw text-warning' data-toggle='tooltip' title='Perbaikan'></i><span class='badge'>Perbaikan</span> </br>";
+                                if (row.issuetype == "Peningkatan") html += "<i class='fa-solid fa-arrow-up-right-dots fa-fw text-teal' data-toggle='tooltip' title='Peningkatan'></i><span class='badge'>Peningkatan</span> </br>";
+                                if (row.issuetype == "Celah") html += "<i class='fa-solid fa-bug fa-fw text-danger' data-toggle='tooltip' title='Celah'></i><span class='badge'>Celah</span> </br>";
+                                if (row.issuetype == "Fitur Baru") html += "<i class='fa-regular fa-plus-square fa-fw text-success' data-toggle='tooltip' title='Fitur Baru'></i><span class='badge'>Fitur Baru</span> </br>";
+                                if (row.issuetype == "Informasi") html += "<i class='fa-solid fa-circle-info text-danger' data-toggle='tooltip' title='Informasi'></i><span class='badge'>Informasi</span> </br>";
 
                                 return html + row.name;
                             }
@@ -267,7 +266,7 @@
                             data: 'duedate',
                             name: 'duedate',
                             render: function(data, type, row) {
-                                return '<div style="text-align: center;">' + data + '</div>';
+                                return '<div style="text-align: center;">' + moment(data).format('DD MMM YYYY') + '</div>';
                             }
                         },
                         {
@@ -285,7 +284,7 @@
                     processing: true,
                     serverSide: true,
                     responsive: true,
-                    ajax: "{{ route('admin.pemeliharaan.pemeliharaanDataTableSelesai') }}",
+                    ajax: "{{ route('admin.pemeliharaan-korektif.pemeliharaanDataTableSelesai') }}",
                     columns: [{
                             data: 'id',
                             name: 'id'
@@ -295,16 +294,12 @@
                             name: 'name',
                             render: function(data, type, row) {
                                 let html = '';
-                                if (row.priority == "High") html += "<i class='fa fa-flag fa-fw text-danger' data-toggle='tooltip' title='High priority'></i>&nbsp;";
-                                if (row.priority == "Medium") html += "<i class='fa fa-flag fa-fw text-warning' data-toggle='tooltip' title='Medium priority'></i>&nbsp;";
-                                if (row.priority == "Low") html += "<i class='fa fa-flag fa-fw text-info' data-toggle='tooltip' title='Low priority'></i>&nbsp;";
-
-                                if (row.type == "Tugas") html += "<i class='fa fa-check-square fa-fw text-info' data-toggle='tooltip' title='Task'></i>&nbsp;";
-                                if (row.type == "Perbaikan") html += "<i class='fa fa-minus-square fa-fw text-warning' data-toggle='tooltip' title='Maintenance'></i>&nbsp;";
-                                if (row.type == "Celah") html += "<i class='fa fa-bug fa-fw text-danger' data-toggle='tooltip' title='Bug'></i>&nbsp;";
-                                if (row.type == "Peningkatan") html += "<i class='fa fa-external-link fa-fw text-teal' data-toggle='tooltip' title='Improvement'></i>&nbsp;";
-                                if (row.type == "Fitur Baru") html += "<i class='fa fa-plus-square fa-fw text-success' data-toggle='tooltip' title='New Feature'></i>&nbsp;";
-                                if (row.type == "Informasi") html += "<i class='fa fa-circle fa-fw text-danger' data-toggle='tooltip' title='Story'></i>&nbsp;";
+                                if (row.issuetype == "Tugas") html += "<i class='fa-regular fa-square-check fa-fw text-info' data-toggle='tooltip' title='Task'></i><span class='badge'>Tugas</span> </br>";
+                                if (row.issuetype == "Perbaikan") html += "<i class='fa-solid fa-screwdriver-wrench fa-fw text-warning' data-toggle='tooltip' title='Maintenance'></i><span class='badge'>Perbaikan</span> </br>";
+                                if (row.issuetype == "Peningkatan") html += "<i class='fa-solid fa-arrow-up-right-dots fa-fw text-teal' data-toggle='tooltip' title='Improvement'></i><span class='badge'>Peningkatan</span> </br>";
+                                if (row.issuetype == "Celah") html += "<i class='fa-solid fa-bug fa-fw text-danger' data-toggle='tooltip' title='Bug'></i><span class='badge'>Celah</span> </br>";
+                                if (row.issuetype == "Fitur Baru") html += "<i class='fa-solid fa-plus-square fa-fw text-success' data-toggle='tooltip' title='New Feature'></i><span class='badge'>Fitur Baru</span> </br>";
+                                if (row.issuetype == "Informasi") html += "<i class='fa-solid fa-circle-info text-danger' data-toggle='tooltip' title='Story'></i><span class='badge'>Informasi</span> </br>";
 
                                 return html + row.name;
                             }
@@ -340,14 +335,17 @@
                         },
                         {
                             data: 'completed_at',
-                            name: 'completed_at'
+                            name: 'completed_at',
+                            render: function(data, type, row) {
+                                return moment(data).format('DD MMM YYYY');
+                            }
                         },
                         {
-                            data: 'attachment',
-                            name: 'attachment',
+                            data: 'attachment_link',
+                            name: 'attachment_link',
                             render: function(data, type, row) {
                                 if (data) {
-                                    return `<a href="{{ asset('storage') }}/${data}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-file-arrow-down"></i> Unduh</a>`;
+                                    return `<a href="${data}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-file-arrow-down"></i> Unduh</a>`;
                                 } else {
                                     return 'Tidak ada bukti dukung';
                                 }

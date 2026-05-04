@@ -19,7 +19,7 @@ return new class extends Migration
         Schema::create('assetcategories', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100);
-            $table->string('color', 7);
+            $table->string('color', 7)->nullable();
             $table->foreignId('classification_id')->constrained('assetclassifications')->cascadeOnDelete();
             $table->timestamps();
         });

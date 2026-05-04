@@ -31,13 +31,13 @@
                                 <div class="row">
                                     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-auto">
                                         <div class="form-group">
-                                            <label for="attachment">Import Aset Rumah Tangga <span class="text-danger">*</span></label>
+                                            <label for="fileasetrt">Import Aset Rumah Tangga <span class="text-danger">*</span></label>
                                             <div class="custom-file">
-                                                <input type="file" class="form-control custom-file-input" id="importasetrt" name="attachment" accept=".xlsx" required>
+                                                <input type="file" class="form-control custom-file-input" id="fileasetrt" name="fileasetrt" accept=".xlsx" required>
                                                 <label class="custom-file-label" for="attachment">Import Aset Rumah Tangga</label>
                                                 <small class="form-text text-muted">Format: XLSX (Max: 2MB)</small>
                                             </div>
-                                            <span id="error-attachment" class="text-danger small"></span>
+                                            <span id="error-fileasetrt" class="text-danger small"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -230,11 +230,12 @@
                         $('#btnImportLokasi').addClass('disabled').attr('disabled', true);
                         $('#btnImportLokasi').html('<i class="fa fa-spinner fa-spin"></i> Mengunggah Data...');
                     },
-                    success: function(response) {
+                    success: function(res) {
                         Swal.fire({
                             icon: 'success',
                             title: 'Berhasil!',
-                            text: 'Data Lokasi berhasil disimpan!',
+                            // text: 'Data Lokasi berhasil disimpan!',
+                            text: 'Semua data sebanyak (' + res.success_count + ') berhasil disimpan!',
                         }).then(() => {
                             $('#formImportLokasi')[0].reset(); // Reset form fields
                             $('#btnImportLokasi').removeClass('disabled').attr('disabled', false);
@@ -271,11 +272,11 @@
                         $('#btnImportAsetTik').addClass('disabled').attr('disabled', true);
                         $('#btnImportAsetTik').html('<i class="fa fa-spinner fa-spin"></i> Mengunggah Data...');
                     },
-                    success: function(response) {
+                    success: function(res) {
                         Swal.fire({
                             icon: 'success',
                             title: 'Berhasil!',
-                            text: 'Data Aset TIk berhasil disimpan!',
+                            text: 'Semua data sebanyak (' + res.success_count + ') berhasil disimpan!',
                         }).then(() => {
                             $('#formImportAsetTik')[0].reset(); // Reset form fields
                             $('#btnImportAsetTik').removeClass('disabled').attr('disabled', false);
@@ -286,9 +287,56 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: 'Terjadi kesalahan. Periksa kembali data unggahan.',
-                        })
-                    }
+                            // text: 'Terjadi kesalahan. Periksa kembali data unggahan.',
+                            text: res.errors.forEach(function(err) {
+                                errorHtml += '<li>' + err + '</li>' + '<br>'
+                            }),
+                        });
+                    },
+                });
+            });
+        </script>
+
+        <script>
+            $('#formImportAsetRt').submit(function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                formData.append('fileasetrt', $('#fileasetrt')[0].files[0]);
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: "{{ route('admin.settings.import.storeasetrt') }}",
+                    type: 'POST',
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function() {
+                        $('#btnImportAsetRt').addClass('disabled').attr('disabled', true);
+                        $('#btnImportAsetRt').html('<i class="fa fa-spinner fa-spin"></i> Mengunggah Data...');
+                    },
+                    success: function(res) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: 'Semua data sebanyak (' + res.success_count + ') berhasil disimpan!',
+                        }).then(() => {
+                            $('#formImportAsetRt')[0].reset(); // Reset form fields
+                            $('#btnImportAsetRt').removeClass('disabled').attr('disabled', false);
+                            $('#btnImportAsetRt').html('<i class="fas fa-file-import"></i> Import');
+                        });
+                    },
+                    error: function() {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            // text: 'Terjadi kesalahan. Periksa kembali data unggahan.',
+                            text: res.errors.forEach(function(err) {
+                                errorHtml += '<li>' + err + '</li>' + '<br>'
+                            }),
+                        });
+                    },
                 });
             });
         </script>

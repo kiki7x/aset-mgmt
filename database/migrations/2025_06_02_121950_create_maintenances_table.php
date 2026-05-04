@@ -16,8 +16,9 @@ return new class extends Migration
             $table->foreignId('asset_id')->nullable();
             $table->string('name'); // Detail pemeliharaan (e.g., 'Ganti Oli Mesin', 'Pembersihan')
             $table->string('frequency')->nullable(); // 'per_3_bulan', 'per_4_bulan', dst '
-            $table->date('old_date')->nullable(); // Tanggal manual untuk Korektif
-            $table->date('next_date')->nullable();
+            $table->dateTime('start')->nullable(); // Tanggal manual untuk Korektif
+            $table->dateTime('end')->nullable();
+            $table->integer('reminder')->nullable(); // Jumlah hari sebelum jadwal untuk mengirim pengingat
             $table->string('status')->nullable();
             $table->text('customfields')->nullable();
             $table->timestamps();
@@ -33,12 +34,13 @@ return new class extends Migration
             $table->string('issuetype')->nullable(); // isian ini jika berdasarkan pada penugasan dan atau korektif
             $table->string('priority')->nullable(); // isian ini jika berdasarkan pada penugasan dan atau korektif
             $table->string('status')->nullable();
-            $table->date('started_at')->nullable();
-            $table->date('completed_at')->nullable();
-            $table->date('duedate')->nullable();
+            $table->dateTime('start')->nullable();
+            $table->dateTime('end')->nullable();
+            $table->dateTime('duedate')->nullable();
             $table->integer('timespent')->nullable();
-            $table->date('period')->nullable(); // Rekam Periode pemeliharaan preventif yang sudah dilakukan
-            $table->string('attachment')->nullable();
+            $table->dateTime('period')->nullable(); // Rekam Periode pemeliharaan preventif yang sudah dilakukan
+            $table->string('attachment_name')->nullable();
+            $table->string('attachment_link')->nullable();
             $table->text('notes')->nullable(); // Catatan tambahan untuk pemeliharaan
             $table->decimal('cost', 12, 2)->nullable(); // Biaya dalam Rupiah
             $table->text('customfields')->nullable();

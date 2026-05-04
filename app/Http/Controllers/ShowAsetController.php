@@ -30,12 +30,12 @@ class ShowAsetController extends Controller
     //     return view('admin.detailaset.pemeliharaan', compact('id', 'maintenances', 'asset'));
     // }
 
-    public function getPenugasanContent($id)
-    {
-        $asset = \App\Models\AssetsModel::findOrFail($id); // Menggunakan model Maintenance::with('item')->latest()->get();
-        Log::info("Loading Penugasan for asset ID: $id");
-        return view('admin.detailaset.penugasan', compact('id', 'asset'));
-    }
+    // public function getPenugasanContent($id)
+    // {
+    //     $asset = \App\Models\AssetsModel::findOrFail($id); // Menggunakan model Maintenance::with('item')->latest()->get();
+    //     Log::info("Loading Penugasan for asset ID: $id");
+    //     return view('admin.detailaset.penugasan', compact('id', 'asset'));
+    // }
 
     public function getTicketsContent($id)
     {
