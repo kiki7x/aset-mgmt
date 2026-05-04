@@ -75,7 +75,7 @@
             <!-- small card -->
             <div class="small-box bg-danger">
                 <div class="inner">
-                    <h3>65</h3>
+                    <h3>{{ $totalTickets }}</h3>
 
                     <p>Helpdesk Tiket</p>
                 </div>
@@ -117,35 +117,26 @@
                 <!-- /.card-header -->
                 <div class="card-body">
                     <ul class="todo-list presort ui-sortable">
-                        <li data-date="2024-07-15 10:56:02 ">
-                            <span class="text"><a href="?route=tickets/manage&amp;id=2">#856929 Internet gangguan di GKT</a></span>
-
+                        @foreach($latestTickets as $ticket)
+                        <li>
+                            <span class="text">
+                                <a href="{{ route('admin.tiket.show', $ticket->id) }}" class="text-primary" style="font-weight: bold;">#{{ $ticket->ticket }} {{ $ticket->subject }}</a>
+                            </span>
                             <!-- Emphasis label -->
-                            <small class="badge bg-navy">In Progress</small>
-                            <small>2 months ago</small>
-
+                            <small class="badge 
+                                @if($ticket->status == 'In Progress') bg-warning text-dark
+                                @elseif($ticket->status == 'Answered') bg-success
+                                @elseif($ticket->status == 'Closed') bg-secondary
+                                @else bg-primary
+                                @endif">{{ $ticket->status }}</small>
+                            <small>{{ $ticket->created_at->diffForHumans() }}</small>
                             <!-- General tools such as edit or delete-->
                             <div class="tools">
-                                <a href="?route=tickets/manage&amp;id=2" class="btn-right text-dark"><i class="fa fa-eye"></i></a>&nbsp; <a href="#"
-                                   onclick="showM(&quot;index.php?modal=tickets/edit&amp;reroute=dashboard&amp;routeid=&amp;id=2&amp;section=&quot;);return false" class="btn-right text-dark"><i class="fa fa-edit"></i></a>&nbsp; <a href="#"
-                                   onclick="showM(&quot;index.php?modal=tickets/delete&amp;reroute=dashboard&amp;routeid=&amp;id=2&amp;section=&quot;);return false" class="btn-right text-red"><i class="fa fa-trash-o"></i></a>
-                            </div>
-
-                        </li>
-                        <li data-date="2024-07-10 15:22:19 ">
-                            <span class="text"><a href="?route=tickets/manage&amp;id=1">#810656 mohon bantu perbaikan pc</a></span>
-
-                            <!-- Emphasis label -->
-                            <small class="badge bg-teal">Answered</small>
-                            <small>2 months ago</small>
-
-                            <!-- General tools such as edit or delete-->
-                            <div class="tools">
-                                <a href="?route=tickets/manage&amp;id=1" class="btn-right text-dark"><i class="fa fa-eye"></i></a>&nbsp; <a href="#"
-                                   onclick="showM(&quot;index.php?modal=tickets/edit&amp;reroute=dashboard&amp;routeid=&amp;id=1&amp;section=&quot;);return false" class="btn-right text-dark"><i class="fa fa-edit"></i></a>&nbsp; <a href="#"
-                                   onclick="showM(&quot;index.php?modal=tickets/delete&amp;reroute=dashboard&amp;routeid=&amp;id=1&amp;section=&quot;);return false" class="btn-right text-red"><i class="fa fa-trash-o"></i></a>
+                                <a href="{{ route('admin.tiket.show', $ticket->id) }}" class="btn-right text-dark"><i class="fa fa-eye"></i></a>&nbsp;
+                                <a href="#" onclick="showM(&quot;index.php?modal=tickets/edit&amp;reroute=dashboard&amp;routeid=&amp;id={{ $ticket->id }}&amp;section=&quot;);return false" class="btn-right text-dark"><i class="fa fa-edit"></i></a>
                             </div>
                         </li>
+                        @endforeach
                     </ul>
                 </div><!-- /.card-body -->
             </div><!-- /.card -->

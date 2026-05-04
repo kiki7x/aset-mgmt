@@ -14,7 +14,9 @@ class AdminController extends Controller
         $totalAssetTik = \App\Models\AssetsModel::where('classification_id', 2)->count();
         $totalAssetRt = \App\Models\AssetsModel::whereIn('classification_id', [3, 4])->count();
         $totalGedung = \App\Models\LocationsModel::count();
-        return view('admin.dashboard', compact('totalAssetTik', 'totalAssetRt', 'totalGedung'));
+        $totalTickets = \App\Models\TicketFront::count();
+        $latestTickets = \App\Models\TicketFront::orderBy('created_at', 'desc')->take(5)->get();
+        return view('admin.dashboard', compact('totalAssetTik', 'totalAssetRt', 'totalGedung', 'totalTickets', 'latestTickets'));
         
     }
 

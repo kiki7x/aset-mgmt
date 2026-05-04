@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
+use App\Http\Controllers\TiketController;
 
 
 // Auth Controller
@@ -23,6 +24,12 @@ Route::get('/faq', [App\Http\Controllers\FrontController::class, 'faq'])->name('
 Route::get('/lacak', [App\Http\Controllers\FrontController::class, 'lacak'])->name('lacak');
 Route::get('/lacak/show/{id}', [App\Http\Controllers\FrontController::class, 'lacak_show'])->name('lacak.show');
 Route::get('/servicedesk', [App\Http\Controllers\FrontController::class, 'servicedesk'])->name('servicedesk');
+Route::post('/servicedesk', [TiketController::class, 'store']);
+//service desk tiketing system
+Route::get('/servicedesk/data', [TiketController::class, 'data'])->name('servicedesk.data');
+Route::get('/servicedesk/print', [TiketController::class, 'print'])->name('servicedesk.print');
+Route::post('/servicedesk/store', [TiketController::class, 'store'])->name('servicedesk.store');
+Route::post('/servicedesk/update-status', [TiketController::class, 'updateStatus'])->name('servicedesk.updateStatus');
 
 //Admin Area
 Route::prefix('admin')->middleware('auth')->group(function () {
@@ -153,6 +160,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     // Route Ticketing System
     Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering'])->group(function () {
         Route::get('/tiket', [App\Http\Controllers\TiketController::class, 'index'])->name('admin.tiket');
+        Route::get('/tiket/{id}', [App\Http\Controllers\TiketController::class, 'show'])->name('admin.tiket.show');
         Route::get('/tiket/get_tikets', [App\Http\Controllers\TiketController::class, 'tiketDataTable'])->name('admin.tiket.tiketDataTable');
     });
 
