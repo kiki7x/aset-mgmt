@@ -8,35 +8,47 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
-            <form id="formCreateTicket" action="{{ route('servicedesk.store') }}" method="POST" enctype="multipart/form-data">
+            <form id="formCreateTicket" action="{{ route('servicedesk.store') }}" method="POST" enctype="multipart/form-data" novalidate>
                 @csrf
                 <div class="modal-body" id="modalCreateTicket">
 
                     <div class="form-group row mb-3">
                         <label class="col-3 col-form-label"><strong>Nama</strong></label>
                         <div class="col-9">
-                            <input type="text" name="nama" class="form-control">
+                            <input type="text" name="nama" id="ticket-nama" class="form-control @error('nama') is-invalid @enderror" value="{{ old('nama') }}">
+                            @error('nama')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
 
                     <div class="form-group row mb-3">
                         <label class="col-3 col-form-label"><strong>Email</strong></label>
                         <div class="col-9">
-                            <input type="email" name="email" class="form-control">
+                            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}">
+                            @error('email')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
 
                     <div class="form-group row mb-3">
                         <label class="col-3 col-form-label"><strong>Nomor WhatsApp</strong></label>
                         <div class="col-9">
-                            <input type="text" name="whatsapp_number" class="form-control">
+                            <input type="text" name="whatsapp_number" class="form-control @error('whatsapp_number') is-invalid @enderror" value="{{ old('whatsapp_number') }}">
+                            @error('whatsapp_number')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
 
                     <div class="form-group row mb-3">
                         <label class="col-3 col-form-label"><strong>Judul</strong></label>
                         <div class="col-9">
-                            <input type="text" name="subject" class="form-control">
+                            <input type="text" name="subject" class="form-control @error('subject') is-invalid @enderror" value="{{ old('subject') }}">
+                            @error('subject')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
 
@@ -47,18 +59,22 @@
                             <div class="col-sm-9">
 
                                 <div class="form-check-inline">
-                                    <input class="form-check-input" type="radio" name="issuetype" value="Keluhan">
+                                    <input class="form-check-input @error('issuetype') is-invalid @enderror" type="radio" name="issuetype" value="Keluhan" {{ old('issuetype') == 'Keluhan' ? 'checked' : '' }}>
                                     <label class="form-check-label">
                                         Keluhan
                                     </label>
                                 </div>
 
                                 <div class="form-check-inline">
-                                    <input class="form-check-input" type="radio" name="issuetype" value="Permintaan">
+                                    <input class="form-check-input @error('issuetype') is-invalid @enderror" type="radio" name="issuetype" value="Permintaan" {{ old('issuetype') == 'Permintaan' ? 'checked' : '' }}>
                                     <label class="form-check-label">
                                         Permintaan
                                     </label>
                                 </div>
+
+                                @error('issuetype')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
 
                             </div>
                         </div>
@@ -71,18 +87,22 @@
                             <div class="col-sm-9">
 
                                 <div class="form-check-inline">
-                                    <input class="form-check-input" type="radio" name="department" value="TIK">
+                                    <input class="form-check-input @error('department') is-invalid @enderror" type="radio" name="department" value="TIK" {{ old('department') == 'TIK' ? 'checked' : '' }}>
                                     <label class="form-check-label">
                                         TIK
                                     </label>
                                 </div>
 
                                 <div class="form-check-inline">
-                                    <input class="form-check-input" type="radio" name="department" value="Rumah Tangga">
+                                    <input class="form-check-input @error('department') is-invalid @enderror" type="radio" name="department" value="Rumah Tangga" {{ old('department') == 'Rumah Tangga' ? 'checked' : '' }}>
                                     <label class="form-check-label">
                                         Rumah Tangga
                                     </label>
                                 </div>
+
+                                @error('department')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
 
                             </div>
                         </div>
@@ -96,25 +116,29 @@
                             <div class="col-sm-9">
 
                                 <div class="form-check-inline">
-                                    <input class="form-check-input" type="radio" name="priority" value="Low">
+                                    <input class="form-check-input @error('priority') is-invalid @enderror" type="radio" name="priority" value="Low" {{ old('priority') == 'Low' ? 'checked' : '' }}>
                                     <label class="form-check-label">
                                         Rendah
                                     </label>
                                 </div>
 
                                 <div class="form-check-inline">
-                                    <input class="form-check-input" type="radio" name="priority" value="Medium">
+                                    <input class="form-check-input @error('priority') is-invalid @enderror" type="radio" name="priority" value="Medium" {{ old('priority') == 'Medium' ? 'checked' : '' }}>
                                     <label class="form-check-label">
                                         Sedang
                                     </label>
                                 </div>
 
                                 <div class="form-check-inline">
-                                    <input class="form-check-input" type="radio" name="priority" value="High">
+                                    <input class="form-check-input @error('priority') is-invalid @enderror" type="radio" name="priority" value="High" {{ old('priority') == 'High' ? 'checked' : '' }}>
                                     <label class="form-check-label">
                                         Tinggi
                                     </label>
                                 </div>
+
+                                @error('priority')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
 
                             </div>
                         </div>
@@ -124,7 +148,10 @@
                     <div class="form-group row mb-3">
                         <label class="col-3 col-form-label"><strong>Deskripsi</strong></label>
                         <div class="col-9">
-                            <textarea name="description" class="form-control" rows="3"></textarea>
+                            <textarea name="description" class="form-control @error('description') is-invalid @enderror" rows="3">{{ old('description') }}</textarea>
+                            @error('description')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
 
@@ -140,8 +167,12 @@
                             <input
                                 type="file"
                                 name="attachments"
-                                class="form-control"
+                                class="form-control @error('attachments') is-invalid @enderror"
                                 accept="image/*">
+
+                            @error('attachments')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
 
                         </div>
 
@@ -168,12 +199,15 @@
                                 type="text"
                                 name="captcha"
                                 id="ticket-captcha"
-                                class="form-control"
+                                class="form-control @error('captcha') is-invalid @enderror"
                                 placeholder="Captcha"
                                 maxlength="6"
                                 autocomplete="off"
                                 style="text-transform: uppercase;"
                                 required>
+                            @error('captcha')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                             <small class="text-muted">Masukkan 6 karakter sesuai gambar</small>
                         </div>
                     </div>
@@ -212,7 +246,7 @@
             success: function(response) {
                 if (response.success && response.captcha_url) {
                     $('#ticket-captcha-image').attr('src', response.captcha_url);
-                    $('#ticket-captcha').val('').focus();
+                    $('#ticket-captcha').val('');
                 }
             },
             error: function() {
@@ -221,10 +255,17 @@
         });
     }
 
+    function clearTicketInlineErrors() {
+        $('#formCreateTicket').find('.ticket-validation-error').remove();
+        $('#formCreateTicket').find('.is-invalid').removeClass('is-invalid');
+    }
+
     // Reset form and CAPTCHA when modal is shown
-    $('#form-tiket').on('show.bs.modal', function () {
+    $('#form-tiket').on('shown.bs.modal', function () {
         $('#formCreateTicket')[0].reset();
+        clearTicketInlineErrors();
         refreshTicketCaptchaImage();
+        $('#ticket-nama').trigger('focus');
     });
 
     // Refresh CAPTCHA

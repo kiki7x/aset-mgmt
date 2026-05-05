@@ -346,7 +346,40 @@
 
         e.preventDefault();
 
+        const $form = $('#formCreateTicket');
+
+        function clearTicketValidationErrors() {
+            $form.find('.ticket-validation-error').remove();
+            $form.find('.is-invalid').removeClass('is-invalid');
+        }
+
+        function showTicketValidationErrors(errors) {
+            clearTicketValidationErrors();
+
+            Object.keys(errors || {}).forEach(function(field) {
+                const message = errors[field][0];
+
+                if (field === 'issuetype' || field === 'department' || field === 'priority') {
+                    const $fieldset = $form.find(`[name="${field}"]`).first().closest('fieldset');
+                    $fieldset.find('.ticket-validation-error').remove();
+                    $fieldset.find('input[name="' + field + '"]').addClass('is-invalid');
+                    $fieldset.find('.col-sm-9').append(`<div class="invalid-feedback d-block ticket-validation-error">${message}</div>`);
+                    return;
+                }
+
+                const $input = $form.find(`[name="${field}"]`).first();
+
+                if ($input.length) {
+                    $input.addClass('is-invalid');
+                    $input.closest('.col-9').find('.ticket-validation-error').remove();
+                    $input.after(`<div class="invalid-feedback d-block ticket-validation-error">${message}</div>`);
+                }
+            });
+        }
+
         let formData = new FormData(this);
+
+        clearTicketValidationErrors();
 
         $.ajax({
 
@@ -384,6 +417,10 @@
                     errorMsg = xhr.responseJSON.message;
                 } else if (xhr.responseJSON && xhr.responseJSON.errors) {
                     errorMsg = Object.values(xhr.responseJSON.errors).flat().join(', ');
+                }
+
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    showTicketValidationErrors(xhr.responseJSON.errors);
                 }
 
                 if (typeof window.refreshCaptchaImage === 'function') {
