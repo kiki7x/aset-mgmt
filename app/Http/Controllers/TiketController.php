@@ -125,6 +125,17 @@ class TiketController extends Controller
     public function store(Request $request)
     {
         try {
+            $captchaInput = strtoupper((string) $request->captcha);
+            $captchaCode = strtoupper((string) session('captcha_code'));
+
+            if ($captchaCode === '' || $captchaInput === '' || !hash_equals($captchaCode, $captchaInput)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Captcha tidak valid',
+                    'errors' => ['captcha' => ['Captcha tidak valid, silakan coba lagi']]
+                ], 422);
+            }
+
             $validated = $request->validate([
                 'nama' => 'required',
                 'email' => 'required|email',
@@ -134,7 +145,8 @@ class TiketController extends Controller
                 'priority' => 'required',
                 'description' => 'required',
                 'whatsapp_number' => 'nullable',
-                'attachments' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+                'attachments' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'captcha' => 'required|string|size:6'
             ]);
 
             $prefix = '';
@@ -193,6 +205,8 @@ class TiketController extends Controller
                 'reason' => null
 
             ]);
+
+            session()->forget('captcha_code');
 
             return response()->json([
                 'success' => true,

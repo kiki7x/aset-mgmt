@@ -31,5 +31,6 @@
     <script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
     <script src="{{asset('assets/plugins/popper/popper.min.js')}}"></script>
     <script src="{{asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
+    @stack('script-foot')
   </body>
 </html>

@@ -24,6 +24,8 @@ Route::get('/faq', [App\Http\Controllers\FrontController::class, 'faq'])->name('
 Route::get('/lacak', [App\Http\Controllers\FrontController::class, 'lacak'])->name('lacak');
 Route::get('/lacak/show/{id}', [App\Http\Controllers\FrontController::class, 'lacak_show'])->name('lacak.show');
 Route::get('/servicedesk', [App\Http\Controllers\FrontController::class, 'servicedesk'])->name('servicedesk');
+Route::get('/captcha-image', [App\Http\Controllers\FrontController::class, 'captchaImage'])->name('captcha.image');
+Route::get('/refresh-captcha', [App\Http\Controllers\FrontController::class, 'refreshCaptcha'])->name('refresh.captcha');
 Route::post('/servicedesk', [TiketController::class, 'store']);
 //service desk tiketing system
 Route::get('/servicedesk/data', [TiketController::class, 'data'])->name('servicedesk.data');

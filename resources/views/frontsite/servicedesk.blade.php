@@ -385,6 +385,11 @@
                 } else if (xhr.responseJSON && xhr.responseJSON.errors) {
                     errorMsg = Object.values(xhr.responseJSON.errors).flat().join(', ');
                 }
+
+                if (typeof window.refreshCaptchaImage === 'function') {
+                    window.refreshCaptchaImage();
+                }
+
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',

@@ -147,6 +147,39 @@
 
                     </div>
 
+                    {{-- CAPTCHA --}}
+                    <div class="form-group row mb-3">
+                        <label class="col-3 col-form-label">
+                            <strong>Keamanan</strong>
+                        </label>
+                        <div class="col-9">
+                            <div class="d-flex align-items-center mb-2">
+                                <img
+                                    id="captcha-image"
+                                    src="{{ route('captcha.image') }}"
+                                    alt="Captcha"
+                                    style="height: 52px; border: 1px solid #ced4da; border-radius: 4px; background: #eef1f4;">
+                                <button class="btn btn-outline-secondary ms-2" type="button" id="refresh-captcha-btn" title="Muat ulang captcha">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+
+                            <div class="input-group">
+                                <input
+                                    type="text"
+                                    name="captcha"
+                                    id="captcha"
+                                    class="form-control"
+                                    placeholder="Captcha"
+                                    maxlength="6"
+                                    autocomplete="off"
+                                    style="text-transform: uppercase;"
+                                    required>
+                            </div>
+                            <small class="text-muted">Masukkan 6 karakter sesuai gambar</small>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="modal-footer">
@@ -171,10 +204,41 @@
 
 <script>
     function openModalCreate() {
-
         $('#form-tiket').modal('show');
-
     }
+
+    function refreshCaptchaImage() {
+        $.ajax({
+            url: '{{ route("refresh.captcha") }}',
+            type: 'GET',
+            success: function(response) {
+                if (response.success && response.captcha_url) {
+                    $('#captcha-image').attr('src', response.captcha_url);
+                    $('#captcha').val('').focus();
+                }
+            },
+            error: function() {
+                alert('Gagal memperbarui captcha');
+            }
+        });
+    }
+
+    // Reset form and CAPTCHA when modal is shown
+    $('#form-tiket').on('show.bs.modal', function () {
+        $('#formCreateTicket')[0].reset();
+        refreshCaptchaImage();
+    });
+
+    // Refresh CAPTCHA
+    $('#refresh-captcha-btn').click(function() {
+        refreshCaptchaImage();
+    });
+
+    $('#captcha').on('input', function() {
+        this.value = this.value.toUpperCase();
+    });
+
+    window.refreshCaptchaImage = refreshCaptchaImage;
 </script>
 
 @endpush
