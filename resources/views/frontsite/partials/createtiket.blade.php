@@ -155,27 +155,25 @@
                         <div class="col-9">
                             <div class="d-flex align-items-center mb-2">
                                 <img
-                                    id="captcha-image"
-                                    src="{{ route('captcha.image') }}"
+                                    id="ticket-captcha-image"
+                                    src="{{ route('captcha.image', ['for' => 'ticket']) }}"
                                     alt="Captcha"
                                     style="height: 52px; border: 1px solid #ced4da; border-radius: 4px; background: #eef1f4;">
-                                <button class="btn btn-outline-secondary ms-2" type="button" id="refresh-captcha-btn" title="Muat ulang captcha">
+                                <button type="button" class="btn btn-outline-secondary ms-2" id="refresh-ticket-captcha-btn" title="Muat ulang captcha">
                                     <i class="fas fa-sync-alt"></i>
                                 </button>
                             </div>
 
-                            <div class="input-group">
-                                <input
-                                    type="text"
-                                    name="captcha"
-                                    id="captcha"
-                                    class="form-control"
-                                    placeholder="Captcha"
-                                    maxlength="6"
-                                    autocomplete="off"
-                                    style="text-transform: uppercase;"
-                                    required>
-                            </div>
+                            <input
+                                type="text"
+                                name="captcha"
+                                id="ticket-captcha"
+                                class="form-control"
+                                placeholder="Captcha"
+                                maxlength="6"
+                                autocomplete="off"
+                                style="text-transform: uppercase;"
+                                required>
                             <small class="text-muted">Masukkan 6 karakter sesuai gambar</small>
                         </div>
                     </div>
@@ -207,14 +205,14 @@
         $('#form-tiket').modal('show');
     }
 
-    function refreshCaptchaImage() {
+    function refreshTicketCaptchaImage() {
         $.ajax({
-            url: '{{ route("refresh.captcha") }}',
+            url: '{{ route("refresh.captcha", ["for" => "ticket"]) }}',
             type: 'GET',
             success: function(response) {
                 if (response.success && response.captcha_url) {
-                    $('#captcha-image').attr('src', response.captcha_url);
-                    $('#captcha').val('').focus();
+                    $('#ticket-captcha-image').attr('src', response.captcha_url);
+                    $('#ticket-captcha').val('').focus();
                 }
             },
             error: function() {
@@ -226,19 +224,19 @@
     // Reset form and CAPTCHA when modal is shown
     $('#form-tiket').on('show.bs.modal', function () {
         $('#formCreateTicket')[0].reset();
-        refreshCaptchaImage();
+        refreshTicketCaptchaImage();
     });
 
     // Refresh CAPTCHA
-    $('#refresh-captcha-btn').click(function() {
-        refreshCaptchaImage();
+    $('#refresh-ticket-captcha-btn').click(function() {
+        refreshTicketCaptchaImage();
     });
 
-    $('#captcha').on('input', function() {
+    $('#ticket-captcha').on('input', function() {
         this.value = this.value.toUpperCase();
     });
 
-    window.refreshCaptchaImage = refreshCaptchaImage;
+    window.refreshTicketCaptchaImage = refreshTicketCaptchaImage;
 </script>
 
 @endpush
