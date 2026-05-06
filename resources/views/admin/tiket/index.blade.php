@@ -190,6 +190,28 @@
 <script>
     window.ticketToOpen = @json($ticketToOpen ?? null);
 
+    function renderTicketStatus(status) {
+        var normalized = (status || '').toString().toLowerCase();
+
+        if (normalized === 'open') {
+            return '<span class="badge badge-success" style="background:#28a745; color:#fff;">Open</span>';
+        }
+
+        if (normalized === 'proses') {
+            return '<span class="badge badge-warning" style="background:#ffc107; color:#212529;">Proses</span>';
+        }
+
+        if (normalized === 'pending') {
+            return '<span class="badge badge-warning" style="background:#fd7e14; color:#fff;">Pending</span>';
+        }
+
+        if (normalized === 'close') {
+            return '<span class="badge badge-secondary" style="background:#6c757d; color:#fff;">Close</span>';
+        }
+
+        return status || '-';
+    }
+
     function openTicketDetail(ticket) {
         if (!ticket) {
             return;
@@ -222,7 +244,7 @@
         }
 
         $('#d_priority').html(label);
-        $('#d_status').text(ticket.status);
+        $('#d_status').html(renderTicketStatus(ticket.status));
         $('#d_description').text(ticket.description);
 
         var status = ticket.status;
@@ -288,7 +310,7 @@
         var reason = $(this).data('reason') || '';
         var notes = $(this).data('notes') || '';
 
-        $('#d_status').text(status);
+        $('#d_status').html(renderTicketStatus(status));
         $('#d_description').text($(this).data('description'));
 
         if (status === 'Pending') {
@@ -540,7 +562,10 @@
                 {
                     data: 'status',
                     name: 'status',
-                    searchable: true
+                    searchable: true,
+                    render: function(data) {
+                        return renderTicketStatus(data);
+                    }
                 },
                 {
                     data: 'duedate',

@@ -179,6 +179,28 @@
 @push('script-foot')
 
 <script>
+    function renderTicketStatus(status) {
+        var normalized = (status || '').toString().toLowerCase();
+
+        if (normalized === 'open') {
+            return '<span style="display:inline-block; padding:0.25rem 0.5rem; border-radius:0.25rem; background:#28a745; color:#fff; font-weight:600;">Open</span>';
+        }
+
+        if (normalized === 'proses') {
+            return '<span style="display:inline-block; padding:0.25rem 0.5rem; border-radius:0.25rem; background:#ffc107; color:#212529; font-weight:600;">Proses</span>';
+        }
+
+        if (normalized === 'pending') {
+            return '<span style="display:inline-block; padding:0.25rem 0.5rem; border-radius:0.25rem; background:#fd7e14; color:#fff; font-weight:600;">Pending</span>';
+        }
+
+        if (normalized === 'close') {
+            return '<span style="display:inline-block; padding:0.25rem 0.5rem; border-radius:0.25rem; background:#6c757d; color:#fff; font-weight:600;">Close</span>';
+        }
+
+        return status || '-';
+    }
+
     $(document).on('click', '.lihat-tiket', function(e) {
 
         e.preventDefault()
@@ -221,7 +243,7 @@
         var reason = $(this).data('reason') || ''
         var notes = $(this).data('notes') || ''
 
-        $('#d_status').text(status)
+        $('#d_status').html(renderTicketStatus(status))
         
         // Tampilkan/sembunyikan kolom berdasarkan status
         if (status === 'Pending') {
@@ -329,7 +351,10 @@
                 {
                     data: 'status',
                     name: 'status',
-                    searchable: true
+                    searchable: true,
+                    render: function(data) {
+                        return renderTicketStatus(data)
+                    }
                 },
                 {
                     data: 'duedate',
