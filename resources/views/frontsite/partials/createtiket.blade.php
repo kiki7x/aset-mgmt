@@ -35,10 +35,11 @@
                     <div class="form-group row mb-3">
                         <label class="col-3 col-form-label"><strong>Nomor WhatsApp</strong></label>
                         <div class="col-9">
-                            <input type="text" name="whatsapp_number" class="form-control @error('whatsapp_number') is-invalid @enderror" value="{{ old('whatsapp_number') }}">
+                            <input type="text" name="whatsapp_number" class="form-control @error('whatsapp_number') is-invalid @enderror" value="{{ old('whatsapp_number') }}" placeholder="contoh: 081234567890" required>
                             @error('whatsapp_number')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
+                            
                         </div>
                     </div>
 

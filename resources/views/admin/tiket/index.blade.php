@@ -218,9 +218,6 @@
         }
 
         var wa = ticket.whatsapp_number || '';
-        if (wa.length > 3) {
-            wa = wa.substring(0, wa.length - 3) + '***';
-        }
 
         $('#d_ticket').text(ticket.ticket);
         $('#d_nama').text(ticket.nama);
@@ -276,14 +273,7 @@
 
     $(document).on('click', '.lihat-tiket', function(e) {
         e.preventDefault();
-        var wa = $(this).data('wa');
-
-        if (wa) {
-            wa = wa.toString();
-            if (wa.length > 3) {
-                wa = wa.substring(0, wa.length - 3) + '***';
-            }
-        }
+        var wa = $(this).data('wa') || '';
 
         $('#d_ticket').text($(this).data('ticket'));
         $('#d_nama').text($(this).data('nama'));
