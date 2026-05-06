@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\TicketFront;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
 
 class TiketController extends Controller
@@ -26,6 +28,14 @@ class TiketController extends Controller
     {
 
         $tickets = TicketFront::latest();
+
+        if (request()->filled('issuetype')) {
+            $tickets->where('issuetype', request('issuetype'));
+        }
+
+        if (request()->filled('department')) {
+            $tickets->where('department', request('department'));
+        }
 
         return DataTables::of($tickets)
 
@@ -99,7 +109,17 @@ class TiketController extends Controller
     public function print(Request $request)
     {
         $search = trim($request->query('search', ''));
+        $issuetype = trim($request->query('issuetype', ''));
+        $department = trim($request->query('department', ''));
         $tickets = TicketFront::latest();
+
+        if ($issuetype !== '') {
+            $tickets->where('issuetype', $issuetype);
+        }
+
+        if ($department !== '') {
+            $tickets->where('department', $department);
+        }
 
         if ($search !== '') {
             $tickets->where(function ($query) use ($search) {
@@ -118,6 +138,8 @@ class TiketController extends Controller
         return view('admin.tiket.print', [
             'tickets' => $tickets->get(),
             'search' => $search,
+            'issuetype' => $issuetype,
+            'department' => $department,
         ]);
     }
 
@@ -125,30 +147,81 @@ class TiketController extends Controller
     public function store(Request $request)
     {
         try {
-            $validated = $request->validate([
-                'nama' => 'required',
-                'email' => 'required|email',
-                'subject' => 'required',
-                'issuetype' => 'required',
-                'department' => 'required',
-                'priority' => 'required',
-                'description' => 'required',
-                'whatsapp_number' => 'nullable',
-                'attachments' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+            $validator = Validator::make($request->all(), [
+                'nama' => ['required', 'string', 'min:3', 'max:100'],
+                'email' => ['required', 'email:rfc,dns', 'max:255'],
+                'whatsapp_number' => ['required', 'string', 'regex:/^[0-9]{11,12}$|^\+?[0-9]{11,12}$/'],
+                'subject' => ['required', 'string', 'min:3', 'max:150'],
+                'issuetype' => ['required', Rule::in(['Keluhan', 'Permintaan'])],
+                'department' => ['required', Rule::in(['TIK', 'Rumah Tangga'])],
+                'priority' => ['required', Rule::in(['Low', 'Medium', 'High'])],
+                'description' => ['required', 'string', 'min:10', 'max:2000'],
+                'attachments' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
+                'captcha' => ['required', 'string', 'size:6'],
+            ], [
+                'nama.required' => 'Nama wajib diisi.',
+                'nama.string' => 'Nama harus berupa teks.',
+                'nama.min' => 'Nama minimal 3 karakter.',
+                'nama.max' => 'Nama maksimal 100 karakter.',
+                'email.required' => 'Email wajib diisi.',
+                'email.email' => 'Format email tidak valid.',
+                'email.max' => 'Email maksimal 255 karakter.',
+                'whatsapp_number.required' => 'Nomor WhatsApp wajib diisi.',
+                'whatsapp_number.string' => 'Nomor WhatsApp harus berupa teks.',
+                'whatsapp_number.regex' => 'Nomor WhatsApp harus terdiri dari 11-12 digit angka (dengan atau tanpa tanda +).',
+                'subject.required' => 'Judul wajib diisi.',
+                'subject.string' => 'Judul harus berupa teks.',
+                'subject.min' => 'Judul minimal 3 karakter.',
+                'subject.max' => 'Judul maksimal 150 karakter.',
+                'issuetype.required' => 'Jenis wajib dipilih.',
+                'issuetype.in' => 'Jenis tiket tidak valid.',
+                'department.required' => 'Bidang wajib dipilih.',
+                'department.in' => 'Bidang tiket tidak valid.',
+                'priority.required' => 'Prioritas wajib dipilih.',
+                'priority.in' => 'Prioritas tiket tidak valid.',
+                'description.required' => 'Deskripsi wajib diisi.',
+                'description.string' => 'Deskripsi harus berupa teks.',
+                'description.min' => 'Deskripsi minimal 10 karakter.',
+                'description.max' => 'Deskripsi maksimal 2000 karakter.',
+                'attachments.image' => 'Lampiran harus berupa gambar.',
+                'attachments.mimes' => 'Lampiran harus berformat JPG, JPEG, atau PNG.',
+                'attachments.max' => 'Ukuran lampiran maksimal 2 MB.',
+                'captcha.required' => 'Captcha wajib diisi.',
+                'captcha.string' => 'Captcha tidak valid.',
+                'captcha.size' => 'Captcha harus terdiri dari 6 karakter.',
             ]);
+
+            $validator->after(function ($validator) use ($request) {
+                $captchaInput = strtoupper((string) $request->input('captcha'));
+                $captchaCode = strtoupper((string) session('captcha_code'));
+
+                if ($captchaCode === '' || $captchaInput === '' || !hash_equals($captchaCode, $captchaInput)) {
+                    $validator->errors()->add('captcha', 'Captcha tidak valid, silakan coba lagi.');
+                }
+            });
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validasi gagal',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            $validated = $validator->validated();
 
             $prefix = '';
 
-            if ($request->issuetype == 'Permintaan') {
+            if ($validated['issuetype'] == 'Permintaan') {
                 $prefix = 'PER';
-            } elseif ($request->issuetype == 'Keluhan') {
+            } elseif ($validated['issuetype'] == 'Keluhan') {
                 $prefix = 'KEL';
             }
             $prefix1 = '';
 
-            if ($request->department == 'TIK') {
+            if ($validated['department'] == 'TIK') {
                 $prefix1 = 'TIK';
-            } elseif ($request->department == 'Rumah Tangga') {
+            } elseif ($validated['department'] == 'Rumah Tangga') {
                 $prefix1 = 'RT';
             }
             $ticketNumber = "TCK-{$prefix}-{$prefix1}-" . rand(100000, 999999) . "-" . now()->year;
@@ -168,21 +241,21 @@ class TiketController extends Controller
 
                 'ticket' => $ticketNumber,
 
-                'nama' => $request->nama,
+                'nama' => $validated['nama'],
 
-                'email' => $request->email,
+                'email' => $validated['email'],
 
-                'whatsapp_number' => $request->whatsapp_number,
+                'whatsapp_number' => $validated['whatsapp_number'] ?? null,
 
-                'subject' => $request->subject,
+                'subject' => $validated['subject'],
 
-                'issuetype' => $request->issuetype,
+                'issuetype' => $validated['issuetype'],
 
-                'department' => $request->department,
+                'department' => $validated['department'],
 
-                'priority' => $request->priority,
+                'priority' => $validated['priority'],
 
-                'description' => $request->description,
+                'description' => $validated['description'],
 
                 'attachments' => $fileName,
 
@@ -193,6 +266,8 @@ class TiketController extends Controller
                 'reason' => null
 
             ]);
+
+            session()->forget('captcha_code');
 
             return response()->json([
                 'success' => true,

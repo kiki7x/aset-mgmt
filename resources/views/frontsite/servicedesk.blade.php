@@ -179,6 +179,28 @@
 @push('script-foot')
 
 <script>
+    function renderTicketStatus(status) {
+        var normalized = (status || '').toString().toLowerCase();
+
+        if (normalized === 'open') {
+            return '<span style="display:inline-block; padding:0.25rem 0.5rem; border-radius:0.25rem; background:#28a745; color:#fff; font-weight:600;">Open</span>';
+        }
+
+        if (normalized === 'proses') {
+            return '<span style="display:inline-block; padding:0.25rem 0.5rem; border-radius:0.25rem; background:#ffc107; color:#212529; font-weight:600;">Proses</span>';
+        }
+
+        if (normalized === 'pending') {
+            return '<span style="display:inline-block; padding:0.25rem 0.5rem; border-radius:0.25rem; background:#fd7e14; color:#fff; font-weight:600;">Pending</span>';
+        }
+
+        if (normalized === 'close') {
+            return '<span style="display:inline-block; padding:0.25rem 0.5rem; border-radius:0.25rem; background:#6c757d; color:#fff; font-weight:600;">Close</span>';
+        }
+
+        return status || '-';
+    }
+
     $(document).on('click', '.lihat-tiket', function(e) {
 
         e.preventDefault()
@@ -221,7 +243,7 @@
         var reason = $(this).data('reason') || ''
         var notes = $(this).data('notes') || ''
 
-        $('#d_status').text(status)
+        $('#d_status').html(renderTicketStatus(status))
         
         // Tampilkan/sembunyikan kolom berdasarkan status
         if (status === 'Pending') {
@@ -329,7 +351,10 @@
                 {
                     data: 'status',
                     name: 'status',
-                    searchable: true
+                    searchable: true,
+                    render: function(data) {
+                        return renderTicketStatus(data)
+                    }
                 },
                 {
                     data: 'duedate',
@@ -346,7 +371,40 @@
 
         e.preventDefault();
 
+        const $form = $('#formCreateTicket');
+
+        function clearTicketValidationErrors() {
+            $form.find('.ticket-validation-error').remove();
+            $form.find('.is-invalid').removeClass('is-invalid');
+        }
+
+        function showTicketValidationErrors(errors) {
+            clearTicketValidationErrors();
+
+            Object.keys(errors || {}).forEach(function(field) {
+                const message = errors[field][0];
+
+                if (field === 'issuetype' || field === 'department' || field === 'priority') {
+                    const $fieldset = $form.find(`[name="${field}"]`).first().closest('fieldset');
+                    $fieldset.find('.ticket-validation-error').remove();
+                    $fieldset.find('input[name="' + field + '"]').addClass('is-invalid');
+                    $fieldset.find('.col-sm-9').append(`<div class="invalid-feedback d-block ticket-validation-error">${message}</div>`);
+                    return;
+                }
+
+                const $input = $form.find(`[name="${field}"]`).first();
+
+                if ($input.length) {
+                    $input.addClass('is-invalid');
+                    $input.closest('.col-9').find('.ticket-validation-error').remove();
+                    $input.after(`<div class="invalid-feedback d-block ticket-validation-error">${message}</div>`);
+                }
+            });
+        }
+
         let formData = new FormData(this);
+
+        clearTicketValidationErrors();
 
         $.ajax({
 
@@ -385,6 +443,15 @@
                 } else if (xhr.responseJSON && xhr.responseJSON.errors) {
                     errorMsg = Object.values(xhr.responseJSON.errors).flat().join(', ');
                 }
+
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    showTicketValidationErrors(xhr.responseJSON.errors);
+                }
+
+                if (typeof window.refreshCaptchaImage === 'function') {
+                    window.refreshCaptchaImage();
+                }
+
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',

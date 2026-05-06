@@ -82,7 +82,7 @@
                 <div class="icon">
                     <i class="fa-solid fa-headset"></i>
                 </div>
-                <a href="#" class="small-box-footer">
+                <a href="{{ route('admin.tiket') }}" class="small-box-footer">
                     Selengkapnya <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>

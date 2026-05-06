@@ -94,13 +94,13 @@
         .badge.priority-medium { color: #d39e00; }
         .badge.priority-high { color: #dc3545; }
 
-        .badge.status-pending,
+        .badge.status-open { color: #198754; }
         .badge.status-proses,
-        .badge.status-process { color: #d39e00; }
-        .badge.status-open { color: #0d6efd; }
+        .badge.status-process { color: #ffc107; }
+        .badge.status-pending { color: #fd7e14; }
         .badge.status-in-progress { color: #0d6efd; }
         .badge.status-close,
-        .badge.status-closed { color: #198754; }
+        .badge.status-closed { color: #6c757d; }
         .badge.status-rejected,
         .badge.status-tolak { color: #dc3545; }
         .badge.status-completed,
@@ -192,6 +192,18 @@
     @if(!empty($search))
         <div class="report-info">
             <strong>Filter pencarian:</strong> {{ $search }}
+        </div>
+    @endif
+
+    @if(!empty($issuetype))
+        <div class="report-info">
+            <strong>Filter jenis:</strong> {{ $issuetype }}
+        </div>
+    @endif
+
+    @if(!empty($department))
+        <div class="report-info">
+            <strong>Filter bidang:</strong> {{ $department }}
         </div>
     @endif
 

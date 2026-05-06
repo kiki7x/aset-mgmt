@@ -43,15 +43,28 @@ class AuthController extends Controller
         $request->validate([
             'email' => 'required',
             'password' => 'required',
+            'captcha' => 'required|string|size:6',
         ]);
+
+        $captchaInput = strtoupper((string) $request->captcha);
+        $captchaCode = strtoupper((string) session('login_captcha_code'));
+
+        if ($captchaCode === '' || $captchaInput === '' || !hash_equals($captchaCode, $captchaInput)) {
+            return redirect('login')
+                ->withErrors(['captcha' => 'Captcha tidak valid, silakan coba lagi'])
+                ->withInput($request->only('email'));
+        }
 
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
+            session()->forget('login_captcha_code');
             return redirect()->intended('admin')
                         ->withSuccess('You have Successfully loggedin');
         }
 
-        return redirect("login")->withError('Oppes! You have entered invalid credentials');
+        return redirect("login")
+            ->with('error', 'Oppes! You have entered invalid credentials')
+            ->withInput($request->only('email'));
     }
 
     /**

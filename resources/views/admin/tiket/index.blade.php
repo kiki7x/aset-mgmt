@@ -14,6 +14,24 @@
         </button>
     </div>
     <div class="card-body">
+        <div class="row g-2 mb-3 align-items-end">
+            <div class="col-12 col-md-3">
+                <label for="filter_issuetype" class="form-label mb-1">Filter Jenis</label>
+                <select id="filter_issuetype" class="form-control form-control-sm">
+                    <option value="">Semua Jenis</option>
+                    <option value="Keluhan">Keluhan</option>
+                    <option value="Permintaan">Permintaan</option>
+                </select>
+            </div>
+            <div class="col-12 col-md-3">
+                <label for="filter_department" class="form-label mb-1">Filter Bidang</label>
+                <select id="filter_department" class="form-control form-control-sm">
+                    <option value="">Semua Bidang</option>
+                    <option value="TIK">TIK</option>
+                    <option value="Rumah Tangga">Rumah Tangga</option>
+                </select>
+            </div>
+        </div>
         <div class="table-responsive">
             <table id="tablePemeliharaan" class="table table-bordered table-striped table-hover table-sm">
                 <thead>
@@ -172,15 +190,34 @@
 <script>
     window.ticketToOpen = @json($ticketToOpen ?? null);
 
+    function renderTicketStatus(status) {
+        var normalized = (status || '').toString().toLowerCase();
+
+        if (normalized === 'open') {
+            return '<span class="badge badge-success" style="background:#28a745; color:#fff;">Open</span>';
+        }
+
+        if (normalized === 'proses') {
+            return '<span class="badge badge-warning" style="background:#ffc107; color:#212529;">Proses</span>';
+        }
+
+        if (normalized === 'pending') {
+            return '<span class="badge badge-warning" style="background:#fd7e14; color:#fff;">Pending</span>';
+        }
+
+        if (normalized === 'close') {
+            return '<span class="badge badge-secondary" style="background:#6c757d; color:#fff;">Close</span>';
+        }
+
+        return status || '-';
+    }
+
     function openTicketDetail(ticket) {
         if (!ticket) {
             return;
         }
 
         var wa = ticket.whatsapp_number || '';
-        if (wa.length > 3) {
-            wa = wa.substring(0, wa.length - 3) + '***';
-        }
 
         $('#d_ticket').text(ticket.ticket);
         $('#d_nama').text(ticket.nama);
@@ -204,7 +241,7 @@
         }
 
         $('#d_priority').html(label);
-        $('#d_status').text(ticket.status);
+        $('#d_status').html(renderTicketStatus(ticket.status));
         $('#d_description').text(ticket.description);
 
         var status = ticket.status;
@@ -236,14 +273,7 @@
 
     $(document).on('click', '.lihat-tiket', function(e) {
         e.preventDefault();
-        var wa = $(this).data('wa');
-
-        if (wa) {
-            wa = wa.toString();
-            if (wa.length > 3) {
-                wa = wa.substring(0, wa.length - 3) + '***';
-            }
-        }
+        var wa = $(this).data('wa') || '';
 
         $('#d_ticket').text($(this).data('ticket'));
         $('#d_nama').text($(this).data('nama'));
@@ -270,7 +300,7 @@
         var reason = $(this).data('reason') || '';
         var notes = $(this).data('notes') || '';
 
-        $('#d_status').text(status);
+        $('#d_status').html(renderTicketStatus(status));
         $('#d_description').text($(this).data('description'));
 
         if (status === 'Pending') {
@@ -434,10 +464,30 @@
         }
 
         let search = tiketTable.search() || '';
+        let issuetype = $('#filter_issuetype').val() || '';
+        let department = $('#filter_department').val() || '';
         let url = "{{ route('servicedesk.print') }}";
 
         if (search) {
             url += '?search=' + encodeURIComponent(search);
+        }
+
+        let queryParts = [];
+
+        if (search) {
+            queryParts.push('search=' + encodeURIComponent(search));
+        }
+
+        if (issuetype) {
+            queryParts.push('issuetype=' + encodeURIComponent(issuetype));
+        }
+
+        if (department) {
+            queryParts.push('department=' + encodeURIComponent(department));
+        }
+
+        if (queryParts.length) {
+            url = "{{ route('servicedesk.print') }}" + '?' + queryParts.join('&');
         }
 
         window.open(url, '_blank');
@@ -450,7 +500,13 @@
             responsive: true,
             pageLength: 10,
             lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-            ajax: "{{ route('servicedesk.data') }}",
+            ajax: {
+                url: "{{ route('servicedesk.data') }}",
+                data: function(d) {
+                    d.issuetype = $('#filter_issuetype').val();
+                    d.department = $('#filter_department').val();
+                }
+            },
             columns: [{
                     data: 'ticket',
                     name: 'ticket',
@@ -496,7 +552,10 @@
                 {
                     data: 'status',
                     name: 'status',
-                    searchable: true
+                    searchable: true,
+                    render: function(data) {
+                        return renderTicketStatus(data);
+                    }
                 },
                 {
                     data: 'duedate',
@@ -520,6 +579,10 @@
                     }
                 }
             ]
+        });
+
+        $('#filter_issuetype, #filter_department').on('change', function() {
+            tiketTable.ajax.reload();
         });
 
         maybeOpenTicketOnLoad();
