@@ -112,7 +112,7 @@
                           <p>Dashboard</p>
                       </a>
                   </li>
-                  <li class="nav-item {{ request()->is('admin/aset*') || request()->is('admin/lisensi*') || request()->is('admin/komponen*') || request()->is('admin/setting_attr*') ? 'menu-open' : '' }}">
+                  <li class="nav-item {{ request()->is('admin/aset*') || request()->is('admin/lisensi*') || request()->is('admin/komponen*') || request()->is('admin/setting_attr*') ? 'menu-open' : 'menu-open' }}">
                       <a href="#" class="nav-link {{ request()->is('admin/*') ? 'active' : '' }}">
                           <i class="nav-icon fa-solid fa-warehouse"></i>
                           <p>
@@ -156,7 +156,7 @@
                           </li>
                       </ul>
                   </li>
-                  <li class="nav-item {{ request()->is('admin/pemeliharaan*') || request()->is('admin/tiket*') || request()->is('admin/proyek*') ? 'menu-open' : '' }}">
+                  <li class="nav-item {{ request()->is('admin/pemeliharaan*') || request()->is('admin/tiket*') || request()->is('admin/proyek*') ? 'menu-open' : 'menu-open' }}">
                       <a href="#" class="nav-link {{ request()->is('admin/pemeliharaan*') ? 'active' : '' }}">
                           <i class="nav-icon fa-solid fa-screwdriver-wrench"></i>
                           <p>
