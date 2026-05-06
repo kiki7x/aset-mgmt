@@ -25,8 +25,8 @@ class MaintenancesModel extends Model
         'period',
         'duedate',
         'created_by',
-        'started_at',
-        'completed_at',
+        'start',
+        'end',
         'timespent',
         'cost',
         'attachment_link',
@@ -49,10 +49,10 @@ class MaintenancesModel extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function ticketreply_id(): BelongsTo
-    {
-        return $this->belongsTo(TicketrepliesModel::class, 'ticketreply_id');
-    }
+    // public function ticketreply_id(): BelongsTo
+    // {
+    //     return $this->belongsTo(TicketrepliesModel::class, 'ticketreply_id');
+    // }
 
     /**
      * Accessor untuk mendapatkan URL publik dari file attachment.

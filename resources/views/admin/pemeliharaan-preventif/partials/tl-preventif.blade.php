@@ -1,8 +1,8 @@
-<div class="modal fade" id="preventif-add" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="preventif-add-label" aria-hidden="true">
+<div class="modal fade" id="tl-preventif" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="tl-preventif-label" aria-hidden="true">
     <div class="modal-dialog modal-l" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="preventif-add-label"></h5>
+                <h5 class="modal-title" id="tl-preventif-label"></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -47,8 +47,8 @@
                     {{-- Checkbox --}}
                     <div class="form-group">
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="customCheckbox1" name="name" value="" required>
-                            <label for="customCheckbox1" class="custom-control-label font-weight-normal">Saya telah menyelesaikan tugas pemeliharaan ini, periode pemeliharaan berikutnya akan diset pada : <span id="checkbox_future_period"></span> <span
+                            <input class="custom-control-input" type="checkbox" id="name" name="name" value="" required>
+                            <label for="name" class="custom-control-label font-weight-normal">Saya telah menyelesaikan tugas pemeliharaan ini, periode pemeliharaan berikutnya akan diset pada : <span class="badge badge-info" id="checkbox_future_period"></span> <span
                                     class="text-danger">*</span></label>
                         </div>
                     </div>
@@ -87,30 +87,32 @@
 </script>
 <script>
     // Fungsi tampilkan modal untuk menyelesaikan tugas preventif
-    function showModalAddPreventif(id) {
+    function showModalTlPreventif(eventData) {
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            // url: "{{ route('admin.pemeliharaan-preventif', ['id' => ':id']) }}".replace(':id', id),
-            url: `{{ url('/admin/pemeliharaan-preventif/preventif-add') }}/${id}`,
+            url: `{{ route('admin.pemeliharaan-preventif.preventif-add', ['id' => ':id']) }}`.replace(':id', eventData.id),
             type: "GET",
             dataType: "json",
             beforeSend: function() {
                 $('#formAddTugasPreventif')[0].reset();
                 $('#error-*').text('');
             },
-            success: function(data) {
+            success: function(maintenance_schedule) {
                 // $('#preventif-add').modal('show');
-                $('#preventif-add').modal('show').data('schedule-id', id); // <--- Simpan ID tugas di modal
+                alert(JSON.stringify(eventData)); // debug data yang diterima dari server
+                $('#tl-preventif').modal('show').data('maintenance-schedule', maintenance_schedule.id); // <--- Tampilkan modal
                 $('#formAddTugasPreventif')[0].reset();
-                $('#modalAddTugasPreventiflabel, .modal-title').html('Tindak lanjut Pemeliharaan Preventif untuk: <span class="badge badge-info">' + data.maintenance_schedule.name + '</span><span class="font-weight-bold"> ' + data.asset.tag + ' ' + data.asset.name +
-                    '</span> periode: <span class="badge badge-info">' + moment(data.maintenance_schedule.end).format('DD MMM YYYY') + '</span>');
-                $('#formAddTugasPreventif input[name="name"]').val(data.maintenance_schedule.name); // Set nilai checkbox sesuai nama tugas
-                $('#formAddTugasPreventif input[name="period"]').val(data.maintenance_schedule.end); // Set nilai periode
+                $('#tl-preventif-label, .modal-title').html('Tindak lanjut Pemeliharaan Preventif untuk: <span class="badge badge-info">' 
+                    + maintenance_schedule.name + '</span><span class="font-weight-bold"> ' 
+                    + maintenance_schedule.tag + ' ' + '<a href="#">' + maintenance_schedule.asset_name + '</a>' +
+                    '</span> periode: <span class="badge badge-info">' + moment(maintenance_schedule.end).format('DD MMM YYYY') + '</span>');
+                $('#formAddTugasPreventif input[name="name"]').val(maintenance_schedule.name); // Set nilai checkbox sesuai nama tugas
+                $('#formAddTugasPreventif input[name="period"]').val(maintenance_schedule.end); // Set nilai periode
 
-                const frequency = parseInt(data.maintenance_schedule.frequency);
-                const futureDate = new Date(data.maintenance_schedule.end);
+                const frequency = parseInt(maintenance_schedule.frequency);  
+                const futureDate = new Date(maintenance_schedule.end);
                 const originalDay = futureDate.getDate();
                 // tambahkan bulan
                 futureDate.setMonth(futureDate.getMonth() + frequency);
@@ -119,11 +121,11 @@
                     // Set ke tanggal 0 dari bulan hasil (ini akan memberikan hari terakhir bulan sebelumnya)
                     futureDate.setDate(0);
                 }
-                // $('#formAddTugasPreventif input[name="period"]').val(futureDate.toISOString().split('T')[0]); // Set nilai periode selanjutnya dalam format YYYY-MM-DD
                 $('#formAddTugasPreventif input[name="future_period"]').val(moment(futureDate).format('YYYY-MM-DD')); // Set nilai periode selanjutnya dalam format YYYY-MM-DD
-                $('#checkbox_future_period').html('<span class="badge badge-info">' + moment(futureDate).format('DD MMM YYYY') + '</span>');
+                $('#checkbox_future_period').html(moment(futureDate).format('DD MMM YYYY'));
 
                 $('#error-tugasPreventifName').text('');
+                // refresh fullcalendar
             },
             error: function(xhr) {
                 if (xhr.status === 422) {
@@ -145,7 +147,7 @@
     $('#formAddTugasPreventif').on('submit', function(e) {
         e.preventDefault();
         var formData = new FormData(this);
-        var scheduleId = $('#preventif-add').data('schedule-id'); // Ganti dengan ID jadwal yang sesuai
+        var scheduleId = $('#tl-preventif').data('maintenance-schedule'); // Ganti dengan ID jadwal yang sesuai
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -161,9 +163,8 @@
                     title: 'Berhasil',
                     text: 'Pemeliharaan preventif berhasil ditindak lanjuti.',
                 }).then(() => {
-                    $('#preventif-add').modal('hide');
-                    $('#tablePemeliharaanPreventif').DataTable().ajax.reload();
-                    $('#tableJadwalPemeliharaan').DataTable().ajax.reload();
+                    $('#tl-preventif').modal('hide');
+                    $('#calendar').calendar('refetchEvents'); // Refresh kalender untuk menampilkan perubahan
                 });
             },
             error: function(xhr) {

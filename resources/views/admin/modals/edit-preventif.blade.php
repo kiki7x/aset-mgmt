@@ -161,7 +161,6 @@
                     processData: false,
                     success: function(response) {
                         $('#tablePemeliharaanPreventif').DataTable().ajax.reload();
-
                         Swal.fire({
                             icon: 'success',
                             title: 'Berhasil',

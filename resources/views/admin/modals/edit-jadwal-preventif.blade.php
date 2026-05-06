@@ -9,21 +9,20 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="" id="formEditJadwalPemeliharaan">
+                <form id="formEditJadwalPemeliharaan">
                     @csrf
                     @method('PATCH')
                     {{-- Nama Barang & Hidden Input --}}
                     <div class="form-group">
                         <p class="h5">{{ $asset->tag }} - {{ $asset->name }}</p>
-                        <input type="text" class="form-control d-none" id="edit_id" name="id" value="">
-                        <input type="text" class="form-control d-none" id="asset_id" name="asset_id" value="{{ $asset->id }}">
-                        <input type="text" class="form-control d-none" id="status" name="status" value="aktif">
+                        <input type="text" class="form-control d-none" id="edit_id" name="edit_id" value="">
+                        {{-- <input type="text" class="form-control d-none" id="asset_id" name="asset_id" value="{{ $asset->id }}"> --}}
                     </div>
 
                     {{-- Klasifikasi Aset --}}
                     <div class="form-group">
-                        <label for="klasifikasi">Klasifikasi</label>
-                        <select class="form-control" id="edit_klasifikasi" name="klasifikasi" disabled>
+                        <label for="edit_klasifikasi">Klasifikasi</label>
+                        <select class="form-control" id="edit_klasifikasi" name="edit_klasifikasi" disabled>
                             <option value="1" @if ($asset->classification_id == 1) selected @endif>None</option>
                             <option value="2" @if ($asset->classification_id == 2) selected @endif>TIK</option>
                             <option value="3" @if ($asset->classification_id == 3) selected @endif>Kendaraan</option>
@@ -35,13 +34,13 @@
                     {{-- Nama Tugas --}}
                     <div class="form-group">
                         <label for="edit_name">Nama Tugas</label>
-                        <input type="text" name="name" id="edit_name" class="form-control" value="" readonly>
+                        <input type="text" name="edit_name" id="edit_name" class="form-control" value="" readonly>
                     </div>
 
                     {{-- Frekuensi Pemeliharaan --}}
                     <div class="form-group">
-                        <label for="frequency">Frekuensi Pemeliharaan: <span class="text-danger">*</span></label>
-                        <select class="form-control" id="edit_frequency" name="frequency">
+                        <label for="edit_frequency">Frekuensi Pemeliharaan: <span class="text-danger">*</span></label>
+                        <select class="form-control" id="edit_frequency" name="edit_frequency">
                             <option value="">-- Pilih --</option>
                             <option value="3">Setiap 3 bulan sekali</option>
                             <option value="4">Setiap 4 bulan sekali</option>
@@ -51,7 +50,7 @@
                         <span class="text-danger small" id="error-frequency"></span>
                     </div>
                     <!-- Tanggal Mulai -->
-                    <input type="hidden" id="edit_start" width="276" class="form-control" name="start" placeholder="yyyy-mm-dd" />
+                    <input type="hidden" id="edit_start" width="276" class="form-control" name="edit_start" placeholder="" />
                     {{-- <div class="form-group">
                         <label for="start">Waktu Pemeliharaan <span class="text-danger">*</span></label>
                         <div>
@@ -61,11 +60,26 @@
                     </div> --}}
                     <!-- Tanggal Selanjutnya -->
                     <div class="form-group">
-                        <label for="end">Waktu Pemeliharaan</label>
+                        <label for="edit_end">Waktu Pemeliharaan</label>
                         <div>
-                            <input id="edit_end" width="276" type="text" class="form-control" name="end" placeholder="DD MMM YYYY" />
+                            <input id="edit_end" width="276" type="text" class="form-control" name="edit_end" placeholder="DD MMM YYYY" />
                         </div>
-                        <span class="text-danger small" id="error-end"></span>
+                        <span class="text-danger small" id="error-edit_end"></span>
+                    </div>
+                    {{-- Reminder day --}}
+                    <div class="form-group">
+                        <label for="edit_reminder">Pengingat Sebelum Pemeliharaan (hari)</label>
+                        <input type="number" id="edit_reminder" name="edit_reminder" class="form-control" value="" min="0">
+                        <small class="form-text text-muted">Masukkan jumlah hari sebelum tanggal pemeliharaan untuk menerima pengingat.</small>
+                        <span class="text-danger small" id="error-reminder"></span>
+                    </div>
+                    {{-- Edit Status --}}
+                    <div class="form-group">
+                        <label for="edit_status">Status</label>
+                        <select class="form-control" id="edit_status" name="edit_status">
+                            <option value="Aktif">Aktif</option>
+                            <option value="Tidak Aktif">Tidak Aktif</option>
+                        </select>
                     </div>
             </div>
             <div class="modal-footer">
@@ -107,11 +121,10 @@
                 $('#edit_id').val(data.id);
                 $('#edit_name').val(data.name);
                 $('#edit_frequency').val(data.frequency);
-                // $('#edit_start').val(data.start ? new Date(data.start).toISOString().split('T')[0] : '');
-                // $('#edit_end').val(data.end ? new Date(data.end).toISOString().split('T')[0] : '');
-                $('#edit_start').val(data.end ? moment(data.end).format('DD-MM-YYYY') : '');
+                $('#edit_start').val(data.end ? moment(data.end).format('DD MMM YYYY') : '');
                 $('#edit_end').val(data.end ? moment(data.end).format('DD MMM YYYY') : '');
                 $('#edit_status').val(data.status);
+                $('#edit_reminder').val(data.reminder || '');
             }
         });
         $('#edit-schedule').modal('show');
@@ -189,27 +202,22 @@
                     $('#edit-schedule').modal('hide');
                 },
                 error: function(xhr) {
-                    if (xhr.responseJSON?.message === 'The name has already been taken.') {
-                        $('#error-name').text('');
-                        $('#error-frequency').text('');
-                        $('#error-start').text('');
-                        $('#error-end').text('');
+                    // Tampilkan pesan error jika permintaan gagal
+                    if (xhr.status === 422) {
+                        const errors = xhr.responseJSON.errors;
+                        $('#error-frequency').text(errors.edit_frequency ? errors.edit_frequency[0] : '');
+                        $('#error-start').text(errors.edit_start ? errors.edit_start[0] : '');
+                        $('#error-end').text(errors.edit_end ? errors.edit_end[0] : '');
+                        $('#error-reminder').text(errors.edit_reminder ? errors.edit_reminder[0] : '');
+                    } else if (xhr.status === 500) {
+                        // get message error from response
+                        const errorMessage = xhr.responseJSON.message || 'Terjadi kesalahan pada server.';
                         Swal.fire({
-                            icon: 'info',
+                            icon: 'error',
                             title: 'Gagal',
-                            text: 'Jadwal pemeliharaan ini sudah ada.',
+                            text: errorMessage,
                         });
-                    } else if (xhr.responseJSON?.errors) {
-                        $.each(xhr.responseJSON.errors, function(key, value) {
-                            $(`#error-${key}`).text(value[0]);
-                        });
-                        // Swal.fire({
-                        //     icon: 'warning',
-                        //     title: 'Gagal',
-                        //     text: 'Periksa kembali data yang dimasukkan.',
-                        // });
                     }
-                    return false;
                 }
             });
         });

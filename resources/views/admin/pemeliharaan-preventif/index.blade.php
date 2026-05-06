@@ -36,7 +36,8 @@
 
     {{-- Modal Detail Event --}}
     @include('admin.pemeliharaan-preventif.partials.event-detail')
-    @include('admin.pemeliharaan-preventif.partials.add-preventif')
+    @include('admin.pemeliharaan-preventif.partials.tl-preventif')
+    @include('admin.pemeliharaan-preventif.partials.add-jadwal')
 
     @push('script-foot')
         <script src="{{ asset('/assets/plugins/fullcalendar-6.1.20/dist/index.global.min.js') }}"></script>
@@ -86,7 +87,10 @@
                     },
                     // Interaction plugin memungkinkan event ini
                     dateClick: function(info) {
-                        alert('Tanggal diklik: ' + info.dateStr);
+                        const clickedDate = info.dateStr; // Format tanggal yang diklik (YYYY-MM-DD)
+                        // panggil event membuka modal add preventif dengan data tanggal yang diklik
+                        // alert('Tanggal diklik: ' + info.dateStr); // debug tanggal yang diterima di event dateClick
+                        showModalAddJadwal(clickedDate);
                     },
 
                     // Interaksi klik event untuk menampilkan modal detail dalam modal
@@ -102,36 +106,39 @@
                         // KONDISI A: Jika is_event bernilai true (Tampilkan Detail)
                         if (isEvent === true || isEvent === 'true' || isEvent == 1) {
                             // bungkus data yang diperlukan untuk modal add preventif dalam sebuah objek
-                            const eventData = {
-                                id: id,
-                                title: eventObj.title,
-                                description: description,
-                                start: eventObj.start,
-                                notes: eventObj.extendedProps.notes,
-                                // tambahkan properti lain yang diperlukan untuk modal add preventif
-                            };
+                            // const eventData = {
+                            //     id: id,
+                            //     title: info.event.title,
+                            //     description: description,
+                            //     start: eventObj.start,
+                            //     end: eventObj.end,
+                            //     // tambahkan properti lain yang diperlukan untuk modal add preventif
+                            //     notes: eventObj.extendedProps.notes,
+                            //     tag: eventObj.extendedProps.tag,
+                            //     frequency: eventObj.extendedProps.frequency,
+                            //     color: eventObj.backgroundColor,
+                            // };
+
+                            // alert(JSON.stringify(eventObj)); // debug data yang akan diterima di modal add preventif
                             // panggil function showModalAddPreventif dengan data yang diterima
-                            showModalAddPreventif(id, eventData);
+                            showModalTlPreventif(eventObj);
                         } else {
-                            // KONDISI B: Jika is_event bernilai false (Tampilkan History)
-                            // Isi konten modal detail secara dinamis
-                            // $('#eventTitle').text(eventObj.title);
-                            // $('#eventDescription').text(description);
-                            // $('#eventTime').text(eventObj.start.toLocaleString());
-                            // $('#eventTime').text(moment(eventObj.start).format('DD MMM YYYY')); // Format waktu menggunakan moment.js
-                            // $('#eventNotes').text(eventObj.extendedProps.notes || 'Tidak ada catatan'); // Tampilkan catatan jika ada, atau teks default jika tidak ada
                             historyData = {
                                 title: info.event.title,
                                 description: description,
                                 start: eventObj.start,
                                 // extendedProps
                                 attachment_link: eventObj.extendedProps.attachment_link,
+                                id_asset: eventObj.extendedProps.id_asset,
+                                classification: eventObj.extendedProps.classification,
                                 cost: eventObj.extendedProps.cost,
                                 notes: eventObj.extendedProps.notes,
                                 asset: eventObj.extendedProps.asset,
                                 status: eventObj.extendedProps.status,
                             };
+                            // alert(JSON.stringify(historyData)); // debug data yang akan ditampilkan di modal history
                             // Tampilkan modal event-detail
+                            // alert(JSON.stringify(historyData)); // debug data yang akan diterima di modal event-detail
                             showModalEventDetail(historyData);
                         }
                         // // 2. Isi konten modal secara dinamis

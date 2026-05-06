@@ -29,12 +29,14 @@ class PemeliharaanPreventifController extends Controller
                     'title' => $schedule->name,
                     'start' => (string) $schedule->start,
                     'end' => (string) $schedule->end,
-                    'description' => "Pemeliharaan untuk aset: " . $schedule->asset->tag . ' - ' . $schedule->asset->name,
+                    'description' => $schedule->asset->name,
                     'allDay' => true,
                     'color' => '#007bff', // Warna biru untuk jadwal pemeliharaan
                     //extendedProps tambahan untuk menampilkan tag
                     'tag' => $schedule->asset->tag,
                     'is_event' => true,
+                    'frequency' => $schedule->frequency,
+                    'period' => $schedule->start, // Tambahkan properti period untuk menyimpan tanggal pemeliharaan
                 ];
             });
         // dd($events);
@@ -54,25 +56,63 @@ class PemeliharaanPreventifController extends Controller
                     'color' => '#28a745', // Warna hijau untuk riwayat (history)
                     //extendedProps tambahan untuk menampilkan tag
                     'tag' => $history->maintenance_schedule->asset->tag,
+                    'id_asset' => $history->maintenance_schedule->asset_id,
                     'attachment_link' => $history->attachment_link,
                     'cost' => $history->cost,
                     'status' => $history->status,
                     'notes' => $history->notes,
+                    'classification' =>
+                        $history->maintenance_schedule->asset->classification->name == 'TIK' ? 'asettik' :
+                        ($history->maintenance_schedule->asset->classification->name == 'Kendaraan' || 'Mesin/Elektronik' ? 'asetrt' : ''),
                 ];
             });
 
         // Gabungkan kedua dataset
         $events = $events->concat($histories);
+
         return response()->json($events);
         // return response()->json($schedules_backup);
     }
 
-    public function preventifAdd(Request $request, $id): JsonResponse
+    public function getCategories(Request $request, $id): JsonResponse
     {
-        $maintenance_schedule = \App\Models\Maintenances_scheduleModel::findOrFail($id);
-        $asset = \App\Models\AssetsModel::findOrFail($maintenance_schedule->asset_id);
-        Log::info("Loading Add Preventif for Maintenance Schedule Name: $maintenance_schedule->name (ID: $id)");
-        return response()->json(['maintenance_schedule' => $maintenance_schedule, 'asset' => $asset]);
+        $categories = \App\Models\AssetcategoriesModel::where('classification_id', $id)->get();
+        return response()->json($categories);
+    }
+
+    public function getAssets(Request $request, $id): JsonResponse
+    {
+        $assets = \App\Models\AssetsModel::where('category_id', $id)->get();
+        return response()->json($assets);
+    }
+
+    public function scheduleAdd(Request $request)
+    {
+        //
+    }
+
+    public function preventifAdd(Request $request, $id): JsonResponse // $date adalah tanggal yang dikirim dari frontend saat user klik jadwal pemeliharaan
+    {
+        $maintenance_schedule = \App\Models\Maintenances_scheduleModel::findOrfail($id);
+        if (!$maintenance_schedule) {
+            return response()->json([
+                'message' => 'Jadwal pemeliharaan tidak ditemukan untuk tanggal tersebut.',
+            ], 404);
+        } else {
+            $data = [
+                'id' => $maintenance_schedule->id,
+                'name' => $maintenance_schedule->name,
+                'start' => (string) $maintenance_schedule->start,
+                'end' => (string) $maintenance_schedule->end,
+                'tag' => $maintenance_schedule->asset->tag,
+                'frequency' => $maintenance_schedule->frequency,
+                'asset_id' => $maintenance_schedule->asset->id,
+                'asset_name' => $maintenance_schedule->asset->name,
+            ];
+            return response()->json($data);
+            ;
+        }
+        \Log::info("Loading Preventif Add for date: $maintenance_schedule->start, Maintenance Schedule ID: $id");
     }
 
     public function preventifStore(Request $request, $id): JsonResponse

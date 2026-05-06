@@ -112,24 +112,25 @@ class PemeliharaanController extends Controller
     public function scheduleUpdate(Request $request, $id): JsonResponse
     {
         $maintenance_schedule = \App\Models\Maintenances_scheduleModel::findOrFail($id);
-        $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('maintenances_schedule')->ignore($maintenance_schedule->id)->where(function ($query) use ($maintenance_schedule) {
-                    return $query->where('asset_id', $maintenance_schedule->asset_id);
-                }),
-            ],
-        ]);
+        // $request->validate([
+        //     'name' => [
+        //         'required',
+        //         'string',
+        //         'max:255',
+        //         Rule::unique('maintenances_schedule')->ignore($maintenance_schedule->id)->where(function ($query) use ($maintenance_schedule) {
+        //             return $query->where('asset_id', $maintenance_schedule->asset_id);
+        //         }),
+        //     ],
+        // ]);
+        // \Log::info($request->all());
         try {
             $data = [
-                'name' => $request->input('name'),
-                'frequency' => $request->input('frequency'),
-                'start' => Carbon::parse($request->input('start'))->format('Y-m-d H:i:s'), // Set waktu ke awal hari
-                'end' => Carbon::parse($request->input('end'))->format('Y-m-d H:i:s'), // Default end sama dengan start, akan dihitung ulang jika frequency dan start valid
-                'reminder' => (int) $request->input('reminder'),
-                'status' => $request->input('status'),
+                'name' => $request->input('edit_name'),
+                'frequency' => $request->input('edit_frequency'),
+                'start' => Carbon::parse($request->input('edit_start'))->format('Y-m-d H:i:s'), // format agar dapat diterima format database
+                'end' => Carbon::parse($request->input('edit_end'))->format('Y-m-d H:i:s'), // Default end sama dengan start, akan dihitung ulang jika frequency dan start valid
+                'reminder' => $request->input('edit_reminder'),
+                'status' => $request->input('edit_status'),
             ];
             $maintenance_schedule->update($data);
             return response()->json([

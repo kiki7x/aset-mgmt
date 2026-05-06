@@ -184,12 +184,12 @@
                                   <p>Tiket</p>
                               </a>
                           </li>
-                          <li class="nav-item" data-toggle="tooltip" title="coming soon..." data-placement="top">
+                          {{-- <li class="nav-item" data-toggle="tooltip" title="coming soon..." data-placement="top">
                               <a href="{{ route('admin.proyek') }}" class="nav-link {{ request()->is('admin/proyek') ? 'active' : '' }}">
                                   <i class="nav-icon fa-solid fa-thumbtack"></i>
                                   <p>Proyek</p>
                               </a>
-                          </li>
+                          </li> --}}
                       </ul>
                   </li>
                   <li class="nav-item" data-toggle="tooltip" title="coming soon..." data-placement="top">

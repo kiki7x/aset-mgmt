@@ -98,8 +98,11 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering'])->group(function () {
         Route::get('/pemeliharaan-preventif', [App\Http\Controllers\PemeliharaanPreventifController::class, 'index'])->name('admin.pemeliharaan-preventif');
         Route::get('/pemeliharaan-preventif/get-maintenance-schedules', [App\Http\Controllers\PemeliharaanPreventifController::class, 'getMaintenanceSchedules'])->name('admin.pemeliharaan-preventif.get-maintenance-schedules');
+        Route::get('/pemeliharaan-preventif/get-categories/{id}', [App\Http\Controllers\PemeliharaanPreventifController::class, 'getCategories'])->name('admin.pemeliharaan-preventif.get-categories');
+        Route::get('/pemeliharaan-preventif/get-assets/{id}', [App\Http\Controllers\PemeliharaanPreventifController::class, 'getAssets'])->name('admin.pemeliharaan-preventif.get-assets');
         Route::get('/pemeliharaan-preventif/preventif-add/{id}', [App\Http\Controllers\PemeliharaanPreventifController::class, 'preventifAdd'])->name('admin.pemeliharaan-preventif.preventif-add');
         Route::post('/pemeliharaan-preventif/preventif-store/{id}', [App\Http\Controllers\PemeliharaanPreventifController::class, 'preventifStore'])->name('admin.pemeliharaan-preventif.preventif-store');
+        Route::post('/pemeliharaan-preventif/schedule-store', [App\Http\Controllers\PemeliharaanPreventifController::class, 'scheduleStore'])->name('admin.pemeliharaan-preventif.scheduleStore');
     });
 
     // Route Setting Atribut / Master Data

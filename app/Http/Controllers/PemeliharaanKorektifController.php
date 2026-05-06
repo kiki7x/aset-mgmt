@@ -164,7 +164,7 @@ class PemeliharaanKorektifController extends Controller
         $maintenance->update([
             'status' => $request->status,
             'notes' => $request->notes,
-            'started_at' => now()
+            'start' => now()
         ]);
 
         return response()->json(['message' => 'Status pemeliharaan berhasil diubah.']);
