@@ -195,6 +195,18 @@
         </div>
     @endif
 
+    @if(!empty($issuetype))
+        <div class="report-info">
+            <strong>Filter jenis:</strong> {{ $issuetype }}
+        </div>
+    @endif
+
+    @if(!empty($department))
+        <div class="report-info">
+            <strong>Filter bidang:</strong> {{ $department }}
+        </div>
+    @endif
+
     <table>
         <thead>
             <tr>

@@ -14,6 +14,24 @@
         </button>
     </div>
     <div class="card-body">
+        <div class="row g-2 mb-3 align-items-end">
+            <div class="col-12 col-md-3">
+                <label for="filter_issuetype" class="form-label mb-1">Filter Jenis</label>
+                <select id="filter_issuetype" class="form-control form-control-sm">
+                    <option value="">Semua Jenis</option>
+                    <option value="Keluhan">Keluhan</option>
+                    <option value="Permintaan">Permintaan</option>
+                </select>
+            </div>
+            <div class="col-12 col-md-3">
+                <label for="filter_department" class="form-label mb-1">Filter Bidang</label>
+                <select id="filter_department" class="form-control form-control-sm">
+                    <option value="">Semua Bidang</option>
+                    <option value="TIK">TIK</option>
+                    <option value="Rumah Tangga">Rumah Tangga</option>
+                </select>
+            </div>
+        </div>
         <div class="table-responsive">
             <table id="tablePemeliharaan" class="table table-bordered table-striped table-hover table-sm">
                 <thead>
@@ -434,10 +452,30 @@
         }
 
         let search = tiketTable.search() || '';
+        let issuetype = $('#filter_issuetype').val() || '';
+        let department = $('#filter_department').val() || '';
         let url = "{{ route('servicedesk.print') }}";
 
         if (search) {
             url += '?search=' + encodeURIComponent(search);
+        }
+
+        let queryParts = [];
+
+        if (search) {
+            queryParts.push('search=' + encodeURIComponent(search));
+        }
+
+        if (issuetype) {
+            queryParts.push('issuetype=' + encodeURIComponent(issuetype));
+        }
+
+        if (department) {
+            queryParts.push('department=' + encodeURIComponent(department));
+        }
+
+        if (queryParts.length) {
+            url = "{{ route('servicedesk.print') }}" + '?' + queryParts.join('&');
         }
 
         window.open(url, '_blank');
@@ -450,7 +488,13 @@
             responsive: true,
             pageLength: 10,
             lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-            ajax: "{{ route('servicedesk.data') }}",
+            ajax: {
+                url: "{{ route('servicedesk.data') }}",
+                data: function(d) {
+                    d.issuetype = $('#filter_issuetype').val();
+                    d.department = $('#filter_department').val();
+                }
+            },
             columns: [{
                     data: 'ticket',
                     name: 'ticket',
@@ -520,6 +564,10 @@
                     }
                 }
             ]
+        });
+
+        $('#filter_issuetype, #filter_department').on('change', function() {
+            tiketTable.ajax.reload();
         });
 
         maybeOpenTicketOnLoad();

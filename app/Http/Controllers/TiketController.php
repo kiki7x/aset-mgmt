@@ -29,6 +29,14 @@ class TiketController extends Controller
 
         $tickets = TicketFront::latest();
 
+        if (request()->filled('issuetype')) {
+            $tickets->where('issuetype', request('issuetype'));
+        }
+
+        if (request()->filled('department')) {
+            $tickets->where('department', request('department'));
+        }
+
         return DataTables::of($tickets)
 
             ->addColumn('ticket', function ($row) {
@@ -101,7 +109,17 @@ class TiketController extends Controller
     public function print(Request $request)
     {
         $search = trim($request->query('search', ''));
+        $issuetype = trim($request->query('issuetype', ''));
+        $department = trim($request->query('department', ''));
         $tickets = TicketFront::latest();
+
+        if ($issuetype !== '') {
+            $tickets->where('issuetype', $issuetype);
+        }
+
+        if ($department !== '') {
+            $tickets->where('department', $department);
+        }
 
         if ($search !== '') {
             $tickets->where(function ($query) use ($search) {
@@ -120,6 +138,8 @@ class TiketController extends Controller
         return view('admin.tiket.print', [
             'tickets' => $tickets->get(),
             'search' => $search,
+            'issuetype' => $issuetype,
+            'department' => $department,
         ]);
     }
 
