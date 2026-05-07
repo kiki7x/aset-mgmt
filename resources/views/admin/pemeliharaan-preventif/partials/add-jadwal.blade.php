@@ -172,10 +172,9 @@
                     type: "GET",
                     success: function(response) {
                         assetSelect.empty().append('<option value="">-- Pilih --</option>'); // Reset options
-                        // debug data response
                         if (response.length > 0) {
                             response.forEach(function(asset) {
-                                assetSelect.append('<option value="' + asset.tag + '">' + asset.name + '</option>');
+                                assetSelect.append('<option value="' + asset.tag + '">' + asset.tag + ' - ' + asset.name + '</option>');
                             });
                             assetWrapper.show();
                         } else {
@@ -190,6 +189,32 @@
             } else {
                 assetWrapper.hide();
                 assetSelect.empty().append('<option value="">-- Pilih --</option>');
+            }
+        });
+
+        $('#asset-select').on('change', function() {
+            const assetTag = $(this).val();
+            const jenisTugasWrapper = $('#jenis-tugas');
+            const jenisTugasSelect = $('#jenis-tugas-select');
+            jenisTugasSelect.empty().append('<option value="">-- Pilih --</option>'); // Reset options
+
+            if (assetTag) {
+                // Tampilkan pilihan jenis tugas berdasarkan klasifikasi
+                const klasifikasi = $('#klasifikasi-select').val();
+                if (klasifikasi === '3') { // Kendaraan
+                    jenisTugasSelect.append('<option value="Pajak STNK">Pajak STNK</option>');
+                    jenisTugasSelect.append('<option value="Service Berkala">Service Berkala</option>');
+                } else if (klasifikasi === '4') { // TIK dan Mesin/Elektronik
+                    jenisTugasSelect.append('<option value="Cek Kondisi & Service Berkala">Cek Kondisi & Service Berkala</option>');
+                } else if (klasifikasi === '2') {
+                    jenisTugasSelect.append('<option value="Cek Kondisi & Service Berkala">Cek Kondisi & Service Berkala</option>');
+                } else {
+                    jenisTugasSelect.append('<option value="Cek Kondisi & Service Berkala">Cek Kondisi & Service Berkala</option>');
+                }
+                jenisTugasWrapper.show();
+            } else {
+                jenisTugasWrapper.hide();
+                jenisTugasSelect.empty().append('<option value="">-- Pilih --</option>');
             }
         });
 
