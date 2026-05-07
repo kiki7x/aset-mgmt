@@ -106,6 +106,50 @@
     </div>{{-- /Rangkum Aset --}}
 
     <div class="row">
+        <div class="col-md-3 col-lg-3 col-6">
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <h3>{{ $totalAssetsMaintained }}</h3>
+                    <p>Aset Sudah Dipelihara</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <a href="#" class="small-box-footer">
+                    Detail <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div><!-- ./col -->
+        <div class="col-md-3 col-lg-3 col-6">
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3>{{ $totalAssetsPendingMaintenance }}</h3>
+                    <p>Aset Belum Dipelihara</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <a href="#" class="small-box-footer">
+                    Detail <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div><!-- ./col -->
+        <div class="col-md-6">
+            <div class="card card-default">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-chart-bar"></i>
+                        Status Pemeliharaan Aset
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <canvas id="maintenanceStatusChart" style="min-height: 250px; height: 250px; max-width: 100%;"></canvas>
+                </div>
+            </div>
+        </div><!-- ./col -->
+    </div>
+
+    <div class="row">
         <div class="col-md-6">
             <div class="card card-default">
                 <div class="card-header">
@@ -220,3 +264,39 @@
 
     </div>
 @endsection
+
+@push('script-foot')
+<script src="{{ asset('assets/plugins/chart.js/Chart.min.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var ctx = document.getElementById('maintenanceStatusChart');
+        if (!ctx) return;
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Aset Terpelihara', 'Menunggu Pemeliharaan'],
+                datasets: [{
+                    label: 'Jumlah Aset',
+                    data: [{{ $totalAssetsMaintained }}, {{ $totalAssetsPendingMaintenance }}],
+                    backgroundColor: ['#28a745', '#ffc107'],
+                    borderColor: ['#28a745', '#ffc107'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+@endpush
