@@ -16,7 +16,9 @@ class AdminController extends Controller
         $totalGedung = \App\Models\LocationsModel::count();
         $totalTickets = \App\Models\TicketFront::count();
         $latestTickets = \App\Models\TicketFront::orderBy('created_at', 'desc')->take(5)->get();
-        return view('admin.dashboard', compact('totalAssetTik', 'totalAssetRt', 'totalGedung', 'totalTickets', 'latestTickets'));
+        $totalAssetsMaintained = \App\Models\MaintenancesModel::where('status', 'Selesai')->distinct('asset_id')->count('asset_id');
+        $totalAssetsPendingMaintenance = \App\Models\AssetsModel::count() - $totalAssetsMaintained;
+        return view('admin.dashboard', compact('totalAssetTik', 'totalAssetRt', 'totalGedung', 'totalTickets', 'latestTickets', 'totalAssetsMaintained', 'totalAssetsPendingMaintenance'));
         
     }
 
