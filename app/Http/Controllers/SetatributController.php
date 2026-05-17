@@ -432,30 +432,6 @@ class SetatributController extends Controller
 
     public function getLokasi(Request $request): JsonResponse
     {
-        $lokasis = \App\Models\BuildingsModel::get();
-        return DataTables::of($lokasis)
-            ->addIndexColumn()
-            ->addColumn('ruangan', function ($lokasis) {
-                return $lokasis->locations->pluck('name')->implode(', ');
-            })
-            ->addColumn('action', function ($lokasis) {
-                return
-                    '
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" title="More..."></button>
-                        <ul class="dropdown-menu dropdown-menu-right">
-                            <li><span class="mx-3" id="edit-lokasi" data-id="' . $lokasis->id . '" data-name="' . e($lokasis->name) . '" style="cursor: pointer; color: #007bff;">Edit</span></li>
-                            <li><span class="mx-3" id="delete-lokasi" data-id="' . $lokasis->id . '" data-name="' . e($lokasis->name) . '" style="cursor: pointer; color: #007bff;">Delete</span></li>
-                        </ul>
-                    </div>
-                    '
-                    ;
-            })
-            ->make();
-    }
-
-    public function getLokasiv2(Request $request): JsonResponse
-    {
         $lokasis = \App\Models\LocationsModel::with('building')->get();
         return DataTables::of($lokasis)
             ->addIndexColumn()
@@ -496,11 +472,22 @@ class SetatributController extends Controller
         $lokasi = \App\Models\LocationsModel::findOrFail($id);
         $data = $request->validate([
             'name' => 'required|unique:locations,name,' . $lokasi->id . '|string|max:255',
-            'color' => 'required|string|max:7'
+            'floor' => 'required|string|max:255',
         ]);
         $lokasi->update($data);
 
         return response()->json(['message' => 'Lokasi berhasil diperbarui.']);
+    }
+
+    public function updateBuilding(Request $request, $id): JsonResponse
+    {
+        $building = \App\Models\BuildingsModel::findOrFail($id);
+        $data = $request->validate([
+            'name' => 'required|unique:buildings,name,' . $building->id . '|string|max:255',
+        ]);
+        $building->update($data);
+
+        return response()->json(['message' => 'Nama gedung berhasil diperbarui.']);
     }
 
     public function deleteLokasi($id): JsonResponse

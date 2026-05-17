@@ -28,6 +28,7 @@ class AssetsModel extends Model
         'name',
         'serial',
         'notes',
+        'image',
         'location_id',
         'customfields',
         'qrvalue',

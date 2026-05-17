@@ -101,7 +101,7 @@
             },
             success: function(maintenance_schedule) {
                 // $('#preventif-add').modal('show');
-                alert(JSON.stringify(eventData)); // debug data yang diterima dari server
+                // alert(JSON.stringify(eventData)); // debug data yang diterima dari server
                 $('#tl-preventif').modal('show').data('maintenance-schedule', maintenance_schedule.id); // <--- Tampilkan modal
                 $('#formAddTugasPreventif')[0].reset();
                 $('#tl-preventif-label, .modal-title').html('Tindak lanjut Pemeliharaan Preventif untuk: <span class="badge badge-info">' 
@@ -164,7 +164,12 @@
                     text: 'Pemeliharaan preventif berhasil ditindak lanjuti.',
                 }).then(() => {
                     $('#tl-preventif').modal('hide');
-                    $('#calendar').calendar('refetchEvents'); // Refresh kalender untuk menampilkan perubahan
+                    if (window.calendar) {
+                        window.calendar.refetchEvents();
+                    }
+                    if (window.completedPreventiveTable) {
+                        window.completedPreventiveTable.ajax.reload(null, false);
+                    }
                 });
             },
             error: function(xhr) {

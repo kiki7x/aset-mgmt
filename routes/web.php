@@ -105,6 +105,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::get('/pemeliharaan-preventif/preventif-add/{id}', [App\Http\Controllers\PemeliharaanPreventifController::class, 'preventifAdd'])->name('admin.pemeliharaan-preventif.preventif-add');
         Route::post('/pemeliharaan-preventif/preventif-store/{id}', [App\Http\Controllers\PemeliharaanPreventifController::class, 'preventifStore'])->name('admin.pemeliharaan-preventif.preventif-store');
         Route::post('/pemeliharaan-preventif/schedule-store', [App\Http\Controllers\PemeliharaanPreventifController::class, 'scheduleStore'])->name('admin.pemeliharaan-preventif.scheduleStore');
+        Route::get('/pemeliharaan-preventif/completed-data-table', [App\Http\Controllers\PemeliharaanPreventifController::class, 'completedDataTable'])->name('admin.pemeliharaan-preventif.completed-data-table');
     });
 
     // Route Setting Atribut / Master Data
@@ -155,10 +156,10 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         // Route Setting Lokasi
         Route::get('/setting_attr/lokasi', [App\Http\Controllers\SetatributController::class, 'lokasi'])->name('admin.setting_attr.lokasi');
         Route::get('/setting_attr/lokasi/get_lokasi', [App\Http\Controllers\SetatributController::class, 'getLokasi'])->name('admin.setting_attr.lokasi.get_lokasi');
-        Route::get('/setting_attr/lokasi/get_lokasiv2', [App\Http\Controllers\SetatributController::class, 'getLokasiv2'])->name('admin.setting_attr.lokasi.get_lokasiv2');
         Route::post('/setting_attr/lokasi/store', [App\Http\Controllers\SetatributController::class, 'storeLokasi'])->name('admin.setting_attr.lokasi.store');
         Route::get('/setting_attr/lokasi/edit/{id}', [App\Http\Controllers\SetatributController::class, 'editLokasi'])->name('admin.setting_attr.lokasi.edit');
         Route::patch('/setting_attr/lokasi/update/{id}', [App\Http\Controllers\SetatributController::class, 'updateLokasi'])->name('admin.setting_attr.lokasi.update');
+        Route::patch('/setting_attr/lokasi/building/update/{id}', [App\Http\Controllers\SetatributController::class, 'updateBuilding'])->name('admin.setting_attr.lokasi.building.update');
         Route::delete('/setting_attr/lokasi/delete/{id}', [App\Http\Controllers\SetatributController::class, 'deleteLokasi'])->name('admin.setting_attr.lokasi.delete');
     });
 

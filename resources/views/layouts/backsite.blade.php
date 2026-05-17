@@ -90,7 +90,7 @@
     <script src="{{ asset('assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
     {{-- Moment.js --}}
     <script src="{{ asset('assets/plugins/moment/moment.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/moment/locale/id.js') }}"></script>
+    <script src="{{ asset('assets/plugins/moment/locales.min.js') }}"></script>
     <!-- InputMask -->
     <script src="{{ asset('assets/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
     <!-- overlayScrollbars -->

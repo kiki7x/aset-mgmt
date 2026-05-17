@@ -17,9 +17,9 @@
                 <div class="card">
                     <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                         <h3 class="card-title">Kalender Pemeliharaan</h3>
-                        <button type="button" class="btn btn-outline-primary" style="margin-left: auto;">
+                        {{-- <button type="button" class="btn btn-outline-primary" style="margin-left: auto;">
                             <i class="fas fa-plus"></i>
-                        </button>
+                        </button> --}}
                     </div>
                     <div class="card-body p-0">
                         <!-- THE CALENDAR -->
@@ -32,6 +32,36 @@
             <!-- /.col -->
         </div>
         <!-- /.row -->
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3 class="card-title">Pemeliharaan Preventif Selesai</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="completedPreventiveTable" class="table table-bordered table-hover" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Periode</th>
+                                        <th>Nama Pemeliharaan</th>
+                                        <th>Tag Aset</th>
+                                        <th>Nama Aset</th>
+                                        <th>PIC</th>
+                                        <th>Biaya</th>
+                                        <th>Status</th>
+                                        <th>Catatan</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div><!-- /.container-fluid -->
 
     {{-- Modal Detail Event --}}
@@ -45,10 +75,10 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 var calendarEl = document.getElementById('calendar');
-                var calendar = new FullCalendar.Calendar(calendarEl, {
+                window.calendar = new FullCalendar.Calendar(calendarEl, {
                     locale: 'id', // Set locale ke Bahasa Indonesia
                     initialView: 'dayGridMonth',
-                    editable: true, // Memungkinkan drag-and-drop (butuh interactionPlugin)
+                    // editable: true, // Memungkinkan drag-and-drop (butuh interactionPlugin)
                     selectable: true,
                     displayEventTime: true,
                     displayEventEnd: true,
@@ -165,7 +195,51 @@
                         });
                     }
                 });
-                calendar.render();
+                window.calendar.render();
+
+                if ($.fn.DataTable) {
+                    window.completedPreventiveTable = $('#completedPreventiveTable').DataTable({
+                        processing: true,
+                        serverSide: false,
+                        responsive: true,
+                        ajax: {
+                            url: '{{ route('admin.pemeliharaan-preventif.completed-data-table') }}',
+                            dataSrc: ''
+                        },
+                        columns: [
+                            {
+                                data: null,
+                                render: function (data, type, row, meta) {
+                                    return meta.row + 1;
+                                },
+                                className: 'text-center',
+                                orderable: false,
+                                width: '40px'
+                            },
+                            { data: 'period' },
+                            { data: 'maintenance_name' },
+                            { data: 'asset_tag' },
+                            { data: 'asset_name' },
+                            { data: 'pic_name' },
+                            { data: 'cost' },
+                            { data: 'status' },
+                            { data: 'notes' }
+                        ],
+                        order: [[5, 'desc']],
+                        language: {
+                            emptyTable: 'Tidak ada data pemeliharaan selesai.',
+                            processing: 'Memuat...',
+                            search: 'Cari:',
+                            lengthMenu: 'Tampilkan _MENU_ baris',
+                            info: 'Menampilkan _START_ sampai _END_ dari _TOTAL_ entri',
+                            infoEmpty: 'Menampilkan 0 sampai 0 dari 0 entri',
+                            paginate: {
+                                previous: 'Sebelumnya',
+                                next: 'Berikutnya'
+                            }
+                        }
+                    });
+                }
             });
         </script>
         <style>

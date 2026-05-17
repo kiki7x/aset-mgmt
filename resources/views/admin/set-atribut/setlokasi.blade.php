@@ -13,45 +13,94 @@
 @endpush
 
 @section('content')
-    <div class="row">
+    <div class="row mt-4">
         <div class="col-md-12">
             <div class="card shadow">
                 <div class="card-header">
-                    <h3 class="card-title"><i class="fa-solid fa-database"></i> Daftar Lokasi</h3>
+                    <h3 class="card-title"><i class="fa-solid fa-building"></i> Daftar Gedung & Ruangan</h3>
                     <div class="card-tools">
-                        <a href="{{ route('admin.setting_attr') }}" class="btn btn-secondary mr-2" data-toggle="tooltip" data-placement="top" title="" data-original-title="Kembali ke Setting Atribut">
-                            <i class="fas fa-arrow-left"></i>
-                            Kembali
-                        </a>
-                        <button type="button" id="btnOpenCreateModal" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Tambah Data">
+                        <button type="button" id="btnRefreshBuildingRooms" class="btn btn-outline-secondary btn-sm" data-toggle="tooltip" data-placement="top" title="Refresh daftar gedung/ruangan">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                        <button type="button" id="btnOpenTambahGedung" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="Tambah Data">
                             <i class="fas fa-plus"></i>
                         </button>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <table id="tableLokasi" class="table table-bordered table-striped table-hover table-sm">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Nama Gedung</th>
-                                    <th>Nama Ruangan</th>
-                                    <th>Lantai</th>
-                                    <th>Timestamp</th>
-                                    <th>Opsi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
+                    <div id="buildingRoomsAccordion" class="accordion"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- Modal Create --}}
-    <div id="createModal" title="Tambah Gedung" data-backdrop="static" class="modal fade" tabindex="-1" role="dialog">
+    {{-- Modal Edit Building --}}
+    <div id="editBuildingModal" title="Edit Gedung" data-backdrop="static" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Gedung</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="" method="POST" id="formEditGedung">
+                    @csrf
+                    @method('PATCH')
+                    <input type="hidden" id="edit_building_id" name="building_id" />
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="edit_building_name">Nama Gedung</label>
+                            <input type="text" class="form-control" id="edit_building_name" name="name" required>
+                        </div>
+                        <span id="error-edit_building_name" class="text-danger small"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary">Perbarui</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal Edit Ruangan --}}
+    <div id="editRuanganModal" title="Edit Ruangan" data-backdrop="static" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Ruangan</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="" method="POST" id="formEditRuangan">
+                    @csrf
+                    @method('PATCH')
+                    <input type="hidden" id="edit_room_id" name="room_id" />
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="edit_room_name">Nama Ruangan</label>
+                            <input type="text" class="form-control" id="edit_room_name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_room_floor">Lantai</label>
+                            <input type="text" class="form-control" id="edit_room_floor" name="floor" required>
+                        </div>
+                        <span id="error-edit_room_name" class="text-danger small"></span>
+                        <span id="error-edit_room_floor" class="text-danger small"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary">Perbarui</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal Tambah Gedung --}}
+    <div id="modalTambahGedung" title="Tambah Gedung" data-backdrop="static" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -78,6 +127,36 @@
             </div>
         </div>
     </div>
+
+    {{-- Modal tambah ruangan --}}
+    <div class="modal fade" id="addRoomModal" tabindex="-1" role="dialog" aria-labelledby="addRoomModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addRoomModalLabel">Tambah Ruangan di Gedung ...</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addRoomForm">
+                    <div class="form-group">
+                        <label for="roomNameInput">Nama Ruangan</label>
+                        <input type="text" class="form-control" id="roomNameInput" name="roomName" placeholder="Masukkan nama ruangan">
+                    </div>
+                    <div class="form-group">
+                        <label for="roomFloorInput">Lantai</label>
+                        <input type="text" class="form-control" id="roomFloorInput" name="roomFloor" placeholder="Masukkan lantai">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                <button type="button" id="addRoomBtn" class="btn btn-primary">Tambah</button>
+            </div>
+        </div>
+    </div>
+</div>
 
     {{-- Modal Edit --}}
     <div id="editModal" title="Edit Lokasi" data-backdrop="static" class="modal fade" tabindex="-1" role="dialog">
@@ -111,152 +190,64 @@
 @endsection
 
 @push('script-foot')
-    <script src="{{ asset('assets/plugins/datatables-rowgroup/js/dataTables.rowGroup.min.js') }}"></script>
     <script>
-        // Table Model
-        // function initTableModel() {
-        //     $('#tableLokasi').DataTable({
-        //         processing: true,
-        //         serverSide: true,
-        //         responsive: true,
-        //         lengthMenu: [
-        //             [10, 50, 100, -1],
-        //             [10, 50, 100, "Semua"]
-        //         ],
-        //         ajax: `{{ url('admin/setting_attr/lokasi/get_lokasi') }}`,
-        //         rowGroup: {
-        //             dataSrc: 'name'
-        //         }
-        //         columns: [{
-        //                 data: 'DT_RowIndex',
-        //                 name: 'DT_RowIndex',
-        //                 searchable: false,
-        //                 orderable: false
-        //             },
-        //             {
-        //                 data: 'name',
-        //                 name: 'name',
-        //             },
-        //             {
-        //                 data: 'ruangan',
-        //                 name: 'ruangan',
-        //                 render: function(data, type, row) {
-        //                     return data  ? `<span class="text-primary">${data}</span>` : `<span class="text-muted">Tidak ada ruangan</span>`;
-        //                 }
-        //             },
-        //             {
-        //                 data: null,
-        //                 name: 'timestamp',
-        //                 render: function(data) {
-        //                     return `<span class="text-muted small">Dibuat: ${moment(data.created_at).format('lll')} <br>
-    //                         Diupdate: ${moment(data.updated_at).format('lll')}</span>`;
-        //                 },
-        //             },
-        //             {
-        //                 data: 'action',
-        //                 name: 'action',
-        //                 orderable: false,
-        //                 searchable: false
-        //             }
-        //         ],
-        //         order: [
-        //             [0, 'asc']
-        //         ],
-        //     });
-        // }
-
-        function initTableModel() {
-            $('#tableLokasi').DataTable({
-                processing: true,
-                serverSide: true,
-                responsive: true,
-                lengthMenu: [
-                    [10, 50, 100, -1],
-                    [10, 50, 100, "Semua"]
-                ],
-                ajax: `{{ url('admin/setting_attr/lokasi/get_lokasiv2') }}`,
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        searchable: false,
-                        orderable: false
-                    },
-                    {
-                        data: null,
-                        name: 'building_id',
-                        // render: function(row) {
-                        //     return row ? `<span class="text-primary">${row.building.name}</span>` : `<span class="text-muted">Tidak ada ruangan</span>`;
-                        // },
-                    },
-                    {
-                        data: 'name',
-                        name: 'name',
-                    },
-                    {
-                        data: 'floor',
-                        name: 'floor',
-                    },
-                    {
-                        data: null,
-                        name: 'timestamp',
-                        render: function(data) {
-                            return `<span class="text-muted small">Dibuat: ${moment(data.created_at).format('lll')} <br>
-                                Diupdate: ${moment(data.updated_at).format('lll')}</span>`;
-                        },
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
-                    }
-                ],
-                order: [
-                    [0, 'asc']
-                ],
-                rowGroup: {
-                    dataSrc: function(row) {
-                        return row.building.name;
-                    },
-                    startRender: function(rows, group) {
-                        return `Gedung: <span class="text-primary">${group}</span>` + ` <span class="btn btn-sm btn-outline-primary" id="btnOpenEditModal"><i class="fa-regular fa-pen-to-square"></i></span>`;
-                    },
-                    searchable: true
-                },
-                columnDefs: [
-                    { targets: [1], visible: false } // Sembunyikan kolom asli agar lebih rapi
-                ],
-            });
-        }
-
+        // Initialize building and room list
         $(document).ready(function() {
-            initTableModel();
+            initBuildingRoomList();
 
-            // Handle Tambah Model
-            $('#btnOpenCreateModal').on('click', function() {
-                $('#createModal').modal('show');
+            // Handle refresh gedung / ruangan
+            $('#btnRefreshBuildingRooms').on('click', function() {
+                initBuildingRoomList();
             });
-            $('#formCreateModel').on('submit', function(e) {
+
+            // Handle Edit Gedung
+            $('#buildingRoomsAccordion').on('click', '.btn-edit-building', function(e) {
+                e.stopPropagation();
+                const id = $(this).data('building-id');
+                const name = $(this).data('building-name');
+                $('#edit_building_id').val(id);
+                $('#edit_building_name').val(name);
+                $('#error-edit_building_name').text('');
+                $('#editBuildingModal').modal('show');
+            });
+
+            // Handle Edit Ruangan
+            $('#buildingRoomsAccordion').on('click', '.btn-edit-room', function(e) {
+                e.stopPropagation();
+                const id = $(this).data('room-id');
+                const name = $(this).data('room-name');
+                const floor = $(this).data('room-floor');
+                $('#edit_room_id').val(id);
+                $('#edit_room_name').val(name);
+                $('#edit_room_floor').val(floor);
+                $('#error-edit_room_name').text('');
+                $('#editRuanganModal').modal('show');
+            });
+
+            // Handle Tambah Gedung
+            $('#btnOpenTambahGedung').on('click', function() {
+                $('#modalTambahGedung').modal('show');
+            });
+            $('#formTambahGedung').on('submit', function(e) {
                 e.preventDefault();
                 const formData = new FormData(this);
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    url: `{{ url('admin/setting_attr/model/store') }}`,
+                    url: `{{ url('admin/setting_attr/lokasi/store') }}`,
                     type: 'POST',
                     data: formData,
                     contentType: false,
                     processData: false,
                     success: function(response) {
-                        $('#createModal').modal('hide');
-                        $('#tableModel').DataTable().ajax.reload();
+                        $('#modalTambahGedung').modal('hide');
                         Swal.fire({
                             icon: 'success',
                             title: 'Sukses',
                             text: 'Model berhasil ditambahkan.',
                         });
-                        $('#formCreateModel')[0].reset();
+                        $('#formTambahGedung')[0].reset();
                         $('#error-name').text('');
                     },
                     error: function(xhr) {
@@ -274,105 +265,167 @@
                     }
                 });
             });
-        });
 
-        // Handle Edit Mpdel
-        $('#tableModel').on('click', '#edit-model', function() {
-            const id = $(this).data('id');
-            const name = $(this).data('name');
-            $('#edit_name').attr('placeholder', name);
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: `{{ url('admin/setting_attr/model/edit') }}/${id}`,
-                type: 'GET',
-                success: function(response) {
-                    $('#edit_name').val(response.name);
-                    $('#formEditModel').data('id', response.id);
-                    $('#editModal').modal('show');
-                },
-                error: function(xhr) {
-                    toastr.error('Terjadi kesalahan, silakan coba lagi.');
-                }
-            });
-        });
+            // Handle Edit Gedung
+            $('#formEditGedung').on('submit', function(e) {
+                e.preventDefault();
+                const id = $('#edit_building_id').val();
+                const formData = new FormData(this);
 
-        // Handle Update Model
-        $('#formEditModel').on('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            const id = $(this).data('id');
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: `{{ url('admin/setting_attr/model/update') }}/${id}`,
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    $('#editModal').modal('hide');
-                    $('#tableModel').DataTable().ajax.reload();
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Sukses',
-                        text: 'Model berhasil diperbarui.',
-                    });
-                    $('#formEditModel')[0].reset();
-                    $('#error-edit_name').text('');
-                },
-                error: function(xhr) {
-                    if (xhr.status === 422) {
-                        const errors = xhr.responseJSON.errors;
-                        $('#error-edit_name').text(errors.name ? errors.name[0] : '');
-                    } else {
-                        toastr.error('Terjadi kesalahan, silakan coba lagi.');
-                    }
-                }
-            });
-        });
-
-        // Handle Delete Merk
-        $('#tableModel').on('click', '#delete-model', function() {
-            const merkId = $(this).data('id');
-            const name = $(this).data('name');
-            Swal.fire({
-                title: 'Konfirmasi Hapus',
-                text: `Apakah Anda yakin ingin menghapus model "${name}"?`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Hapus',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        url: `{{ url('admin/setting_attr/model/delete') }}/${merkId}`,
-                        type: 'DELETE',
-                        success: function(response) {
-                            $('#tableModel').DataTable().ajax.reload();
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil',
-                                text: 'Model berhasil dihapus.',
-                            });
-                        },
-                        error: function(xhr) {
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: `{{ url('admin/setting_attr/lokasi/building/update') }}/${id}`,
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        $('#editBuildingModal').modal('hide');
+                        initTableModel();
+                        initBuildingRoomList();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.message,
+                        });
+                    },
+                    error: function(xhr) {
+                        if (xhr.status === 422) {
+                            const errors = xhr.responseJSON.errors;
+                            $('#error-edit_building_name').text(errors.name ? errors.name[0] : '');
+                        } else {
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Gagal',
-                                text: 'Terjadi kesalahan saat menghapus model.',
+                                title: 'Error',
+                                text: 'Gagal memperbarui nama gedung.',
                             });
                         }
-                    });
-                }
+                    }
+                });
+            });
+
+            $('#formEditRuangan').on('submit', function(e) {
+                e.preventDefault();
+                const id = $('#edit_room_id').val();
+                const formData = new FormData(this);
+
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: `{{ url('admin/setting_attr/lokasi/update') }}/${id}`,
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        $('#editRuanganModal').modal('hide');
+                        initBuildingRoomList();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.message,
+                        });
+                    },
+                    error: function(xhr) {
+                        if (xhr.status === 422) {
+                            const errors = xhr.responseJSON.errors;
+                            $('#error-edit_room_name').text(errors.name ? errors.name[0] : '');
+                            $('#error-edit_room_floor').text(errors.floor ? errors.floor[0] : '');
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Gagal memperbarui ruangan.',
+                            });
+                        }
+                    }
+                });
             });
         });
+
+        function initBuildingRoomList() {
+            const accordion = $('#buildingRoomsAccordion');
+            accordion.html('<div class="text-center py-4"><i class="fas fa-spinner fa-spin"></i> Memuat daftar gedung...</div>');
+
+            $.getJSON(`{{ url('admin/setting_attr/lokasi/get_lokasi') }}`, function(response) {
+                const rows = response.data || response;
+                const buildings = {};
+
+                rows.forEach(function(item) {
+                    const buildingName = item.building ? item.building.name : 'Gedung Tidak Diketahui';
+                    if (!buildings[buildingName]) {
+                        buildings[buildingName] = [];
+                    }
+                    buildings[buildingName].push(item);
+                });
+
+                if ($.isEmptyObject(buildings)) {
+                    accordion.html('<div class="text-muted">Tidak ada data gedung atau ruangan.</div>');
+                    return;
+                }
+
+                let html = '';
+                let index = 0;
+                let roomIndex = 0;
+                Object.keys(buildings).forEach(function(buildingName, index) {
+                    index++;
+                    roomIndex = 0;
+                    const rooms = buildings[buildingName];
+                    const count = rooms.length;
+                    const collapseId = 'buildingRoomsCollapse' + index;
+
+                    html += `<div class="card">
+                        <div class="card-header p-0" id="heading-${index}">
+                            <div class="d-flex justify-content-between align-items-center p-2">
+                                <button class="btn btn-link flex-grow-1 text-left mb-0 p-0" type="button" data-toggle="collapse" data-target="#${collapseId}" aria-expanded="false" aria-controls="${collapseId}">
+                                    <strong>${index}. ${buildingName}</strong> <small class="text-muted">(${count} ruangan)</small>
+                                    <span class="text-muted"><i class="fas fa-chevron-down"></i></span>
+                                </button>
+                                <div class="d-flex align-items-center">
+                                    {{-- Tambah Ruangan --}}
+                                    <button type="button" class="btn btn-sm btn-outline-primary btn-add-room" data-building-name="${buildingName}" data-toggle="modal" data-target="#addRoomModal">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                    {{-- Edit Gedung --}}
+                                    <button type="button" class="btn btn-sm btn-outline-secondary mr-2 btn-edit-building" data-building-id="${rooms[0].building.id}" data-building-name="${buildingName}" title="Edit Gedung">
+                                        <i class="fas fa-pen"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="${collapseId}" class="collapse" aria-labelledby="heading-${index}" data-parent="#buildingRoomsAccordion">
+                            <div class="card-body p-3">
+                                <ul class="list-group">
+                                    ${rooms.map(room => {
+                                        roomIndex++;
+                                        const roomFloor = room.floor ? `Lantai ${room.floor}` : 'Lantai -';
+                                        return `<li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <strong>${roomIndex}. ${room.name}</strong><br>
+                                                <small class="text-muted">${roomFloor}</small>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                {{-- tombol edit ruangan --}}
+                                                <button type="button" class="btn btn-sm btn-outline-primary btn-edit-room" data-room-id="${room.id}" data-room-name="${room.name}" data-room-floor="${room.floor || ''}" title="Edit Ruangan">
+                                                    <i class="fas fa-pen"></i>
+                                                </button>
+                                            </div>
+                                        </li>`;
+                                    }).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+
+                accordion.html(html);
+            }).fail(function() {
+                accordion.html('<div class="text-danger">Gagal memuat daftar gedung. Coba refresh ulang.</div>');
+            });
+        }
+
     </script>
 @endpush

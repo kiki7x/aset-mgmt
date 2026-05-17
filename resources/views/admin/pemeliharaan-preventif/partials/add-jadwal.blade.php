@@ -8,12 +8,13 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="#" id="formJadwalPemeliharaan">
-                    <h5 class="text-center">1. Pilih aset</h5>
+                <form action="" id="formJadwalPemeliharaan" method="POST">
+                    @csrf
+                    <h5 class="text-left">1. Pilih aset</h5>
                     {{-- Pilih klasifikasi --}}
                     <div class="form-group">
                         <label for="klasifikasi-select">Klasifikasi: <span class="text-danger">*</span></label>
-                        <select class="form-control" id="klasifikasi-select" name="klasifikasi">
+                        <select class="form-control" id="klasifikasi-select" name="">
                             <option value="">-- Pilih --</option>
                             <option value="2">TIK</option>
                             <option value="3">Kendaraan</option>
@@ -22,23 +23,14 @@
                         <span class="text-danger small" id="error-klasifikasi"></span>
                     </div>
 
-                    
+
                     {{-- Pilih category aset, dinamiskan dengan pilihan radio button yang muncul sesuai klasifikasi yang dipilih, jika klasifikasi tidak dipilih maka pilihan radio button tidak muncul --}}
                     <div class="form-group" id="category" style="display: none;">
                         <label for="category-select">Kategori Aset: <span class="text-danger">*</span></label>
-                        <select class="form-control" id="category-select" name="category">
+                        <select class="form-control" id="category-select" name="">
                             <option value="">-- Pilih --</option>
                         </select>
                         <span class="text-danger small" id="error-category"></span>
-                    </div>
-                    
-                    {{-- Pilih jenis tugas, khusus untuk klasifikasi Kendaraan ada pilihan Pajak STNK dan Service Berkala, selain Kendaraan ada pilihan Cek Kondisi & Service Berkala --}}
-                    <div class="form-group" id="jenis-tugas" style="display: none;">
-                        <label for="jenis-tugas-select">Jenis Tugas: <span class="text-danger">*</span></label>
-                        <select class="form-control" id="jenis-tugas-select" name="name">
-                            <option value="">-- Pilih --</option>
-                        </select>
-                        <span class="text-danger small" id="error-name"></span>
                     </div>
 
                     {{-- Pilih Aset, dinamiskan dengan pilihan radio button yang muncul sesuai kategori aset yang dipilih, jika kategori aset tidak dipilih maka pilihan radio button tidak muncul --}}
@@ -50,8 +42,17 @@
                         <span class="text-danger small" id="error-asset"></span>
                     </div>
 
+                    {{-- Pilih jenis tugas, khusus untuk klasifikasi Kendaraan ada pilihan Pajak STNK dan Service Berkala, selain Kendaraan ada pilihan Cek Kondisi & Service Berkala --}}
+                    <div class="form-group" id="jenis-tugas" style="display: none;">
+                        <label for="jenis-tugas-select">Jenis Tugas: <span class="text-danger">*</span></label>
+                        <select class="form-control" id="jenis-tugas-select" name="name">
+                            <option value="">-- Pilih --</option>
+                        </select>
+                        <span class="text-danger small" id="error-name"></span>
+                    </div>
+
                     <hr>
-                    <h5 class="text-center">2. Tentukan jadwal pemeliharaan</h5>
+                    <h5 class="text-left">2. Tentukan jadwal pemeliharaan</h5>
 
                     {{-- Frekuensi Pemeliharaan --}}
                     <div class="form-group">
@@ -69,7 +70,7 @@
                     <div class="form-group">
                         <label for="end">Waktu Pemeliharaan</label>
                         <div>
-                            <input id="end" width="276" type="text" class="form-control" name="end" placeholder="DD MMM YYYY" />
+                            <input id="end" width="276" type="text" class="form-control" name="end" readonly />
                         </div>
                         <span class="text-danger small" id="error-end"></span>
                     </div>
@@ -98,9 +99,9 @@
             $('#add-schedule-label').html('Setup Jadwal Pemeliharaan pada: ' + '<span class="badge badge-success">' + moment(clickedDate).format('DD MMM YYYY') + '</span>'); // Set judul modal dengan tanggal yang diklik
             $('#formJadwalPemeliharaan')[0].reset();
             $('#add-schedule').modal('show');
+            // moment.locale('en');
+            $('#end').val(moment(clickedDate).format('DD MMMM YYYY'));
         }
-
-        
 
         $('#klasifikasi-select').on('change', function() {
             const klasifikasi = $(this).val();
@@ -174,7 +175,7 @@
                         assetSelect.empty().append('<option value="">-- Pilih --</option>'); // Reset options
                         if (response.length > 0) {
                             response.forEach(function(asset) {
-                                assetSelect.append('<option value="' + asset.tag + '">' + asset.tag + ' - ' + asset.name + '</option>');
+                                assetSelect.append('<option value="' + asset.id + '">' + asset.tag + ' - ' + asset.name + '</option>');
                             });
                             assetWrapper.show();
                         } else {
@@ -219,22 +220,20 @@
         });
 
         // datepicker
-        $('#end').datepicker({
-            format: "dd M yyyy",
-            autoclose: true,
-            todayHighlight: true,
-            orientation: "auto",
-            todayBtn: "linked",
-        });
+        // $('#end').datepicker({
+        //     format: "dd M yyyy",
+        //     autoclose: true,
+        //     todayHighlight: true,
+        //     orientation: "auto",
+        //     todayBtn: "linked",
+        // });
     </script>
     <script>
         // Event listener untuk submit form pemeliharaan preventif
         $('#formJadwalPemeliharaan').on('submit', function(e) {
             e.preventDefault();
-
             // Serialize semua data form menjadi string URL-encoded
             const formData = new FormData(this)
-
             // Lakukan permintaan Ajax POST ke endpoint Laravel
             $.ajax({
                 headers: {
@@ -246,13 +245,13 @@
                 processData: false,
                 contentType: false,
                 success: function(response) {
-                    $('#add-schedule').modal('hide');
-                    $('#calendar').fullCalendar('refetchEvents'); // Refresh kalender untuk menampilkan jadwal baru
-
                     Swal.fire({
                         icon: 'success',
                         title: 'Berhasil',
                         text: response.message,
+                    }).then(() => {
+                        $('#add-schedule').modal('hide');
+                        window.calendar.refetchEvents();
                     })
                 },
                 error: function(xhr) {
@@ -265,6 +264,7 @@
                         let errorMsg = res?.message || 'Data tidak valid';
 
                         if (res?.message === 'The name has already been taken.') {
+                            // debug formData 
                             errorMsg = 'Jadwal pemeliharaan ini sudah ada.';
                         }
 
@@ -284,7 +284,8 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'Kesalahan Sistem',
-                            text: xhr.status === 500 ? 'Terjadi kesalahan pada server.' : 'Terjadi kesalahan yang tidak diketahui.',
+                            // text: xhr.status === 500 ? 'Terjadi kesalahan pada server.' : 'Terjadi kesalahan yang tidak diketahui.',
+                            text: xhr.status === 500 ? xhr.responseJSON.message : 'Terjadi kesalahan yang tidak diketahui.',
                         });
                     }
                 },

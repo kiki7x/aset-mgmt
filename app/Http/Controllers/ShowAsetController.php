@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Models\MaintenancesModel;
-use App\Models\AssetsModel;
 
 use Illuminate\Support\Facades\Log;
 
@@ -70,7 +71,7 @@ class ShowAsetController extends Controller
         return view('admin.detailaset.timelog', compact('id', 'asset', 'timeLogs'));
     }
 
-    public function getEditAssetContent($id)
+    public function getEditAssetContent($id): View
     {
         // Mengambil data aset beserta relasi user.
         // Jika aset tidak ditemukan, akan otomatis melempar 404.
@@ -85,6 +86,7 @@ class ShowAsetController extends Controller
         } else {
             $categories = \App\Models\AssetcategoriesModel::whereIn('classification_id', [3, 4])->get();
         }
+        // fetch all data
         $users = \App\Models\User::all();
         $manufacturers = \App\Models\ManufacturersModel::all();
         $models = \App\Models\ModelsModel::all();
@@ -103,7 +105,7 @@ class ShowAsetController extends Controller
             'models',
             'suppliers',
             'locations',
-            'statuses'
+            'statuses',
         ));
     }
 

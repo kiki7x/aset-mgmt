@@ -10,7 +10,7 @@
 @endpush
 
 @section('content-tab')
-    <form id="formEditAsset">
+    <form id="formEditAsset" enctype="multipart/form-data">
         @csrf
         @method('PATCH') {{-- Gunakan PUT atau PATCH sesuai dengan definisi rute Anda di Laravel --}}
         <div class="card-body">
@@ -110,6 +110,7 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label for="purchase_date">Tanggal Perolehan:</label>
+                    {{-- <input type="text" name="purchase_date" id="purchase_date" class="form-control" placeholder="Select date" value="{{ $asset->purchase_date ?? '' }}"> --}}
                     <input type="text" name="purchase_date" id="purchase_date" class="form-control" placeholder="Select date" value="{{ $asset->purchase_date ?? '' }}">
                     <span id="error-purchase_date" class="text-danger small"></span>
                 </div>
@@ -123,10 +124,22 @@
                     </div>
                     <span id="error-warranty_months" class="text-danger small"></span>
                 </div>
-                <div class="form-group col-md-12">
+                <div class="form-group col-md-6">
                     <label for="notes">Catatan</label>
                     <textarea name="notes" id="notes" class="form-control" rows="3" placeholder="Write notes here...">{{ $asset->notes ?? '' }}</textarea>
                     <span id="notes-error" class="text-danger small"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="image">Foto</label>
+                    <div class="input-group">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="image" name="image">
+                            <label class="custom-file-label" for="image">Choose file</label>
+                        </div>
+                    </div>
+                    {{-- preview image --}}
+                    <label for="preview-image"></label>
+                    <img id="preview-image" src="{{ asset('storage/' . $asset->image) }}" alt="Preview" alt="Preview" class="img-fluid">
                 </div>
             </div>
             <div class="d-flex justify-content-end mt-4">
@@ -145,7 +158,6 @@
     <script src="{{ asset('assets/plugins/select2/js/select2.full.min.js') }}"></script>
 
     <script>
-        // $(document).ready(function() {
         // Fungsi untuk menginisialisasi Select2
         function initSelect2(selector, options = {}) {
             $(selector).select2({
@@ -180,25 +192,39 @@
             }
         });
         $('#purchase_date').datepicker({
-                format: "yyyy-mm-dd",
-                autoclose: true,
-                todayHighlight: true,
-                orientation: "bottom auto",
-                todayBtn: "linked",
-            });
+            format: "dd M yyyy",
+            autoclose: true,
+            todayHighlight: true,
+            orientation: "bottom auto",
+            todayBtn: "linked",
+        });
     </script>
     <script>
+        // handle image preview
         $(document).ready(function() {
+            $('#image').on('change', function() {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#preview-image').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(this.files[0]);
+            });
+        })
+
+        // Handle pengiriman form melalui AJAX
+        $(document).ready(function(e) {
             // Handle pengiriman form melalui AJAX
             $('#formEditAsset').on('submit', function(e) {
                 e.preventDefault();
-                let form = $(this);
+                let formData = new FormData(this);
                 let id = $('#id').val(); //ambil value dari hidden input asset_id
 
                 $.ajax({
                     url: "{{ route('admin.asettik.update', $id) }}",
                     method: "POST", // Laravel interprets @method('PUT') when using POST
-                    data: form.serialize(),
+                    data: formData,
+                    contentType: false,
+                    processData: false,
                     success: function(res) {
                         // $('.select2, .select2tag').val(null).trigger('change'); // Reset Select2
                         // $('.text-danger').text(''); // clear validation error
@@ -222,6 +248,12 @@
                                 title: 'Oops...',
                                 text: 'Cek kembali isian form.',
                             })
+                        } else if (xhr.status === 500) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: xhr.responseJSON.message,
+                            });
                         } else {
                             Swal.fire({
                                 icon: 'error',

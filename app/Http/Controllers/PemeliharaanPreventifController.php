@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
-// use Illuminate\Support\Carbon;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 
 class PemeliharaanPreventifController extends Controller
@@ -86,9 +88,65 @@ class PemeliharaanPreventifController extends Controller
         return response()->json($assets);
     }
 
-    public function scheduleAdd(Request $request)
+    public function completedDataTable(Request $request): JsonResponse
     {
-        //
+        $histories = \App\Models\MaintenancesModel::with(['maintenance_schedule.asset', 'pic'])
+            ->where('status', 'Selesai')
+            ->orderBy('period', 'desc')
+            ->get()
+            ->map(function ($history) {
+                return [
+                    'id' => $history->id,
+                    'maintenance_name' => $history->name,
+                    'asset_tag' => optional($history->maintenance_schedule->asset)->tag ?? '-',
+                    'asset_name' => optional($history->maintenance_schedule->asset)->name ?? '-',
+                    'pic_name' => optional($history->pic)->name ?? '-',
+                    'period' => $history->period ? Carbon::parse($history->period)->format('d M Y') : '-',
+                    'cost' => $history->cost !== null ? number_format($history->cost, 0, ',', '.') : '-',
+                    'status' => $history->status,
+                    'notes' => $history->notes,
+                    'attachment_link' => $history->attachment_link,
+                ];
+            });
+
+        return response()->json($histories);
+    }
+
+    public function scheduleStore(Request $request): JsonResponse
+    {
+        // 1. VALIDASI
+        $request->validate([
+            'asset' => 'required',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('maintenances_schedule', 'name')->where(function ($query) use ($request) {
+                    return $query->where('asset_id', $request->input('asset'));
+                }),
+            ],
+            'end' => 'required',
+            'frequency' => 'required',
+            'reminder' => 'required',
+        ]);
+
+        // 2. PENYIMPANAN DATA KE DATABASE
+        try {
+            $data = [
+                'asset_id' => $request->input('asset'), // Relasi ke asset,
+                'name' => $request->input('name'),
+                'start' => Carbon::parse($request->input('end'))->format('Y-m-d H:i:s'), // Set waktu ke awal hari $request->input('end'),
+                'end' => Carbon::parse($request->input('end'))->format('Y-m-d H:i:s'), // Default end sama dengan start, akan dihitung ulang jika frequency dan start valid $request->input('end'),
+                'frequency' => $request->input('frequency'),
+                'reminder' => $request->input('reminder'),
+                'status' => "Aktif",
+            ];
+            \App\Models\Maintenances_scheduleModel::create($data);
+            return response()->json(['message' => 'Jadwal pemeliharaan berhasil disimpan.']);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['message' => 'Gagal menyimpan data: ' . $e->getMessage()], 404);
+        }
     }
 
     public function preventifAdd(Request $request, $id): JsonResponse // $date adalah tanggal yang dikirim dari frontend saat user klik jadwal pemeliharaan
@@ -126,12 +184,8 @@ class PemeliharaanPreventifController extends Controller
 
         // 1. VALIDASI
         $request->validate([
-            // 'attachment' adalah nama input file di HTML: <input type="file" name="attachment">
-            // 'attachment_name' => 'required|string',
             'attachment_link' => 'required|string',
             'name' => 'required|string', // Untuk checkbox
-            // 'start' => 'required|date',
-            // 'end' => 'required|date|after:start',
             'period' => 'required|string',
             'cost' => 'required|numeric|min:0',
             'notes' => 'required|string',

@@ -53,7 +53,7 @@
                                             <th>Kategori</th>
                                             <th>Tipe/Model</th>
                                             <th>Pengguna</th>
-                                            <th>Timestamp</th>
+                                            <th>Perubahan Terakhir</th>
                                             <th>Opsi</th>
                                         </tr>
                                     </thead>
@@ -143,9 +143,8 @@
                             name: 'timestamp',
                             render: function(data) {
                                 return `
-                                    Tahun Perolehan: ${data.purchase_date ? moment(data.purchase_date).format('YYYY') : '-'} <br>
                                     <span class="text-muted small">
-                                    Dimodifikasi: ${moment(data.updated_at).format('lll')} </span><br>
+                                    ${moment(data.updated_at).format('DD MMM YYYY HH:mm')} </span><br>
                                     `;
                             }
                         },

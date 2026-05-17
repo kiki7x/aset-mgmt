@@ -1,6 +1,6 @@
 @extends('layouts.backsite-navtab-aset', [
     'id' => $asset->id,
-    'classification_id' => $asset->classification_id
+    'classification_id' => $asset->classification_id,
 ])
 
 @section('content-tab')
@@ -73,6 +73,17 @@
 
                 <div class="col-md-8">
                     <div class="card">
+                        <div class="card-header">Foto Aset</div>
+                        <div class="card-body">
+                            {{-- @if (isset($asset->image) && !empty($asset->image))
+                                <img src="{{ asset('storage/' . $asset->image) }}" alt="Asset Image" class="img-fluid">
+                            @else
+                                <p class="text-muted">Belum ada foto.</p>
+                            @endif --}}
+                            <img src="" alt="Asset Image" id="image" class="img-fluid">
+                        </div>
+                    </div>
+                    <div class="card">
                         <div class="card-header">Notes</div>
                         <div class="card-body">
                             @if (isset($asset->notes) && !empty($asset->notes))
@@ -86,4 +97,21 @@
             </div>
         </div>
     </div>
+    <!-- Image Preview Modal -->
+    <div class="modal fade" id="modalImage" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <img id="imgPreview" src="" style="width:100%">
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
+
+@push('script-foot')
+    <script>
+        // tampilkan image dar asset->image
+        document.getElementById('image').src = "{{ asset('storage/' . $asset->image) }}";
+    </script>
+@endpush

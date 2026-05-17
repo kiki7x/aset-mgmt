@@ -15,9 +15,9 @@ class Maintenances_scheduleModel extends Model
     protected $fillable = [
         'asset_id',
         'name', // nama pemeliharaan berupa 'Ganti Oli Mesin', 'Pembersihan', dll
-        'frequency',
         'start',
         'end',
+        'frequency',
         'reminder',
         'status',
         'customfields'

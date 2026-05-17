@@ -128,10 +128,17 @@
                         </div>
 
                         {{-- Notes --}}
-                        <div class="form-group col-md-12">
+                        <div class="form-group col-md-6">
                             <label for="notes">Catatan</label>
                             <textarea name="notes" id="notes" class="form-control" rows="2"></textarea>
                             <span class="text-danger small" id="error-notes"></span>
+                        </div>
+
+                        {{-- Image --}}
+                        <div class="form-group col-md-6">
+                            <label for="image">Foto <span class="text-danger">*</span></label>
+                            <input type="file" name="image" id="image" class="form-control">
+                            <span class="text-danger small" id="error-image"></span>
                         </div>
                     </div>
                     <p class="text-muted font-italic">Tanda <span class="text-danger">*</span> wajib diisi</p>
@@ -198,8 +205,9 @@
                         $('#tableAsetrt').DataTable().ajax.reload();
                     },
                     error: function(xhr) {
-                        if (xhr.responseJSON?.errors) {
-                            $.each(xhr.responseJSON.errors, function(key, value) {
+                        const res = xhr.responseJSON;
+                        if (res?.errors) {
+                            $.each(res.errors, function(key, value) {
                                 $(`#error-${key}`).text(value[0]);
                             });
                         }
