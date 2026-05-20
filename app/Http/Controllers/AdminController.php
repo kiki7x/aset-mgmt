@@ -18,8 +18,15 @@ class AdminController extends Controller
         $totalRuangan = \App\Models\LocationsModel::count();
         $totalTickets = \App\Models\TicketFront::count();
         $latestTickets = \App\Models\TicketFront::orderBy('created_at', 'desc')->take(5)->get();
-        $totalAssetsMaintained = \App\Models\MaintenancesModel::where('status', 'Selesai')->distinct('asset_id')->count('asset_id');
-        $totalAssetsPendingMaintenance = \App\Models\AssetsModel::count() - $totalAssetsMaintained;
+        $totalAssetsPreventiveTarget = \App\Models\Maintenances_scheduleModel::count();
+        $totalAssetsMaintained = \App\Models\Maintenances_scheduleModel::whereHas('maintenances', function ($query) {
+                $query->where('status', 'Selesai');
+            })
+            ->count('asset_id');
+        $totalAssetsPendingMaintenance = \App\Models\Maintenances_scheduleModel::whereDoesntHave('maintenances', function ($query) {
+                $query->where('status', 'Selesai');
+            })
+            ->count();
         $korektifBaseQuery = \App\Models\MaintenancesModel::with('asset')
             ->whereDoesntHave('maintenance_schedule');
 
