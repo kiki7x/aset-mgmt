@@ -78,13 +78,25 @@
                 <div class="col-md-8">
                     <div class="card">
                         <div class="card-header">Foto Aset</div>
-                        <div class="card-body">
-                            {{-- @if (isset($asset->image) && !empty($asset->image))
-                                <img src="{{ asset('storage/' . $asset->image) }}" alt="Asset Image" class="img-fluid">
+                        <div class="card-body text-center">
+                            @php
+                                $imageUrl = null;
+                                try {
+                                    if (!empty($asset->image) && \Illuminate\Support\Facades\Storage::disk('public')->exists($asset->image)) {
+                                        $imageUrl = asset('storage/' . $asset->image);
+                                    } elseif (!empty($asset->image) && file_exists(public_path($asset->image))) {
+                                        $imageUrl = asset($asset->image);
+                                    }
+                                } catch (Exception $e) {
+                                    $imageUrl = null;
+                                }
+                            @endphp
+
+                            @if ($imageUrl)
+                                <img src="{{ $imageUrl }}" alt="Asset Image" id="image" class="img-fluid" style="max-height:400px; cursor:pointer" data-toggle="modal" data-target="#modalImage" onclick="document.getElementById('imgPreview').src='{{ $imageUrl }}'">
                             @else
                                 <p class="text-muted">Belum ada foto.</p>
-                            @endif --}}
-                            <img src="" alt="Asset Image" id="image" class="img-fluid">
+                            @endif
                         </div>
                     </div>
                     <div class="card">
@@ -114,8 +126,4 @@
 @endsection
 
 @push('script-foot')
-    <script>
-        // tampilkan image dar asset->image
-        document.getElementById('image').src = "{{ asset('storage/' . $asset->image) }}";
-    </script>
 @endpush

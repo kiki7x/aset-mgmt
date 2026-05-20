@@ -196,6 +196,7 @@ class AssetController extends Controller
             'purchase_date' => 'required|date',
             'warranty_months' => 'required|integer|min:0',
             'notes' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ],
             [
             'name.required' => 'Nama aset wajib diisi.',
@@ -306,6 +307,13 @@ class AssetController extends Controller
             'customfields' => $request->customfields,
             'qrvalue' => $request->qrvalue,
         ];
+
+        // handle image upload if provided
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imagePath = $image->store('assets/images', 'public');
+            $data['image'] = $imagePath;
+        }
 
         // simpan
         $asset = AssetsModel::Create($data);
