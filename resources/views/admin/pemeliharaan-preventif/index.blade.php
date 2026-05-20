@@ -38,6 +38,9 @@
                 <div class="card">
                     <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                         <h3 class="card-title">Pemeliharaan Preventif Selesai</h3>
+                        <button class="btn btn-success btn-sm"style="margin-left: auto;" onclick="printPreventifReport()">
+                            <i class="fa fa-print"></i> Cetak PDF
+                        </button>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -206,26 +209,52 @@
                             url: '{{ route('admin.pemeliharaan-preventif.completed-data-table') }}',
                             dataSrc: ''
                         },
-                        columns: [
-                            {
+                        columns: [{
                                 data: null,
-                                render: function (data, type, row, meta) {
+                                render: function(data, type, row, meta) {
                                     return meta.row + 1;
                                 },
                                 className: 'text-center',
                                 orderable: false,
                                 width: '40px'
                             },
-                            { data: 'period' },
-                            { data: 'maintenance_name' },
-                            { data: 'asset_tag' },
-                            { data: 'asset_name' },
-                            { data: 'pic_name' },
-                            { data: 'cost' },
-                            { data: 'status' },
-                            { data: 'notes' }
+                            {
+                                data: 'period'
+                            },
+                            {
+                                data: 'maintenance_name'
+                            },
+                            {
+                                data: 'asset_tag'
+                            },
+                            {
+                                data: 'asset_name',
+                                render: function(data, type, row) {
+                                    if (row.classification_name == 'TIK') {
+                                        return '<a href="/admin/asettik/' + row.asset_id + '/overview" target="_blank">' + row.asset_tag + ' - ' + row.asset_name + '<i class="fa fa-external-link"></i>' + '</a>';
+                                    } else if (row.classification_name == 'Kendaraan' || row.classification_name == 'Mesin/Elektronik') {
+                                        return '<a href="/admin/asetrt/' + row.asset_id + '/overview" target="_blank">' + row.asset_tag + ' - ' + row.asset_name + '<i class="fa fa-external-link"></i>' + '</a>';
+                                    } else {
+                                        return row.asset_tag + ' - ' + row.asset_name;
+                                    }
+                                }
+                            },
+                            {
+                                data: 'pic_name'
+                            },
+                            {
+                                data: 'cost'
+                            },
+                            {
+                                data: 'status'
+                            },
+                            {
+                                data: 'notes'
+                            }
                         ],
-                        order: [[5, 'desc']],
+                        order: [
+                            [5, 'desc']
+                        ],
                         language: {
                             emptyTable: 'Tidak ada data pemeliharaan selesai.',
                             processing: 'Memuat...',
@@ -242,6 +271,44 @@
                 }
             });
         </script>
+
+        <script>
+            function printPreventifReport() {
+                if (!completedPreventiveTable) {
+                    return;
+                }
+
+                let search = completedPreventiveTable.search() || '';
+                // let issuetype = $('#filter_issuetype').val() || '';
+                // let department = $('#filter_department').val() || '';
+                let url = "{{ route('admin.pemeliharaan-preventif.print') }}";
+
+                if (search) {
+                    url += '?search=' + encodeURIComponent(search);
+                }
+
+                let queryParts = [];
+
+                if (search) {
+                    queryParts.push('search=' + encodeURIComponent(search));
+                }
+
+                // if (issuetype) {
+                //     queryParts.push('issuetype=' + encodeURIComponent(issuetype));
+                // }
+
+                // if (department) {
+                //     queryParts.push('department=' + encodeURIComponent(department));
+                // }
+
+                if (queryParts.length) {
+                    url = "{{ route('admin.pemeliharaan-preventif.print') }}" + '?' + queryParts.join('&');
+                }
+
+                window.open(url, '_blank');
+            }
+        </script>
+
         <style>
             #calendar {
                 max-width: 100vh;

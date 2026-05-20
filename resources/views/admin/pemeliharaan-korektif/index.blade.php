@@ -22,9 +22,21 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                        {{-- <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                             <h3 class="card-title font-weight-bold"><i class="fa-solid fa-list-check"></i> Pemeliharaan Korektif <span class="badge end-0 mr-3 bg-info text-light">{{ $totalPemeliharaan }} </span></h3>
                             <button class="btn btn-outline-primary" onclick="openModalCreate()" style="margin-left: auto;" data-toggle="tooltip" data-placement="top" title="Tambah Data"><i class="fa-regular fa-plus"></i></button>
+                            <button class="btn btn-success btn-sm"style="margin-left: auto;" onclick="printPreventifReport()">
+                                <i class="fa fa-print"></i> Cetak PDF
+                            </button>
+                        </div> --}}
+                        <div class="card-header row">
+                            <h3 class="card-title font-weight-bold col"><i class="fa-solid fa-list-check"></i> Pemeliharaan Korektif <span class="badge bg-info text-light">{{ $totalPemeliharaan }} </span></h3>
+                            <div class="col-md-1 d-flex justify-content-end">
+                                <button class="btn btn-outline-primary" onclick="openModalCreate()" data-toggle="tooltip" data-placement="top" title="Tambah Data"><i class="fa-regular fa-plus"></i></button>
+                            </div>
+                            <div>
+                                <button class="btn btn-outline-success" onclick="printPreventifReport()" data-toggle="tooltip" data-placement="top" title="Cetak PDF"><i class="fa-solid fa-print"></i></button>
+                            </div>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -74,10 +86,8 @@
 
                                 </div>
                                 <div class="col-md-12">
-                                    <div class="dt-buttons btn-group"><a class="btn btn-default buttons-copy buttons-html5" tabindex="0" aria-controls="dataTablesFull" href="#"><span>Copy</span></a><a class="btn btn-default buttons-csv buttons-html5"
-                                           tabindex="0" aria-controls="dataTablesFull" href="#"><span>CSV</span></a><a class="btn btn-default buttons-excel buttons-html5" tabindex="0" aria-controls="dataTablesFull" href="#"><span>Excel</span></a><a
-                                           class="btn btn-default buttons-pdf buttons-html5" tabindex="0" aria-controls="dataTablesFull" href="#"><span>PDF</span></a><a class="btn btn-default buttons-print" tabindex="0" aria-controls="dataTablesFull"
-                                           href="#"><span>Print</span></a>
+                                    <div class="dt-buttons btn-group">
+                                        <a class="btn btn-default buttons-print" tabindex="0" aria-controls="dataTablesFull"><span>Print</span></a>
                                     </div>
                                 </div>
                             </div>
@@ -139,10 +149,8 @@
 
                                 </div>
                                 <div class="col-md-12">
-                                    <div class="dt-buttons btn-group"><a class="btn btn-default buttons-copy buttons-html5" tabindex="0" aria-controls="dataTablesFull" href="#"><span>Copy</span></a><a class="btn btn-default buttons-csv buttons-html5"
-                                           tabindex="0" aria-controls="dataTablesFull" href="#"><span>CSV</span></a><a class="btn btn-default buttons-excel buttons-html5" tabindex="0" aria-controls="dataTablesFull"
-                                           href="#"><span>Excel</span></a><a class="btn btn-default buttons-pdf buttons-html5" tabindex="0" aria-controls="dataTablesFull" href="#"><span>PDF</span></a><a class="btn btn-default buttons-print"
-                                           tabindex="0" aria-controls="dataTablesFull" href="#"><span>Print</span></a>
+                                    <div class="dt-buttons btn-group">
+                                        <a class="btn btn-default buttons-print" tabindex="0" aria-controls="dataTablesFull" href="#"><span>Print</span></a>
                                     </div>
                                 </div>
                             </div>
@@ -223,7 +231,7 @@
                             data: 'asset',
                             name: 'asset',
                             render: function(data, type, row) {
-                                return '<a href="/admin/asettik/' + row.asset_id + '/overview" target="_blank">' + row.asset.tag + ' - ' + row.asset.name + '</a>';
+                                return '<a href="/admin/asettik/' + row.asset_id + '/overview" target="_blank">' + row.asset.tag + ' - ' + row.asset.name + '<i class="fa fa-external-link"></i>' + '</a>';
                             }
                         },
                         {

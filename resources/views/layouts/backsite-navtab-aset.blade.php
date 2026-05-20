@@ -41,7 +41,7 @@
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->routeIs('admin.asetrt.tickets') || request()->routeIs('admin.asettik.tickets') ? 'active' : '' }}" id="tickets-tab" role="tab" aria-controls="tickets" aria-selected="false"
                                     href="{{ $classification_id == 2 ? route('admin.asettik.tickets', $id) : route('admin.asetrt.tickets', $id) }}">
-                                    Tickets
+                                    Tiket
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -53,7 +53,7 @@
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->routeIs('admin.asetrt.timelog') || request()->routeIs('admin.asettik.timelog') ? 'active' : '' }}" id="timelog-tab" role="tab" aria-controls="timelog" aria-selected="false"
                                     href="{{ $classification_id == 2 ? route('admin.asettik.timelog', $id) : route('admin.asetrt.timelog', $id) }}">
-                                    Time Log
+                                    Log
                                 </a>
                             </li>
                             <li class="nav-item">

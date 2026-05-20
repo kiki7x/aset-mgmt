@@ -8,6 +8,8 @@ use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 use App\Jobs\SendWhatsappNotification;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
+
 
 class PemeliharaanKorektifController extends Controller
 {
@@ -132,6 +134,16 @@ class PemeliharaanKorektifController extends Controller
             // simpan
             $maintenance = \App\Models\MaintenancesModel::create($data);
 
+            // ubah status asset berdasarkan input issuetype
+            if ($data['issuetype'] == 'Perbaikan' || $data['issuetype'] == 'Peningkatan') {
+                $asset = \App\Models\AssetsModel::findOrFail($data['asset_id']);
+                $asset->status_id = '4';
+                $asset->save();
+            } else {
+                // jangan ubah status asset
+                $asset = \App\Models\AssetsModel::findOrFail($request->asset_id);
+            }
+
             // kirim notifikasi WA
             $target = env('FONNTE_GROUP_ID');
             $message = "Halo, Pemeliharaan Korektif baru saja ditambahkan";
@@ -143,7 +155,6 @@ class PemeliharaanKorektifController extends Controller
         } catch (\Exception $e) {
             return response()->json(['message' => 'Pemeliharaan korektif gagal ditambahkan.', 'error' => $e->getMessage()], 500);
         }
-
     }
 
     public function edit(Request $request, $id): JsonResponse

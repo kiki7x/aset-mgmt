@@ -27,11 +27,6 @@ Route::get('/servicedesk', [App\Http\Controllers\FrontController::class, 'servic
 Route::get('/captcha-image', [App\Http\Controllers\FrontController::class, 'captchaImage'])->name('captcha.image');
 Route::get('/refresh-captcha', [App\Http\Controllers\FrontController::class, 'refreshCaptcha'])->name('refresh.captcha');
 Route::post('/servicedesk', [TiketController::class, 'store']);
-//service desk tiketing system
-Route::get('/servicedesk/data', [TiketController::class, 'data'])->name('servicedesk.data');
-Route::get('/servicedesk/print', [TiketController::class, 'print'])->name('servicedesk.print');
-Route::post('/servicedesk/store', [TiketController::class, 'store'])->name('servicedesk.store');
-Route::post('/servicedesk/update-status', [TiketController::class, 'updateStatus'])->name('servicedesk.updateStatus');
 
 //Admin Area
 Route::prefix('admin')->middleware('auth')->group(function () {
@@ -106,6 +101,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::post('/pemeliharaan-preventif/preventif-store/{id}', [App\Http\Controllers\PemeliharaanPreventifController::class, 'preventifStore'])->name('admin.pemeliharaan-preventif.preventif-store');
         Route::post('/pemeliharaan-preventif/schedule-store', [App\Http\Controllers\PemeliharaanPreventifController::class, 'scheduleStore'])->name('admin.pemeliharaan-preventif.scheduleStore');
         Route::get('/pemeliharaan-preventif/completed-data-table', [App\Http\Controllers\PemeliharaanPreventifController::class, 'completedDataTable'])->name('admin.pemeliharaan-preventif.completed-data-table');
+        Route::get('/pemeliharaan-preventif/print', [App\Http\Controllers\PemeliharaanPreventifController::class, 'print'])->name('admin.pemeliharaan-preventif.print');
+
     });
 
     // Route Setting Atribut / Master Data
@@ -168,6 +165,12 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::get('/tiket', [App\Http\Controllers\TiketController::class, 'index'])->name('admin.tiket');
         Route::get('/tiket/{id}', [App\Http\Controllers\TiketController::class, 'show'])->name('admin.tiket.show');
         Route::get('/tiket/get_tikets', [App\Http\Controllers\TiketController::class, 'tiketDataTable'])->name('admin.tiket.tiketDataTable');
+        //service desk tiketing system
+        Route::get('/servicedesk/data', [TiketController::class, 'data'])->name('servicedesk.data');
+        Route::get('/servicedesk/print', [TiketController::class, 'print'])->name('servicedesk.print');
+        Route::post('/servicedesk/store', [TiketController::class, 'store'])->name('servicedesk.store');
+        Route::post('/servicedesk/update-status', [TiketController::class, 'updateStatus'])->name('servicedesk.updateStatus');
+
     });
 
     // Route Proyek

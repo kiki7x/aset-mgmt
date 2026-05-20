@@ -48,7 +48,9 @@ class CreateAsetTik extends Notification
         return [
             'message' => 'Aset TIK baru ditambahkan: ' . $this->asettik->name,
             'asettik_id' => $this->asettik->id,
+            'created_by' => $this->asettik->created_by,
             'created_at' => now()->toDateTimeString(),
+            dd($this->asettik)
         ];
     }
 

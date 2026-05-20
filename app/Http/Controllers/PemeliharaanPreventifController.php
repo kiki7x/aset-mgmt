@@ -92,15 +92,18 @@ class PemeliharaanPreventifController extends Controller
     {
         $histories = \App\Models\MaintenancesModel::with(['maintenance_schedule.asset', 'pic'])
             ->where('status', 'Selesai')
+            ->where('maintenance_schedule_id', '!=', null)
             ->orderBy('period', 'desc')
             ->get()
             ->map(function ($history) {
                 return [
                     'id' => $history->id,
+                    'classification_name' => $history->maintenance_schedule->asset->classification->name,
                     'maintenance_name' => $history->name,
-                    'asset_tag' => optional($history->maintenance_schedule->asset)->tag ?? '-',
-                    'asset_name' => optional($history->maintenance_schedule->asset)->name ?? '-',
-                    'pic_name' => optional($history->pic)->name ?? '-',
+                    'asset_id' => $history->maintenance_schedule->asset_id ?? '-',
+                    'asset_tag' => $history->maintenance_schedule->asset->tag ?? '-',
+                    'asset_name' => $history->maintenance_schedule->asset->name ?? '-',
+                    'pic_name' => $history->pic->name ?? '-',
                     'period' => $history->period ? Carbon::parse($history->period)->format('d M Y') : '-',
                     'cost' => $history->cost !== null ? number_format($history->cost, 0, ',', '.') : '-',
                     'status' => $history->status,
@@ -108,7 +111,6 @@ class PemeliharaanPreventifController extends Controller
                     'attachment_link' => $history->attachment_link,
                 ];
             });
-
         return response()->json($histories);
     }
 
@@ -233,5 +235,53 @@ class PemeliharaanPreventifController extends Controller
                 'message' => 'Gagal menyimpan data: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    public function print(Request $request): View
+    {
+        $search = trim($request->query('search', ''));
+
+        $pemeliharaanpreventif = \App\Models\MaintenancesModel::with('maintenance_schedule.asset', 'pic')
+        // hanya yang berisi nilai maintenance_schedule_id
+        ->whereNotNull('maintenance_schedule_id')
+        ->get()
+        ->map(function ($preventif) {
+            return [
+                'id' => $preventif->id,
+                'period' => $preventif->period ? Carbon::parse($preventif->period)->format('d M Y') : '-',
+                'name' => $preventif->name,
+                'asset_tag' => optional($preventif->maintenance_schedule->asset)->tag ?? '-',
+                'asset_name' => optional($preventif->maintenance_schedule->asset)->name ?? '-',
+                'pic_name' => optional($preventif->pic)->fullname ?? '-',
+                // 'cost' => $preventif->cost !== null ? number_format($preventif->cost, 0, ',', '.') : '-',
+                'cost' => $preventif->cost !== null ? 'Rp ' . number_format($preventif->cost, 0, ',', '.') : '-',
+                'status' => $preventif->status,
+                'notes' => $preventif->notes,
+                'attachment_link' => $preventif->attachment_link,
+            ];
+        });
+
+        // dd($pemeliharaanpreventif);
+
+        if ($search !== '') {
+            $pemeliharaanpreventif
+                ->where(function ($query) use ($search) {
+                    $query->where('period', 'like', "%{$search}%")
+                        ->orWhere('name', 'like', "%{$search}%")
+                        ->orWhere('pic_id', 'like', "%{$search}%")
+                        ->orWhere('asset_tag', 'like', "%{$search}%")
+                        ->orWhere('asset_name', 'like', "%{$search}%")
+                        ->orWhere('cost', 'like', "%{$search}%")
+                        ->orWhere('status', 'like', "%{$search}%")
+                        ->orWhereRaw("DATE_FORMAT(created_at, '%d %b %Y') LIKE ?", ["%{$search}%"]);
+                });
+        }
+        // dd($pemeliharaanpreventif);
+
+        return view('admin.pemeliharaan-preventif.print', [
+            'search' => $search,
+            // 'preventifs' => $pemeliharaanpreventif->get(),
+            'preventifs' => $pemeliharaanpreventif,
+        ]);
     }
 }
