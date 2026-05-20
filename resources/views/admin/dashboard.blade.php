@@ -261,28 +261,25 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <div class="callout callout-danger">
-                        <h5>I am a danger callout!</h5>
-
-                        <p>There is a problem that we need to fix. A wonderful serenity has taken possession of my entire
-                            soul,
-                            like these sweet mornings of spring which I enjoy with my whole heart.</p>
-                    </div>
-                    <div class="callout callout-info">
-                        <h5>I am an info callout!</h5>
-
-                        <p>Follow the steps to continue to payment.</p>
-                    </div>
-                    <div class="callout callout-warning">
-                        <h5>I am a warning callout!</h5>
-
-                        <p>This is a yellow callout.</p>
-                    </div>
-                    <div class="callout callout-success">
-                        <h5>I am a success callout!</h5>
-
-                        <p>This is a green callout.</p>
-                    </div>
+                    @forelse($latestPreventifUpcoming as $schedule)
+                        @php
+                            $assetRoute = ($schedule->asset->classification_id ?? null) == 2
+                                ? route('admin.asettik.pemeliharaan', $schedule->asset_id)
+                                : route('admin.asetrt.pemeliharaan', $schedule->asset_id);
+                        @endphp
+                        <div class="callout callout-info">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h5 class="mb-2">{{ $loop->iteration }}. {{ $schedule->name }}</h5>
+                                <span class="badge badge-info">{{ \Illuminate\Support\Carbon::parse($schedule->start)->format('d M Y') }}</span>
+                            </div>
+                            <p class="mb-2">{{ $schedule->asset->name ?? '-' }}</p>
+                            <a href="{{ $assetRoute }}" class="small-box-footer text-info">
+                                Lihat detail aset <i class="fas fa-arrow-circle-right"></i>
+                            </a>
+                        </div>
+                    @empty
+                        <p class="text-muted mb-0">Tidak ada pemeliharaan preventif dalam 30 hari mendatang.</p>
+                    @endforelse
                 </div><!-- /.card-body -->
             </div><!-- /.card -->
         </div><!-- /.col -->

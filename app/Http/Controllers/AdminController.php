@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 //import return type redirectResponse
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 
 class AdminController extends Controller
 {
@@ -46,6 +47,12 @@ class AdminController extends Controller
             ->take(5)
             ->get();
 
+        $latestPreventifUpcoming = \App\Models\Maintenances_scheduleModel::with('asset')
+            ->whereBetween('start', [now(), now()->addDays(30)])
+            ->orderBy('start', 'asc')
+            ->take(5)
+            ->get();
+
         return view('admin.dashboard', compact(
             'totalAssetTik',
             'totalAssetRt',
@@ -58,7 +65,8 @@ class AdminController extends Controller
             'latestKorektifSegera',
             'latestKorektifSedang',
             'latestKorektifDitahan',
-            'latestKorektifSelesai'
+            'latestKorektifSelesai',
+            'latestPreventifUpcoming'
         ));
         
     }
