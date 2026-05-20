@@ -530,7 +530,7 @@ class AssetController extends Controller
             'status',
             'location'
             )
-            ->where('classification_id' !== 2)
+            ->whereIn('classification_id', [3, 4])
             ->get();
             $data = [
                 [
