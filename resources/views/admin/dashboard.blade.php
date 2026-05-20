@@ -41,38 +41,6 @@
         </div><!-- ./col -->
         <div class="col-md-2 col-lg-2 col-6">
             <!-- small card -->
-            <div class="small-box bg-success">
-                <div class="inner">
-                    <h3>53<sup style="font-size: 20px">%</sup></h3>
-
-                    <p>Lisensi</p>
-                </div>
-                <div class="icon">
-                    <i class="fa-solid fa-key"></i>
-                </div>
-                <a href="#" class="small-box-footer">
-                    Selengkapnya <i class="fas fa-arrow-circle-right"></i>
-                </a>
-            </div>
-        </div><!-- ./col -->
-        <div class="col-md-2 col-lg-2 col-6">
-            <!-- small card -->
-            <div class="small-box bg-warning">
-                <div class="inner">
-                    <h3>44</h3>
-
-                    <p>Pemeliharaan</p>
-                </div>
-                <div class="icon">
-                    <i class="fa-solid fa-screwdriver-wrench"></i>
-                </div>
-                <a href="#" class="small-box-footer">
-                    Selengkapnya <i class="fas fa-arrow-circle-right"></i>
-                </a>
-            </div>
-        </div><!-- ./col -->
-        <div class="col-md-2 col-lg-2 col-6">
-            <!-- small card -->
             <div class="small-box bg-danger">
                 <div class="inner">
                     <h3>{{ $totalTickets }}</h3>
@@ -97,6 +65,22 @@
                 </div>
                 <div class="icon">
                     <i class="fa-solid fa-location-dot"></i>
+                </div>
+                <a href="#" class="small-box-footer">
+                    Selengkapnya <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div><!-- ./col -->
+        <div class="col-md-2 col-lg-2 col-6">
+            <!-- small card -->
+            <div class="small-box bg-warning">
+                <div class="inner">
+                    <h3>{{ $totalRuangan ?? 0 }}</h3>
+
+                    <p>Ruangan</p>
+                </div>
+                <div class="icon">
+                    <i class="fa-solid fa-door-open"></i>
                 </div>
                 <a href="#" class="small-box-footer">
                     Selengkapnya <i class="fas fa-arrow-circle-right"></i>
