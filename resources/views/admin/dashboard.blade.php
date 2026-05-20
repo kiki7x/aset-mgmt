@@ -97,7 +97,7 @@
                 <div class="icon">
                     <i class="fa-solid fa-location-dot"></i>
                 </div>
-                <a href="#" class="small-box-footer">
+                <a href="{{ route('admin.setting_attr.lokasi') }}" class="small-box-footer">
                     Selengkapnya <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
@@ -113,7 +113,7 @@
                 <div class="icon">
                     <i class="fa-solid fa-door-open"></i>
                 </div>
-                <a href="#" class="small-box-footer">
+                <a href="{{ route('admin.setting_attr.lokasi') }}" class="small-box-footer">
                     Selengkapnya <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
