@@ -39,6 +39,37 @@
                 </a>
             </div>
         </div><!-- ./col -->
+        <div class="col-md-3 col-lg-3 col-6">
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <h3>{{ $totalAssetsMaintained }}</h3>
+                    <p>Aset Sudah Dipelihara</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <a href="#" class="small-box-footer">
+                    Detail <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div><!-- ./col -->
+        <div class="col-md-3 col-lg-3 col-6">
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3>{{ $totalAssetsPendingMaintenance }}</h3>
+                    <p>Aset Belum Dipelihara</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <a href="#" class="small-box-footer">
+                    Detail <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div><!-- ./col -->
+    </div>{{-- /Rangkum Aset --}}
+
+    <div class="row">
         <div class="col-md-2 col-lg-2 col-6">
             <!-- small card -->
             <div class="small-box bg-danger">
@@ -84,37 +115,6 @@
                 </div>
                 <a href="#" class="small-box-footer">
                     Selengkapnya <i class="fas fa-arrow-circle-right"></i>
-                </a>
-            </div>
-        </div><!-- ./col -->
-    </div>{{-- /Rangkum Aset --}}
-
-    <div class="row">
-        <div class="col-md-3 col-lg-3 col-6">
-            <div class="small-box bg-success">
-                <div class="inner">
-                    <h3>{{ $totalAssetsMaintained }}</h3>
-                    <p>Aset Sudah Dipelihara</p>
-                </div>
-                <div class="icon">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <a href="#" class="small-box-footer">
-                    Detail <i class="fas fa-arrow-circle-right"></i>
-                </a>
-            </div>
-        </div><!-- ./col -->
-        <div class="col-md-3 col-lg-3 col-6">
-            <div class="small-box bg-danger">
-                <div class="inner">
-                    <h3>{{ $totalAssetsPendingMaintenance }}</h3>
-                    <p>Aset Belum Dipelihara</p>
-                </div>
-                <div class="icon">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <a href="#" class="small-box-footer">
-                    Detail <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
         </div><!-- ./col -->
