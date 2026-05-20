@@ -178,32 +178,74 @@
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="fas fa-bullhorn"></i>
-                        Pemeliharaan Preventif dalam waktu dekat
+                        Pemeliharaan Korektif Terbaru
                     </h3>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
                     <div class="callout callout-danger">
-                        <h5>I am a danger callout!</h5>
-
-                        <p>There is a problem that we need to fix. A wonderful serenity has taken possession of my entire
-                            soul,
-                            like these sweet mornings of spring which I enjoy with my whole heart.</p>
-                    </div>
-                    <div class="callout callout-info">
-                        <h5>I am an info callout!</h5>
-
-                        <p>Follow the steps to continue to payment.</p>
+                        <h5 class="mb-3">Segera Dikerjakan</h5>
+                        <ul class="list-unstyled mb-0">
+                            @forelse($latestKorektifSegera as $maintenance)
+                                <li class="mb-3 d-flex align-items-start">
+                                    <div class="badge badge-danger mr-3" style="min-width: 28px; line-height: 18px;">{{ $loop->iteration }}</div>
+                                    <div>
+                                        <div class="font-weight-bold">{{ $maintenance->name }}</div>
+                                        <div class="text-sm text-muted">{{ $maintenance->description ?? '-' }}</div>
+                                    </div>
+                                </li>
+                            @empty
+                                <li class="text-muted">Tidak ada data.</li>
+                            @endforelse
+                        </ul>
                     </div>
                     <div class="callout callout-warning">
-                        <h5>I am a warning callout!</h5>
-
-                        <p>This is a yellow callout.</p>
+                        <h5 class="mb-3">Sedang Dikerjakan</h5>
+                        <ul class="list-unstyled mb-0">
+                            @forelse($latestKorektifSedang as $maintenance)
+                                <li class="mb-3 d-flex align-items-start">
+                                    <div class="badge badge-warning mr-3" style="min-width: 28px; line-height: 18px;">{{ $loop->iteration }}</div>
+                                    <div>
+                                        <div class="font-weight-bold">{{ $maintenance->name }}</div>
+                                        <div class="text-sm text-muted">{{ $maintenance->description ?? '-' }}</div>
+                                    </div>
+                                </li>
+                            @empty
+                                <li class="text-muted">Tidak ada data.</li>
+                            @endforelse
+                        </ul>
+                    </div>
+                    <div class="callout callout-default" style="border-left-color: #6c757d;">
+                        <h5 class="mb-3">Ditahan</h5>
+                        <ul class="list-unstyled mb-0">
+                            @forelse($latestKorektifDitahan as $maintenance)
+                                <li class="mb-3 d-flex align-items-start">
+                                    <div class="badge badge-secondary mr-3" style="min-width: 28px; line-height: 18px;">{{ $loop->iteration }}</div>
+                                    <div>
+                                        <div class="font-weight-bold">{{ $maintenance->name }}</div>
+                                        <div class="text-sm text-muted">{{ $maintenance->description ?? '-' }}</div>
+                                    </div>
+                                </li>
+                            @empty
+                                <li class="text-muted">Tidak ada data.</li>
+                            @endforelse
+                        </ul>
                     </div>
                     <div class="callout callout-success">
-                        <h5>I am a success callout!</h5>
-
-                        <p>This is a green callout.</p>
+                        <h5 class="mb-3">Selesai</h5>
+                        <ul class="list-unstyled mb-0">
+                            @forelse($latestKorektifSelesai as $maintenance)
+                                <li class="mb-3 d-flex align-items-start">
+                                    <div class="badge badge-success mr-3" style="min-width: 28px; line-height: 18px;">{{ $loop->iteration }}</div>
+                                    <div>
+                                        <div class="font-weight-bold">{{ $maintenance->name }}</div>
+                                        <div class="text-sm text-muted">{{ $maintenance->notes ?? '-' }}</div>
+                                    </div>
+                                </li>
+                            @empty
+                                <li class="text-muted">Tidak ada data.</li>
+                            @endforelse
+                        </ul>
                     </div>
                 </div><!-- /.card-body -->
             </div><!-- /.card -->
@@ -214,7 +256,7 @@
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="fas fa-bullhorn"></i>
-                        Pemeliharaan Korektif
+                        Pemeliharaan Preventif dalam waktu dekat
                     </h3>
                 </div>
                 <!-- /.card-header -->

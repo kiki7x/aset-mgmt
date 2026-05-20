@@ -19,7 +19,47 @@ class AdminController extends Controller
         $latestTickets = \App\Models\TicketFront::orderBy('created_at', 'desc')->take(5)->get();
         $totalAssetsMaintained = \App\Models\MaintenancesModel::where('status', 'Selesai')->distinct('asset_id')->count('asset_id');
         $totalAssetsPendingMaintenance = \App\Models\AssetsModel::count() - $totalAssetsMaintained;
-        return view('admin.dashboard', compact('totalAssetTik', 'totalAssetRt', 'totalGedung', 'totalRuangan', 'totalTickets', 'latestTickets', 'totalAssetsMaintained', 'totalAssetsPendingMaintenance'));
+        $korektifBaseQuery = \App\Models\MaintenancesModel::with('asset')
+            ->whereDoesntHave('maintenance_schedule');
+
+        $latestKorektifSegera = (clone $korektifBaseQuery)
+            ->where('status', 'Segera Kerjakan')
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+
+        $latestKorektifSedang = (clone $korektifBaseQuery)
+            ->where('status', 'Sedang Dikerjakan')
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+
+        $latestKorektifDitahan = (clone $korektifBaseQuery)
+            ->where('status', 'Ditahan')
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+
+        $latestKorektifSelesai = (clone $korektifBaseQuery)
+            ->where('status', 'Selesai')
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+
+        return view('admin.dashboard', compact(
+            'totalAssetTik',
+            'totalAssetRt',
+            'totalGedung',
+            'totalRuangan',
+            'totalTickets',
+            'latestTickets',
+            'totalAssetsMaintained',
+            'totalAssetsPendingMaintenance',
+            'latestKorektifSegera',
+            'latestKorektifSedang',
+            'latestKorektifDitahan',
+            'latestKorektifSelesai'
+        ));
         
     }
 
