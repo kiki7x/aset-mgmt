@@ -39,38 +39,37 @@
                 </a>
             </div>
         </div><!-- ./col -->
-        <div class="col-md-2 col-lg-2 col-6">
-            <!-- small card -->
+        <div class="col-md-3 col-lg-3 col-6">
             <div class="small-box bg-success">
                 <div class="inner">
-                    <h3>53<sup style="font-size: 20px">%</sup></h3>
-
-                    <p>Lisensi</p>
+                    <h3>{{ $totalAssetsMaintained }}</h3>
+                    <p>Aset Sudah Dipelihara</p>
                 </div>
                 <div class="icon">
-                    <i class="fa-solid fa-key"></i>
+                    <i class="fas fa-check-circle"></i>
                 </div>
                 <a href="#" class="small-box-footer">
-                    Selengkapnya <i class="fas fa-arrow-circle-right"></i>
+                    Detail <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
         </div><!-- ./col -->
-        <div class="col-md-2 col-lg-2 col-6">
-            <!-- small card -->
-            <div class="small-box bg-warning">
+        <div class="col-md-3 col-lg-3 col-6">
+            <div class="small-box bg-danger">
                 <div class="inner">
-                    <h3>44</h3>
-
-                    <p>Pemeliharaan</p>
+                    <h3>{{ $totalAssetsPendingMaintenance }}</h3>
+                    <p>Aset Belum Dipelihara</p>
                 </div>
                 <div class="icon">
-                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                    <i class="fas fa-clock"></i>
                 </div>
                 <a href="#" class="small-box-footer">
-                    Selengkapnya <i class="fas fa-arrow-circle-right"></i>
+                    Detail <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
         </div><!-- ./col -->
+    </div>{{-- /Rangkum Aset --}}
+
+    <div class="row">
         <div class="col-md-2 col-lg-2 col-6">
             <!-- small card -->
             <div class="small-box bg-danger">
@@ -98,39 +97,24 @@
                 <div class="icon">
                     <i class="fa-solid fa-location-dot"></i>
                 </div>
-                <a href="#" class="small-box-footer">
+                <a href="{{ route('admin.setting_attr.lokasi') }}" class="small-box-footer">
                     Selengkapnya <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
         </div><!-- ./col -->
-    </div>{{-- /Rangkum Aset --}}
+        <div class="col-md-2 col-lg-2 col-6">
+            <!-- small card -->
+            <div class="small-box bg-warning">
+                <div class="inner">
+                    <h3>{{ $totalRuangan ?? 0 }}</h3>
 
-    <div class="row">
-        <div class="col-md-3 col-lg-3 col-6">
-            <div class="small-box bg-success">
-                <div class="inner">
-                    <h3>{{ $totalAssetsMaintained }}</h3>
-                    <p>Aset Sudah Dipelihara</p>
+                    <p>Ruangan</p>
                 </div>
                 <div class="icon">
-                    <i class="fas fa-check-circle"></i>
+                    <i class="fa-solid fa-door-open"></i>
                 </div>
-                <a href="#" class="small-box-footer">
-                    Detail <i class="fas fa-arrow-circle-right"></i>
-                </a>
-            </div>
-        </div><!-- ./col -->
-        <div class="col-md-3 col-lg-3 col-6">
-            <div class="small-box bg-danger">
-                <div class="inner">
-                    <h3>{{ $totalAssetsPendingMaintenance }}</h3>
-                    <p>Aset Belum Dipelihara</p>
-                </div>
-                <div class="icon">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <a href="#" class="small-box-footer">
-                    Detail <i class="fas fa-arrow-circle-right"></i>
+                <a href="{{ route('admin.setting_attr.lokasi') }}" class="small-box-footer">
+                    Selengkapnya <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
         </div><!-- ./col -->
@@ -194,32 +178,74 @@
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="fas fa-bullhorn"></i>
-                        Pemeliharaan Preventif dalam waktu dekat
+                        Pemeliharaan Korektif Terbaru
                     </h3>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
                     <div class="callout callout-danger">
-                        <h5>I am a danger callout!</h5>
-
-                        <p>There is a problem that we need to fix. A wonderful serenity has taken possession of my entire
-                            soul,
-                            like these sweet mornings of spring which I enjoy with my whole heart.</p>
-                    </div>
-                    <div class="callout callout-info">
-                        <h5>I am an info callout!</h5>
-
-                        <p>Follow the steps to continue to payment.</p>
+                        <h5 class="mb-3">Segera Dikerjakan</h5>
+                        <ul class="list-unstyled mb-0">
+                            @forelse($latestKorektifSegera as $maintenance)
+                                <li class="mb-3 d-flex align-items-start">
+                                    <div class="badge badge-danger mr-3" style="min-width: 28px; line-height: 18px;">{{ $loop->iteration }}</div>
+                                    <div>
+                                        <div class="font-weight-bold">{{ $maintenance->name }}</div>
+                                        <div class="text-sm text-muted">{{ $maintenance->description ?? '-' }}</div>
+                                    </div>
+                                </li>
+                            @empty
+                                <li class="text-muted">Tidak ada data.</li>
+                            @endforelse
+                        </ul>
                     </div>
                     <div class="callout callout-warning">
-                        <h5>I am a warning callout!</h5>
-
-                        <p>This is a yellow callout.</p>
+                        <h5 class="mb-3">Sedang Dikerjakan</h5>
+                        <ul class="list-unstyled mb-0">
+                            @forelse($latestKorektifSedang as $maintenance)
+                                <li class="mb-3 d-flex align-items-start">
+                                    <div class="badge badge-warning mr-3" style="min-width: 28px; line-height: 18px;">{{ $loop->iteration }}</div>
+                                    <div>
+                                        <div class="font-weight-bold">{{ $maintenance->name }}</div>
+                                        <div class="text-sm text-muted">{{ $maintenance->description ?? '-' }}</div>
+                                    </div>
+                                </li>
+                            @empty
+                                <li class="text-muted">Tidak ada data.</li>
+                            @endforelse
+                        </ul>
+                    </div>
+                    <div class="callout callout-default" style="border-left-color: #6c757d;">
+                        <h5 class="mb-3">Ditahan</h5>
+                        <ul class="list-unstyled mb-0">
+                            @forelse($latestKorektifDitahan as $maintenance)
+                                <li class="mb-3 d-flex align-items-start">
+                                    <div class="badge badge-secondary mr-3" style="min-width: 28px; line-height: 18px;">{{ $loop->iteration }}</div>
+                                    <div>
+                                        <div class="font-weight-bold">{{ $maintenance->name }}</div>
+                                        <div class="text-sm text-muted">{{ $maintenance->description ?? '-' }}</div>
+                                    </div>
+                                </li>
+                            @empty
+                                <li class="text-muted">Tidak ada data.</li>
+                            @endforelse
+                        </ul>
                     </div>
                     <div class="callout callout-success">
-                        <h5>I am a success callout!</h5>
-
-                        <p>This is a green callout.</p>
+                        <h5 class="mb-3">Selesai</h5>
+                        <ul class="list-unstyled mb-0">
+                            @forelse($latestKorektifSelesai as $maintenance)
+                                <li class="mb-3 d-flex align-items-start">
+                                    <div class="badge badge-success mr-3" style="min-width: 28px; line-height: 18px;">{{ $loop->iteration }}</div>
+                                    <div>
+                                        <div class="font-weight-bold">{{ $maintenance->name }}</div>
+                                        <div class="text-sm text-muted">{{ $maintenance->notes ?? '-' }}</div>
+                                    </div>
+                                </li>
+                            @empty
+                                <li class="text-muted">Tidak ada data.</li>
+                            @endforelse
+                        </ul>
                     </div>
                 </div><!-- /.card-body -->
             </div><!-- /.card -->
@@ -230,33 +256,30 @@
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="fas fa-bullhorn"></i>
-                        Pemeliharaan Korektif
+                        Pemeliharaan Preventif dalam waktu dekat
                     </h3>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <div class="callout callout-danger">
-                        <h5>I am a danger callout!</h5>
-
-                        <p>There is a problem that we need to fix. A wonderful serenity has taken possession of my entire
-                            soul,
-                            like these sweet mornings of spring which I enjoy with my whole heart.</p>
-                    </div>
-                    <div class="callout callout-info">
-                        <h5>I am an info callout!</h5>
-
-                        <p>Follow the steps to continue to payment.</p>
-                    </div>
-                    <div class="callout callout-warning">
-                        <h5>I am a warning callout!</h5>
-
-                        <p>This is a yellow callout.</p>
-                    </div>
-                    <div class="callout callout-success">
-                        <h5>I am a success callout!</h5>
-
-                        <p>This is a green callout.</p>
-                    </div>
+                    @forelse($latestPreventifUpcoming as $schedule)
+                        @php
+                            $assetRoute = ($schedule->asset->classification_id ?? null) == 2
+                                ? route('admin.asettik.pemeliharaan', $schedule->asset_id)
+                                : route('admin.asetrt.pemeliharaan', $schedule->asset_id);
+                        @endphp
+                        <div class="callout callout-info">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h5 class="mb-2">{{ $loop->iteration }}. {{ $schedule->name }}</h5>
+                                <span class="badge badge-info">{{ \Illuminate\Support\Carbon::parse($schedule->start)->format('d M Y') }}</span>
+                            </div>
+                            <p class="mb-2">{{ $schedule->asset->name ?? '-' }}</p>
+                            <a href="{{ $assetRoute }}" class="small-box-footer text-info">
+                                Lihat detail aset <i class="fas fa-arrow-circle-right"></i>
+                            </a>
+                        </div>
+                    @empty
+                        <p class="text-muted mb-0">Tidak ada pemeliharaan preventif dalam 30 hari mendatang.</p>
+                    @endforelse
                 </div><!-- /.card-body -->
             </div><!-- /.card -->
         </div><!-- /.col -->

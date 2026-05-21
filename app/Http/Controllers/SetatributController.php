@@ -432,23 +432,54 @@ class SetatributController extends Controller
 
     public function getLokasi(Request $request): JsonResponse
     {
-        $lokasis = \App\Models\LocationsModel::with('building')->get();
-        return DataTables::of($lokasis)
-            ->addIndexColumn()
-            ->addColumn('action', function ($lokasis) {
-                return
-                    '
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" title="More..."></button>
-                        <ul class="dropdown-menu dropdown-menu-right">
-                            <li><span class="mx-3" id="edit-lokasi" data-id="' . $lokasis->id . '" data-name="' . e($lokasis->name) . '" style="cursor: pointer; color: #007bff;">Edit</span></li>
-                            <li><span class="mx-3" id="delete-lokasi" data-id="' . $lokasis->id . '" data-name="' . e($lokasis->name) . '" style="cursor: pointer; color: #007bff;">Delete</span></li>
-                        </ul>
-                    </div>
-                    '
-                    ;
-            })
-            ->make();
+        $buildings = \App\Models\BuildingsModel::with(['locations' => function ($query) {
+            $query->orderBy('name');
+        }])->orderBy('name')->get();
+
+        $rows = $buildings->map(function ($building) {
+            return [
+                'building' => [
+                    'id' => $building->id,
+                    'name' => $building->name,
+                ],
+                'locations' => $building->locations->map(function ($location) {
+                    return [
+                        'id' => $location->id,
+                        'name' => $location->name,
+                        'floor' => $location->floor,
+                        'building_id' => $location->building_id,
+                    ];
+                })->values(),
+            ];
+        })->values();
+
+        return response()->json(['data' => $rows]);
+    }
+
+    public function storeBuilding(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'name' => 'required|unique:buildings,name|string|max:255',
+        ]);
+
+        $data['client_id'] = auth()->user()->client_id;
+
+        \App\Models\BuildingsModel::create($data);
+
+        return response()->json(['message' => 'Gedung berhasil ditambahkan.']);
+    }
+
+    public function storeRoom(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'building_id' => 'required|exists:buildings,id',
+            'name' => 'required|string|max:255',
+            'floor' => 'required|string|max:255',
+        ]);
+
+        \App\Models\LocationsModel::create($data);
+
+        return response()->json(['message' => 'Ruangan berhasil ditambahkan.']);
     }
 
     public function storeLokasi(Request $request): JsonResponse
@@ -488,6 +519,14 @@ class SetatributController extends Controller
         $building->update($data);
 
         return response()->json(['message' => 'Nama gedung berhasil diperbarui.']);
+    }
+
+    public function deleteBuilding($id): JsonResponse
+    {
+        $building = \App\Models\BuildingsModel::findOrFail($id);
+        $building->delete();
+
+        return response()->json(['message' => 'Gedung ' . $building->name . ' berhasil dihapus.']);
     }
 
     public function deleteLokasi($id): JsonResponse

@@ -9,7 +9,7 @@
                 </button>
             </div>
 
-            <form id="formCreateAsetTIK" method="POST" autocomplete="off">
+            <form id="formCreateAsetTIK" method="POST" autocomplete="off" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="row">
@@ -132,6 +132,13 @@
                             <textarea name="notes" id="notes" class="form-control" rows="2"></textarea>
                             <span class="text-danger small" id="error-notes"></span>
                         </div>
+
+                        {{-- Image --}}
+                        <div class="form-group col-md-6">
+                            <label for="image">Foto</label>
+                            <input type="file" name="image" id="image" class="form-control">
+                            <span class="text-danger small" id="error-image"></span>
+                        </div>
                     </div>
                     <p class="text-muted">Tanda <span class="text-danger">*</span> wajib diisi</p>
                 </div>
@@ -177,15 +184,18 @@
         $(document).ready(function() {
             $('#formCreateAsetTIK').on('submit', function(e) {
                 e.preventDefault();
-                let form = $(this);
+                let form = $(this)[0];
+                let formData = new FormData(form);
 
                 $.ajax({
                     url: "{{ route('admin.asettik.store', ['classification' => 'tik']) }}",
                     method: "POST",
-                    data: form.serialize(),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
                     success: function(res) {
                         $('#createModal').modal('hide');
-                        form[0].reset();
+                        $('#formCreateAsetTIK')[0].reset();
                         $('.select2, .select2tag').val(null).trigger('change');
 
                         Swal.fire({

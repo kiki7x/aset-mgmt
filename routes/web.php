@@ -27,6 +27,9 @@ Route::get('/servicedesk', [App\Http\Controllers\FrontController::class, 'servic
 Route::get('/captcha-image', [App\Http\Controllers\FrontController::class, 'captchaImage'])->name('captcha.image');
 Route::get('/refresh-captcha', [App\Http\Controllers\FrontController::class, 'refreshCaptcha'])->name('refresh.captcha');
 Route::post('/servicedesk', [TiketController::class, 'store']);
+// Public endpoints for frontsite Service Desk (used by public UI)
+Route::get('/servicedesk/data', [TiketController::class, 'data'])->name('servicedesk.data.public');
+Route::post('/servicedesk/store', [TiketController::class, 'store'])->name('servicedesk.store.public');
 
 //Admin Area
 Route::prefix('admin')->middleware('auth')->group(function () {
@@ -52,6 +55,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::middleware(['role:superadmin|admin_rt|staf_driver|staf_engineering'])->group(function () {
         Route::get('/asetrt', [App\Http\Controllers\AssetController::class, 'index_rt'])->name('admin.asetrt');
         Route::get('/asetrt/get_assets', [App\Http\Controllers\AssetController::class, 'get_assets'])->name('admin.asetrt.get_assets');
+        Route::get('/asetrt/export', [App\Http\Controllers\AssetController::class, 'exportExcelRt'])->name('admin.asetrt.export');
         Route::post('/asetrt/store/{classification}', [App\Http\Controllers\AssetController::class, 'store'])->name('admin.asetrt.store');
         Route::delete('/asetrt/destroy/{id}/{classification}', [App\Http\Controllers\AssetController::class, 'destroy'])->name('admin.asetrt.destroy');
         Route::get('/asetrt/{id}', [App\Http\Controllers\ShowAsetController::class, 'showDetails'])->name('admin.asetrt.details');
@@ -153,10 +157,13 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         // Route Setting Lokasi
         Route::get('/setting_attr/lokasi', [App\Http\Controllers\SetatributController::class, 'lokasi'])->name('admin.setting_attr.lokasi');
         Route::get('/setting_attr/lokasi/get_lokasi', [App\Http\Controllers\SetatributController::class, 'getLokasi'])->name('admin.setting_attr.lokasi.get_lokasi');
+        Route::post('/setting_attr/lokasi/building/store', [App\Http\Controllers\SetatributController::class, 'storeBuilding'])->name('admin.setting_attr.lokasi.building.store');
+        Route::post('/setting_attr/lokasi/room/store', [App\Http\Controllers\SetatributController::class, 'storeRoom'])->name('admin.setting_attr.lokasi.room.store');
         Route::post('/setting_attr/lokasi/store', [App\Http\Controllers\SetatributController::class, 'storeLokasi'])->name('admin.setting_attr.lokasi.store');
         Route::get('/setting_attr/lokasi/edit/{id}', [App\Http\Controllers\SetatributController::class, 'editLokasi'])->name('admin.setting_attr.lokasi.edit');
         Route::patch('/setting_attr/lokasi/update/{id}', [App\Http\Controllers\SetatributController::class, 'updateLokasi'])->name('admin.setting_attr.lokasi.update');
         Route::patch('/setting_attr/lokasi/building/update/{id}', [App\Http\Controllers\SetatributController::class, 'updateBuilding'])->name('admin.setting_attr.lokasi.building.update');
+        Route::delete('/setting_attr/lokasi/building/delete/{id}', [App\Http\Controllers\SetatributController::class, 'deleteBuilding'])->name('admin.setting_attr.lokasi.building.delete');
         Route::delete('/setting_attr/lokasi/delete/{id}', [App\Http\Controllers\SetatributController::class, 'deleteLokasi'])->name('admin.setting_attr.lokasi.delete');
     });
 
