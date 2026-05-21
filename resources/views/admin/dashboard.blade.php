@@ -1,6 +1,6 @@
 @extends('layouts.backsite', [
     'title' => 'Dashboard | SAPA PPL',
-    'welcome' => 'Selamat datang ' . Auth::user()->name . ' di Sistem Aplikasi Pemeliharaan Aset',
+    'welcome' => 'Selamat datang ' . Auth::user()->fullname . ' di Sistem Aplikasi Pemeliharaan Aset',
     // 'breadcrumb' => 'Dashboard'
 ])
 
@@ -8,7 +8,7 @@
 @section('content')
     {{-- Rangkum Aset --}}
     <div class="row">
-        <div class="col-md-2 col-lg-2 col-6">
+        <div class="col-md-2 col-lg-3 col-6">
             <!-- small card -->
             <div class="small-box bg-info">
                 <div class="inner">
@@ -23,7 +23,7 @@
                 </a>
             </div>
         </div><!-- ./col -->
-        <div class="col-md-2 col-lg-2 col-6">
+        <div class="col-md-2 col-lg-3 col-6">
             <!-- small card -->
             <div class="small-box bg-info">
                 <div class="inner">
@@ -32,13 +32,14 @@
                     <p>Aset Rumah Tangga</p>
                 </div>
                 <div class="icon">
-                    <i class="fas fa-building"></i>
+                    <i class="fa-solid fa-house-chimney-window"></i>
                 </div>
                 <a href="{{ route('admin.asetrt') }}" class="small-box-footer">
                     Selengkapnya <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
         </div><!-- ./col -->
+        
         <div class="col-md-3 col-lg-3 col-6">
             <div class="small-box bg-success">
                 <div class="inner">
@@ -54,7 +55,7 @@
             </div>
         </div><!-- ./col -->
         <div class="col-md-3 col-lg-3 col-6">
-            <div class="small-box bg-danger">
+            <div class="small-box bg-warning">
                 <div class="inner">
                     <h3>{{ $totalAssetsPendingMaintenance }}</h3>
                     <p>Aset Belum Dipelihara</p>
@@ -72,30 +73,14 @@
     <div class="row">
         <div class="col-md-2 col-lg-2 col-6">
             <!-- small card -->
-            <div class="small-box bg-danger">
-                <div class="inner">
-                    <h3>{{ $totalTickets }}</h3>
-
-                    <p>Helpdesk Tiket</p>
-                </div>
-                <div class="icon">
-                    <i class="fa-solid fa-headset"></i>
-                </div>
-                <a href="{{ route('admin.tiket') }}" class="small-box-footer">
-                    Selengkapnya <i class="fas fa-arrow-circle-right"></i>
-                </a>
-            </div>
-        </div><!-- ./col -->
-        <div class="col-md-2 col-lg-2 col-6">
-            <!-- small card -->
-            <div class="small-box bg-success">
+            <div class="small-box bg-info">
                 <div class="inner">
                     <h3>{{ $totalGedung }}</h3>
 
                     <p>Gedung</p>
                 </div>
                 <div class="icon">
-                    <i class="fa-solid fa-location-dot"></i>
+                    <i class="fas fa-building"></i>
                 </div>
                 <a href="{{ route('admin.setting_attr.lokasi') }}" class="small-box-footer">
                     Selengkapnya <i class="fas fa-arrow-circle-right"></i>
@@ -104,7 +89,7 @@
         </div><!-- ./col -->
         <div class="col-md-2 col-lg-2 col-6">
             <!-- small card -->
-            <div class="small-box bg-warning">
+            <div class="small-box bg-info">
                 <div class="inner">
                     <h3>{{ $totalRuangan ?? 0 }}</h3>
 
@@ -114,6 +99,21 @@
                     <i class="fa-solid fa-door-open"></i>
                 </div>
                 <a href="{{ route('admin.setting_attr.lokasi') }}" class="small-box-footer">
+                    Selengkapnya <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div><!-- ./col -->
+        <div class="col-md-2 col-lg-2 col-6">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>{{ $totalTickets }}</h3>
+
+                    <p>Helpdesk Tiket</p>
+                </div>
+                <div class="icon">
+                    <i class="fa-solid fa-headset"></i>
+                </div>
+                <a href="{{ route('admin.tiket') }}" class="small-box-footer">
                     Selengkapnya <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
@@ -134,7 +134,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="card card-default">
                 <div class="card-header">
                     <h3 class="card-title">
@@ -145,25 +145,25 @@
                 <!-- /.card-header -->
                 <div class="card-body">
                     <ul class="todo-list presort ui-sortable">
-                        @foreach($latestTickets as $ticket)
-                        <li>
-                            <span class="text">
-                                <a href="{{ route('admin.tiket.show', $ticket->id) }}" class="text-primary" style="font-weight: bold;">#{{ $ticket->ticket }} {{ $ticket->subject }}</a>
-                            </span>
-                            <!-- Emphasis label -->
-                            <small class="badge 
-                                @if($ticket->status == 'In Progress') bg-warning text-dark
+                        @foreach ($latestTickets as $ticket)
+                            <li>
+                                <span class="text">
+                                    <a href="{{ route('admin.tiket.show', $ticket->id) }}" class="text-primary" style="font-weight: bold;">#{{ $ticket->ticket }} {{ $ticket->subject }}</a>
+                                </span>
+                                <!-- Emphasis label -->
+                                <small
+                                       class="badge 
+                                @if ($ticket->status == 'In Progress') bg-warning text-dark
                                 @elseif($ticket->status == 'Answered') bg-success
                                 @elseif($ticket->status == 'Closed') bg-secondary
-                                @else bg-primary
-                                @endif">{{ $ticket->status }}</small>
-                            <small>{{ $ticket->created_at->diffForHumans() }}</small>
-                            <!-- General tools such as edit or delete-->
-                            <div class="tools">
-                                <a href="{{ route('admin.tiket.show', $ticket->id) }}" class="btn-right text-dark"><i class="fa fa-eye"></i></a>&nbsp;
-                                <a href="#" onclick="showM(&quot;index.php?modal=tickets/edit&amp;reroute=dashboard&amp;routeid=&amp;id={{ $ticket->id }}&amp;section=&quot;);return false" class="btn-right text-dark"><i class="fa fa-edit"></i></a>
-                            </div>
-                        </li>
+                                @else bg-primary @endif">{{ $ticket->status }}</small>
+                                <small>{{ $ticket->created_at->diffForHumans() }}</small>
+                                <!-- General tools such as edit or delete-->
+                                <div class="tools">
+                                    <a href="{{ route('admin.tiket.show', $ticket->id) }}" class="btn-right text-dark"><i class="fa fa-eye"></i></a>&nbsp;
+                                    <a href="#" onclick="showM(&quot;index.php?modal=tickets/edit&amp;reroute=dashboard&amp;routeid=&amp;id={{ $ticket->id }}&amp;section=&quot;);return false" class="btn-right text-dark"><i class="fa fa-edit"></i></a>
+                                </div>
+                            </li>
                         @endforeach
                     </ul>
                 </div><!-- /.card-body -->
@@ -263,9 +263,7 @@
                 <div class="card-body">
                     @forelse($latestPreventifUpcoming as $schedule)
                         @php
-                            $assetRoute = ($schedule->asset->classification_id ?? null) == 2
-                                ? route('admin.asettik.pemeliharaan', $schedule->asset_id)
-                                : route('admin.asetrt.pemeliharaan', $schedule->asset_id);
+                            $assetRoute = ($schedule->asset->classification_id ?? null) == 2 ? route('admin.asettik.pemeliharaan', $schedule->asset_id) : route('admin.asetrt.pemeliharaan', $schedule->asset_id);
                         @endphp
                         <div class="callout callout-info">
                             <div class="d-flex justify-content-between align-items-start">
@@ -289,37 +287,37 @@
 @endsection
 
 @push('script-foot')
-<script src="{{ asset('assets/plugins/chart.js/Chart.min.js') }}"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var ctx = document.getElementById('maintenanceStatusChart');
-        if (!ctx) return;
+    <script src="{{ asset('assets/plugins/chart.js/Chart.min.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var ctx = document.getElementById('maintenanceStatusChart');
+            if (!ctx) return;
 
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Aset Terpelihara', 'Menunggu Pemeliharaan'],
-                datasets: [{
-                    label: 'Jumlah Aset',
-                    data: [{{ $totalAssetsMaintained }}, {{ $totalAssetsPendingMaintenance }}],
-                    backgroundColor: ['#28a745', '#ffc107'],
-                    borderColor: ['#28a745', '#ffc107'],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            precision: 0
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Aset Terpelihara', 'Menunggu Pemeliharaan'],
+                    datasets: [{
+                        label: 'Jumlah Aset',
+                        data: [{{ $totalAssetsMaintained }}, {{ $totalAssetsPendingMaintenance }}],
+                        backgroundColor: ['#28a745', '#ffc107'],
+                        borderColor: ['#28a745', '#ffc107'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
                         }
                     }
                 }
-            }
+            });
         });
-    });
-</script>
+    </script>
 @endpush

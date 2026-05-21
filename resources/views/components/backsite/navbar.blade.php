@@ -127,14 +127,14 @@
                                   <p>Aset TIK</p>
                               </a>
                           </li>
-                          <li class="nav-item">
+                          <li class="nav-item" data-toggle="tooltip" title="coming soon..." data-placement="top">
                               <a href="#" class="nav-link {{ request()->is('admin/lisensi*') ? 'active' : '' }}">
                                 &nbsp;&nbsp;
                                 <i class="nav-icon fa-regular fa-file-code"></i>
                                 <p>Lisensi</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" data-toggle="tooltip" title="coming soon..." data-placement="top">
                             <a href="#" class="nav-link {{ request()->is('admin/komponen*') ? 'active' : '' }}">
                                   &nbsp;&nbsp;
                                   <i class="nav-icon fa-regular fa-keyboard"></i>
@@ -204,7 +204,7 @@
                           <p>Monitoring</p>
                       </a>
                   </li>
-                  <li class="nav-item">
+                  <li class="nav-item" data-toggle="tooltip" title="coming soon..." data-placement="top">
                       <a href="{{ route('admin.laporan') }}" class="nav-link {{ request()->is('admin/laporan') ? 'active' : '' }}">
                           <i class="nav-icon fa fa-bar-chart"></i>
                           <p>Laporan</p>
