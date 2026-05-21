@@ -8,7 +8,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
-            <form id="formCreateTicket" action="{{ route('servicedesk.store') }}" method="POST" enctype="multipart/form-data" novalidate>
+            <form id="formCreateTicket" action="{{ route('servicedesk.store.public') }}" method="POST" enctype="multipart/form-data" novalidate>
                 @csrf
                 <div class="modal-body" id="modalCreateTicket">
 

@@ -27,6 +27,9 @@ Route::get('/servicedesk', [App\Http\Controllers\FrontController::class, 'servic
 Route::get('/captcha-image', [App\Http\Controllers\FrontController::class, 'captchaImage'])->name('captcha.image');
 Route::get('/refresh-captcha', [App\Http\Controllers\FrontController::class, 'refreshCaptcha'])->name('refresh.captcha');
 Route::post('/servicedesk', [TiketController::class, 'store']);
+// Public endpoints for frontsite Service Desk (used by public UI)
+Route::get('/servicedesk/data', [TiketController::class, 'data'])->name('servicedesk.data.public');
+Route::post('/servicedesk/store', [TiketController::class, 'store'])->name('servicedesk.store.public');
 
 //Admin Area
 Route::prefix('admin')->middleware('auth')->group(function () {

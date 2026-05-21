@@ -299,7 +299,7 @@
             pageLength: 10,
             lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
 
-            ajax: "{{ route('servicedesk.data') }}",
+            ajax: "{{ route('servicedesk.data.public') }}",
 
             columns: [{
                     data: 'ticket',
@@ -408,7 +408,7 @@
 
         $.ajax({
 
-            url: "{{ route('servicedesk.store') }}",
+            url: "{{ route('servicedesk.store.public') }}",
             type: "POST",
             data: formData,
             processData: false,
@@ -448,8 +448,8 @@
                     showTicketValidationErrors(xhr.responseJSON.errors);
                 }
 
-                if (typeof window.refreshCaptchaImage === 'function') {
-                    window.refreshCaptchaImage();
+                if (typeof window.refreshTicketCaptchaImage === 'function') {
+                    window.refreshTicketCaptchaImage();
                 }
 
                 Swal.fire({
