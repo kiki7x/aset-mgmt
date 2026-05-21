@@ -3,7 +3,7 @@
 {{-- @section('title', 'Kelola Aset TIK') --}}
 {{-- <x-slot:title>{{ $title }}</x-slot:title> --}}
 
-@push('scripts-head')
+@push('script-head')
 <style>
     #video-container {
         width: 100%;
