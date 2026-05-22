@@ -183,70 +183,26 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <div class="callout callout-danger">
-                        <h5 class="mb-3">Segera Dikerjakan</h5>
-                        <ul class="list-unstyled mb-0">
-                            @forelse($latestKorektifSegera as $maintenance)
-                                <li class="mb-3 d-flex align-items-start">
-                                    <div class="badge badge-danger mr-3" style="min-width: 28px; line-height: 18px;">{{ $loop->iteration }}</div>
-                                    <div>
-                                        <div class="font-weight-bold">{{ $maintenance->name }}</div>
-                                        <div class="text-sm text-muted">{{ $maintenance->description ?? '-' }}</div>
-                                    </div>
-                                </li>
-                            @empty
-                                <li class="text-muted">Tidak ada data.</li>
-                            @endforelse
-                        </ul>
-                    </div>
-                    <div class="callout callout-warning">
-                        <h5 class="mb-3">Sedang Dikerjakan</h5>
-                        <ul class="list-unstyled mb-0">
-                            @forelse($latestKorektifSedang as $maintenance)
-                                <li class="mb-3 d-flex align-items-start">
-                                    <div class="badge badge-warning mr-3" style="min-width: 28px; line-height: 18px;">{{ $loop->iteration }}</div>
-                                    <div>
-                                        <div class="font-weight-bold">{{ $maintenance->name }}</div>
-                                        <div class="text-sm text-muted">{{ $maintenance->description ?? '-' }}</div>
-                                    </div>
-                                </li>
-                            @empty
-                                <li class="text-muted">Tidak ada data.</li>
-                            @endforelse
-                        </ul>
-                    </div>
-                    <div class="callout callout-default" style="border-left-color: #6c757d;">
-                        <h5 class="mb-3">Ditahan</h5>
-                        <ul class="list-unstyled mb-0">
-                            @forelse($latestKorektifDitahan as $maintenance)
-                                <li class="mb-3 d-flex align-items-start">
-                                    <div class="badge badge-secondary mr-3" style="min-width: 28px; line-height: 18px;">{{ $loop->iteration }}</div>
-                                    <div>
-                                        <div class="font-weight-bold">{{ $maintenance->name }}</div>
-                                        <div class="text-sm text-muted">{{ $maintenance->description ?? '-' }}</div>
-                                    </div>
-                                </li>
-                            @empty
-                                <li class="text-muted">Tidak ada data.</li>
-                            @endforelse
-                        </ul>
-                    </div>
-                    <div class="callout callout-success">
-                        <h5 class="mb-3">Selesai</h5>
-                        <ul class="list-unstyled mb-0">
-                            @forelse($latestKorektifSelesai as $maintenance)
-                                <li class="mb-3 d-flex align-items-start">
-                                    <div class="badge badge-success mr-3" style="min-width: 28px; line-height: 18px;">{{ $loop->iteration }}</div>
-                                    <div>
-                                        <div class="font-weight-bold">{{ $maintenance->name }}</div>
-                                        <div class="text-sm text-muted">{{ $maintenance->notes ?? '-' }}</div>
-                                    </div>
-                                </li>
-                            @empty
-                                <li class="text-muted">Tidak ada data.</li>
-                            @endforelse
-                        </ul>
-                    </div>
+                    @forelse($latestKorektifItems as $maintenance)
+                        @php
+                            $statusBadgeClass = match ($maintenance->status) {
+                                'Segera Kerjakan' => 'danger',
+                                'Sedang Dikerjakan' => 'warning',
+                                'Ditahan' => 'secondary',
+                                'Selesai' => 'success',
+                                default => 'primary',
+                            };
+                        @endphp
+                        <div class="callout callout-light border-left-0">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h5 class="mb-2">{{ $loop->iteration }}. {{ $maintenance->name }}</h5>
+                                <span class="badge badge-{{ $statusBadgeClass }}">{{ $maintenance->status }}</span>
+                            </div>
+                            <p class="mb-0 text-muted">{{ $maintenance->description ?? '-' }}</p>
+                        </div>
+                    @empty
+                        <p class="text-muted mb-0">Tidak ada data pemeliharaan korektif terbaru.</p>
+                    @endforelse
                 </div><!-- /.card-body -->
             </div><!-- /.card -->
         </div><!-- /.col -->
