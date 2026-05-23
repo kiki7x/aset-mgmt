@@ -54,6 +54,15 @@ class AdminController extends Controller
             ->take(5)
             ->get();
 
+        $latestKorektifItems = collect()
+            ->concat($latestKorektifSegera)
+            ->concat($latestKorektifSedang)
+            ->concat($latestKorektifDitahan)
+            ->concat($latestKorektifSelesai)
+            ->sortByDesc('created_at')
+            ->take(5)
+            ->values();
+
         $latestPreventifUpcoming = \App\Models\Maintenances_scheduleModel::with('asset')
             ->whereBetween('start', [now(), now()->addDays(30)])
             ->orderBy('start', 'asc')
@@ -73,6 +82,7 @@ class AdminController extends Controller
             'latestKorektifSedang',
             'latestKorektifDitahan',
             'latestKorektifSelesai',
+            'latestKorektifItems',
             'latestPreventifUpcoming'
         ));
         
