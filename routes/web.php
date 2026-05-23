@@ -193,6 +193,19 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     // Route Knowledge Base
     Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering'])->group(function () {
         Route::get('/knowledge-base', [App\Http\Controllers\KnowledgeBaseController::class, 'index'])->name('admin.knowledge-base');
+        Route::get('/knowledge-base/create', [App\Http\Controllers\KnowledgeBaseController::class, 'create'])->name('admin.knowledge-base.create');
+        Route::post('/knowledge-base', [App\Http\Controllers\KnowledgeBaseController::class, 'store'])->name('admin.knowledge-base.store');
+        Route::get('/knowledge-base/{article}/edit', [App\Http\Controllers\KnowledgeBaseController::class, 'edit'])->name('admin.knowledge-base.edit');
+        Route::patch('/knowledge-base/{article}', [App\Http\Controllers\KnowledgeBaseController::class, 'update'])->name('admin.knowledge-base.update');
+        Route::delete('/knowledge-base/{article}', [App\Http\Controllers\KnowledgeBaseController::class, 'destroy'])->name('admin.knowledge-base.destroy');
+
+        // Rute untuk manajemen kategori Knowledge Base (via AJAX)
+        Route::post('/knowledge-base/categories', [App\Http\Controllers\KnowledgeBaseController::class, 'categoryStore'])->name('admin.knowledge-base.categories.store');
+        Route::patch('/knowledge-base/categories/{category}', [App\Http\Controllers\KnowledgeBaseController::class, 'categoryUpdate'])->name('admin.knowledge-base.categories.update');
+        Route::delete('/knowledge-base/categories/{category}', [App\Http\Controllers\KnowledgeBaseController::class, 'categoryDestroy'])->name('admin.knowledge-base.categories.destroy');
+
+        // Rute untuk Summernote Image Upload
+        Route::post('/knowledge-base/upload-image', [App\Http\Controllers\KnowledgeBaseController::class, 'uploadImage'])->name('admin.knowledge-base.upload-image');
     });
 
     // Route Monitoring

@@ -1,10 +1,308 @@
 @extends('layouts.backsite', [
     'title' => 'Knowledge Base | SAPA PPL',
     'welcome' => 'Knowledge Base',
-    'breadcrumb' => '<li class="breadcrumb-item active">Knowledge Base</li>'
-    ])
+    'breadcrumb' => '
+        <li class="breadcrumb-item active">Knowledge Base</li>
+    ',
+])
 
+@push('script-head')
+    <!-- DataTables CSS (jika belum ada di layout) -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
+@endpush
 
 @section('content')
-coming soon...
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Daftar Artikel</h3>
+                        <div class="card-tools">
+                            <a href="{{ route('admin.knowledge-base.create') }}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus"></i> Tambah Artikel
+                            </a>
+                            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#categoryManagementModal">
+                                <i class="fas fa-tags"></i> Manajemen Kategori
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="articlesTable" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Judul Artikel</th>
+                                    <th>Kategori</th>
+                                    <th>Penulis</th>
+                                    <th>Dibuat Pada</th>
+                                    <th>Terakhir Diperbarui</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($articles as $article)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $article->title }}</td>
+                                        <td>{{ $article->category->name ?? 'Tidak Ada' }}</td>
+                                        <td>{{ $article->author->name ?? 'Pengguna Tidak Dikenal' }}</td>
+                                        <td>{{ $article->created_at->format('d M Y H:i') }}</td>
+                                        <td>{{ $article->updated_at->format('d M Y H:i') }}</td>
+                                        <td>
+                                            <a href="{{ route('admin.knowledge-base.edit', $article->id) }}" class="btn btn-sm btn-warning" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="submit" class="btn btn-sm btn-danger" title="Hapus">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+
+    <!-- Category Management Modal -->
+    <div class="modal fade" id="categoryManagementModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="categoryManagementModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="categoryManagementModalLabel">Manajemen Kategori Knowledge Base</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addCategoryForm">
+                        @csrf
+                        <div class="form-group">
+                            <label for="categoryName">Nama Kategori</label>
+                            <input type="text" class="form-control" id="categoryName" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="categoryDescription">Deskripsi (Opsional)</label>
+                            <textarea class="form-control" id="categoryDescription" name="description"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm">Tambah Kategori</button>
+                    </form>
+                    <hr>
+                    <h5>Daftar Kategori</h5>
+                    <table class="table table-bordered mt-3">
+                        <thead>
+                            <tr>
+                                <th>Nama</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categoryList">
+                            @foreach ($categories as $category)
+                                <tr id="category-{{ $category->id }}">
+                                    <td>
+                                        <span class="category-name-display">{{ $category->name }}</span>
+                                        <input type="text" class="form-control category-name-edit d-none" value="{{ $category->name }}">
+                                        <input type="hidden" class="category-description-edit" value="{{ $category->description }}">
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-info edit-category" data-id="{{ $category->id }}">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-success save-category d-none" data-id="{{ $category->id }}">
+                                            <i class="fas fa-save"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-secondary cancel-edit-category d-none" data-id="{{ $category->id }}">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-danger delete-category" data-id="{{ $category->id }}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
+
+
+@push('script-foot')
+    <!-- DataTables JS (jika belum ada di layout) -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+    <!-- SweetAlert2 (jika belum ada di layout) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        $(function() {
+            // Initialize DataTables
+            $("#articlesTable").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#articlesTable_wrapper .col-md-6:eq(0)');
+
+            // Handle Article Delete
+            $('.delete-form').on('submit', function(e) {
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Artikel ini akan dihapus secara permanen!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.submit();
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+    // --- Category Management (AJAX) ---
+            $('#addCategoryForm').on('submit', function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: "{{ route('admin.knowledge-base.categories.store') }}",
+                    method: "POST",
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        Swal.fire('Berhasil!', response.message, 'success');
+                        $('#categoryName').val('');
+                        $('#categoryDescription').val('');
+                        // Add new category to the list
+                        let newRow = `<tr id="category-${response.category.id}">
+                                        <td>
+                                            <span class="category-name-display">${response.category.name}</span>
+                                            <input type="text" class="form-control category-name-edit d-none" value="${response.category.name}">
+                                            <input type="hidden" class="category-description-edit" value="${response.category.description}">
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-info edit-category" data-id="${response.category.id}">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-success save-category d-none" data-id="${response.category.id}">
+                                                <i class="fas fa-save"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-secondary cancel-edit-category d-none" data-id="${response.category.id}">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-danger delete-category" data-id="${response.category.id}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>`;
+                        $('#categoryList').append(newRow);
+                    },
+                    error: function(response) {
+                        Swal.fire('Error!', response.responseJSON.message || 'Terjadi kesalahan!', 'error');
+                    }
+                });
+            });
+
+            // Edit Category
+            $(document).on('click', '.edit-category', function() {
+                let id = $(this).data('id');
+                let row = $('#category-' + id);
+                row.find('.category-name-display').addClass('d-none');
+                row.find('.category-name-edit').removeClass('d-none').focus();
+                row.find('.edit-category').addClass('d-none');
+                row.find('.delete-category').addClass('d-none');
+                row.find('.save-category').removeClass('d-none');
+                row.find('.cancel-edit-category').removeClass('d-none');
+            });
+
+            // Cancel Edit Category
+            $(document).on('click', '.cancel-edit-category', function() {
+                let id = $(this).data('id');
+                let row = $('#category-' + id);
+                row.find('.category-name-display').removeClass('d-none');
+                row.find('.category-name-edit').addClass('d-none');
+                row.find('.edit-category').removeClass('d-none');
+                row.find('.delete-category').removeClass('d-none');
+                row.find('.save-category').addClass('d-none');
+                row.find('.cancel-edit-category').addClass('d-none');
+                // Revert value
+                row.find('.category-name-edit').val(row.find('.category-name-display').text());
+            });
+
+            // Save Category
+            $(document).on('click', '.save-category', function() {
+                let id = $(this).data('id');
+                let row = $('#category-' + id);
+                let newName = row.find('.category-name-edit').val();
+                let description = row.find('.category-description-edit').val();
+
+                $.ajax({
+                    url: `/admin/knowledge-base/categories/${id}`,
+                    method: "PATCH",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        name: newName,
+                        description: description
+                    },
+                    success: function(response) {
+                        Swal.fire('Berhasil!', response.message, 'success');
+                        row.find('.category-name-display').text(response.category.name).removeClass('d-none');
+                        row.find('.category-name-edit').addClass('d-none');
+                        row.find('.edit-category').removeClass('d-none');
+                        row.find('.delete-category').removeClass('d-none');
+                        row.find('.save-category').addClass('d-none');
+                        row.find('.cancel-edit-category').addClass('d-none');
+                    },
+                    error: function(response) {
+                        Swal.fire('Error!', response.responseJSON.message || 'Terjadi kesalahan!', 'error');
+                    }
+                });
+            });
+
+            // Delete Category
+            $(document).on('click', '.delete-category', function() {
+                let id = $(this).data('id');
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Kategori ini akan dihapus!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: `/admin/knowledge-base/categories/${id}`,
+                            method: "DELETE",
+                            data: {
+                                _token: "{{ csrf_token() }}"
+                            },
+                            success: function(response) {
+                                Swal.fire('Berhasil!', response.message, 'success');
+                                $('#category-' + id).remove();
+                            },
+                            error: function(response) {
+                                Swal.fire('Error!', response.responseJSON.message || 'Terjadi kesalahan!', 'error');
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
+@endpush
