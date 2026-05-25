@@ -21,6 +21,8 @@ Route::get('/layanan', [App\Http\Controllers\FrontController::class, 'layanan'])
 Route::get('/statistik', [App\Http\Controllers\FrontController::class, 'statistik'])->name('statistik');
 Route::get('/team', [App\Http\Controllers\FrontController::class, 'team'])->name('team');
 Route::get('/faq', [App\Http\Controllers\FrontController::class, 'faq'])->name('faq');
+Route::get('/knowledge-base', [App\Http\Controllers\KnowledgeBaseController::class, 'publicIndex'])->name('knowledge-base');
+Route::get('/knowledge-base/{slug}', [App\Http\Controllers\KnowledgeBaseController::class, 'show'])->name('knowledge-base.show');
 Route::get('/lacak', [App\Http\Controllers\FrontController::class, 'lacak'])->name('lacak');
 Route::get('/lacak/show/{id}', [App\Http\Controllers\FrontController::class, 'lacak_show'])->name('lacak.show');
 Route::get('/servicedesk', [App\Http\Controllers\FrontController::class, 'servicedesk'])->name('servicedesk');

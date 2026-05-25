@@ -192,8 +192,8 @@
                           </li> --}}
                       </ul>
                   </li>
-                  <li class="nav-item" data-toggle="tooltip" title="coming soon..." data-placement="top">
-                      <a href="{{ route('admin.knowledge-base') }}" class="nav-link {{ request()->is('admin/knowledge_base') ? 'active' : '' }}">
+                  <li class="nav-item" data-toggle="tooltip" data-placement="top">
+                      <a href="{{ route('admin.knowledge-base') }}" class="nav-link {{ request()->is('admin/knowledge-base*') ? 'active' : '' }}">
                           <i class="nav-icon fa-solid fa-book"></i>
                           <p>Knowledge Base</p>
                       </a>
