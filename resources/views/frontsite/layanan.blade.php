@@ -73,6 +73,14 @@
                             <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia</p>
                         </div>
                     </div><!-- End Service Item -->
+
+                    <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up">
+                        <div class="service-item position-relative">
+                            <div class="icon"><i class="bi bi-lightbulb icon"></i></div>
+                            <h4><a href="{{ route('knowledge-base') }}" class="stretched-link">Knowledge Base</a></h4>
+                            <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia</p>
+                        </div>
+                    </div><!-- End Service Item -->
                 </div>
             </div>
         </section><!-- /Services Section -->

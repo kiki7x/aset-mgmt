@@ -65,13 +65,13 @@ class KnowledgeBaseController extends Controller
             'slug' => Str::slug($request->title), // Sudah di boot model, tapi bisa dipertegas
         ]);
 
-        return redirect()->route('admin.knowledge-base.index');
+        return redirect()->route('admin.knowledge-base');
     }
 
     public function destroy(KbArticleModel $article)
     {
         $article->delete();
-        return redirect()->route('admin.knowledge-base.index');
+        return redirect()->route('admin.knowledge-base');
     }
 
     // --- Category Management (via AJAX atau modal) ---
@@ -119,22 +119,55 @@ class KnowledgeBaseController extends Controller
     }
 
     // --- Summernote Image Upload ---
+    // --- Frontsite (public) views ---
+
+    public function publicIndex()
+    {
+        $categories = KbCategoryModel::all();
+        $articles = KbArticleModel::with('category', 'author')->where('is_published', 1)->latest()->get();
+
+        return view('frontsite.knowledge-base.index', compact('articles', 'categories'));
+    }
+
+    public function show($slug)
+    {
+        $article = KbArticleModel::with('category', 'author')->where('slug', $slug)->where('is_published', 1)->firstOrFail();
+
+        // Increment views counter (best-effort)
+        try {
+            $article->increment('views');
+        } catch (\Exception $e) {
+            // ignore increment errors
+        }
+
+        $related = KbArticleModel::with('category')->where('category_id', $article->category_id)->where('id', '!=', $article->id)->where('is_published', 1)->take(5)->get();
+
+        return view('frontsite.knowledge-base.show', compact('article', 'related'));
+    }
 
     public function uploadImage(Request $request)
     {
+        // Terima gambar atau video. Ukuran maksimum diset lebih besar (KB): images up to 5MB, videos up to 50MB.
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required|file|mimes:jpeg,png,jpg,gif,svg,mp4,mov,avi,mkv|max:51200', // max 50MB
         ]);
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('storage/kb_images'), $imageName); // Simpan di public/storage/kb_images
+            $file = $request->file('image');
+            $ext = $file->getClientOriginalExtension();
+            $mime = $file->getMimeType();
 
-            // Pastikan Anda telah menjalankan `php artisan storage:link` sebelumnya
-            return response()->json(['url' => asset('storage/kb_images/' . $imageName)]);
+            // Tentukan folder berdasarkan tipe
+            $isImage = str_starts_with($mime, 'image/');
+            $folder = $isImage ? 'kb_images' : 'kb_videos';
+
+            $fileName = time() . '_' . Str::random(10) . '.' . $ext;
+            $file->move(public_path('storage/' . $folder), $fileName);
+
+            // Pastikan `php artisan storage:link` sudah dijalankan
+            return response()->json(['url' => asset('storage/' . $folder . '/' . $fileName), 'type' => $isImage ? 'image' : 'video']);
         }
 
-        return response()->json(['error' => 'Gagal mengunggah gambar'], 400);
+        return response()->json(['error' => 'Gagal mengunggah file'], 400);
     }
 }
