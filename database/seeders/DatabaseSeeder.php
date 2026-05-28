@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             ManufacturersSeeder::class,
             ModelsSeeder::class,
             SuppliersSeeder::class,
+            KnowledgeBaseSeeder::class,
             // AssetsRTSeeder::class,
             // AssetsTIKSeeder::class,
         ]);
