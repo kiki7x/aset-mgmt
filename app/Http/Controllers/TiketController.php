@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
@@ -17,10 +16,10 @@ class TiketController extends Controller
         return view('admin.tiket.index');
     }
 
-    public function show($id): JsonResponse
+    public function show($id): View
     {
         $ticketToOpen = \App\Models\TicketsModel::findOrFail($id);
-        return response()->json($ticketToOpen);
+        return view('admin.tiket.show', compact('ticketToOpen'));
     }
 
     public function data(): JsonResponse
