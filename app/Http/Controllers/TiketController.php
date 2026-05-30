@@ -26,84 +26,88 @@ class TiketController extends Controller
 
     public function data()
     {
+        try {
+            $tickets = TicketFront::latest();
 
-        $tickets = TicketFront::latest();
+            if (request()->filled('issuetype')) {
+                $tickets->where('issuetype', request('issuetype'));
+            }
 
-        if (request()->filled('issuetype')) {
-            $tickets->where('issuetype', request('issuetype'));
+            if (request()->filled('department')) {
+                $tickets->where('department', request('department'));
+            }
+
+            return DataTables::of($tickets)
+
+                ->addColumn('ticket', function ($row) {
+                    return '<a href="javascript:void(0)" class="lihat-tiket"
+                    data-ticket="' . e($row->ticket) . '"
+                    data-nama="' . e($row->nama) . '"
+                    data-email="' . e($row->email) . '"
+                    data-wa="' . e($row->whatsapp_number ?? '') . '"
+                    data-subject="' . e($row->subject) . '"
+                    data-issuetype="' . e($row->issuetype) . '"
+                    data-department="' . e($row->department) . '"
+                    data-priority="' . e($row->priority) . '"
+                    data-description="' . e($row->description) . '"
+                    data-status="' . e($row->status) . '"
+                    data-reason="' . e($row->reason ?? '') . '"
+                    data-notes="' . e($row->notes ?? '') . '"
+                    data-attachments="' . e($row->attachments ?? '') . '"
+                >' . e($row->ticket) . '</a>';
+                })
+
+                ->addColumn('nama', function ($row) {
+                    return $row->nama;
+                })
+
+                ->addColumn('department', function ($row) {
+                    return $row->issuetype . ' - ' . $row->department;
+                })
+
+                ->addColumn('subject', function ($row) {
+                    return $row->subject;
+                })
+
+                ->addColumn('description', function ($row) {
+                    return $row->description;
+                })
+
+                ->addColumn('priority', function ($row) {
+                    return $row->priority;
+                })
+
+                ->addColumn('status', function ($row) {
+                    return $row->status;
+                })
+
+                ->addColumn('duedate', function ($row) {
+                    return $row->created_at->format('d M Y');
+                })
+
+                ->filter(function ($query) {
+                    if (request()->has('search') && !empty(request('search')['value'])) {
+                        $searchTerm = request('search')['value'];
+                        $query->where('ticket', 'like', "%{$searchTerm}%")
+                            ->orWhere('nama', 'like', "%{$searchTerm}%")
+                            ->orWhere('subject', 'like', "%{$searchTerm}%")
+                            ->orWhere('description', 'like', "%{$searchTerm}%")
+                            ->orWhere('issuetype', 'like', "%{$searchTerm}%")
+                            ->orWhere('department', 'like', "%{$searchTerm}%")
+                            ->orWhere('priority', 'like', "%{$searchTerm}%")
+                            ->orWhere('status', 'like', "%{$searchTerm}%")
+                            ->orWhereRaw("DATE_FORMAT(created_at, '%d %b %Y') LIKE ?", ["%{$searchTerm}%"]);
+                    }
+                })
+
+                ->rawColumns(['ticket'])
+
+                ->make(true);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error loading data: ' . $e->getMessage()
+            ], 500);
         }
-
-        if (request()->filled('department')) {
-            $tickets->where('department', request('department'));
-        }
-
-        return DataTables::of($tickets)
-
-            ->addColumn('ticket', function ($row) {
-
-                return '<a href="javascript:void(0)" class="lihat-tiket"
-                data-ticket="' . $row->ticket . '"
-                data-nama="' . $row->nama . '"
-                data-email="' . $row->email . '"
-                data-wa="' . $row->whatsapp_number . '"
-                data-subject="' . $row->subject . '"
-                data-issuetype="' . $row->issuetype . '"
-                data-department="' . $row->department . '"
-                data-priority="' . $row->priority . '"
-                data-description="' . $row->description . '"
-                data-status="' . $row->status . '"
-                data-reason="' . e($row->reason) . '"
-                data-notes="' . e($row->notes) . '"
-                data-attachments="' . $row->attachments . '"
-            >' . $row->ticket . '</a>';
-            })
-
-            ->addColumn('nama', function ($row) {
-                return $row->nama;
-            })
-
-            ->addColumn('department', function ($row) {
-                return $row->issuetype . ' - ' . $row->department;
-            })
-
-            ->addColumn('subject', function ($row) {
-                return $row->subject;
-            })
-
-            ->addColumn('description', function ($row) {
-                return $row->description;
-            })
-
-            ->addColumn('priority', function ($row) {
-                return $row->priority;
-            })
-
-            ->addColumn('status', function ($row) {
-                return $row->status;
-            })
-
-            ->addColumn('duedate', function ($row) {
-                return $row->created_at->format('d M Y');
-            })
-
-            ->filter(function ($query) {
-                if (request()->has('search') && !empty(request('search')['value'])) {
-                    $searchTerm = request('search')['value'];
-                    $query->where('ticket', 'like', "%{$searchTerm}%")
-                        ->orWhere('nama', 'like', "%{$searchTerm}%")
-                        ->orWhere('subject', 'like', "%{$searchTerm}%")
-                        ->orWhere('description', 'like', "%{$searchTerm}%")
-                        ->orWhere('issuetype', 'like', "%{$searchTerm}%")
-                        ->orWhere('department', 'like', "%{$searchTerm}%")
-                        ->orWhere('priority', 'like', "%{$searchTerm}%")
-                        ->orWhere('status', 'like', "%{$searchTerm}%")
-                        ->orWhereRaw("DATE_FORMAT(created_at, '%d %b %Y') LIKE ?", ["%{$searchTerm}%"]);
-                }
-            })
-
-            ->rawColumns(['ticket'])
-
-            ->make(true);
     }
 
     public function print(Request $request)
