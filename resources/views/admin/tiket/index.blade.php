@@ -466,7 +466,7 @@
         let search = tiketTable.search() || '';
         let issuetype = $('#filter_issuetype').val() || '';
         let department = $('#filter_department').val() || '';
-        let url = "{{ route('admin.tiket.print') }}";
+        let url = "{{ route('servicedesk.print') }}";
 
         if (search) {
             url += '?search=' + encodeURIComponent(search);
@@ -487,7 +487,7 @@
         }
 
         if (queryParts.length) {
-            url = "{{ route('admin.tiket.print') }}" + '?' + queryParts.join('&');
+            url = "{{ route('servicedesk.print') }}" + '?' + queryParts.join('&');
         }
 
         window.open(url, '_blank');

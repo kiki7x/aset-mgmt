@@ -172,7 +172,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering'])->group(function () {
         Route::get('/tiket', [App\Http\Controllers\TiketController::class, 'index'])->name('admin.tiket');
         Route::get('/tiket/{id}', [App\Http\Controllers\TiketController::class, 'show'])->name('admin.tiket.show');
-        Route::get('/tiket/print', [TiketController::class, 'print'])->name('admin.tiket.print');
+        Route::get('/servicedesk/print', [TiketController::class, 'print'])->name('servicedesk.print');
         Route::post('/tiket/update-status', [TiketController::class, 'updateStatus'])->name('admin.tiket.updateStatus');
 
     });
