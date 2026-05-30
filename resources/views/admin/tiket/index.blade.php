@@ -501,7 +501,7 @@
             pageLength: 10,
             lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
             ajax: {
-                url: "{{ route('admin.tiket.data') }}",
+                url: "{{ route('servicedesk.data.public') }}",
                 data: function(d) {
                     d.issuetype = $('#filter_issuetype').val();
                     d.department = $('#filter_department').val();

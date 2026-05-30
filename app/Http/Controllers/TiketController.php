@@ -19,7 +19,7 @@ class TiketController extends Controller
     public function show($id): View
     {
         $ticketToOpen = \App\Models\TicketsModel::findOrFail($id);
-        return view('admin.tiket.show', compact('ticketToOpen'));
+        return view('admin.tiket.index', compact('ticketToOpen'));
     }
 
     public function data(): JsonResponse
