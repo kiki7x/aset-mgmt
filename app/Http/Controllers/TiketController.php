@@ -192,10 +192,12 @@ class TiketController extends Controller
             ]);
 
             $validator->after(function ($validator) use ($request) {
-                $captchaInput = strtoupper((string) $request->input('captcha'));
-                $captchaCode = strtoupper((string) session('captcha_code'));
+                $captchaInput = strtoupper(trim((string) $request->input('captcha')));
+                $captchaCode = strtoupper(trim((string) session('captcha_code')));
 
-                if ($captchaCode === '' || $captchaInput === '' || !hash_equals($captchaCode, $captchaInput)) {
+                if ($captchaCode === '' || $captchaInput === '') {
+                    $validator->errors()->add('captcha', 'Captcha wajib diisi.');
+                } elseif (!hash_equals($captchaCode, $captchaInput)) {
                     $validator->errors()->add('captcha', 'Captcha tidak valid, silakan coba lagi.');
                 }
             });

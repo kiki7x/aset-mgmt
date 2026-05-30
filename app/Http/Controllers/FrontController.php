@@ -38,7 +38,13 @@ class FrontController extends Controller
 
     private function captchaSessionKey(Request $request): string
     {
-        return $request->query('for') === 'login' ? 'login_captcha_code' : 'captcha_code';
+        $for = $request->query('for');
+        if ($for === 'login') {
+            return 'login_captcha_code';
+        } elseif ($for === 'ticket') {
+            return 'captcha_code';
+        }
+        return 'captcha_code';
     }
 
     private function generateCaptchaCode(string $sessionKey = 'captcha_code'): string
