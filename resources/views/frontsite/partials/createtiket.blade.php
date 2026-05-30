@@ -39,7 +39,7 @@
                             @error('whatsapp_number')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
-                            
+
                         </div>
                     </div>
 
@@ -165,11 +165,7 @@
 
                         <div class="col-9">
 
-                            <input
-                                type="file"
-                                name="attachments"
-                                class="form-control @error('attachments') is-invalid @enderror"
-                                accept="image/*">
+                            <input type="file" name="attachments" class="form-control @error('attachments') is-invalid @enderror" accept="image/*">
 
                             @error('attachments')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -186,26 +182,13 @@
                         </label>
                         <div class="col-9">
                             <div class="d-flex align-items-center mb-2">
-                                <img
-                                    id="ticket-captcha-image"
-                                    src="{{ route('captcha.image', ['for' => 'ticket']) }}"
-                                    alt="Captcha"
-                                    style="height: 52px; border: 1px solid #ced4da; border-radius: 4px; background: #eef1f4;">
+                                <img id="ticket-captcha-image" src="{{ route('captcha.image', ['for' => 'ticket']) }}" alt="Captcha" style="height: 52px; border: 1px solid #ced4da; border-radius: 4px; background: #eef1f4;">
                                 <button type="button" class="btn btn-outline-secondary ms-2" id="refresh-ticket-captcha-btn" title="Muat ulang captcha">
                                     <i class="fas fa-sync-alt"></i>
                                 </button>
                             </div>
 
-                            <input
-                                type="text"
-                                name="captcha"
-                                id="ticket-captcha"
-                                class="form-control @error('captcha') is-invalid @enderror"
-                                placeholder="Captcha"
-                                maxlength="6"
-                                autocomplete="off"
-                                style="text-transform: uppercase;"
-                                required>
+                            <input type="text" name="captcha" id="ticket-captcha" class="form-control @error('captcha') is-invalid @enderror" placeholder="Captcha" maxlength="6" autocomplete="off" style="text-transform: uppercase;" required>
                             @error('captcha')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
@@ -234,51 +217,137 @@
 </div>
 
 @push('script-foot')
+    <script>
+        function openModalCreate() {
+            $('#form-tiket').modal('show');
+        }
 
-<script>
-    function openModalCreate() {
-        $('#form-tiket').modal('show');
-    }
-
-    function refreshTicketCaptchaImage() {
-        $.ajax({
-            url: '{{ route("refresh.captcha", ["for" => "ticket"]) }}',
-            type: 'GET',
-            success: function(response) {
-                if (response.success && response.captcha_url) {
-                    $('#ticket-captcha-image').attr('src', response.captcha_url);
-                    $('#ticket-captcha').val('');
+        function refreshTicketCaptchaImage() {
+            $.ajax({
+                url: '{{ route('refresh.captcha', ['for' => 'ticket']) }}',
+                type: 'GET',
+                success: function(response) {
+                    if (response.success && response.captcha_url) {
+                        $('#ticket-captcha-image').attr('src', response.captcha_url);
+                        $('#ticket-captcha').val('');
+                    }
+                },
+                error: function() {
+                    alert('Gagal memperbarui captcha');
                 }
-            },
-            error: function() {
-                alert('Gagal memperbarui captcha');
-            }
+            });
+        }
+
+        function clearTicketInlineErrors() {
+            $('#formCreateTicket').find('.ticket-validation-error').remove();
+            $('#formCreateTicket').find('.is-invalid').removeClass('is-invalid');
+        }
+
+        // Reset form and CAPTCHA when modal is shown
+        $('#form-tiket').on('shown.bs.modal', function() {
+            $('#formCreateTicket')[0].reset();
+            clearTicketInlineErrors();
+            refreshTicketCaptchaImage();
+            $('#ticket-nama').trigger('focus');
         });
-    }
 
-    function clearTicketInlineErrors() {
-        $('#formCreateTicket').find('.ticket-validation-error').remove();
-        $('#formCreateTicket').find('.is-invalid').removeClass('is-invalid');
-    }
+        // Refresh CAPTCHA
+        $('#refresh-ticket-captcha-btn').click(function() {
+            refreshTicketCaptchaImage();
+        });
 
-    // Reset form and CAPTCHA when modal is shown
-    $('#form-tiket').on('shown.bs.modal', function () {
-        $('#formCreateTicket')[0].reset();
-        clearTicketInlineErrors();
-        refreshTicketCaptchaImage();
-        $('#ticket-nama').trigger('focus');
-    });
+        $('#ticket-captcha').on('input', function() {
+            this.value = this.value.toUpperCase();
+        });
 
-    // Refresh CAPTCHA
-    $('#refresh-ticket-captcha-btn').click(function() {
-        refreshTicketCaptchaImage();
-    });
+        window.refreshTicketCaptchaImage = refreshTicketCaptchaImage;
+    </script>
 
-    $('#ticket-captcha').on('input', function() {
-        this.value = this.value.toUpperCase();
-    });
+    <script>
+        $(document).on('submit', '#formCreateTicket', function(e) {
 
-    window.refreshTicketCaptchaImage = refreshTicketCaptchaImage;
-</script>
+            e.preventDefault();
 
+            const $form = $('#formCreateTicket');
+
+            function clearTicketValidationErrors() {
+                $form.find('.ticket-validation-error').remove();
+                $form.find('.is-invalid').removeClass('is-invalid');
+            }
+
+            function showTicketValidationErrors(errors) {
+                clearTicketValidationErrors();
+
+                Object.keys(errors || {}).forEach(function(field) {
+                    const message = errors[field][0];
+
+                    if (field === 'issuetype' || field === 'department' || field === 'priority') {
+                        const $fieldset = $form.find(`[name="${field}"]`).first().closest('fieldset');
+                        $fieldset.find('.ticket-validation-error').remove();
+                        $fieldset.find('input[name="' + field + '"]').addClass('is-invalid');
+                        $fieldset.find('.col-sm-9').append(`<div class="invalid-feedback d-block ticket-validation-error">${message}</div>`);
+                        return;
+                    }
+
+                    const $input = $form.find(`[name="${field}"]`).first();
+
+                    if ($input.length) {
+                        $input.addClass('is-invalid');
+                        $input.closest('.col-9').find('.ticket-validation-error').remove();
+                        $input.after(`<div class="invalid-feedback d-block ticket-validation-error">${message}</div>`);
+                    }
+                });
+            }
+
+            let formData = new FormData(this);
+
+            clearTicketValidationErrors();
+
+            $.ajax({
+                url: "{{ route('servicedesk.store.public') }}",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.message,
+                            confirmButtonColor: '#3085d6'
+                        }).then(() => {
+                            $('#form-tiket').modal('hide');
+                            $('#formCreateTicket')[0].reset();
+                            location.reload();
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    let errorMsg = 'Gagal menyimpan tiket';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMsg = xhr.responseJSON.message;
+                    } else if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        errorMsg = Object.values(xhr.responseJSON.errors).flat().join(', ');
+                    }
+                    if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        showTicketValidationErrors(xhr.responseJSON.errors);
+                    }
+                    if (typeof window.refreshTicketCaptchaImage === 'function') {
+                        window.refreshTicketCaptchaImage();
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: errorMsg,
+                        confirmButtonColor: '#3085d6'
+                    });
+                    console.log('Error Response:', xhr.responseJSON);
+                }
+            });
+        });
+    </script>
 @endpush

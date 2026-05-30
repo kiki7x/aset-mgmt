@@ -1,6 +1,6 @@
 @extends('layouts.backsite', [
     'title' => 'Detail Aset ' . ($classification_id == 2 ? 'TIK' : 'RT') . ' | SAPA PPL',
-    'welcome' => 'Detail Aset ' . ($classification_id == 2 ? 'TIK' : 'RT'),
+    'welcome' => 'Detail Aset ' . ($classification_id == 2 ? 'TIK' : 'RT') . ($asset->name ? ' | ' . $asset->tag . ' - ' . $asset->name : ''),
     'breadcrumb' => '<li class="breadcrumb-item"> <a href="' . route($classification_id == 2 ? 'admin.asettik' : 'admin.asetrt') . '">Aset ' . ($classification_id == 2 ? 'TIK' : 'RT') . '</a></li>'
     . '<li class="breadcrumb-item active">Detail Aset ' . ($classification_id == 2 ? 'TIK' : 'RT') . '</li>'
 ])

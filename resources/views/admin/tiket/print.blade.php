@@ -58,7 +58,6 @@
         .line2 {
             font-size: 16px;
             font-weight: 900;
-            margin-top: 8px;
             text-transform: uppercase;
         }
 
@@ -189,21 +188,30 @@
 
     <div class="divider"></div>
 
+    {{-- Judul Laporan --}}
+    <div class="report-title">
+        <h2>Daftar Tiket ServiceDesk</h2>
+    </div>
+
+    <div class="report-info text-center">
+        <strong>Periode:</strong> Bulan ... Tahun ...
+    </div>
+
     @if(!empty($search))
         <div class="report-info">
-            <strong>Filter pencarian:</strong> {{ $search }}
+            <strong>Berdasarkan pencarian:</strong> {{ $search }}
         </div>
     @endif
 
     @if(!empty($issuetype))
         <div class="report-info">
-            <strong>Filter jenis:</strong> {{ $issuetype }}
+            <strong>Berdasarkan jenis:</strong> {{ $issuetype }}
         </div>
     @endif
 
     @if(!empty($department))
         <div class="report-info">
-            <strong>Filter bidang:</strong> {{ $department }}
+            <strong>Berdasarkan bidang:</strong> {{ $department }}
         </div>
     @endif
 

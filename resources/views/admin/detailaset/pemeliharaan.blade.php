@@ -11,7 +11,7 @@
 @section('content-tab')
     <div class="container-fluid">
         <div class="row align-items-center">
-            <p class="col-12 h4 d-flex justify-content-center"><u>{{ $asset->tag }} - {{ $asset->name }}</u></p>
+            {{-- <p class="col-12 h4 d-flex justify-content-center"><u>{{ $asset->tag }} - {{ $asset->name }}</u></p> --}}
             <p class="col-12 h4">Jadwal Pemeliharaan <button class="btn btn-outline-primary" onclick="showModalAddJadwalPemeliharaan()" data-toggle="tooltip" data-placement="top" title="Tambah Jadwal"><i class="fa-regular fa-plus"></i></button></p>
         </div>
 

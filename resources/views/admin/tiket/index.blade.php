@@ -398,7 +398,7 @@
         }
 
         $.ajax({
-            url: "{{ route('servicedesk.updateStatus') }}",
+            url: "{{ route('admin.tiket.updateStatus') }}",
             type: 'POST',
             data: data,
             success: function(response) {
@@ -466,7 +466,7 @@
         let search = tiketTable.search() || '';
         let issuetype = $('#filter_issuetype').val() || '';
         let department = $('#filter_department').val() || '';
-        let url = "{{ route('servicedesk.print') }}";
+        let url = "{{ route('admin.tiket.print') }}";
 
         if (search) {
             url += '?search=' + encodeURIComponent(search);
@@ -487,7 +487,7 @@
         }
 
         if (queryParts.length) {
-            url = "{{ route('servicedesk.print') }}" + '?' + queryParts.join('&');
+            url = "{{ route('admin.tiket.print') }}" + '?' + queryParts.join('&');
         }
 
         window.open(url, '_blank');
@@ -501,7 +501,7 @@
             pageLength: 10,
             lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
             ajax: {
-                url: "{{ route('servicedesk.data') }}",
+                url: "{{ route('admin.tiket.data') }}",
                 data: function(d) {
                     d.issuetype = $('#filter_issuetype').val();
                     d.department = $('#filter_department').val();

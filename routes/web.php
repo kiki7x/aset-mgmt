@@ -28,7 +28,6 @@ Route::get('/lacak/show/{id}', [App\Http\Controllers\FrontController::class, 'la
 Route::get('/servicedesk', [App\Http\Controllers\FrontController::class, 'servicedesk'])->name('servicedesk');
 Route::get('/captcha-image', [App\Http\Controllers\FrontController::class, 'captchaImage'])->name('captcha.image');
 Route::get('/refresh-captcha', [App\Http\Controllers\FrontController::class, 'refreshCaptcha'])->name('refresh.captcha');
-Route::post('/servicedesk', [TiketController::class, 'store']);
 // Public endpoints for frontsite Service Desk (used by public UI)
 Route::get('/servicedesk/data', [TiketController::class, 'data'])->name('servicedesk.data.public');
 Route::post('/servicedesk/store', [TiketController::class, 'store'])->name('servicedesk.store.public');
@@ -175,10 +174,9 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::get('/tiket/{id}', [App\Http\Controllers\TiketController::class, 'show'])->name('admin.tiket.show');
         Route::get('/tiket/get_tikets', [App\Http\Controllers\TiketController::class, 'tiketDataTable'])->name('admin.tiket.tiketDataTable');
         //service desk tiketing system
-        Route::get('/servicedesk/data', [TiketController::class, 'data'])->name('servicedesk.data');
-        Route::get('/servicedesk/print', [TiketController::class, 'print'])->name('servicedesk.print');
-        Route::post('/servicedesk/store', [TiketController::class, 'store'])->name('servicedesk.store');
-        Route::post('/servicedesk/update-status', [TiketController::class, 'updateStatus'])->name('servicedesk.updateStatus');
+        Route::get('/tiket/data', [TiketController::class, 'data'])->name('admin.tiket.data');
+        Route::get('/tiket/print', [TiketController::class, 'print'])->name('admin.tiket.print');
+        Route::post('/tiket/update-status', [TiketController::class, 'updateStatus'])->name('admin.tiket.updateStatus');
 
     });
 

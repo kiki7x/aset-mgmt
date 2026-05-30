@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? config('app.name') }}</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
@@ -44,13 +45,16 @@
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
 
-  {{-- script tambahan --}}
-  @stack('script-head')
-  {{-- ./script tambahan --}}
+    {{-- script tambahan --}}
+    @stack('script-head')
+    {{-- ./script tambahan --}}
     <!-- Prevent flash of unstyled content (FOUC) while CSS loads -->
     <style>
         /* Hide page until fully loaded to avoid FOUC */
-        body.front-loading { visibility: hidden; }
+        body.front-loading {
+            visibility: hidden;
+        }
+
         /* Simple preloader style (minimal) */
         #preloader {
             position: fixed;
@@ -61,6 +65,7 @@
             background: #fff;
             z-index: 99999;
         }
+
         #preloader .spinner {
             position: absolute;
             left: 50%;
@@ -74,8 +79,13 @@
     <noscript>
         <style>
             /* If JS is disabled, show the page and hide preloader */
-            body.front-loading { visibility: visible; }
-            #preloader { display: none; }
+            body.front-loading {
+                visibility: visible;
+            }
+
+            #preloader {
+                display: none;
+            }
         </style>
     </noscript>
 
@@ -83,7 +93,7 @@
 
 <body class="front-loading index-page">
     <x-frontsite.header></x-frontsite.header>
-        @yield('content')
+    @yield('content')
     <x-frontsite.footer></x-frontsite.footer>
 
     <!-- Scroll Top -->
@@ -120,13 +130,16 @@
 
     <script>
         // Remove preloader and reveal page when all resources are loaded.
-        (function(){
+        (function() {
             function finish() {
                 try {
                     document.body.classList.remove('front-loading');
                     var p = document.getElementById('preloader');
-                    if (p) { p.style.display = 'none'; }
-                } catch(e) { /* ignore */ }
+                    if (p) {
+                        p.style.display = 'none';
+                    }
+                } catch (e) {
+                    /* ignore */ }
             }
             if (document.readyState === 'complete') {
                 finish();
