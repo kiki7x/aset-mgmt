@@ -3,31 +3,30 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\TicketFront;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
-
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
 class TiketController extends Controller
 {
 
-    public function index()
+    public function index(): View
     {
         return view('admin.tiket.index');
     }
 
-    public function show($id)
+    public function show($id): JsonResponse
     {
-        $ticketToOpen = TicketFront::findOrFail($id);
-        return view('admin.tiket.index', compact('ticketToOpen'));
+        $ticketToOpen = \App\Models\TicketsModel::findOrFail($id);
+        return response()->json($ticketToOpen);
     }
 
-
-    public function data()
+    public function data(): JsonResponse
     {
         try {
-            $tickets = TicketFront::latest();
+            $tickets = \App\Models\TicketsModel::latest();
 
             if (request()->filled('issuetype')) {
                 $tickets->where('issuetype', request('issuetype'));
@@ -115,7 +114,7 @@ class TiketController extends Controller
         $search = trim($request->query('search', ''));
         $issuetype = trim($request->query('issuetype', ''));
         $department = trim($request->query('department', ''));
-        $tickets = TicketFront::latest();
+        $tickets = \App\Models\TicketsModel::latest();
 
         if ($issuetype !== '') {
             $tickets->where('issuetype', $issuetype);
@@ -148,7 +147,7 @@ class TiketController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         try {
             $validator = Validator::make($request->all(), [
@@ -243,7 +242,7 @@ class TiketController extends Controller
                 $file->storeAs('attachments', $fileName, 'public');
             }
 
-            TicketFront::create([
+            \App\Models\TicketsModel::create([
 
                 'ticket' => $ticketNumber,
 
@@ -311,7 +310,7 @@ class TiketController extends Controller
             'confirm_close' => 'sometimes|required_if:status,Close|in:on,yes,1,true'
         ]);
 
-        $ticket = TicketFront::where('ticket', $request->ticket)->firstOrFail();
+        $ticket = \App\Models\TicketsModel::where('ticket', $request->ticket)->firstOrFail();
 
         $updateData = [
             'status' => $request->status,
