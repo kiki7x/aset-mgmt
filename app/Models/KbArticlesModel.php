@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class KbArticleModel extends Model
+class KbArticlesModel extends Model
 {
     use HasFactory;
 
@@ -37,7 +37,7 @@ class KbArticleModel extends Model
 
     public function category()
     {
-        return $this->belongsTo(KbCategoryModel::class, 'category_id');
+        return $this->belongsTo(KbCategoriesModel::class, 'category_id');
     }
 
     public function author()

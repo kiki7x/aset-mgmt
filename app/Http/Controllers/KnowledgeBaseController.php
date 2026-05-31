@@ -3,16 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\KbArticleModel; // Pastikan menggunakan model yang benar
-use App\Models\KbCategoryModel; // Pastikan menggunakan model yang benar
 use Illuminate\Support\Str;
 
 class KnowledgeBaseController extends Controller
 {
     public function index(Request $request)
     {
-        $categories = KbCategoryModel::all();
-        $articles = KbArticleModel::with('category', 'author')->latest()->get();
+        $categories = \App\Models\KbCategoriesModel::all();
+        $articles = \App\Models\KbArticlesModel::with('category', 'author')->latest()->get();
 
         return view('admin.knowledge-base.index', compact('articles', 'categories'));
     }
@@ -21,7 +19,7 @@ class KnowledgeBaseController extends Controller
 
     public function create()
     {
-        $categories = KbCategoryModel::all();
+        $categories = \App\Models\KbCategoriesModel::all();
         return view('admin.knowledge-base.create', compact('categories'));
     }
 
@@ -33,7 +31,7 @@ class KnowledgeBaseController extends Controller
             'content' => 'required',
         ]);
 
-        KbArticleModel::create([
+        \App\Models\KbArticlesModel::create([
             'title' => $request->title,
             'category_id' => $request->category_id,
             'content' => $request->content,
@@ -44,13 +42,13 @@ class KnowledgeBaseController extends Controller
         return redirect()->route('admin.knowledge-base');
     }
 
-    public function edit(KbArticleModel $article)
+    public function edit(\App\Models\KbArticlesModel $article)
     {
-        $categories = KbCategoryModel::all();
+        $categories = \App\Models\KbCategoriesModel::all();
         return view('admin.knowledge-base.edit', compact('article', 'categories'));
     }
 
-    public function update(Request $request, KbArticleModel $article)
+    public function update(Request $request, \App\Models\KbArticlesModel $article)
     {
         $request->validate([
             'title' => 'required|string|max:255|unique:kb_articles,title,' . $article->id,
@@ -68,7 +66,7 @@ class KnowledgeBaseController extends Controller
         return redirect()->route('admin.knowledge-base');
     }
 
-    public function destroy(KbArticleModel $article)
+    public function destroy(\App\Models\KbArticlesModel $article)
     {
         $article->delete();
         return redirect()->route('admin.knowledge-base');
@@ -83,7 +81,7 @@ class KnowledgeBaseController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        $category = KbCategoryModel::create([
+        $category = \App\Models\KbCategoriesModel::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'description' => $request->description,
@@ -92,7 +90,7 @@ class KnowledgeBaseController extends Controller
         return response()->json(['success' => true, 'message' => 'Kategori berhasil ditambahkan!', 'category' => $category]);
     }
 
-    public function categoryUpdate(Request $request, KbCategoryModel $category)
+    public function categoryUpdate(Request $request, \App\Models\KbCategoriesModel $category)
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:kb_categories,name,' . $category->id,
@@ -108,7 +106,7 @@ class KnowledgeBaseController extends Controller
         return response()->json(['success' => true, 'message' => 'Kategori berhasil diperbarui!', 'category' => $category]);
     }
 
-    public function categoryDestroy(KbCategoryModel $category)
+    public function categoryDestroy(\App\Models\KbCategoriesModel $category)
     {
         if ($category->articles()->count() > 0) {
             return response()->json(['success' => false, 'message' => 'Tidak bisa menghapus kategori yang memiliki artikel!'], 400);
@@ -123,15 +121,15 @@ class KnowledgeBaseController extends Controller
 
     public function publicIndex()
     {
-        $categories = KbCategoryModel::all();
-        $articles = KbArticleModel::with('category', 'author')->where('is_published', 1)->latest()->get();
+        $categories = \App\Models\KbCategoriesModel::all();
+        $articles = \App\Models\KbArticlesModel::with('category', 'author')->where('is_published', 1)->latest()->get();
 
         return view('frontsite.knowledge-base.index', compact('articles', 'categories'));
     }
 
     public function show($slug)
     {
-        $article = KbArticleModel::with('category', 'author')->where('slug', $slug)->where('is_published', 1)->firstOrFail();
+        $article = \App\Models\KbArticlesModel::with('category', 'author')->where('slug', $slug)->where('is_published', 1)->firstOrFail();
 
         // Increment views counter (best-effort)
         try {
@@ -140,7 +138,7 @@ class KnowledgeBaseController extends Controller
             // ignore increment errors
         }
 
-        $related = KbArticleModel::with('category')->where('category_id', $article->category_id)->where('id', '!=', $article->id)->where('is_published', 1)->take(5)->get();
+        $related = \App\Models\KbArticlesModel::with('category')->where('category_id', $article->category_id)->where('id', '!=', $article->id)->where('is_published', 1)->take(5)->get();
 
         return view('frontsite.knowledge-base.show', compact('article', 'related'));
     }

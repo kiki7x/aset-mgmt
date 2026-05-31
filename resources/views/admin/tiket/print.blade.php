@@ -108,11 +108,7 @@
         .report-title {
             text-align: center;
             margin-bottom: 18px;
-        }
-
-        .report-info {
-            margin-bottom: 16px;
-            font-size: 13px;
+            text-decoration: underline;
         }
 
         .report-info strong {
@@ -191,10 +187,6 @@
     {{-- Judul Laporan --}}
     <div class="report-title">
         <h2>Daftar Tiket ServiceDesk</h2>
-    </div>
-
-    <div class="report-info text-center">
-        <strong>Periode:</strong> Bulan ... Tahun ...
     </div>
 
     @if(!empty($search))
