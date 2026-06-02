@@ -20,6 +20,7 @@ class KbArticlesModel extends Model
         'author_id',
         'is_published',
         'views',
+        'featured_image',
     ];
 
     public static function boot()
