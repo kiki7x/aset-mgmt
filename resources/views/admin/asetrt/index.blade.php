@@ -15,58 +15,56 @@
 @endpush
 
 @section('content')
-    <section class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header d-flex bd-highlight">
-                            <h3 class="card-title font-weight-bold mr-auto p-2 bd-highlight"><i class="fa-solid fa-building"></i> Aset Rumah Tangga <span class="badge end-0 mr-3 bg-info text-light">{{ $totalAssets }}</span></h3>
-                            <a href="javascript:void(0)" id="btnExport" class="btn btn-outline-primary bd-highlight mr-2" data-toggle="tooltip" data-placement="top" title="Export">
-                                <i class="fas fa-file-arrow-down"></i> Export
-                            </a>
-                            <button type="button" id="btnOpenCreateModal" class="btn btn-outline-primary bd-highlight" data-toggle="tooltip" data-placement="top" title="Tambah Data">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                                    <div class="px-2 d-flex">
-                                        <select id="category" name="jenis" class="ml-0 form-control mr-2">
-                                            <option value="">Semua Kategori</option>
-                                            @foreach ($categories as $cat)
-                                                <option value="{{ $cat->id }}" {{ request('category') == $cat->id ? 'selected' : '' }}>
-                                                    {{ $cat->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        <button type="submit" class="ml-0 btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Filter"><i class="fas fa-filter"></i></button>
-                                    </div>
-                                </div>
-                            </div>
+    <div class="card">
+        <div class="card-header d-flex bd-highlight">
+            <h3 class="card-title font-weight-bold mr-auto p-2 bd-highlight"><i class="fa-solid fa-building"></i> Aset Rumah Tangga <span class="badge end-0 mr-3 bg-info text-light">{{ $totalAssets }}</span></h3>
+            <div>
+            <a href="javascript:void(0)" id="btnExport" class="btn btn-outline-primary bd-highlight mr-2" data-toggle="tooltip" data-placement="top" title="Export">
+                <i class="fas fa-file-arrow-down"></i>
+            </a>
+            </div>
+            <div>
+                <button type="button" id="btnOpenCreateModal" class="btn btn-outline-primary bd-highlight" data-toggle="tooltip" data-placement="top" title="Tambah Data">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="row g-2 mb-3 align-items-end">
+                <div class="col-12 col-md-3">
+                    <label for="category" class="form-label mb-1">Filter Kategori</label>
+                    <select id="category" name="jenis" class="ml-0 form-control mr-2">
+                        <option value="">Semua Kategori</option>
+                        @foreach ($categories as $cat)
+                            <option value="{{ $cat->id }}" {{ request('category') == $cat->id ? 'selected' : '' }}>
+                                {{ $cat->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
 
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover table-sm" id="tableAsetrt">
-                                    <thead>
-                                        <tr>
-                                            <th>Tag</th>
-                                            <th>Nama Aset</th>
-                                            <th>Kategori</th>
-                                            <th>Tipe/Model</th>
-                                            <th>Pengguna</th>
-                                            <th>Perubahan Terakhir</th>
-                                            <th>Opsi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover table-sm" id="tableAsetrt">
+                    <thead>
+                        <tr>
+                            <th>Tag</th>
+                            <th>Nama Aset</th>
+                            <th>Kategori</th>
+                            <th>Tipe/Model</th>
+                            <th>Pengguna</th>
+                            <th>Perubahan Terakhir</th>
+                            <th>Opsi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                                    </tbody>
-                                </table>
-                            </div>
+                    </tbody>
+                </table>
+            </div>
 
-                            {{-- <div class="row">
+            {{-- <div class="row">
                                 <div class="col-md-12">
                                     <div class="dt-buttons btn-group"><a class="btn btn-default buttons-copy buttons-html5"
                                             tabindex="0" aria-controls="dataTablesFull"
@@ -82,156 +80,152 @@
                                     </div>
                                 </div>
                             </div> --}}
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         @include('admin.asetrt.partials.create-modal')
         @include('admin.asetrt.partials.delete-modal')
         @include('admin.asetrt.partials.qrcode-modal')
-    </section>
+        </section>
 
-    @push('script-foot')
-        <!-- InputMask -->
-        <script src="{{ asset('assets/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
-        {{-- Select2 --}}
-        <script src="{{ asset('assets/plugins/select2/js/select2.full.min.js') }}"></script>
+        @push('script-foot')
+            <!-- InputMask -->
+            <script src="{{ asset('assets/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
+            {{-- Select2 --}}
+            <script src="{{ asset('assets/plugins/select2/js/select2.full.min.js') }}"></script>
 
-        {{-- TableScript --}}
-        <script>
-            function initTableAsetrt() {
-                $('#tableAsetrt').DataTable({
-                    layout: {
-                        topEnd: {
-                            search: {
-                                placeholder: 'nama / serial no'
+            {{-- TableScript --}}
+            <script>
+                function initTableAsetrt() {
+                    $('#tableAsetrt').DataTable({
+                        layout: {
+                            topEnd: {
+                                search: {
+                                    placeholder: 'nama / serial no'
+                                }
                             }
-                        }
-                    },
-                    processing: true,
-                    serverSide: true,
-                    responsive: true,
-                    ajax: {
-                        url: "{{ route('admin.asetrt.get_assets') }}",
-                        data: function(d) {
-                            d.category = $('#category').val();
-                            d.classification =
-                                'rt';
-                        }
-                    },
-                    columns: [{
-                            data: 'tag',
-                            name: 'tag'
                         },
-                        {
-                            data: 'name',
-                            name: 'name'
+                        processing: true,
+                        serverSide: true,
+                        responsive: true,
+                        ajax: {
+                            url: "{{ route('admin.asetrt.get_assets') }}",
+                            data: function(d) {
+                                d.category = $('#category').val();
+                                d.classification =
+                                    'rt';
+                            }
                         },
-                        {
-                            data: 'category',
-                            name: 'category'
-                        },
-                        {
-                            data: 'model',
-                            name: 'model'
-                        },
-                        {
-                            data: 'user',
-                            name: 'user'
-                        },
-                        {
-                            data: null,
-                            name: 'timestamp',
-                            render: function(data) {
-                                return `
+                        columns: [{
+                                data: 'tag',
+                                name: 'tag'
+                            },
+                            {
+                                data: 'name',
+                                name: 'name'
+                            },
+                            {
+                                data: 'category',
+                                name: 'category'
+                            },
+                            {
+                                data: 'model',
+                                name: 'model'
+                            },
+                            {
+                                data: 'user',
+                                name: 'user'
+                            },
+                            {
+                                data: null,
+                                name: 'timestamp',
+                                render: function(data) {
+                                    return `
                                     <span class="text-muted small">
                                     ${moment(data.updated_at).format('DD MMM YYYY HH:mm')} </span><br>
                                     `;
-                            }
-                        },
-                        {
-                            data: 'action',
-                            name: 'action',
-                            orderable: false,
-                            searchable: false
-                        },
-                    ],
-                });
-            }
+                                }
+                            },
+                            {
+                                data: 'action',
+                                name: 'action',
+                                orderable: false,
+                                searchable: false
+                            },
+                        ],
+                    });
+                }
 
-            $('#category').on('change', function() {
-                $('#tableAsetrt').DataTable().ajax.reload();
-            });
-
-            $(document).ready(function() {
-                initTableAsetrt();
-            })
-        </script>
-
-        {{-- ModalManagement --}}
-        <script>
-            $(document).ready(function() {
-                // Create Modal
-                $('#btnOpenCreateModal').on('click', function() {
-                    $('#createModal').modal('show');
+                $('#category').on('change', function() {
+                    $('#tableAsetrt').DataTable().ajax.reload();
                 });
 
-                // Delete Modal
-                $('#deleteModal').on('show.bs.modal', function(event) {
-                    var button = $(event.relatedTarget);
-                    var id = button.data('id');
-                    var name = button.data('name');
-
-                    var modal = $(this)
-                    modal.find('#assetName').text(name)
-                });
-
-                // QR Code Modal
-                $('#qrCodeModal').on('show.bs.modal', function(event) {
-                    var button = $(event.relatedTarget);
-                    var id = button.data('id');
-                    var name = button.data('name');
-
-                    var modal = $(this)
-                });
-            });
-        </script>
-
-        {{-- Export Script --}}
-        <script>
-            //buat fungsi export dengan gaya sweetalert
-            $('#btnExport').on('click', function(e) {
-                e.preventDefault();
-
-                const originalText = $(this).html();
-                $(this).html('<i class="fa fa-spinner fa-spin"></i> Menyiapkan Data...').addClass('disabled');
-
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                    onOpen: (toast) => {
-                        toast.addEventListener('mouseenter', Swal.stopTimer)
-                        toast.addEventListener('mouseleave', Swal.resumeTimer)
-                    }
+                $(document).ready(function() {
+                    initTableAsetrt();
                 })
+            </script>
 
-                Toast.fire({
-                    icon: 'info',
-                    title: 'Menyiapkan Data...'
-                }).then((result) => {
-                    if (result.dismiss === Swal.DismissReason.timer) {
-                        window.location.href = "{{ route('admin.asetrt.export') }}";
-                    }
-                    setTimeout(() => {
-                        $(this).html(originalText).removeClass('disabled');
+            {{-- ModalManagement --}}
+            <script>
+                $(document).ready(function() {
+                    // Create Modal
+                    $('#btnOpenCreateModal').on('click', function() {
+                        $('#createModal').modal('show');
+                    });
+
+                    // Delete Modal
+                    $('#deleteModal').on('show.bs.modal', function(event) {
+                        var button = $(event.relatedTarget);
+                        var id = button.data('id');
+                        var name = button.data('name');
+
+                        var modal = $(this)
+                        modal.find('#assetName').text(name)
+                    });
+
+                    // QR Code Modal
+                    $('#qrCodeModal').on('show.bs.modal', function(event) {
+                        var button = $(event.relatedTarget);
+                        var id = button.data('id');
+                        var name = button.data('name');
+
+                        var modal = $(this)
                     });
                 });
-            })
-        </script>
-    @endpush
-@endsection
+            </script>
+
+            {{-- Export Script --}}
+            <script>
+                //buat fungsi export dengan gaya sweetalert
+                $('#btnExport').on('click', function(e) {
+                    e.preventDefault();
+
+                    const originalText = $(this).html();
+                    $(this).html('<i class="fa fa-spinner fa-spin"></i> Menyiapkan Data...').addClass('disabled');
+
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+
+                    Toast.fire({
+                        icon: 'info',
+                        title: 'Menyiapkan Data...'
+                    }).then((result) => {
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                            window.location.href = "{{ route('admin.asetrt.export') }}";
+                        }
+                        setTimeout(() => {
+                            $(this).html(originalText).removeClass('disabled');
+                        });
+                    });
+                })
+            </script>
+        @endpush
+    @endsection

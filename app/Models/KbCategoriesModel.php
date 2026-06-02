@@ -32,6 +32,6 @@ class KbCategoriesModel extends Model
 
     public function articles()
     {
-        return $this->hasMany(KbArticleModel::class, 'category_id');
+        return $this->hasMany(KbArticlesModel::class, 'category_id');
     }
 }

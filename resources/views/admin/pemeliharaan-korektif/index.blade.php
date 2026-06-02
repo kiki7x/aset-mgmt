@@ -17,154 +17,117 @@
 @endpush
 
 @section('content')
-    <section class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        {{-- <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                            <h3 class="card-title font-weight-bold"><i class="fa-solid fa-list-check"></i> Pemeliharaan Korektif <span class="badge end-0 mr-3 bg-info text-light">{{ $totalPemeliharaan }} </span></h3>
-                            <button class="btn btn-outline-primary" onclick="openModalCreate()" style="margin-left: auto;" data-toggle="tooltip" data-placement="top" title="Tambah Data"><i class="fa-regular fa-plus"></i></button>
-                            <button class="btn btn-success btn-sm"style="margin-left: auto;" onclick="printPreventifReport()">
-                                <i class="fa fa-print"></i> Cetak PDF
-                            </button>
-                        </div> --}}
-                        <div class="card-header row">
-                            <h3 class="card-title font-weight-bold col"><i class="fa-solid fa-list-check"></i> Pemeliharaan Korektif <span class="badge bg-info text-light">{{ $totalPemeliharaan }} </span></h3>
-                            <div class="col-md-1 d-flex justify-content-end">
-                                <button class="btn btn-outline-primary" onclick="openModalCreate()" data-toggle="tooltip" data-placement="top" title="Tambah Data"><i class="fa-regular fa-plus"></i></button>
-                            </div>
-                            <div>
-                                <button class="btn btn-outline-success" onclick="printPreventifReport()" data-toggle="tooltip" data-placement="top" title="Cetak PDF"><i class="fa-solid fa-print"></i></button>
-                            </div>
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table id="tablePemeliharaan" class="table table-bordered table-striped table-hover table-sm table-responsive-md">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Judul</th>
-                                            <th>Deskripsi</th>
-                                            <th>Petugas</th>
-                                            <th>Aset Terkait</th>
-                                            <th class="text-center">Prioritas</th>
-                                            <th class="text-center">Status</th>
-                                            <th class="text-center">Tenggat Waktu</th>
-                                            <th>Opsi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+    <div class="card">
+        <div class="card-header d-flex bd-highlight">
+            <h3 class="card-title font-weight-bold mr-auto p-2 bd-highlight"><i class="fa-solid fa-list-check"></i> Pemeliharaan Korektif <span class="badge bg-info text-light">{{ $totalPemeliharaan }} </span></h3>
+            <div>
+                <button class="btn btn-outline-primary bd-highlight mr-2" onclick="openModalCreate()" data-toggle="tooltip" data-placement="top" title="Tambah Data"><i class="fa-regular fa-plus"></i></button>
+            </div>
+            <div>
+                <button class="btn btn-outline-success bd-highlight" onclick="printPreventifReport()" data-toggle="tooltip" data-placement="top" title="Cetak PDF"><i class="fa-solid fa-print"></i></button>
+            </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="tablePemeliharaan" class="table table-bordered table-striped table-hover table-sm table-responsive-md">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Judul</th>
+                            <th>Deskripsi</th>
+                            <th>Petugas</th>
+                            <th>Aset Terkait</th>
+                            <th class="text-center">Prioritas</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Tenggat Waktu</th>
+                            <th>Opsi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- Modal Konfirmasi -->
-                            <div class="modal fade" data-backdrop="static" role="dialog" id="modalDelete">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Konfirmasi Penghapusan !</h5>
-                                            <button type="button" class="close" aria-label="Close">
-                                                <span>×</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            Apakah Anda yakin ingin menghapus data ini?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button wire:click="$dispatch('closeModalDelete')" type="button" class="btn btn-secondary">Batal</button>
-                                            <button wire:click="$dispatch('delete', { id:  })" type="button" class="btn btn-danger">Ya, Hapus</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <!-- Pagination -->
-                                <div class="col-md-12">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="dt-buttons btn-group">
-                                        <a class="btn btn-default buttons-print" tabindex="0" aria-controls="dataTablesFull"><span>Print</span></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <!-- Modal Konfirmasi -->
+    <div class="modal fade" data-backdrop="static" role="dialog" id="modalDelete">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Konfirmasi Penghapusan !</h5>
+                    <button type="button" class="close" aria-label="Close">
+                        <span>×</span>
+                    </button>
                 </div>
-
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                            <h3 class="card-title font-weight-bold"><i class="fa-solid fa-list-check"></i> Pemeliharaan Korektif Selesai <span class="badge end-0 mr-3 bg-info text-light"> {{ $totalPemeliharaanSelesai }} </span></h3>
-                            {{-- <button class="btn btn-outline-primary" onclick="openModalCreate()" style="margin-left: auto;" data-toggle="tooltip" data-placement="top" title="Tambah Data"><i class="fa-regular fa-plus"></i></button> --}}
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                            {{-- <div class="table-responsive"> --}}
-                            <table id="tablePemeliharaanSelesai" class="table table-bordered table-striped table-hover table-sm table-responsive-md">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Judul</th>
-                                        <th>Aset Terkait</th>
-                                        <th>Petugas</th>
-                                        <th>Catatan</th>
-                                        <th>Diselesaikan Pada</th>
-                                        <th>Bukti Dukung</th>
-                                        <th>Biaya</th>
-                                        <th>Opsi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                </tbody>
-                            </table>
-                            {{-- </div> --}}
-                            <!-- Modal Konfirmasi -->
-                            <div class="modal fade" data-backdrop="static" role="dialog" id="modalDelete">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Konfirmasi Penghapusan !</h5>
-                                            <button type="button" class="close" aria-label="Close">
-                                                <span>×</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            Apakah Anda yakin ingin menghapus data ini?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button wire:click="$dispatch('closeModalDelete')" type="button" class="btn btn-secondary">Batal</button>
-                                            <button wire:click="$dispatch('delete', { id:  })" type="button" class="btn btn-danger">Ya, Hapus</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <!-- Pagination -->
-                                <div class="col-md-12">
-
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="dt-buttons btn-group">
-                                        <a class="btn btn-default buttons-print" tabindex="0" aria-controls="dataTablesFull" href="#"><span>Print</span></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="modal-body">
+                    Apakah Anda yakin ingin menghapus data ini?
+                </div>
+                <div class="modal-footer">
+                    <button wire:click="$dispatch('closeModalDelete')" type="button" class="btn btn-secondary">Batal</button>
+                    <button wire:click="$dispatch('delete', { id:  })" type="button" class="btn btn-danger">Ya, Hapus</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        {{-- Komponen Modal/CreateAsetTik --}}
-        @include('admin.pemeliharaan-korektif.partials.create-pemeliharaan')
-        @include('admin.pemeliharaan-korektif.partials.tl-pemeliharaan')
-        @include('admin.pemeliharaan-korektif.partials.edit-pemeliharaan')
-    </section>
+    <div class="card">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 class="card-title font-weight-bold"><i class="fa-solid fa-list-check"></i> Pemeliharaan Korektif Selesai <span class="badge end-0 mr-3 bg-info text-light"> {{ $totalPemeliharaanSelesai }} </span></h3>
+            {{-- <button class="btn btn-outline-primary" onclick="openModalCreate()" style="margin-left: auto;" data-toggle="tooltip" data-placement="top" title="Tambah Data"><i class="fa-regular fa-plus"></i></button> --}}
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="tablePemeliharaanSelesai" class="table table-bordered table-striped table-hover table-sm table-responsive-md">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Judul</th>
+                            <th>Aset Terkait</th>
+                            <th>Petugas</th>
+                            <th>Catatan</th>
+                            <th>Diselesaikan Pada</th>
+                            <th>Bukti Dukung</th>
+                            <th>Biaya</th>
+                            <th>Opsi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi -->
+    <div class="modal fade" data-backdrop="static" role="dialog" id="modalDelete">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Konfirmasi Penghapusan !</h5>
+                    <button type="button" class="close" aria-label="Close">
+                        <span>×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Apakah Anda yakin ingin menghapus data ini?
+                </div>
+                <div class="modal-footer">
+                    <button wire:click="$dispatch('closeModalDelete')" type="button" class="btn btn-secondary">Batal</button>
+                    <button wire:click="$dispatch('delete', { id:  })" type="button" class="btn btn-danger">Ya, Hapus</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Komponen Modal/CreateAsetTik --}}
+    @include('admin.pemeliharaan-korektif.partials.create-pemeliharaan')
+    @include('admin.pemeliharaan-korektif.partials.tl-pemeliharaan')
+    @include('admin.pemeliharaan-korektif.partials.edit-pemeliharaan')
 
     @push('script-foot')
         <!-- InputMask -->

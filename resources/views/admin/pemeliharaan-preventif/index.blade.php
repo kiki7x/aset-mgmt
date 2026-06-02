@@ -11,61 +11,48 @@
 @endpush
 
 @section('content')
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                        <h3 class="card-title">Kalender Pemeliharaan</h3>
-                        {{-- <button type="button" class="btn btn-outline-primary" style="margin-left: auto;">
+    <div class="card">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 class="card-title">Kalender Pemeliharaan</h3>
+            {{-- <button type="button" class="btn btn-outline-primary" style="margin-left: auto;">
                             <i class="fas fa-plus"></i>
                         </button> --}}
-                    </div>
-                    <div class="card-body p-0">
-                        <!-- THE CALENDAR -->
-                        <div id="calendar"></div>
-                    </div>
-                    <!-- /.card-body -->
-                </div>
-                <!-- /.card -->
-            </div>
-            <!-- /.col -->
         </div>
-        <!-- /.row -->
+        <div class="card-body p-0">
+            <!-- THE CALENDAR -->
+            <div id="calendar"></div>
+        </div>
+        <!-- /.card-body -->
+    </div>
 
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                        <h3 class="card-title">Pemeliharaan Preventif Selesai</h3>
-                        <button class="btn btn-success btn-sm"style="margin-left: auto;" onclick="printPreventifReport()">
-                            <i class="fa fa-print"></i> Cetak PDF
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="completedPreventiveTable" class="table table-bordered table-hover" style="width:100%">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Periode</th>
-                                        <th>Nama Pemeliharaan</th>
-                                        <th>Tag Aset</th>
-                                        <th>Nama Aset</th>
-                                        <th>PIC</th>
-                                        <th>Biaya</th>
-                                        <th>Status</th>
-                                        <th>Catatan</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+    <div class="card">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 class="card-title">Pemeliharaan Preventif Selesai</h3>
+            <button class="btn btn-success btn-sm"style="margin-left: auto;" onclick="printPreventifReport()">
+                <i class="fa fa-print"></i> Cetak PDF
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="completedPreventiveTable" class="table table-bordered table-hover" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Periode</th>
+                            <th>Nama Pemeliharaan</th>
+                            <th>Tag Aset</th>
+                            <th>Nama Aset</th>
+                            <th>PIC</th>
+                            <th>Biaya</th>
+                            <th>Status</th>
+                            <th>Catatan</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
         </div>
-    </div><!-- /.container-fluid -->
+    </div>
 
     {{-- Modal Detail Event --}}
     @include('admin.pemeliharaan-preventif.partials.event-detail')

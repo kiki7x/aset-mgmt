@@ -1,8 +1,8 @@
 @extends('layouts.backsite', [
-    'title' => 'Knowledge Base | SAPA PPL',
-    'welcome' => 'Knowledge Base',
+    'title' => 'Pusat Pengetahuan | SAPA PPL',
+    'welcome' => 'Pusat Pengetahuan',
     'breadcrumb' => '
-        <li class="breadcrumb-item active">Knowledge Base</li>
+        <li class="breadcrumb-item active">Pusat Pengetahuan</li>
     ',
 ])
 
@@ -12,78 +12,69 @@
 @endpush
 
 @section('content')
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Daftar Artikel</h3>
-                        <div class="card-tools">
-                            <a href="{{ route('admin.knowledge-base.create') }}" class="btn btn-primary btn-sm">
-                                <i class="fas fa-plus"></i> Tambah Artikel
-                            </a>
-                            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#categoryManagementModal">
-                                <i class="fas fa-tags"></i> Manajemen Kategori
-                            </button>
-                        </div>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        <table id="articlesTable" class="table table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Featured Image</th>
-                                    <th>Judul Artikel</th>
-                                    <th>Kategori</th>
-                                    <th>Penulis</th>
-                                    <th>Dibuat Pada</th>
-                                    <th>Terakhir Diperbarui</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($articles as $article)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>
-                                            @if ($article->featured_image_url)
-                                                <img src="{{ $article->featured_image_url }}" alt="Featured Image {{ $article->title }}" class="img-thumbnail" style="max-width: 80px; max-height: 80px; object-fit: cover;">
-                                            @else
-                                                <span class="text-muted">-</span>
-                                            @endif
-                                        </td>
-                                        <td>{{ $article->title }}</td>
-                                        <td>{{ $article->category->name ?? 'Tidak Ada' }}</td>
-                                        <td>{{ $article->author->name ?? 'Pengguna Tidak Dikenal' }}</td>
-                                        <td>{{ $article->created_at->format('d M Y H:i') }}</td>
-                                        <td>{{ $article->updated_at->format('d M Y H:i') }}</td>
-                                        <td>
-                                            <a href="{{ route('admin.knowledge-base.edit', $article->id) }}" class="btn btn-sm btn-warning" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <form action="{{ route('admin.knowledge-base.destroy', $article->id) }}" method="POST" class="d-inline delete-form">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger" title="Hapus">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- /.card-body -->
-                </div>
-                <!-- /.card -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Daftar Artikel</h3>
+            <div class="card-tools">
+                <a href="{{ route('admin.knowledge-base.create') }}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> Tambah Artikel
+                </a>
+                <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#categoryManagementModal">
+                    <i class="fas fa-tags"></i> Manajemen Kategori
+                </button>
             </div>
-            <!-- /.col -->
         </div>
-        <!-- /.row -->
+        <!-- /.card-header -->
+        <div class="card-body">
+            <table id="articlesTable" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Featured Image</th>
+                        <th>Judul Artikel</th>
+                        <th>Kategori</th>
+                        <th>Penulis</th>
+                        <th>Dibuat Pada</th>
+                        <th>Terakhir Diperbarui</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($articles as $article)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>
+                                @if ($article->featured_image_url)
+                                    <img src="{{ $article->featured_image_url }}" alt="Featured Image {{ $article->title }}" class="img-thumbnail" style="max-width: 80px; max-height: 80px; object-fit: cover;">
+                                @else
+                                    <span class="text-muted">-</span>
+                                @endif
+                            </td>
+                            <td>{{ $article->title }}</td>
+                            <td>{{ $article->category->name ?? 'Tidak Ada' }}</td>
+                            <td>{{ $article->author->name ?? 'Pengguna Tidak Dikenal' }}</td>
+                            <td>{{ $article->created_at->format('d M Y H:i') }}</td>
+                            <td>{{ $article->updated_at->format('d M Y H:i') }}</td>
+                            <td>
+                                <a href="{{ route('admin.knowledge-base.edit', $article->id) }}" class="btn btn-sm btn-warning" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form action="{{ route('admin.knowledge-base.destroy', $article->id) }}" method="POST" class="d-inline delete-form">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger" title="Hapus">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        <!-- /.card-body -->
     </div>
-    <!-- /.container-fluid -->
+    <!-- /.card -->
 
     <!-- Category Management Modal -->
     <div class="modal fade" id="categoryManagementModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="categoryManagementModalLabel" aria-hidden="true">
@@ -188,19 +179,19 @@
         });
     </script>
     <script>
-    // --- Category Management (AJAX) ---
-            $('#addCategoryForm').on('submit', function(e) {
-                e.preventDefault();
-                $.ajax({
-                    url: "{{ route('admin.knowledge-base.categories.store') }}",
-                    method: "POST",
-                    data: $(this).serialize(),
-                    success: function(response) {
-                        Swal.fire('Berhasil!', response.message, 'success');
-                        $('#categoryName').val('');
-                        $('#categoryDescription').val('');
-                        // Add new category to the list
-                        let newRow = `<tr id="category-${response.category.id}">
+        // --- Category Management (AJAX) ---
+        $('#addCategoryForm').on('submit', function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: "{{ route('admin.knowledge-base.categories.store') }}",
+                method: "POST",
+                data: $(this).serialize(),
+                success: function(response) {
+                    Swal.fire('Berhasil!', response.message, 'success');
+                    $('#categoryName').val('');
+                    $('#categoryDescription').val('');
+                    // Add new category to the list
+                    let newRow = `<tr id="category-${response.category.id}">
                                         <td>
                                             <span class="category-name-display">${response.category.name}</span>
                                             <input type="text" class="form-control category-name-edit d-none" value="${response.category.name}">
@@ -221,100 +212,100 @@
                                             </button>
                                         </td>
                                     </tr>`;
-                        $('#categoryList').append(newRow);
-                    },
-                    error: function(response) {
-                        Swal.fire('Error!', response.responseJSON.message || 'Terjadi kesalahan!', 'error');
-                    }
-                });
+                    $('#categoryList').append(newRow);
+                },
+                error: function(response) {
+                    Swal.fire('Error!', response.responseJSON.message || 'Terjadi kesalahan!', 'error');
+                }
             });
+        });
 
-            // Edit Category
-            $(document).on('click', '.edit-category', function() {
-                let id = $(this).data('id');
-                let row = $('#category-' + id);
-                row.find('.category-name-display').addClass('d-none');
-                row.find('.category-name-edit').removeClass('d-none').focus();
-                row.find('.edit-category').addClass('d-none');
-                row.find('.delete-category').addClass('d-none');
-                row.find('.save-category').removeClass('d-none');
-                row.find('.cancel-edit-category').removeClass('d-none');
+        // Edit Category
+        $(document).on('click', '.edit-category', function() {
+            let id = $(this).data('id');
+            let row = $('#category-' + id);
+            row.find('.category-name-display').addClass('d-none');
+            row.find('.category-name-edit').removeClass('d-none').focus();
+            row.find('.edit-category').addClass('d-none');
+            row.find('.delete-category').addClass('d-none');
+            row.find('.save-category').removeClass('d-none');
+            row.find('.cancel-edit-category').removeClass('d-none');
+        });
+
+        // Cancel Edit Category
+        $(document).on('click', '.cancel-edit-category', function() {
+            let id = $(this).data('id');
+            let row = $('#category-' + id);
+            row.find('.category-name-display').removeClass('d-none');
+            row.find('.category-name-edit').addClass('d-none');
+            row.find('.edit-category').removeClass('d-none');
+            row.find('.delete-category').removeClass('d-none');
+            row.find('.save-category').addClass('d-none');
+            row.find('.cancel-edit-category').addClass('d-none');
+            // Revert value
+            row.find('.category-name-edit').val(row.find('.category-name-display').text());
+        });
+
+        // Save Category
+        $(document).on('click', '.save-category', function() {
+            let id = $(this).data('id');
+            let row = $('#category-' + id);
+            let newName = row.find('.category-name-edit').val();
+            let description = row.find('.category-description-edit').val();
+
+            $.ajax({
+                url: `/admin/knowledge-base/categories/${id}`,
+                method: "PATCH",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    name: newName,
+                    description: description
+                },
+                success: function(response) {
+                    Swal.fire('Berhasil!', response.message, 'success');
+                    row.find('.category-name-display').text(response.category.name).removeClass('d-none');
+                    row.find('.category-name-edit').addClass('d-none');
+                    row.find('.edit-category').removeClass('d-none');
+                    row.find('.delete-category').removeClass('d-none');
+                    row.find('.save-category').addClass('d-none');
+                    row.find('.cancel-edit-category').addClass('d-none');
+                },
+                error: function(response) {
+                    Swal.fire('Error!', response.responseJSON.message || 'Terjadi kesalahan!', 'error');
+                }
             });
+        });
 
-            // Cancel Edit Category
-            $(document).on('click', '.cancel-edit-category', function() {
-                let id = $(this).data('id');
-                let row = $('#category-' + id);
-                row.find('.category-name-display').removeClass('d-none');
-                row.find('.category-name-edit').addClass('d-none');
-                row.find('.edit-category').removeClass('d-none');
-                row.find('.delete-category').removeClass('d-none');
-                row.find('.save-category').addClass('d-none');
-                row.find('.cancel-edit-category').addClass('d-none');
-                // Revert value
-                row.find('.category-name-edit').val(row.find('.category-name-display').text());
+        // Delete Category
+        $(document).on('click', '.delete-category', function() {
+            let id = $(this).data('id');
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Kategori ini akan dihapus!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/admin/knowledge-base/categories/${id}`,
+                        method: "DELETE",
+                        data: {
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            Swal.fire('Berhasil!', response.message, 'success');
+                            $('#category-' + id).remove();
+                        },
+                        error: function(response) {
+                            Swal.fire('Error!', response.responseJSON.message || 'Terjadi kesalahan!', 'error');
+                        }
+                    });
+                }
             });
-
-            // Save Category
-            $(document).on('click', '.save-category', function() {
-                let id = $(this).data('id');
-                let row = $('#category-' + id);
-                let newName = row.find('.category-name-edit').val();
-                let description = row.find('.category-description-edit').val();
-
-                $.ajax({
-                    url: `/admin/knowledge-base/categories/${id}`,
-                    method: "PATCH",
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        name: newName,
-                        description: description
-                    },
-                    success: function(response) {
-                        Swal.fire('Berhasil!', response.message, 'success');
-                        row.find('.category-name-display').text(response.category.name).removeClass('d-none');
-                        row.find('.category-name-edit').addClass('d-none');
-                        row.find('.edit-category').removeClass('d-none');
-                        row.find('.delete-category').removeClass('d-none');
-                        row.find('.save-category').addClass('d-none');
-                        row.find('.cancel-edit-category').addClass('d-none');
-                    },
-                    error: function(response) {
-                        Swal.fire('Error!', response.responseJSON.message || 'Terjadi kesalahan!', 'error');
-                    }
-                });
-            });
-
-            // Delete Category
-            $(document).on('click', '.delete-category', function() {
-                let id = $(this).data('id');
-                Swal.fire({
-                    title: 'Apakah Anda yakin?',
-                    text: "Kategori ini akan dihapus!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ya, hapus!',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: `/admin/knowledge-base/categories/${id}`,
-                            method: "DELETE",
-                            data: {
-                                _token: "{{ csrf_token() }}"
-                            },
-                            success: function(response) {
-                                Swal.fire('Berhasil!', response.message, 'success');
-                                $('#category-' + id).remove();
-                            },
-                            error: function(response) {
-                                Swal.fire('Error!', response.responseJSON.message || 'Terjadi kesalahan!', 'error');
-                            }
-                        });
-                    }
-                });
-            });
-        </script>
+        });
+    </script>
 @endpush
