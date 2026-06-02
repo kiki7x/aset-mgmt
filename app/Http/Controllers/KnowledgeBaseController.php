@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class KnowledgeBaseController extends Controller
@@ -29,15 +32,32 @@ class KnowledgeBaseController extends Controller
             'title' => 'required|string|max:255|unique:kb_articles,title',
             'category_id' => 'required|exists:kb_categories,id',
             'content' => 'required',
+            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
-        \App\Models\KbArticlesModel::create([
+        $supportsFeaturedImageColumn = $this->supportsFeaturedImageColumn();
+        $featuredImagePath = null;
+        $content = $request->input('content');
+
+        if ($request->hasFile('featured_image')) {
+            $featuredImagePath = $request->file('featured_image')->store('kb_featured_images', 'public');
+        }
+
+        $content = $this->normalizeFeaturedImageContent($content, $featuredImagePath, $supportsFeaturedImageColumn);
+
+        $payload = [
             'title' => $request->title,
             'category_id' => $request->category_id,
-            'content' => $request->content,
-            'author_id' => auth()->id(),
+            'content' => $content,
+            'author_id' => Auth::id(),
             'slug' => Str::slug($request->title), // Sudah di boot model, tapi bisa dipertegas
-        ]);
+        ];
+
+        if ($supportsFeaturedImageColumn) {
+            $payload['featured_image'] = $featuredImagePath;
+        }
+
+        \App\Models\KbArticlesModel::create($payload);
 
         return redirect()->route('admin.knowledge-base');
     }
@@ -54,22 +74,101 @@ class KnowledgeBaseController extends Controller
             'title' => 'required|string|max:255|unique:kb_articles,title,' . $article->id,
             'category_id' => 'required|exists:kb_categories,id',
             'content' => 'required',
+            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
-        $article->update([
+        $supportsFeaturedImageColumn = $this->supportsFeaturedImageColumn();
+        $content = $request->input('content');
+        $featuredImagePath = $supportsFeaturedImageColumn
+            ? $article->featured_image
+            : $this->extractFeaturedImagePathFromContent($article->content);
+
+        if ($request->hasFile('featured_image')) {
+            if ($featuredImagePath) {
+                Storage::disk('public')->delete($featuredImagePath);
+            }
+
+            $featuredImagePath = $request->file('featured_image')->store('kb_featured_images', 'public');
+        }
+
+        $content = $this->normalizeFeaturedImageContent($content, $featuredImagePath, $supportsFeaturedImageColumn);
+
+        $payload = [
             'title' => $request->title,
             'category_id' => $request->category_id,
-            'content' => $request->content,
+            'content' => $content,
             'slug' => Str::slug($request->title), // Sudah di boot model, tapi bisa dipertegas
-        ]);
+        ];
+
+        if ($supportsFeaturedImageColumn) {
+            $payload['featured_image'] = $featuredImagePath;
+        }
+
+        $article->update($payload);
 
         return redirect()->route('admin.knowledge-base');
     }
 
     public function destroy(\App\Models\KbArticlesModel $article)
     {
+        $supportsFeaturedImageColumn = $this->supportsFeaturedImageColumn();
+        $featuredImagePath = $supportsFeaturedImageColumn
+            ? $article->featured_image
+            : $this->extractFeaturedImagePathFromContent($article->content);
+
+        if ($featuredImagePath) {
+            Storage::disk('public')->delete($featuredImagePath);
+        }
+
         $article->delete();
         return redirect()->route('admin.knowledge-base');
+    }
+
+    private function supportsFeaturedImageColumn(): bool
+    {
+        try {
+            return Schema::hasColumn('kb_articles', 'featured_image');
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+
+    private function injectFeaturedImageIntoContent(?string $content, string $imagePath): string
+    {
+        $content = $this->stripFeaturedImageMarker($content ?? '');
+        $imageUrl = asset('storage/' . $imagePath);
+        $marker = '<div class="kb-featured-image" data-kb-featured="1" data-kb-featured-path="' . e($imagePath) . '"><img src="' . e($imageUrl) . '" alt="Featured Image" style="max-width:100%;height:auto;"></div>';
+
+        return $marker . "\n" . $content;
+    }
+
+    private function normalizeFeaturedImageContent(?string $content, ?string $featuredImagePath, bool $supportsFeaturedImageColumn): string
+    {
+        $content = $this->stripFeaturedImageMarker($content ?? '');
+
+        if (!$supportsFeaturedImageColumn && $featuredImagePath) {
+            return $this->injectFeaturedImageIntoContent($content, $featuredImagePath);
+        }
+
+        return $content;
+    }
+
+    private function stripFeaturedImageMarker(string $content): string
+    {
+        return preg_replace('/<div[^>]*data-kb-featured="1"[^>]*>.*?<\/div>\s*/is', '', $content) ?? $content;
+    }
+
+    private function extractFeaturedImagePathFromContent(?string $content): ?string
+    {
+        if (empty($content)) {
+            return null;
+        }
+
+        if (preg_match('/data-kb-featured-path="([^"]+)"/i', $content, $matches)) {
+            return html_entity_decode($matches[1], ENT_QUOTES, 'UTF-8');
+        }
+
+        return null;
     }
 
     // --- Category Management (via AJAX atau modal) ---
@@ -163,7 +262,22 @@ class KnowledgeBaseController extends Controller
             $file->move(public_path('storage/' . $folder), $fileName);
 
             // Pastikan `php artisan storage:link` sudah dijalankan
-            return response()->json(['url' => asset('storage/' . $folder . '/' . $fileName), 'type' => $isImage ? 'image' : 'video']);
+            $url = asset('storage/' . $folder . '/' . $fileName);
+
+            if ($isImage) {
+                return response()->json([
+                    'url' => $url,
+                    'type' => 'image',
+                ]);
+            }
+
+            $iframe = '<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="' . e($url) . '" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+            return response()->json([
+                'url' => $url,
+                'type' => 'video',
+                'iframe' => $iframe,
+            ]);
         }
 
         return response()->json(['error' => 'Gagal mengunggah file'], 400);
