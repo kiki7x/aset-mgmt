@@ -33,6 +33,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>Featured Image</th>
                                     <th>Judul Artikel</th>
                                     <th>Kategori</th>
                                     <th>Penulis</th>
@@ -45,6 +46,13 @@
                                 @foreach ($articles as $article)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
+                                        <td>
+                                            @if ($article->featured_image_url)
+                                                <img src="{{ $article->featured_image_url }}" alt="Featured Image {{ $article->title }}" class="img-thumbnail" style="max-width: 80px; max-height: 80px; object-fit: cover;">
+                                            @else
+                                                <span class="text-muted">-</span>
+                                            @endif
+                                        </td>
                                         <td>{{ $article->title }}</td>
                                         <td>{{ $article->category->name ?? 'Tidak Ada' }}</td>
                                         <td>{{ $article->author->name ?? 'Pengguna Tidak Dikenal' }}</td>

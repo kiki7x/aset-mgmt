@@ -21,7 +21,7 @@
                         <h3 class="card-title">Form Tambah Artikel Baru</h3>
                     </div>
                     <!-- /.card-header -->
-                    <form action="{{ route('admin.knowledge-base.store') }}" method="POST">
+                    <form action="{{ route('admin.knowledge-base.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="card-body">
                             <div class="form-group">
@@ -45,6 +45,19 @@
                                 </select>
                                 @error('category_id')
                                     <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="featured_image">Featured Image</label>
+                                <input type="file" class="form-control-file @error('featured_image') is-invalid @enderror" id="featured_image" name="featured_image" accept="image/*">
+                                <div class="mt-2 d-none" id="featured_image_preview_wrap">
+                                    <img id="featured_image_preview" src="" alt="Featured Image Preview" class="img-thumbnail" style="max-width: 240px;">
+                                </div>
+                                <small class="form-text text-muted">Opsional. Format: JPG, PNG, GIF, atau WebP.</small>
+                                @error('featured_image')
+                                    <span class="invalid-feedback d-block" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
@@ -81,6 +94,25 @@
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
     <script>
         $(document).ready(function() {
+            $('#featured_image').on('change', function() {
+                const file = this.files && this.files[0];
+
+                if (!file) {
+                    $('#featured_image_preview_wrap').addClass('d-none');
+                    $('#featured_image_preview').attr('src', '');
+                    return;
+                }
+
+                const reader = new FileReader();
+
+                reader.onload = function(event) {
+                    $('#featured_image_preview').attr('src', event.target.result);
+                    $('#featured_image_preview_wrap').removeClass('d-none');
+                };
+
+                reader.readAsDataURL(file);
+            });
+
             $('#summernote').summernote({
                 height: 300,
                 placeholder: 'Tulis konten artikel di sini...',
@@ -95,15 +127,145 @@
                     ['view', ['fullscreen', 'codeview', 'help']]
                 ],
                 callbacks: {
+                    onInit: function() {
+                        bindVideoToolbarButton();
+                        // keep track of the current selection range so inserts happen at caret
+                        $('#summernote').on('mouseup keyup focus', function() {
+                            try { $('#summernote').summernote('saveRange'); } catch (e) {}
+                        });
+                    },
                     onImageUpload: function(files) {
                         for (let i = 0; i < files.length; i++) {
-                            uploadImage(files[i]);
+                            uploadMedia(files[i]);
                         }
                     }
                 }
             });
 
-            function uploadImage(file) {
+            function bindVideoToolbarButton() {
+                const toolbar = $('#summernote').next('.note-editor').find('.note-toolbar')[0];
+
+                if (!toolbar || toolbar.dataset.kbVideoBound === '1') {
+                    return;
+                }
+
+                toolbar.dataset.kbVideoBound = '1';
+
+                toolbar.addEventListener('click', function(event) {
+                    const button = event.target.closest('button');
+
+                    if (!button) {
+                        return;
+                    }
+
+                    const label = `${button.getAttribute('title') || ''} ${button.getAttribute('aria-label') || ''} ${button.textContent || ''}`.toLowerCase();
+                    const hasVideoIcon = button.querySelector('.note-icon-video');
+
+                    if (!hasVideoIcon && !label.includes('video')) {
+                        return;
+                    }
+
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    // save current range so we can restore it when inserting
+                    try { $('#summernote').summernote('saveRange'); } catch (e) {}
+
+                    // Open modal to input video URL instead of prompt
+                    $('#video_url').val('');
+                    $('#video_preview').html('');
+                    $('#kbVideoModal').modal('show');
+                }, true);
+            }
+
+            function insertVideoFromUrl(url) {
+                const embedHtml = buildVideoEmbedHtml(url);
+
+                if (!embedHtml) {
+                    alert('Link video tidak dikenali. Gunakan link YouTube, Vimeo, Dailymotion, atau Youku.');
+                    return;
+                }
+
+                try { $('#summernote').summernote('restoreRange'); } catch (e) {}
+                $('#summernote').summernote('pasteHTML', embedHtml);
+                $('#video_url').val('');
+            }
+
+            function buildVideoEmbedHtml(url) {
+                if (!url) {
+                    return null;
+                }
+
+                const normalizedUrl = url.trim();
+                const youtubeVideoId = extractYouTubeVideoId(normalizedUrl);
+
+                if (youtubeVideoId) {
+                    return `<div class="embed-responsive embed-responsive-16by9 kb-video-wrapper" style="position:relative;">` +
+                        `<button type="button" class="kb-video-settings btn btn-sm btn-light" style="position:absolute;top:6px;right:6px;z-index:10;">&#9881;</button>` +
+                        `<iframe class="embed-responsive-item kb-video-iframe" src="https://www.youtube.com/embed/${youtubeVideoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+                }
+
+                const vimeoMatch = normalizedUrl.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
+                if (vimeoMatch) {
+                    return `<div class="embed-responsive embed-responsive-16by9 kb-video-wrapper" style="position:relative;">` +
+                        `<button type="button" class="kb-video-settings btn btn-sm btn-light" style="position:absolute;top:6px;right:6px;z-index:10;">&#9881;</button>` +
+                        `<iframe class="embed-responsive-item kb-video-iframe" src="https://player.vimeo.com/video/${vimeoMatch[1]}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>`;
+                }
+
+                const dailymotionMatch = normalizedUrl.match(/(?:dailymotion\.com\/video\/|dai\.ly\/)([\w-]+)/i);
+                if (dailymotionMatch) {
+                    return `<div class="embed-responsive embed-responsive-16by9 kb-video-wrapper" style="position:relative;">` +
+                        `<button type="button" class="kb-video-settings btn btn-sm btn-light" style="position:absolute;top:6px;right:6px;z-index:10;">&#9881;</button>` +
+                        `<iframe class="embed-responsive-item kb-video-iframe" src="https://www.dailymotion.com/embed/video/${dailymotionMatch[1]}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>`;
+                }
+
+                const youkuMatch = normalizedUrl.match(/youku\.com\/(?:embed\/|v_show\/id_)?([\w=]+)/i);
+                if (youkuMatch) {
+                    return `<div class="embed-responsive embed-responsive-16by9 kb-video-wrapper" style="position:relative;">` +
+                        `<button type="button" class="kb-video-settings btn btn-sm btn-light" style="position:absolute;top:6px;right:6px;z-index:10;">&#9881;</button>` +
+                        `<iframe class="embed-responsive-item kb-video-iframe" src="https://player.youku.com/embed/${youkuMatch[1]}" frameborder="0" allowfullscreen></iframe></div>`;
+                }
+
+                return null;
+            }
+
+            function extractYouTubeVideoId(url) {
+                try {
+                    const parsedUrl = new URL(url, window.location.origin);
+                    const hostname = parsedUrl.hostname.replace(/^www\./i, '').toLowerCase();
+
+                    if (hostname === 'youtu.be') {
+                        return parsedUrl.pathname.split('/').filter(Boolean)[0] || null;
+                    }
+
+                    if (hostname === 'youtube.com' || hostname === 'm.youtube.com' || hostname === 'music.youtube.com' || hostname === 'youtube-nocookie.com') {
+                        const path = parsedUrl.pathname;
+
+                        if (path === '/watch') {
+                            return parsedUrl.searchParams.get('v');
+                        }
+
+                        const embedMatch = path.match(/\/embed\/([\w-]{11})/i);
+                        if (embedMatch) {
+                            return embedMatch[1];
+                        }
+
+                        const shortMatch = path.match(/\/shorts\/([\w-]{11})/i);
+                        if (shortMatch) {
+                            return shortMatch[1];
+                        }
+                    }
+                } catch (error) {
+                    const fallbackMatch = url.match(/(?:youtube\.com\/watch\?v=|youtube\.com\/embed\/|youtu\.be\/|youtube-nocookie\.com\/embed\/)([\w-]{11})/i);
+                    if (fallbackMatch) {
+                        return fallbackMatch[1];
+                    }
+                }
+
+                return null;
+            }
+
+            function uploadMedia(file) {
                 let data = new FormData();
                 data.append("image", file);
                 data.append("_token", "{{ csrf_token() }}");
@@ -116,19 +278,226 @@
                     data: data,
                     type: "POST",
                     success: function(response) {
-                        if (response.url) {
+                        if (response.type === 'video' && response.iframe) {
+                            try { $('#summernote').summernote('restoreRange'); } catch (e) {}
+                            $('#summernote').summernote('pasteHTML', response.iframe);
+                        } else if (response.url) {
                             $('#summernote').summernote('insertImage', response.url);
                         } else {
-                            console.error('URL gambar tidak ditemukan dalam respons:', response);
-                            alert('Gagal mengunggah gambar.');
+                            console.error('URL media tidak ditemukan dalam respons:', response);
+                            alert('Gagal mengunggah media.');
                         }
                     },
                     error: function(data) {
                         console.error(data);
-                        alert('Terjadi kesalahan saat mengunggah gambar.');
+                        alert('Terjadi kesalahan saat mengunggah media.');
                     }
                 });
             }
+
+            // Modal handlers for video insertion
+            $('#kbVideoModal').on('shown.bs.modal', function() {
+                $('#video_url').trigger('focus');
+            });
+
+            $('#video_url').on('input', function() {
+                const url = $(this).val().trim();
+                const embed = buildVideoEmbedHtml(url);
+
+                if (embed) {
+                    $('#video_preview').html(embed);
+                } else {
+                    $('#video_preview').html('<div class="text-muted">Preview tidak tersedia untuk link ini.</div>');
+                }
+            });
+
+            $('#kbInsertVideoBtn').on('click', function() {
+                const url = $('#video_url').val().trim();
+
+                if (!url) {
+                    alert('Masukkan link video terlebih dahulu.');
+                    return;
+                }
+
+                const embedHtml = buildVideoEmbedHtml(url);
+
+                if (!embedHtml) {
+                    alert('Link video tidak dikenali. Gunakan link YouTube, Vimeo, Dailymotion, atau Youku.');
+                    return;
+                }
+
+                try { $('#summernote').summernote('restoreRange'); } catch (e) {}
+                $('#summernote').summernote('pasteHTML', embedHtml);
+                $('#kbVideoModal').modal('hide');
+                $('#video_url').val('');
+                $('#video_preview').html('');
+            });
+
+            $('#kbVideoModal').on('hidden.bs.modal', function() {
+                $('#video_url').val('');
+                $('#video_preview').html('');
+            });
+
+            // Video popover for post-insert controls (align, resize, edit, remove)
+            (function() {
+                let $videoPopover = null;
+                let $selectedVideo = null;
+                // flag to prevent immediate hide after opening the popover
+                let popoverJustOpened = false;
+
+                function createPopover() {
+                    if ($videoPopover) return $videoPopover;
+
+                    $videoPopover = $(
+                        '<div class="note-video-popover popover fade" style="display:none; position: absolute; z-index: 1060;">' +
+                        '  <div class="arrow"></div>' +
+                        '  <div class="popover-content p-2 text-center">' +
+                        '    <div class="btn-group btn-group-sm" role="group">' +
+                        '      <button type="button" class="btn btn-light" data-act="align-left" title="Align Left">L</button>' +
+                        '      <button type="button" class="btn btn-light" data-act="align-center" title="Center">C</button>' +
+                        '      <button type="button" class="btn btn-light" data-act="align-right" title="Align Right">R</button>' +
+                        '      <button type="button" class="btn btn-light" data-act="w-100" title="Width 100%">100%</button>' +
+                        '      <button type="button" class="btn btn-light" data-act="w-50" title="Width 50%">50%</button>' +
+                        '      <button type="button" class="btn btn-light" data-act="edit" title="Edit">Edit</button>' +
+                        '      <button type="button" class="btn btn-danger" data-act="remove" title="Remove">Del</button>' +
+                        '    </div>' +
+                        '  </div>' +
+                        '</div>'
+                    ).appendTo('body');
+
+                    $videoPopover.on('click', 'button', function(e) {
+                        e.preventDefault();
+                        const act = $(this).data('act');
+
+                        if (!$selectedVideo || !$selectedVideo.length) return;
+
+                        const $wrapper = $selectedVideo.closest('.embed-responsive');
+
+                        if (act === 'align-left') {
+                            $wrapper.css({display: 'block', margin: '0', float: 'left', 'margin-right': '1rem'});
+                        } else if (act === 'align-right') {
+                            $wrapper.css({display: 'block', margin: '0', float: 'right', 'margin-left': '1rem'});
+                        } else if (act === 'align-center') {
+                            $wrapper.css({display: 'block', margin: '0 auto', float: 'none'});
+                        } else if (act === 'w-100') {
+                            $selectedVideo.css({width: '100%', height: 'auto'});
+                            $wrapper.css({'max-width': '100%'});
+                        } else if (act === 'w-50') {
+                            $selectedVideo.css({width: '100%', height: 'auto'});
+                            $wrapper.css({'max-width': '50%'});
+                        } else if (act === 'edit') {
+                            // open modal with current src
+                            const src = $selectedVideo.attr('src') || '';
+                            $('#video_url').val(src);
+                            $('#video_preview').html(buildVideoEmbedHtml(src));
+                            $('#kbVideoModal').modal('show');
+                        } else if (act === 'remove') {
+                            $wrapper.remove();
+                        }
+
+                        hidePopover();
+                    });
+
+                    return $videoPopover;
+                }
+
+                function showPopover($iframe) {
+                    $selectedVideo = $iframe;
+                    const pop = createPopover();
+                    const rect = $iframe[0].getBoundingClientRect();
+                    const scrollTop = $(window).scrollTop();
+                    const top = rect.top + scrollTop - pop.outerHeight() - 8;
+                    const left = rect.left + (rect.width / 2) - (pop.outerWidth() / 2);
+
+                    pop.css({top: top + 'px', left: Math.max(8, left) + 'px'}).addClass('show').show();
+
+                    // mark as just opened to ignore the immediate mouseup/click that follows
+                    popoverJustOpened = true;
+                    setTimeout(function() { popoverJustOpened = false; }, 300);
+                }
+
+                function hidePopover() {
+                    if ($videoPopover) {
+                        $videoPopover.removeClass('show').hide();
+                    }
+                    $selectedVideo = null;
+                }
+
+                // show popover when clicking the settings button overlay
+                $(document).on('click', '.kb-video-settings', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const $btn = $(this);
+                    const $wrapper = $btn.closest('.kb-video-wrapper');
+                    const $iframe = $wrapper.find('iframe.kb-video-iframe');
+                    if ($iframe.length) {
+                        showPopover($iframe);
+                    }
+                });
+
+                // click outside popover or settings -> hide popover
+                $(document).on('click', function(e) {
+                    // if popover was just opened, ignore this click (it may be the same user click)
+                    if (popoverJustOpened) return;
+
+                    if (!$(e.target).closest('.note-video-popover, .kb-video-settings').length) {
+                        hidePopover();
+                    }
+                });
+
+                // hide on editor events (e.g., keyup or selection change)
+                $(document).on('keyup mouseup', function(e) {
+                    // ignore events that originate from the settings button or the popover itself
+                    if ($(e.target).closest('.note-video-popover, .kb-video-settings').length) {
+                        return;
+                    }
+
+                    // if popover was just opened, ignore the immediate mouseup/keyup
+                    if (popoverJustOpened) return;
+
+                    if (!$(e.target).closest('iframe').length) {
+                        // small delay to allow clicks on popover
+                        setTimeout(() => {
+                            if (!$(document.activeElement).is('iframe')) {
+                                // keep popover if focus is on popover
+                                if (!$(document.activeElement).closest('.note-video-popover').length) {
+                                    hidePopover();
+                                }
+                            }
+                        }, 150);
+                    }
+                });
+
+                // hide popover when modal opens
+                $('#kbVideoModal').on('show.bs.modal', hidePopover);
+            })();
         });
     </script>
 @endpush
+
+<!-- Video Insert Modal -->
+<div class="modal fade" id="kbVideoModal" tabindex="-1" role="dialog" aria-labelledby="kbVideoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="kbVideoModalLabel">Insert Video</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="video_url">Link Video (YouTube, Vimeo, Dailymotion, Youku)</label>
+                    <input type="text" id="video_url" class="form-control" placeholder="https://www.youtube.com/watch?v=...">
+                </div>
+                <div id="video_preview" class="mt-3" style="min-height:120px;">
+                    <!-- preview inserted here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                <button type="button" id="kbInsertVideoBtn" class="btn btn-primary">Insert Video</button>
+            </div>
+        </div>
+    </div>
+</div>

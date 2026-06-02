@@ -34,9 +34,10 @@
             <div class="row">
                 @foreach($articles as $article)
                     @php
-                        // Extract first image from content if available
-                        $thumbnail = null;
-                        if (preg_match("/<img[^>]+src=[\"']([^\"']+)[\"']/i", $article->content, $m)) {
+                        // Use featured image first, then fall back to first image in content, then placeholder.
+                        $thumbnail = $article->featured_image_url;
+
+                        if (!$thumbnail && preg_match("/<img[^>]+src=[\"']([^\"']+)[\"']/i", $article->content, $m)) {
                             $thumbnail = $m[1];
                         }
                         if (!$thumbnail) {
