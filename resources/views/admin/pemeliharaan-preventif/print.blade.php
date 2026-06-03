@@ -268,8 +268,7 @@
             <tr>
                 <th>No.</th>
                 <th class="text-center">Periode</th>
-                <th class="text-center">Nama Pemeliharaan</th>
-                <th class="text-center">Tag Aset</th>
+                <th class="text-center">Judul Pemeliharaan</th>
                 <th class="text-center">Nama Aset</th>
                 <th class="text-center">PIC</th>
                 <th class="text-center">Biaya</th>
@@ -284,8 +283,7 @@
                     <td class="text-center">{{ $loop->iteration }}</td>
                     <td>{{ $preventif['period'] }}</td>
                     <td>{{ $preventif['name'] }}</td>
-                    <td>{{ $preventif['asset_tag'] }}</td>
-                    <td>{{ $preventif['asset_name'] }}</td>
+                    <td>{{ $preventif['asset_tag'] }} | {{ $preventif['asset_name'] }}</td>
                     <td>{{ $preventif['pic_name'] }}</td>
                     <td>{{ $preventif['cost'] }}</td>
                     <td>{{ $preventif['status'] }}</td>

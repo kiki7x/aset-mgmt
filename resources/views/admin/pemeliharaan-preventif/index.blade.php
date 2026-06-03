@@ -14,15 +14,11 @@
     <div class="card">
         <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
             <h3 class="card-title">Kalender Pemeliharaan</h3>
-            {{-- <button type="button" class="btn btn-outline-primary" style="margin-left: auto;">
-                            <i class="fas fa-plus"></i>
-                        </button> --}}
         </div>
-        <div class="card-body p-0">
+        <div class="card-body">
             <!-- THE CALENDAR -->
             <div id="calendar"></div>
         </div>
-        <!-- /.card-body -->
     </div>
 
     <div class="card">
@@ -39,13 +35,13 @@
                         <tr>
                             <th>#</th>
                             <th>Periode</th>
-                            <th>Nama Pemeliharaan</th>
-                            <th>Tag Aset</th>
+                            <th>Judul Pemeliharaan</th>
                             <th>Nama Aset</th>
                             <th>PIC</th>
                             <th>Biaya</th>
                             <th>Status</th>
                             <th>Catatan</th>
+                            <th>Bukti Dukung</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -212,15 +208,12 @@
                                 data: 'maintenance_name'
                             },
                             {
-                                data: 'asset_tag'
-                            },
-                            {
                                 data: 'asset_name',
                                 render: function(data, type, row) {
                                     if (row.classification_name == 'TIK') {
-                                        return '<a href="/admin/asettik/' + row.asset_id + '/overview" target="_blank">' + row.asset_tag + ' - ' + row.asset_name + '<i class="fa fa-external-link"></i>' + '</a>';
+                                        return '<a href="/admin/asettik/' + row.asset_id + '/overview" target="_blank">' + row.asset_tag + '<br>' + row.asset_name + '<i class="fa fa-external-link"></i>' + '</a>';
                                     } else if (row.classification_name == 'Kendaraan' || row.classification_name == 'Mesin/Elektronik') {
-                                        return '<a href="/admin/asetrt/' + row.asset_id + '/overview" target="_blank">' + row.asset_tag + ' - ' + row.asset_name + '<i class="fa fa-external-link"></i>' + '</a>';
+                                        return '<a href="/admin/asetrt/' + row.asset_id + '/overview" target="_blank">' + row.asset_tag + '<br>' + row.asset_name + '<i class="fa fa-external-link"></i>' + '</a>';
                                     } else {
                                         return row.asset_tag + ' - ' + row.asset_name;
                                     }
@@ -237,6 +230,16 @@
                             },
                             {
                                 data: 'notes'
+                            },
+                            {
+                                data: 'attachment_link',
+                                render: function(data, type, row) {
+                                    if (data) {
+                                        return `<a href="${data}" target="_blank">${data}</a>`;
+                                    } else {
+                                        return '-';
+                                    }
+                                }
                             }
                         ],
                         order: [

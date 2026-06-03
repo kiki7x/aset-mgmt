@@ -103,7 +103,7 @@ class PemeliharaanPreventifController extends Controller
                     'asset_id' => $history->maintenance_schedule->asset_id ?? '-',
                     'asset_tag' => $history->maintenance_schedule->asset->tag ?? '-',
                     'asset_name' => $history->maintenance_schedule->asset->name ?? '-',
-                    'pic_name' => $history->pic->name ?? '-',
+                    'pic_name' => $history->pic->fullname ?? '-',
                     'period' => $history->period ? Carbon::parse($history->period)->format('d M Y') : '-',
                     'cost' => $history->cost !== null ? number_format($history->cost, 0, ',', '.') : '-',
                     'status' => $history->status,
