@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 use Shuchkin\SimpleXLSX;
@@ -237,8 +238,19 @@ class ImportController extends Controller
             $rows = $xlsx->rows();
             array_shift($rows);
 
+            $knownUsernames = array_fill_keys(
+                \App\Models\User::query()->pluck('username')->filter()->all(),
+                true
+            );
+            $knownEmails = array_fill_keys(
+                \App\Models\User::query()->pluck('email')->filter()->all(),
+                true
+            );
+
             $errors = [];
+            $pendingUsers = [];
             $successCount = 0;
+            $timestamp = now();
 
             foreach ($rows as $index => $row) {
                 $rowNumber = $index + 2;
@@ -248,7 +260,7 @@ class ImportController extends Controller
                 $usernameInput = trim((string) ($row[1] ?? ''));
                 $email = trim((string) ($row[2] ?? ''));
                 $password = trim((string) ($row[3] ?? ''));
-                $username = $this->normalizeImportedUsername($fullname, $usernameInput);
+                $username = $this->normalizeImportedUsername($fullname, $usernameInput, $knownUsernames);
 
                 if ($fullname === '') {
                     $rowErrors[] = "Kolom 'fullname' tidak boleh kosong.";
@@ -263,10 +275,7 @@ class ImportController extends Controller
                     $rowErrors[] = "Kolom 'password' tidak boleh kosong.";
                 }
 
-                if ($username !== '' && \App\Models\User::where('username', $username)->exists()) {
-                    $rowErrors[] = "Username '{$username}' sudah digunakan.";
-                }
-                if ($email !== '' && \App\Models\User::where('email', $email)->exists()) {
+                if ($email !== '' && isset($knownEmails[$email])) {
                     $rowErrors[] = "Email '{$email}' sudah digunakan.";
                 }
 
@@ -277,16 +286,46 @@ class ImportController extends Controller
                     continue;
                 }
 
-                $user = \App\Models\User::create([
+                $pendingUsers[] = [
                     'fullname' => $fullname,
                     'username' => $username,
                     'email' => $email,
                     'password' => bcrypt($password),
                     'avatar' => null,
-                ]);
+                    'email_verified_at' => null,
+                    'created_at' => $timestamp,
+                    'updated_at' => $timestamp,
+                ];
 
-                $user->assignRole($role->name);
-                $successCount++;
+                $knownUsernames[$username] = true;
+                $knownEmails[$email] = true;
+            }
+
+            if (!empty($pendingUsers)) {
+                DB::transaction(function () use ($pendingUsers, $role, &$successCount) {
+                    \App\Models\User::insert($pendingUsers);
+
+                    $insertedUsers = \App\Models\User::query()
+                        ->whereIn('email', array_column($pendingUsers, 'email'))
+                        ->get(['id', 'email']);
+
+                    $pivotRows = [];
+                    foreach ($insertedUsers as $user) {
+                        $pivotRows[] = [
+                            'role_id' => $role->id,
+                            'model_type' => \App\Models\User::class,
+                            'model_id' => $user->id,
+                        ];
+                    }
+
+                    if (!empty($pivotRows)) {
+                        DB::table('model_has_roles')->insert($pivotRows);
+                    }
+
+                    $successCount = count($pendingUsers);
+                });
+            } else {
+                $successCount = 0;
             }
 
             return response()->json([
@@ -303,7 +342,7 @@ class ImportController extends Controller
         ], 400);
     }
 
-    private function normalizeImportedUsername(string $fullname, string $usernameInput): string
+    private function normalizeImportedUsername(string $fullname, string $usernameInput, array &$knownUsernames): string
     {
         $base = Str::slug($usernameInput !== '' ? $usernameInput : $fullname, '.');
         $base = str_replace('.', '_', $base);
@@ -322,7 +361,7 @@ class ImportController extends Controller
         }
 
         $suffix = 1;
-        while (\App\Models\User::where('username', $candidate)->exists()) {
+        while (isset($knownUsernames[$candidate])) {
             $suffixText = '-' . $suffix;
             $candidate = substr($base, 0, $maxLength - strlen($suffixText));
             $candidate = rtrim($candidate, '-_');
