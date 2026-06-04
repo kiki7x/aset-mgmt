@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 use Shuchkin\SimpleXLSX;
+use Shuchkin\SimpleXLSXGen;
 
 class ImportController extends Controller
 {
@@ -202,5 +205,131 @@ class ImportController extends Controller
             'status' => 'error',
             'message' => 'Gagal mengimport data.'
         ], 400);
+    }
+
+    public function templateUser()
+    {
+        $data = [
+            ['fullname', 'username', 'email', 'password'],
+            ['Budi Santoso', 'budi.santoso', 'budi@example.com', 'password123'],
+        ];
+
+        $date = now()->format('d-m-Y');
+
+        return SimpleXLSXGen::fromArray($data)->downloadAs("{$date}_sapa-ppl-user-management-template.xlsx");
+    }
+
+    public function storeUserManagement(Request $request): JsonResponse
+    {
+        $request->validate([
+            'fileusermanagement' => 'required|mimes:xlsx',
+        ]);
+
+        $role = Role::where('name', 'user')->first();
+        if (!$role) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Role user tidak ditemukan di sistem.'
+            ], 404);
+        }
+
+        if ($xlsx = SimpleXLSX::parse($request->file('fileusermanagement'))) {
+            $rows = $xlsx->rows();
+            array_shift($rows);
+
+            $errors = [];
+            $successCount = 0;
+
+            foreach ($rows as $index => $row) {
+                $rowNumber = $index + 2;
+                $rowErrors = [];
+
+                $fullname = trim((string) ($row[0] ?? ''));
+                $usernameInput = trim((string) ($row[1] ?? ''));
+                $email = trim((string) ($row[2] ?? ''));
+                $password = trim((string) ($row[3] ?? ''));
+                $username = $this->normalizeImportedUsername($fullname, $usernameInput);
+
+                if ($fullname === '') {
+                    $rowErrors[] = "Kolom 'fullname' tidak boleh kosong.";
+                }
+                if ($usernameInput === '' && $fullname === '') {
+                    $rowErrors[] = "Kolom 'username' tidak boleh kosong.";
+                }
+                if ($email === '') {
+                    $rowErrors[] = "Kolom 'email' tidak boleh kosong.";
+                }
+                if ($password === '') {
+                    $rowErrors[] = "Kolom 'password' tidak boleh kosong.";
+                }
+
+                if ($username !== '' && \App\Models\User::where('username', $username)->exists()) {
+                    $rowErrors[] = "Username '{$username}' sudah digunakan.";
+                }
+                if ($email !== '' && \App\Models\User::where('email', $email)->exists()) {
+                    $rowErrors[] = "Email '{$email}' sudah digunakan.";
+                }
+
+                if (!empty($rowErrors)) {
+                    foreach ($rowErrors as $message) {
+                        $errors[] = "Baris $rowNumber: {$message}";
+                    }
+                    continue;
+                }
+
+                $user = \App\Models\User::create([
+                    'fullname' => $fullname,
+                    'username' => $username,
+                    'email' => $email,
+                    'password' => bcrypt($password),
+                    'avatar' => null,
+                ]);
+
+                $user->assignRole($role->name);
+                $successCount++;
+            }
+
+            return response()->json([
+                'status' => count($errors) > 0 ? 'partial_error' : 'success',
+                'success_count' => $successCount,
+                'errors' => $errors,
+                'message' => 'Data user management berhasil diimport.'
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Gagal mengimport data.'
+        ], 400);
+    }
+
+    private function normalizeImportedUsername(string $fullname, string $usernameInput): string
+    {
+        $base = Str::slug($usernameInput !== '' ? $usernameInput : $fullname, '.');
+        $base = str_replace('.', '_', $base);
+        $base = strtolower(trim($base, '-_'));
+
+        if ($base === '') {
+            $base = 'user';
+        }
+
+        $maxLength = 20;
+        $candidate = substr($base, 0, $maxLength);
+        $candidate = rtrim($candidate, '-_');
+
+        if ($candidate === '') {
+            $candidate = 'user';
+        }
+
+        $suffix = 1;
+        while (\App\Models\User::where('username', $candidate)->exists()) {
+            $suffixText = '-' . $suffix;
+            $candidate = substr($base, 0, $maxLength - strlen($suffixText));
+            $candidate = rtrim($candidate, '-_');
+            $candidate .= $suffixText;
+            $suffix++;
+        }
+
+        return $candidate;
     }
 }

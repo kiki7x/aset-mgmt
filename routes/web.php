@@ -228,6 +228,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::get('settings/usermanager/edit/{id}', [App\Http\Controllers\UserController::class, 'edit'])->name('admin.settings.usermanager.edit');
         // Route Import
         Route::get('settings/import', [App\Http\Controllers\ImportController::class, 'index'])->name('admin.settings.import');
+        Route::get('settings/import/template-user', [App\Http\Controllers\ImportController::class, 'templateUser'])->name('admin.settings.import.templateuser');
+        Route::post('settings/import/storeusermanagement', [App\Http\Controllers\ImportController::class, 'storeUserManagement'])->name('admin.settings.import.storeusermanagement');
         Route::post('settings/import/storelokasi', [App\Http\Controllers\ImportController::class, 'storeLokasi'])->name('admin.settings.import.storelokasi');
         Route::post('settings/import/storeasettik', [App\Http\Controllers\ImportController::class, 'storeAsetTik'])->name('admin.settings.import.storeasettik');
         Route::post('settings/import/storeasetrt', [App\Http\Controllers\ImportController::class, 'storeAsetRt'])->name('admin.settings.import.storeasetrt');
