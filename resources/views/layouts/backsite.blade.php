@@ -45,11 +45,31 @@
     {{-- script-head --}}
     @stack('script-head')
     {{-- ./script-head --}}
+    @php
+        $isReadOnlyUser = auth()->check() && auth()->user()->hasRole('user');
+    @endphp
+    @if ($isReadOnlyUser)
+        <style>
+            .readonly-user button[type="submit"],
+            .readonly-user button[data-toggle="modal"],
+            .readonly-user a.btn[href*="/edit"],
+            .readonly-user a.btn[href*="/delete"],
+            .readonly-user a.btn[href*="/destroy"],
+            .readonly-user [id^="btnOpenCreateModal"],
+            .readonly-user [id^="btnImport"],
+            .readonly-user [id^="edit-"],
+            .readonly-user [id^="delete-"],
+            .readonly-user [data-target*="edit"],
+            .readonly-user [data-target*="delete"] {
+                display: none !important;
+            }
+        </style>
+    @endif
 </head>
 
 {{-- <body class="hold-transition layout-top-nav layout-fixed layout-navbar-fixed text-sm"> --}}
 
-<body class="hold-transition layout-fixed sidebar-mini">
+<body class="hold-transition layout-fixed sidebar-mini {{ $isReadOnlyUser ? 'readonly-user' : '' }}">
     <div class="wrapper">
         <x-backsite.navbar></x-backsite.navbar>
         <div class="content-wrapper">
