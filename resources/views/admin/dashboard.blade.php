@@ -161,7 +161,7 @@
                                 <!-- General tools such as edit or delete-->
                                 <div class="tools">
                                     <a href="{{ route('admin.tiket.show', $ticket->id) }}" class="btn-right text-dark"><i class="fa fa-eye"></i></a>&nbsp;
-                                    <a href="#" onclick="showM(&quot;index.php?modal=tickets/edit&amp;reroute=dashboard&amp;routeid=&amp;id={{ $ticket->id }}&amp;section=&quot;);return false" class="btn-right text-dark"><i class="fa fa-edit"></i></a>
+                                    <a href="#" data-crud="true" onclick="showM(&quot;index.php?modal=tickets/edit&amp;reroute=dashboard&amp;routeid=&amp;id={{ $ticket->id }}&amp;section=&quot;);return false" class="btn-right text-dark"><i class="fa fa-edit"></i></a>
                                 </div>
                             </li>
                         @endforeach

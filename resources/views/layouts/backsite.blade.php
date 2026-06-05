@@ -48,23 +48,6 @@
     @php
         $isReadOnlyUser = auth()->check() && auth()->user()->hasRole('user');
     @endphp
-    @if ($isReadOnlyUser)
-        <style>
-            .readonly-user button[type="submit"],
-            .readonly-user button[data-toggle="modal"],
-            .readonly-user a.btn[href*="/edit"],
-            .readonly-user a.btn[href*="/delete"],
-            .readonly-user a.btn[href*="/destroy"],
-            .readonly-user [id^="btnOpenCreateModal"],
-            .readonly-user [id^="btnImport"],
-            .readonly-user [id^="edit-"],
-            .readonly-user [id^="delete-"],
-            .readonly-user [data-target*="edit"],
-            .readonly-user [data-target*="delete"] {
-                display: none !important;
-            }
-        </style>
-    @endif
 </head>
 
 {{-- <body class="hold-transition layout-top-nav layout-fixed layout-navbar-fixed text-sm"> --}}
@@ -142,6 +125,86 @@
             }
         });
     </script>
+    @if ($isReadOnlyUser)
+        <script>
+            // Peringatan untuk role 'user'
+            const __readonlyUserWarningText = 'Fungsi ini hanya boleh dilakukan oleh role superaadmin/staf rt/staf tik';
+
+            function _isCrudTrigger(el) {
+                if (!el || el.nodeType !== 1) return false;
+
+                const title = (el.getAttribute('title') || '').toLowerCase();
+                const aria = (el.getAttribute('aria-label') || '').toLowerCase();
+                const text = (el.textContent || '').toLowerCase();
+                const href = (el.getAttribute('href') || '').toLowerCase();
+                const onclick = (el.getAttribute('onclick') || '').toLowerCase();
+                const wireClick = (el.getAttribute('wire:click') || '').toLowerCase();
+                const className = (el.className || '').toLowerCase();
+
+                if (el.closest('[data-crud="true"]')) return true;
+
+                if (/hapus|delete|remove/.test(title) || /hapus|delete|remove/.test(aria)) return true;
+                if (/tambah|create|add|edit|hapus|delete|remove|submit|simpan|save/.test(text)) return true;
+                if (/(\/create|\/edit|\/delete|\/destroy)/i.test(href)) return true;
+                if (/showm\(|openmodalcreate\(|dispatch\(|wire:click/.test(onclick + ' ' + wireClick)) return true;
+                if (/btn-danger|btn-warning|btn-success/.test(className) && /hapus|delete|remove|edit|tambah|create|add|simpan|save|submit/.test(text + ' ' + title)) return true;
+
+                return false;
+            }
+
+            // Capture-phase click listener: dibatasi hanya di area konten admin
+            document.addEventListener('click', function(e) {
+                try {
+                    const contentRoot = e.target.closest('.content-wrapper');
+                    if (!contentRoot) return;
+
+                    const crudTarget = e.target.closest('[data-crud="true"]') || (e.target.closest('a,button,form') && _isCrudTrigger(e.target.closest('a,button,form')));
+                    if (crudTarget) {
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        e.stopPropagation();
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Akses Ditolak',
+                            text: __readonlyUserWarningText,
+                            confirmButtonText: 'Tutup'
+                        });
+                        return false;
+                    }
+                } catch (err) {
+                    console.error('Readonly role interceptor error', err);
+                }
+            }, true); // useCapture = true
+
+            // Capture-phase submit listener: cegah submit dari form CRUD yang ditandai atau terdeteksi di area konten
+            document.addEventListener('submit', function(e) {
+                try {
+                    const form = e.target;
+                    if (!form || form.nodeName !== 'FORM') return;
+
+                    if (!form.closest('.content-wrapper')) return;
+
+                    const submitter = e.submitter || null;
+                    const submitterIsCrud = submitter && submitter.closest('[data-crud="true"]');
+                    const formIsCrud = form.closest('[data-crud="true"]') || form.querySelector('[data-crud="true"]') || _isCrudTrigger(form);
+
+                    if (submitterIsCrud || formIsCrud) {
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Akses Ditolak',
+                            text: __readonlyUserWarningText,
+                            confirmButtonText: 'Tutup'
+                        });
+                        return false;
+                    }
+                } catch (err) {
+                    console.error('Readonly form interceptor error', err);
+                }
+            }, true);
+        </script>
+    @endif
     <script>
         $(function() {
             $('[data-toggle="tooltip"]').tooltip()

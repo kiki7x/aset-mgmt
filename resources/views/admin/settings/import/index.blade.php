@@ -23,7 +23,7 @@
                 <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                     <h3 class="card-title font-weight-bold"><i class="fa-solid fa-building"></i> Import Aset Rumah Tangga <span class="badge end-0 mr-3 bg-info text-light"></span></h3>
                 </div>
-                <form id="formImportAsetRt" method="POST" autocomplete="off" enctype="multipart/form-data">
+                <form id="formImportAsetRt" method="POST" autocomplete="off" enctype="multipart/form-data" data-crud="true">
                     @csrf
                     <div class="card-body">
                         <div class="row">
@@ -44,7 +44,7 @@
                         <a href="javascript:void(0)" id="btnTemplateAsetRt" class="btn btn-secondary mr-2">
                             <i class="fas fa-file-download"></i> Download Template
                         </a>
-                        <button type="submit" id="btnImportAsetRt" class="btn btn-primary">
+                        <button type="submit" id="btnImportAsetRt" class="btn btn-primary" data-crud="true">
                             <i class="fas fa-file-import"></i> Import
                         </button>
                     </div>
@@ -61,7 +61,7 @@
                 <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                     <h3 class="card-title font-weight-bold"><i class="fa-solid fa-computer"></i> Import Aset TIK <span class="badge end-0 mr-3 bg-info text-light"></span></h3>
                 </div>
-                <form id="formImportAsetTik" method="POST" autocomplete="off" enctype="multipart/form-data">
+                <form id="formImportAsetTik" method="POST" autocomplete="off" enctype="multipart/form-data" data-crud="true">
                     @csrf
                     <div class="card-body">
                         <div class="row">
@@ -82,7 +82,7 @@
                         <a href="javascript:void(0)" id="btnTemplateAsetTik" class="btn btn-secondary mr-2">
                             <i class="fas fa-file-download"></i> Download Template
                         </a>
-                        <button type="submit" id="btnImportAsetTik" class="btn btn-primary">
+                        <button type="submit" id="btnImportAsetTik" class="btn btn-primary" data-crud="true">
                             <i class="fas fa-file-import"></i> Import
                         </button>
                     </div>
@@ -168,7 +168,7 @@
                 <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                     <h3 class="card-title font-weight-bold"><i class="fa-regular fa-building"></i> Import Lokasi <span class="badge end-0 mr-3 bg-info text-light"></span></h3>
                 </div>
-                <form id="formImportLokasi" method="POST" enctype="multipart/form-data">
+                <form id="formImportLokasi" method="POST" enctype="multipart/form-data" data-crud="true">
                     @csrf
                     <div class="card-body">
                         <div class="row">
@@ -189,7 +189,7 @@
                         <a href="javascript:void(0)" id="btnTemplateLokasi" class="btn btn-secondary mr-2">
                             <i class="fas fa-file-download"></i> Download Template
                         </a>
-                        <button type="submit" id="btnImportLokasi" class="btn btn-primary">
+                        <button type="submit" id="btnImportLokasi" class="btn btn-primary" data-crud="true">
                             <i class="fas fa-file-import"></i> Import
                         </button>
                     </div>
@@ -207,7 +207,7 @@
                 <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                     <h3 class="card-title font-weight-bold"><i class="fa-solid fa-users"></i> Import User Management <span class="badge end-0 mr-3 bg-info text-light"></span></h3>
                 </div>
-                <form id="formImportUserManagement" method="POST" enctype="multipart/form-data">
+                <form id="formImportUserManagement" method="POST" enctype="multipart/form-data" data-crud="true">
                     @csrf
                     <div class="card-body">
                         <div class="row">
@@ -228,7 +228,7 @@
                         <a href="{{ route('admin.settings.import.templateuser') }}" class="btn btn-secondary mr-2">
                             <i class="fas fa-file-download"></i> Download Template
                         </a>
-                        <button type="submit" id="btnImportUserManagement" class="btn btn-primary">
+                        <button type="submit" id="btnImportUserManagement" class="btn btn-primary" data-crud="true">
                             <i class="fas fa-file-import"></i> Import
                         </button>
                     </div>

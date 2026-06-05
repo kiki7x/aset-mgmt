@@ -19,7 +19,7 @@
     <div class="card">
         <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
             <h3 class="card-title font-weight-bold"><i class="fa-solid fa-computer"></i> Daftar Pengguna <span class="badge end-0 mr-3 bg-info text-light">{{ $totalUsers }}</span></h3>
-            <button type="button" id="btnOpenCreateModal" class="btn btn-outline-primary" style="margin-left: auto;" data-toggle="tooltip" data-placement="top" title="Tambah Data">
+            <button type="button" id="btnOpenCreateModal" class="btn btn-outline-primary" style="margin-left: auto;" data-toggle="tooltip" data-placement="top" title="Tambah Data" data-crud="true">
                 <i class="fas fa-plus"></i>
             </button>
         </div>

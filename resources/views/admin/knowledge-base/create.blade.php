@@ -358,8 +358,8 @@
                         '      <button type="button" class="btn btn-light" data-act="align-right" title="Align Right">R</button>' +
                         '      <button type="button" class="btn btn-light" data-act="w-100" title="Width 100%">100%</button>' +
                         '      <button type="button" class="btn btn-light" data-act="w-50" title="Width 50%">50%</button>' +
-                        '      <button type="button" class="btn btn-light" data-act="edit" title="Edit">Edit</button>' +
-                        '      <button type="button" class="btn btn-danger" data-act="remove" title="Remove">Del</button>' +
+                        '      <button type="button" class="btn btn-light" data-act="edit" title="Edit" data-crud="true">Edit</button>' +
+                        '      <button type="button" class="btn btn-danger" data-act="remove" title="Remove" data-crud="true">Del</button>' +
                         '    </div>' +
                         '  </div>' +
                         '</div>'

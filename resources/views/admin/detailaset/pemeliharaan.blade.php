@@ -12,7 +12,7 @@
     <div class="container-fluid">
         <div class="row align-items-center">
             {{-- <p class="col-12 h4 d-flex justify-content-center"><u>{{ $asset->tag }} - {{ $asset->name }}</u></p> --}}
-            <p class="col-12 h4">Jadwal Pemeliharaan <button class="btn btn-outline-primary" onclick="showModalAddJadwalPemeliharaan()" data-toggle="tooltip" data-placement="top" title="Tambah Jadwal"><i class="fa-regular fa-plus"></i></button></p>
+            <p class="col-12 h4">Jadwal Pemeliharaan <button class="btn btn-outline-primary" onclick="showModalAddJadwalPemeliharaan()" data-toggle="tooltip" data-placement="top" title="Tambah Jadwal" data-crud="true"><i class="fa-regular fa-plus"></i></button></p>
         </div>
 
         <div class="table-responsive">
@@ -62,7 +62,7 @@
         </div>
 
         <div class="row align-items-center mt-3">
-            <p class="col-12 h4">Pemeliharaan Korektif <button class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="Tambah Pemeliharaan Korektif" onclick="showModalAddKorektif()"><i class="fa-solid fa-plus"></i></button></p>
+            <p class="col-12 h4">Pemeliharaan Korektif <button class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="Tambah Pemeliharaan Korektif" onclick="showModalAddKorektif()" data-crud="true"><i class="fa-solid fa-plus"></i></button></p>
         </div>
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover table-sm" id="tablePemeliharaanKorektif">

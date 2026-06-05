@@ -30,7 +30,7 @@
                         <button type="button" id="btnRefreshBuildingRooms" class="btn btn-outline-secondary btn-sm" data-toggle="tooltip" data-placement="top" title="Refresh daftar gedung/ruangan">
                             <i class="fas fa-sync-alt"></i> Refresh
                         </button>
-                        <button type="button" id="btnOpenTambahGedung" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="Tambah Data">
+                        <button type="button" id="btnOpenTambahGedung" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="Tambah Data" data-crud="true">
                             <i class="fas fa-plus"></i>
                         </button>
                     </div>
@@ -528,13 +528,13 @@
                                     <span class="text-muted"><i class="fas fa-chevron-down"></i></span>
                                 </button>
                                 <div class="d-flex align-items-center">
-                                    <button type="button" class="btn btn-sm btn-outline-primary btn-add-room" data-building-id="${building.id || ''}" data-building-name="${escapeHtml(building.name || '')}" title="Tambah Ruangan">
+                                    <button type="button" class="btn btn-sm btn-outline-primary btn-add-room" data-building-id="${building.id || ''}" data-building-name="${escapeHtml(building.name || '')}" title="Tambah Ruangan" data-crud="true">
                                         <i class="fas fa-plus"></i>
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary mr-2 btn-edit-building" data-building-id="${building.id || ''}" data-building-name="${escapeHtml(building.name || '')}" title="Edit Gedung">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary mr-2 btn-edit-building" data-building-id="${building.id || ''}" data-building-name="${escapeHtml(building.name || '')}" title="Edit Gedung" data-crud="true">
                                         <i class="fas fa-pen"></i>
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-outline-danger btn-delete-building" data-building-id="${building.id || ''}" data-building-name="${escapeHtml(building.name || '')}" title="Hapus Gedung">
+                                    <button type="button" class="btn btn-sm btn-outline-danger btn-delete-building" data-building-id="${building.id || ''}" data-building-name="${escapeHtml(building.name || '')}" title="Hapus Gedung" data-crud="true">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
@@ -551,10 +551,10 @@
                                                 <small class="text-muted">${roomFloor}</small>
                                             </div>
                                             <div class="d-flex align-items-center">
-                                                <button type="button" class="btn btn-sm btn-outline-primary btn-edit-room" data-room-id="${room.id || ''}" data-room-name="${escapeHtml(room.name || '')}" data-room-floor="${escapeHtml(room.floor || '')}" title="Edit Ruangan">
+                                                <button type="button" class="btn btn-sm btn-outline-primary btn-edit-room" data-room-id="${room.id || ''}" data-room-name="${escapeHtml(room.name || '')}" data-room-floor="${escapeHtml(room.floor || '')}" title="Edit Ruangan" data-crud="true">
                                                     <i class="fas fa-pen"></i>
                                                 </button>
-                                                <button type="button" class="btn btn-sm btn-outline-danger ml-2 btn-delete-room" data-room-id="${room.id || ''}" data-room-name="${escapeHtml(room.name || '')}" title="Hapus Ruangan">
+                                                <button type="button" class="btn btn-sm btn-outline-danger ml-2 btn-delete-room" data-room-id="${room.id || ''}" data-room-name="${escapeHtml(room.name || '')}" title="Hapus Ruangan" data-crud="true">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </div>

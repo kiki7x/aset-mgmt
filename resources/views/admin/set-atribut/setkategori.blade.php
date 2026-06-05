@@ -23,7 +23,7 @@
                                 <i class="fas fa-arrow-left"></i>
                                 Kembali
                             </a>
-                            <button type="button" id="btnOpenCreateModal" class="ml-0 btn btn-outline-primary">
+                            <button type="button" id="btnOpenCreateModal" class="ml-0 btn btn-outline-primary" data-crud="true">
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>

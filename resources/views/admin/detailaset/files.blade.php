@@ -29,7 +29,7 @@
                         <td class="text-right py-0 align-middle">
                             <div class="btn-group btn-group-sm">
                                 <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                                <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                                <a href="#" class="btn btn-danger" data-crud="true"><i class="fas fa-trash"></i></a>
                             </div>
                         </td>
                     </tr>
@@ -39,7 +39,7 @@
                         <td class="text-right py-0 align-middle">
                             <div class="btn-group btn-group-sm">
                                 <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                                <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                                <a href="#" class="btn btn-danger" data-crud="true"><i class="fas fa-trash"></i></a>
                             </div>
                         </td>
                     </tr>
@@ -49,7 +49,7 @@
                         <td class="text-right py-0 align-middle">
                             <div class="btn-group btn-group-sm">
                                 <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                                <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                                <a href="#" class="btn btn-danger" data-crud="true"><i class="fas fa-trash"></i></a>
                             </div>
                         </td>
                     </tr>
@@ -59,7 +59,7 @@
                         <td class="text-right py-0 align-middle">
                             <div class="btn-group btn-group-sm">
                                 <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                                <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                                <a href="#" class="btn btn-danger" data-crud="true"><i class="fas fa-trash"></i></a>
                             </div>
                         </td>
                     </tr>
@@ -69,7 +69,7 @@
                         <td class="text-right py-0 align-middle">
                             <div class="btn-group btn-group-sm">
                                 <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                                <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                                <a href="#" class="btn btn-danger" data-crud="true"><i class="fas fa-trash"></i></a>
                             </div>
                         </td>
                     </tr>

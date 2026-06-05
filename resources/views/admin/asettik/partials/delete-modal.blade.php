@@ -15,7 +15,7 @@
                  </div>
                  <div class="modal-footer">
                      <button type="button" class="btn btn-secondary" id="btnCloseModal">Batal</button>
-                     <button type="submit" class="btn btn-danger">Ya, Hapus</button>
+                     <button type="submit" class="btn btn-danger" data-crud="true">Ya, Hapus</button>
                  </div>
              </form>
          </div>
