@@ -62,186 +62,169 @@
                     </tbody>
                 </table>
             </div>
-
-            {{-- <div class="row">
-                                <div class="col-md-12">
-                                    <div class="dt-buttons btn-group"><a class="btn btn-default buttons-copy buttons-html5"
-                                            tabindex="0" aria-controls="dataTablesFull"
-                                            href="#"><span>Copy</span></a><a
-                                            class="btn btn-default buttons-csv buttons-html5" tabindex="0"
-                                            aria-controls="dataTablesFull" href="#"><span>CSV</span></a><a
-                                            class="btn btn-default buttons-excel buttons-html5" tabindex="0"
-                                            aria-controls="dataTablesFull" href="#"><span>Excel</span></a><a
-                                            class="btn btn-default buttons-pdf buttons-html5" tabindex="0"
-                                            aria-controls="dataTablesFull" href="#"><span>PDF</span></a><a
-                                            class="btn btn-default buttons-print" tabindex="0"
-                                            aria-controls="dataTablesFull" href="#"><span>Print</span></a>
-                                    </div>
-                                </div>
-                            </div> --}}
         </div>
+    </div>
 
-        {{-- Komponen Modal --}}
-        @include('admin.asettik.partials.create-modal')
-        @include('admin.asettik.partials.delete-modal')
-        @include('admin.asettik.partials.qrcode-modal')
-        </section>
+    {{-- Komponen Modal --}}
+    @include('admin.asettik.partials.create-modal')
+    @include('admin.asettik.partials.delete-modal')
+    @include('admin.asettik.partials.qrcode-modal')
+@endsection
 
-        @push('script-foot')
-            <!-- InputMask -->
-            <script src="{{ asset('assets/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
-            {{-- Select2 --}}
-            <script src="{{ asset('assets/plugins/select2/js/select2.full.min.js') }}"></script>
+@push('script-foot')
+    <!-- InputMask -->
+    <script src="{{ asset('assets/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
+    {{-- Select2 --}}
+    <script src="{{ asset('assets/plugins/select2/js/select2.full.min.js') }}"></script>
 
-            {{-- TableScript --}}
-            <script>
-                function initTableAsettik() {
-                    $('#tableAsettik').DataTable({
-                        layout: {
-                            topEnd: {
-                                search: {
-                                    placeholder: 'nama aset / serial no'
-                                }
-                            }
-                        },
-                        processing: true,
-                        serverSide: true,
-                        responsive: true,
-                        ajax: {
-                            url: "{{ route('admin.asettik.get_assets') }}",
-                            data: function(d) {
-                                d.category = $('#category').val();
-                                d.classification =
-                                    'tik';
-                            }
-                        },
-                        columns: [{
-                                data: 'tag',
-                                name: 'tag'
-                            },
-                            {
-                                data: 'name',
-                                name: 'name'
-                            },
-                            {
-                                data: 'category',
-                                name: 'category'
-                            },
-                            {
-                                data: 'model',
-                                name: 'model'
-                            },
-                            {
-                                data: 'user',
-                                name: 'user'
-                            },
-                            {
-                                data: null,
-                                name: 'timestamp',
-                                render: function(data) {
-                                    return `
+    {{-- TableScript --}}
+    <script>
+        function initTableAsettik() {
+            $('#tableAsettik').DataTable({
+                layout: {
+                    topEnd: {
+                        search: {
+                            placeholder: 'nama aset / serial no'
+                        }
+                    }
+                },
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                ajax: {
+                    url: "{{ route('admin.asettik.get_assets') }}",
+                    data: function(d) {
+                        d.category = $('#category').val();
+                        d.classification =
+                            'tik';
+                    }
+                },
+                columns: [{
+                        data: 'tag',
+                        name: 'tag'
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'category',
+                        name: 'category'
+                    },
+                    {
+                        data: 'model',
+                        name: 'model'
+                    },
+                    {
+                        data: 'user',
+                        name: 'user'
+                    },
+                    {
+                        data: null,
+                        name: 'timestamp',
+                        render: function(data) {
+                            return `
                                     <span class="text-muted small">
                                     ${moment(data.updated_at).format('DD MMM YYYY HH:mm')} </span><br>
                                     `;
-                                }
-                            },
-                            {
-                                data: 'action',
-                                name: 'action',
-                                orderable: false,
-                                searchable: false
-                            },
-                        ],
-                    });
+                        }
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    },
+                ],
+            });
+        }
+
+        $('#category').on('change', function() {
+            $('#tableAsettik').DataTable().ajax.reload();
+        });
+
+        $(document).ready(function() {
+            initTableAsettik();
+        })
+    </script>
+
+    {{-- ModalManagement --}}
+    <script>
+        $(document).ready(function() {
+            // Create Modal
+            $('#btnOpenCreateModal').on('click', function() {
+                $('#createModal').modal('show');
+            });
+
+            // Delete Modal
+            $('#deleteModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('id');
+                var name = button.data('name');
+
+                var modal = $(this)
+                modal.find('#assetName').text(name)
+            });
+
+            // QR Code Modal
+            $('#qrCodeModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('id');
+                var name = button.data('name');
+                var modal = $(this)
+            });
+        });
+
+        // buat fungsi export
+        // $('#btnExport').on('click', function(e) {
+        //     e.preventDefault();
+        //     // alert('export');
+
+        //     // Opsional: Beri loading state pada tombol
+        //     const originalText = $(this).html();
+        //     $(this).html('<i class="fa fa-spinner fa-spin"></i> Menyiapkan Data...').addClass('disabled');
+
+        //     window.location.href = "{{ route('admin.asettik.export') }}";
+        //     // Kembalikan tombol setelah beberapa detik
+        //     setTimeout(() => {
+        //         $(this).html(originalText).removeClass('disabled');
+        //     }, 5000);
+        // });
+
+        //buat fungsi export dengan gaya sweetalert
+        $('#btnExport').on('click', function(e) {
+            e.preventDefault();
+            // alert('export');
+
+            // Opsional: Beri loading state pada tombol
+            const originalText = $(this).html();
+            $(this).html('<i class="fa fa-spinner fa-spin"></i> Menyiapkan Data...').addClass('disabled');
+
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                onOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
                 }
+            })
 
-                $('#category').on('change', function() {
-                    $('#tableAsettik').DataTable().ajax.reload();
+            Toast.fire({
+                icon: 'info',
+                title: 'Menyiapkan Data...'
+            }).then((result) => {
+                /* Read more about handling dismissals below */
+                if (result.dismiss === Swal.DismissReason.timer) {
+                    window.location.href = "{{ route('admin.asettik.export') }}";
+                }
+                // Kembalikan tombol setelah beberapa detik
+                setTimeout(() => {
+                    $(this).html(originalText).removeClass('disabled');
                 });
-
-                $(document).ready(function() {
-                    initTableAsettik();
-                })
-            </script>
-
-            {{-- ModalManagement --}}
-            <script>
-                $(document).ready(function() {
-                    // Create Modal
-                    $('#btnOpenCreateModal').on('click', function() {
-                        $('#createModal').modal('show');
-                    });
-
-                    // Delete Modal
-                    $('#deleteModal').on('show.bs.modal', function(event) {
-                        var button = $(event.relatedTarget);
-                        var id = button.data('id');
-                        var name = button.data('name');
-
-                        var modal = $(this)
-                        modal.find('#assetName').text(name)
-                    });
-
-                    // QR Code Modal
-                    $('#qrCodeModal').on('show.bs.modal', function(event) {
-                        var button = $(event.relatedTarget);
-                        var id = button.data('id');
-                        var name = button.data('name');
-                        var modal = $(this)
-                    });
-                });
-
-                // buat fungsi export
-                // $('#btnExport').on('click', function(e) {
-                //     e.preventDefault();
-                //     // alert('export');
-
-                //     // Opsional: Beri loading state pada tombol
-                //     const originalText = $(this).html();
-                //     $(this).html('<i class="fa fa-spinner fa-spin"></i> Menyiapkan Data...').addClass('disabled');
-
-                //     window.location.href = "{{ route('admin.asettik.export') }}";
-                //     // Kembalikan tombol setelah beberapa detik
-                //     setTimeout(() => {
-                //         $(this).html(originalText).removeClass('disabled');
-                //     }, 5000);
-                // });
-
-                //buat fungsi export dengan gaya sweetalert
-                $('#btnExport').on('click', function(e) {
-                    e.preventDefault();
-                    // alert('export');
-
-                    // Opsional: Beri loading state pada tombol
-                    const originalText = $(this).html();
-                    $(this).html('<i class="fa fa-spinner fa-spin"></i> Menyiapkan Data...').addClass('disabled');
-
-                    const Toast = Swal.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        timerProgressBar: true,
-                        onOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer)
-                            toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        }
-                    })
-
-                    Toast.fire({
-                        icon: 'info',
-                        title: 'Menyiapkan Data...'
-                    }).then((result) => {
-                        /* Read more about handling dismissals below */
-                        if (result.dismiss === Swal.DismissReason.timer) {
-                            window.location.href = "{{ route('admin.asettik.export') }}";
-                        }
-                        // Kembalikan tombol setelah beberapa detik
-                        setTimeout(() => {
-                            $(this).html(originalText).removeClass('disabled');
-                        });
-                    });
-                })
-            </script>
-        @endpush
-    @endsection
+            });
+        })
+    </script>
+@endpush
