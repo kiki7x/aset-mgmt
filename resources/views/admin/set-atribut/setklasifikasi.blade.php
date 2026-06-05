@@ -7,8 +7,8 @@
 ])
 
 @push('script-head')
-    {{-- DataTable Css --}}
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.1/css/dataTables.bootstrap4.css" />
+{{-- DataTable Css --}}
+<link rel="stylesheet" href="https://cdn.datatables.net/2.3.1/css/dataTables.bootstrap4.css" />
 @endpush
 
 @section('content')

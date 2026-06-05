@@ -6,8 +6,6 @@ use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use App\Http\Requests\StoreAssetRequest;
-use App\Http\Requests\UpdateAssetRequest;
 use App\Models\AssetcategoriesModel;
 use App\Models\AssetsModel;
 use App\Models\LabelsModel;
