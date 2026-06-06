@@ -36,7 +36,7 @@ Route::post('/servicedesk/store', [TiketController::class, 'store'])->name('serv
 Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function () {
     Route::get('/', [App\Http\Controllers\AdminController::class, 'index'])->name('admin.index');
     // Route Aset TIK
-    Route::middleware(['role:superadmin|admin_tik|staf_tik|user', 'readonly_user'])->group(function () {
+    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering|user', 'readonly_user'])->group(function () {
         Route::get('/asettik', [App\Http\Controllers\AssetController::class, 'index_tik'])->name('admin.asettik');
         Route::get('/asettik/get_assets', [App\Http\Controllers\AssetController::class, 'get_assets'])->name('admin.asettik.get_assets');
         Route::post('/asettik/store/{classification}', [App\Http\Controllers\AssetController::class, 'store'])->name('admin.asettik.store');
@@ -53,7 +53,7 @@ Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function ()
         Route::get('/asettik/{id}/edit', [App\Http\Controllers\ShowAsetController::class, 'getEditAssetContent'])->name('admin.asettik.edit');
     });
     // Route Aset Rumah Tangga
-    Route::middleware(['role:superadmin|admin_rt|staf_driver|staf_engineering|user', 'readonly_user'])->group(function () {
+    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering|user', 'readonly_user'])->group(function () {
         Route::get('/asetrt', [App\Http\Controllers\AssetController::class, 'index_rt'])->name('admin.asetrt');
         Route::get('/asetrt/get_assets', [App\Http\Controllers\AssetController::class, 'get_assets'])->name('admin.asetrt.get_assets');
         Route::get('/asetrt/export', [App\Http\Controllers\AssetController::class, 'exportExcelRt'])->name('admin.asetrt.export');
