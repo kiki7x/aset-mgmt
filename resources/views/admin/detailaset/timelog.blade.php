@@ -24,7 +24,7 @@
                         </div>
                         <div class="timeline-footer">
                             <a class="btn btn-primary btn-sm">Read more</a>
-                            <a class="btn btn-danger btn-sm">Delete</a>
+                            <a class="btn btn-danger btn-sm" data-crud="true">Delete</a>
                         </div>
                     </div>
                 </div>

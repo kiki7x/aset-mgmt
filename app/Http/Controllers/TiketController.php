@@ -13,27 +13,77 @@ class TiketController extends Controller
 
     public function index(): View
     {
-        return view('admin.tiket.index');
+        return view('admin.tiket.index', [
+            'statusCounts' => $this->getStatusCounts(),
+        ]);
     }
 
     public function show($id): View
     {
         $ticketToOpen = \App\Models\TicketsModel::findOrFail($id);
-        return view('admin.tiket.index', compact('ticketToOpen'));
+        return view('admin.tiket.index', [
+            'ticketToOpen' => $ticketToOpen,
+            'statusCounts' => $this->getStatusCounts(),
+        ]);
+    }
+
+    private function getStatusCounts(?string $issuetype = null, ?string $department = null, ?string $search = null): array
+    {
+        $query = \App\Models\TicketsModel::query();
+
+        if (!empty($issuetype)) {
+            $query->where('issuetype', $issuetype);
+        }
+
+        if (!empty($department)) {
+            $query->where('department', $department);
+        }
+
+        if (!empty($search)) {
+            $query->where(function ($subQuery) use ($search) {
+                $subQuery->where('ticket', 'like', "%{$search}%")
+                    ->orWhere('nama', 'like', "%{$search}%")
+                    ->orWhere('subject', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%")
+                    ->orWhere('issuetype', 'like', "%{$search}%")
+                    ->orWhere('department', 'like', "%{$search}%")
+                    ->orWhere('priority', 'like', "%{$search}%")
+                    ->orWhere('status', 'like', "%{$search}%")
+                    ->orWhereRaw("DATE_FORMAT(created_at, '%d %b %Y') LIKE ?", ["%{$search}%"]);
+            });
+        }
+
+        $counts = $query
+            ->selectRaw('status, COUNT(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status')
+            ->all();
+
+        return [
+            'open' => (int) ($counts['Open'] ?? 0),
+            'proses' => (int) ($counts['Proses'] ?? 0),
+            'pending' => (int) ($counts['Pending'] ?? 0),
+            'close' => (int) ($counts['Close'] ?? 0),
+        ];
     }
 
     public function data(): JsonResponse
     {
         try {
             $tickets = \App\Models\TicketsModel::latest();
+            $issuetype = request('issuetype');
+            $department = request('department');
+            $searchTerm = trim((string) request('search.value', ''));
 
-            if (request()->filled('issuetype')) {
-                $tickets->where('issuetype', request('issuetype'));
+            if (!empty($issuetype)) {
+                $tickets->where('issuetype', $issuetype);
             }
 
-            if (request()->filled('department')) {
-                $tickets->where('department', request('department'));
+            if (!empty($department)) {
+                $tickets->where('department', $department);
             }
+
+            $statusCounts = $this->getStatusCounts($issuetype, $department, $searchTerm);
 
             return DataTables::of($tickets)
 
@@ -99,7 +149,7 @@ class TiketController extends Controller
                 })
 
                 ->rawColumns(['ticket'])
-
+                ->with('statusCounts', $statusCounts)
                 ->make(true);
         } catch (\Exception $e) {
             return response()->json([

@@ -16,7 +16,7 @@
         <div class="card-header">
             <h3 class="card-title">Daftar Artikel</h3>
             <div class="card-tools">
-                <a href="{{ route('admin.knowledge-base.create') }}" class="btn btn-primary btn-sm">
+                <a href="{{ route('admin.knowledge-base.create') }}" class="btn btn-primary btn-sm" data-crud="true">
                     <i class="fas fa-plus"></i> Tambah Artikel
                 </a>
                 <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#categoryManagementModal">
@@ -56,13 +56,13 @@
                             <td>{{ $article->created_at->format('d M Y H:i') }}</td>
                             <td>{{ $article->updated_at->format('d M Y H:i') }}</td>
                             <td>
-                                <a href="{{ route('admin.knowledge-base.edit', $article->id) }}" class="btn btn-sm btn-warning" title="Edit">
+                                <a href="{{ route('admin.knowledge-base.edit', $article->id) }}" class="btn btn-sm btn-warning" title="Edit" data-crud="true">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <form action="{{ route('admin.knowledge-base.destroy', $article->id) }}" method="POST" class="d-inline delete-form">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" title="Hapus">
+                                    <button type="submit" class="btn btn-sm btn-danger" title="Hapus" data-crud="true">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
@@ -97,7 +97,7 @@
                             <label for="categoryDescription">Deskripsi (Opsional)</label>
                             <textarea class="form-control" id="categoryDescription" name="description"></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-sm">Tambah Kategori</button>
+                        <button type="submit" class="btn btn-primary btn-sm" data-crud="true">Tambah Kategori</button>
                     </form>
                     <hr>
                     <h5>Daftar Kategori</h5>
@@ -117,16 +117,16 @@
                                         <input type="hidden" class="category-description-edit" value="{{ $category->description }}">
                                     </td>
                                     <td>
-                                        <button type="button" class="btn btn-sm btn-info edit-category" data-id="{{ $category->id }}">
+                                        <button type="button" class="btn btn-sm btn-info edit-category" data-id="{{ $category->id }}" data-crud="true">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-success save-category d-none" data-id="{{ $category->id }}">
+                                        <button type="button" class="btn btn-sm btn-success save-category d-none" data-id="{{ $category->id }}" data-crud="true">
                                             <i class="fas fa-save"></i>
                                         </button>
                                         <button type="button" class="btn btn-sm btn-secondary cancel-edit-category d-none" data-id="{{ $category->id }}">
                                             <i class="fas fa-times"></i>
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-danger delete-category" data-id="{{ $category->id }}">
+                                        <button type="button" class="btn btn-sm btn-danger delete-category" data-id="{{ $category->id }}" data-crud="true">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
@@ -198,16 +198,16 @@
                                             <input type="hidden" class="category-description-edit" value="${response.category.description}">
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-sm btn-info edit-category" data-id="${response.category.id}">
+                                            <button type="button" class="btn btn-sm btn-info edit-category" data-id="${response.category.id}" data-crud="true">
                                                 <i class="fas fa-edit"></i>
                                             </button>
-                                            <button type="button" class="btn btn-sm btn-success save-category d-none" data-id="${response.category.id}">
+                                            <button type="button" class="btn btn-sm btn-success save-category d-none" data-id="${response.category.id}" data-crud="true">
                                                 <i class="fas fa-save"></i>
                                             </button>
                                             <button type="button" class="btn btn-sm btn-secondary cancel-edit-category d-none" data-id="${response.category.id}">
                                                 <i class="fas fa-times"></i>
                                             </button>
-                                            <button type="button" class="btn btn-sm btn-danger delete-category" data-id="${response.category.id}">
+                                            <button type="button" class="btn btn-sm btn-danger delete-category" data-id="${response.category.id}" data-crud="true">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </td>

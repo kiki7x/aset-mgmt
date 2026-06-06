@@ -11,7 +11,7 @@
             <div class="card h-100">
                 <div class="card-body">
                     <p class="text-secondary small mb-1">Open</p>
-                    <h3 class="mb-0 fw-bold text-danger">6</h3>
+                    <h3 id="count-open" class="mb-0 fw-bold text-danger">{{ $statusCounts['open'] ?? 0 }}</h3>
                 </div>
             </div>
         </div>
@@ -19,7 +19,7 @@
             <div class="card h-100">
                 <div class="card-body">
                     <p class="text-secondary small mb-1">Diproses</p>
-                    <h3 class="mb-0 fw-bold text-primary">3</h3>
+                    <h3 id="count-proses" class="mb-0 fw-bold text-primary">{{ $statusCounts['proses'] ?? 0 }}</h3>
                 </div>
             </div>
         </div>
@@ -27,7 +27,7 @@
             <div class="card h-100">
                 <div class="card-body">
                     <p class="text-secondary small mb-1">Ditahan</p>
-                    <h3 class="mb-0 fw-bold text-warning">2</h3>
+                    <h3 id="count-pending" class="mb-0 fw-bold text-warning">{{ $statusCounts['pending'] ?? 0 }}</h3>
                 </div>
             </div>
         </div>
@@ -35,7 +35,7 @@
             <div class="card h-100">
                 <div class="card-body">
                     <p class="text-secondary small mb-1">Closed</p>
-                    <h3 class="mb-0 fw-bold text-success">1</h3>
+                    <h3 id="count-close" class="mb-0 fw-bold text-success">{{ $statusCounts['close'] ?? 0 }}</h3>
                 </div>
             </div>
         </div>
@@ -528,6 +528,17 @@
         }
 
         function tablePemeliharaan() {
+            $('#tablePemeliharaan').on('xhr.dt', function(e, settings, json) {
+                if (!json || !json.statusCounts) {
+                    return;
+                }
+
+                $('#count-open').text(json.statusCounts.open ?? 0);
+                $('#count-proses').text(json.statusCounts.proses ?? 0);
+                $('#count-pending').text(json.statusCounts.pending ?? 0);
+                $('#count-close').text(json.statusCounts.close ?? 0);
+            });
+
             tiketTable = $('#tablePemeliharaan').DataTable({
                 processing: true,
                 serverSide: true,

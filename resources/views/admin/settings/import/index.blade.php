@@ -23,7 +23,7 @@
                 <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                     <h3 class="card-title font-weight-bold"><i class="fa-solid fa-building"></i> Import Aset Rumah Tangga <span class="badge end-0 mr-3 bg-info text-light"></span></h3>
                 </div>
-                <form id="formImportAsetRt" method="POST" autocomplete="off" enctype="multipart/form-data">
+                <form id="formImportAsetRt" method="POST" autocomplete="off" enctype="multipart/form-data" data-crud="true">
                     @csrf
                     <div class="card-body">
                         <div class="row">
@@ -44,7 +44,7 @@
                         <a href="javascript:void(0)" id="btnTemplateAsetRt" class="btn btn-secondary mr-2">
                             <i class="fas fa-file-download"></i> Download Template
                         </a>
-                        <button type="submit" id="btnImportAsetRt" class="btn btn-primary">
+                        <button type="submit" id="btnImportAsetRt" class="btn btn-primary" data-crud="true">
                             <i class="fas fa-file-import"></i> Import
                         </button>
                     </div>
@@ -61,7 +61,7 @@
                 <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                     <h3 class="card-title font-weight-bold"><i class="fa-solid fa-computer"></i> Import Aset TIK <span class="badge end-0 mr-3 bg-info text-light"></span></h3>
                 </div>
-                <form id="formImportAsetTik" method="POST" autocomplete="off" enctype="multipart/form-data">
+                <form id="formImportAsetTik" method="POST" autocomplete="off" enctype="multipart/form-data" data-crud="true">
                     @csrf
                     <div class="card-body">
                         <div class="row">
@@ -82,7 +82,7 @@
                         <a href="javascript:void(0)" id="btnTemplateAsetTik" class="btn btn-secondary mr-2">
                             <i class="fas fa-file-download"></i> Download Template
                         </a>
-                        <button type="submit" id="btnImportAsetTik" class="btn btn-primary">
+                        <button type="submit" id="btnImportAsetTik" class="btn btn-primary" data-crud="true">
                             <i class="fas fa-file-import"></i> Import
                         </button>
                     </div>
@@ -168,7 +168,7 @@
                 <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                     <h3 class="card-title font-weight-bold"><i class="fa-regular fa-building"></i> Import Lokasi <span class="badge end-0 mr-3 bg-info text-light"></span></h3>
                 </div>
-                <form id="formImportLokasi" method="POST" enctype="multipart/form-data">
+                <form id="formImportLokasi" method="POST" enctype="multipart/form-data" data-crud="true">
                     @csrf
                     <div class="card-body">
                         <div class="row">
@@ -189,7 +189,46 @@
                         <a href="javascript:void(0)" id="btnTemplateLokasi" class="btn btn-secondary mr-2">
                             <i class="fas fa-file-download"></i> Download Template
                         </a>
-                        <button type="submit" id="btnImportLokasi" class="btn btn-primary">
+                        <button type="submit" id="btnImportLokasi" class="btn btn-primary" data-crud="true">
+                            <i class="fas fa-file-import"></i> Import
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    {{-- Import User Management --}}
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="card">
+                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 class="card-title font-weight-bold"><i class="fa-solid fa-users"></i> Import User Management <span class="badge end-0 mr-3 bg-info text-light"></span></h3>
+                </div>
+                <form id="formImportUserManagement" method="POST" enctype="multipart/form-data" data-crud="true">
+                    @csrf
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-auto">
+                                <div class="form-group">
+                                    <label for="fileusermanagement">Import User Management <span class="text-danger">*</span></label>
+                                    <div class="custom-file">
+                                        <input type="file" class="form-control custom-file-input" id="fileusermanagement" name="fileusermanagement" accept=".xlsx" required>
+                                        <label class="custom-file-label" for="fileusermanagement">Import User Management</label>
+                                        <small class="form-text text-muted">Format: XLSX (Max: 2MB) | Role otomatis: user | Username akan disesuaikan jika terlalu panjang</small>
+                                    </div>
+                                    <span id="error-fileusermanagement" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-end">
+                        <a href="{{ route('admin.settings.import.templateuser') }}" class="btn btn-secondary mr-2">
+                            <i class="fas fa-file-download"></i> Download Template
+                        </a>
+                        <button type="submit" id="btnImportUserManagement" class="btn btn-primary" data-crud="true">
                             <i class="fas fa-file-import"></i> Import
                         </button>
                     </div>
@@ -331,6 +370,58 @@
                             text: res.errors.forEach(function(err) {
                                 errorHtml += '<li>' + err + '</li>' + '<br>'
                             }),
+                        });
+                    },
+                });
+            });
+        </script>
+
+        <script>
+            $('#formImportUserManagement').submit(function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                formData.append('fileusermanagement', $('#fileusermanagement')[0].files[0]);
+
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: "{{ route('admin.settings.import.storeusermanagement') }}",
+                    type: 'POST',
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function() {
+                        $('#btnImportUserManagement').addClass('disabled').attr('disabled', true);
+                        $('#btnImportUserManagement').html('<i class="fa fa-spinner fa-spin"></i> Mengunggah Data...');
+                    },
+                    success: function(res) {
+                        const isPartialError = res.status === 'partial_error' && Array.isArray(res.errors) && res.errors.length > 0;
+                        const alertConfig = isPartialError ? {
+                            icon: 'warning',
+                            title: 'Sebagian data gagal diimport',
+                            html: '<div class="text-left"><p>Berhasil disimpan: <strong>' + res.success_count + '</strong></p><ul class="mb-0">' + res.errors.map(function(err) { return '<li>' + err + '</li>'; }).join('') + '</ul></div>'
+                        } : {
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: 'Semua data sebanyak (' + res.success_count + ') berhasil disimpan!'
+                        };
+
+                        Swal.fire(alertConfig).then(() => {
+                            $('#formImportUserManagement')[0].reset();
+                            $('#btnImportUserManagement').removeClass('disabled').attr('disabled', false);
+                            $('#btnImportUserManagement').html('<i class="fas fa-file-import"></i> Import');
+                        });
+                    },
+                    error: function(xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: xhr.responseJSON?.message ?? 'Terjadi kesalahan. Periksa kembali data unggahan.',
+                        }).then(() => {
+                            $('#btnImportUserManagement').removeClass('disabled').attr('disabled', false);
+                            $('#btnImportUserManagement').html('<i class="fas fa-file-import"></i> Import');
                         });
                     },
                 });

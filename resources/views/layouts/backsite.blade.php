@@ -45,11 +45,26 @@
     {{-- script-head --}}
     @stack('script-head')
     {{-- ./script-head --}}
+    @php
+        $isReadOnlyUser = auth()->check() && auth()->user()->hasRole('user');
+        // current admin module (second URL segment under /admin/{module}/...)
+        $currentModule = request()->segment(2);
+        // per-module forbidden roles (server-side mapping must match middleware)
+        $forbiddenByModule = [
+            'asetrt' => ['admin_tik', 'staf_tik'],
+            'asettik' => ['admin_rt', 'staf_driver', 'staf_engineering'],
+        ];
+        $isModuleRestricted = false;
+        if ($currentModule && auth()->check() && isset($forbiddenByModule[$currentModule])) {
+            $isModuleRestricted = auth()->user()->hasAnyRole($forbiddenByModule[$currentModule]);
+        }
+        $shouldInjectInterceptor = $isReadOnlyUser || $isModuleRestricted;
+    @endphp
 </head>
 
 {{-- <body class="hold-transition layout-top-nav layout-fixed layout-navbar-fixed text-sm"> --}}
 
-<body class="hold-transition layout-fixed sidebar-mini">
+<body class="hold-transition layout-fixed sidebar-mini {{ $isReadOnlyUser ? 'readonly-user' : '' }}">
     <div class="wrapper">
         <x-backsite.navbar></x-backsite.navbar>
         <div class="content-wrapper">
@@ -122,6 +137,111 @@
             }
         });
     </script>
+    @if ($shouldInjectInterceptor)
+        <script>
+            // Peringatan untuk role terbatas (bisa karena role 'user' atau role dibatasi pada modul)
+            let __readonlyUserWarningText = 'Fungsi ini hanya boleh dilakukan oleh role superaadmin/staf rt/staf tik';
+            // Jika pembatasan berasal dari per-modul (bukan karena role 'user'), gunakan pesan generik modul
+            @if ($isModuleRestricted)
+                __readonlyUserWarningText = 'Fungsi ini hanya boleh dilakukan oleh superadmin atau admin yang berwenang untuk modul ini.';
+            @endif
+            const __moduleRestrictionActive = @json($isModuleRestricted);
+            const __currentModuleName = @json($currentModule);
+
+            function _isCrudTrigger(el) {
+                if (!el || el.nodeType !== 1) return false;
+
+                const title = (el.getAttribute('title') || '').toLowerCase();
+                const aria = (el.getAttribute('aria-label') || '').toLowerCase();
+                const text = (el.textContent || '').toLowerCase();
+                const href = (el.getAttribute('href') || '').toLowerCase();
+                const onclick = (el.getAttribute('onclick') || '').toLowerCase();
+                const wireClick = (el.getAttribute('wire:click') || '').toLowerCase();
+                const className = (el.className || '').toLowerCase();
+
+                if (el.closest('[data-crud="true"]')) return true;
+
+                if (/hapus|delete|remove/.test(title) || /hapus|delete|remove/.test(aria)) return true;
+                if (/tambah|create|add|edit|hapus|delete|remove|submit|simpan|save/.test(text)) return true;
+                if (/(\/create|\/edit|\/delete|\/destroy)/i.test(href)) return true;
+                if (/showm\(|openmodalcreate\(|dispatch\(|wire:click/.test(onclick + ' ' + wireClick)) return true;
+                if (/btn-danger|btn-warning|btn-success/.test(className) && /hapus|delete|remove|edit|tambah|create|add|simpan|save|submit/.test(text + ' ' + title)) return true;
+
+                return false;
+            }
+
+            function _isCrudFormAction(form) {
+                if (!form || form.nodeType !== 1 || form.nodeName !== 'FORM') return false;
+
+                const action = (form.getAttribute('action') || '').toLowerCase();
+                const method = (form.getAttribute('method') || 'get').toLowerCase();
+                const text = (form.textContent || '').toLowerCase();
+
+                if (form.closest('[data-crud="true"]')) return true;
+                if (form.querySelector('[data-crud="true"]')) return true;
+
+                if (__moduleRestrictionActive) {
+                    if (/(\/store|\/update|\/delete|\/destroy|\/import|\/create|\/edit)/i.test(action)) return true;
+                    if (['post', 'put', 'patch', 'delete'].includes(method) && /tambah|edit|hapus|delete|import|simpan|save|submit|create/i.test(text)) return true;
+                }
+
+                return _isCrudTrigger(form);
+            }
+
+            // Capture-phase click listener: dibatasi hanya di area konten admin
+            document.addEventListener('click', function(e) {
+                try {
+                    const contentRoot = e.target.closest('.content-wrapper');
+                    if (!contentRoot) return;
+
+                    const target = e.target.closest('a,button,form');
+                    const crudTarget = e.target.closest('[data-crud="true"]') || (target && _isCrudTrigger(target)) || (target && target.nodeName === 'FORM' && _isCrudFormAction(target));
+                    if (crudTarget) {
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        e.stopPropagation();
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Akses Ditolak',
+                            text: __readonlyUserWarningText,
+                            confirmButtonText: 'Tutup'
+                        });
+                        return false;
+                    }
+                } catch (err) {
+                    console.error('Readonly role interceptor error', err);
+                }
+            }, true); // useCapture = true
+
+            // Capture-phase submit listener: cegah submit dari form CRUD yang ditandai atau terdeteksi di area konten
+            document.addEventListener('submit', function(e) {
+                try {
+                    const form = e.target;
+                    if (!form || form.nodeName !== 'FORM') return;
+
+                    if (!form.closest('.content-wrapper')) return;
+
+                    const submitter = e.submitter || null;
+                    const submitterIsCrud = submitter && submitter.closest('[data-crud="true"]');
+                    const formIsCrud = _isCrudFormAction(form) || (submitter && _isCrudTrigger(submitter));
+
+                    if (submitterIsCrud || formIsCrud) {
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Akses Ditolak',
+                            text: __readonlyUserWarningText,
+                            confirmButtonText: 'Tutup'
+                        });
+                        return false;
+                    }
+                } catch (err) {
+                    console.error('Readonly form interceptor error', err);
+                }
+            }, true);
+        </script>
+    @endif
     <script>
         $(function() {
             $('[data-toggle="tooltip"]').tooltip()

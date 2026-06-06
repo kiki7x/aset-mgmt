@@ -23,7 +23,7 @@
                 </a>
             </div>
             <div>
-                <button type="button" id="btnOpenCreateModal" class="btn btn-outline-primary bd-highlight" data-toggle="tooltip" data-placement="top" title="Tambah Data">
+                <button type="button" id="btnOpenCreateModal" class="btn btn-outline-primary bd-highlight" data-toggle="tooltip" data-placement="top" title="Tambah Data" data-crud="true">
                     <i class="fas fa-plus"></i>
                 </button>
             </div>

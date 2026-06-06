@@ -23,9 +23,9 @@
                         <li><a href="?route=inventory/assets/manage&amp;id=1&amp;section=timelog">Time Log</a></li>
                         <li><a href="?route=inventory/assets/manage&amp;id=1&amp;section=edit">Edit Asset</a></li>
                         <div class="btn-group pull-right" style="padding:6px;">
-                            <a data-toggle="tooltip" title="New Issue" class="btn btn-default btn-sm btn-flat" href="#"
-                               onclick="showM(&quot;?modal=issues/add&amp;reroute=inventory/assets/manage&amp;routeid=1&amp;clientid=1&amp;assetid=1&amp;section=issues&quot;);return false"><i class="fa fa-tasks fa-fw"></i> New Issue</a> <a
-                               class="btn btn-default btn-sm btn-flat" href="#" onclick="showM(&quot;?modal=time/add&amp;reroute=inventory/assets/manage&amp;routeid=1&amp;clientid=1&amp;assetid=1&amp;section=timelog&quot;);return false"><i
+                            <a data-toggle="tooltip" title="New Issue" class="btn btn-default btn-sm btn-flat" href="#" data-crud="true"
+                               onclick="showM(&quot;?modal=issues/add&amp;reroute=inventory/assets/manage&amp;routeid=1&amp;clientid=1&amp;assetid=1&amp;section=issues&quot;);return false" data-crud="true"><i class="fa fa-tasks fa-fw"></i> New Issue</a> <a
+                               class="btn btn-default btn-sm btn-flat" href="#" data-crud="true" onclick="showM(&quot;?modal=time/add&amp;reroute=inventory/assets/manage&amp;routeid=1&amp;clientid=1&amp;assetid=1&amp;section=timelog&quot;);return false"><i
                                    class="fa fa-clock-o fa-fw"></i> Log Time</a>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-primary btn-sm btn-flat dropdown-toggle" data-toggle="dropdown">
@@ -33,13 +33,13 @@
                                 </button>
                                 <ul class="dropdown-menu pull-right">
 
-                                    <li><a href="#" onclick="showM(&quot;?modal=tickets/add&amp;reroute=inventory/assets/manage&amp;routeid=1&amp;clientid=1&amp;assetid=1&amp;section=tickets&quot;);return false"><i class="fa fa-tag fa-fw"></i>New Ticket</a>
+                                        <li><a href="#" data-crud="true" onclick="showM(&quot;?modal=tickets/add&amp;reroute=inventory/assets/manage&amp;routeid=1&amp;clientid=1&amp;assetid=1&amp;section=tickets&quot;);return false"><i class="fa fa-tag fa-fw"></i>New Ticket</a>
                                     </li>
-                                    <li><a href="#" onclick="showM(&quot;?modal=credentials/add&amp;section=&amp;reroute=inventory/assets/manage&amp;routeid=1&amp;assetid=1&amp;clientid=1&quot;);return false"><i class="fa fa-asterisk fa-fw"></i>New
+                                        <li><a href="#" data-crud="true" onclick="showM(&quot;?modal=credentials/add&amp;section=&amp;reroute=inventory/assets/manage&amp;routeid=1&amp;assetid=1&amp;clientid=1&quot;);return false"><i class="fa fa-asterisk fa-fw"></i>New
                                             Credential</a></li>
-                                    <li><a href="#" onclick="showM(&quot;?modal=files/upload&amp;reroute=inventory/assets/manage&amp;routeid=1&amp;clientid=1&amp;assetid=1&amp;section=files&quot;);return false"><i class="fa fa-upload fa-fw"></i>Upload
+                                        <li><a href="#" data-crud="true" onclick="showM(&quot;?modal=files/upload&amp;reroute=inventory/assets/manage&amp;routeid=1&amp;clientid=1&amp;assetid=1&amp;section=files&quot;);return false"><i class="fa fa-upload fa-fw"></i>Upload
                                             File</a></li>
-                                    <li><a href="#" onclick="showM(&quot;?modal=assets/assignLicense&amp;section=&amp;reroute=inventory/assets/manage&amp;routeid=1&quot;);return false"><i class="fa fa-thumb-tack fa-fw"></i>Assign License</a></li>
+                                        <li><a href="#" data-crud="true" onclick="showM(&quot;?modal=assets/assignLicense&amp;section=&amp;reroute=inventory/assets/manage&amp;routeid=1&quot;);return false"><i class="fa fa-thumb-tack fa-fw"></i>Assign License</a></li>
                                     <li><a href="?route=pdf&amp;type=assetlabel&amp;id=1" target="_blank"><i class="fa fa-barcode fa-fw"></i>Label</a></li>
                                 </ul>
                             </div>
@@ -169,8 +169,8 @@
                                                             <td>Operating Systems</td>
                                                             <td><a href="?route=inventory/licenses/manage&amp;id=3">Windows Server 2012 R2 Essentials</a></td>
                                                             <td>
-                                                                <div class="pull-right"><a href="#" onclick="showM(&quot;?modal=assets/unassignLicense&amp;section=&amp;reroute=inventory/assets/manage&amp;routeid=1&amp;id=1&quot;);return false"
-                                                                       class="btn btn-flat btn-danger btn-sm"><i class="fa fa-trash-o"></i></a></div>
+                                                                 <div class="pull-right"><a href="#" data-crud="true" onclick="showM(&quot;?modal=assets/unassignLicense&amp;section=&amp;reroute=inventory/assets/manage&amp;routeid=1&amp;id=1&quot;);return false"
+                                                                     class="btn btn-flat btn-danger btn-sm"><i class="fa fa-trash-o"></i></a></div>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -178,7 +178,7 @@
                                                             <td>Operating Systems</td>
                                                             <td><a href="?route=inventory/licenses/manage&amp;id=2">Office Home &amp; Business 2016</a></td>
                                                             <td>
-                                                                <div class="pull-right"><a href="#" onclick="showM(&quot;?modal=assets/unassignLicense&amp;section=&amp;reroute=inventory/assets/manage&amp;routeid=1&amp;id=2&quot;);return false"
+                                                                 <div class="pull-right"><a href="#" data-crud="true" onclick="showM(&quot;?modal=assets/unassignLicense&amp;section=&amp;reroute=inventory/assets/manage&amp;routeid=1&amp;id=2&quot;);return false"
                                                                        class="btn btn-flat btn-danger btn-sm"><i class="fa fa-trash-o"></i></a></div>
                                                             </td>
                                                         </tr>
@@ -371,10 +371,10 @@
 
                                                 <td>Coverted from issue's time spent during 1.11 version upgrade.</td>
                                                 <td>
-                                                    <div class="pull-right">
+                                                            <div class="pull-right">
                                                         <div class="btn-group">
-                                                            <a href="#" onclick="showM(&quot;?modal=time/edit&amp;reroute=inventory/assets/manage&amp;routeid=1&amp;id=3&amp;section=timelog&quot;);return false" class="btn btn-flat btn-success btn-sm"><i
-                                                                   class="fa fa-edit"></i></a> <a href="#" onclick="showM(&quot;?modal=time/delete&amp;reroute=inventory/assets/manage&amp;routeid=1&amp;id=3&amp;section=timelog&quot;);return false"
+                                                            <a href="#" data-crud="true" onclick="showM(&quot;?modal=time/edit&amp;reroute=inventory/assets/manage&amp;routeid=1&amp;id=3&amp;section=timelog&quot;);return false" class="btn btn-flat btn-success btn-sm"><i
+                                                                   class="fa fa-edit"></i></a> <a href="#" data-crud="true" onclick="showM(&quot;?modal=time/delete&amp;reroute=inventory/assets/manage&amp;routeid=1&amp;id=3&amp;section=timelog&quot;);return false"
                                                                class="btn btn-flat btn-danger btn-sm"><i class="fa fa-trash-o"></i></a>
                                                         </div>
                                                     </div>

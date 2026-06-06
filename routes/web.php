@@ -33,10 +33,10 @@ Route::get('/servicedesk/data', [TiketController::class, 'data'])->name('service
 Route::post('/servicedesk/store', [TiketController::class, 'store'])->name('servicedesk.store.public');
 
 //Admin Area
-Route::prefix('admin')->middleware('auth')->group(function () {
+Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function () {
     Route::get('/', [App\Http\Controllers\AdminController::class, 'index'])->name('admin.index');
     // Route Aset TIK
-    Route::middleware(['role:superadmin|admin_tik|staf_tik'])->group(function () {
+    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering|user', 'readonly_user'])->group(function () {
         Route::get('/asettik', [App\Http\Controllers\AssetController::class, 'index_tik'])->name('admin.asettik');
         Route::get('/asettik/get_assets', [App\Http\Controllers\AssetController::class, 'get_assets'])->name('admin.asettik.get_assets');
         Route::post('/asettik/store/{classification}', [App\Http\Controllers\AssetController::class, 'store'])->name('admin.asettik.store');
@@ -53,7 +53,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::get('/asettik/{id}/edit', [App\Http\Controllers\ShowAsetController::class, 'getEditAssetContent'])->name('admin.asettik.edit');
     });
     // Route Aset Rumah Tangga
-    Route::middleware(['role:superadmin|admin_rt|staf_driver|staf_engineering'])->group(function () {
+    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering|user', 'readonly_user'])->group(function () {
         Route::get('/asetrt', [App\Http\Controllers\AssetController::class, 'index_rt'])->name('admin.asetrt');
         Route::get('/asetrt/get_assets', [App\Http\Controllers\AssetController::class, 'get_assets'])->name('admin.asetrt.get_assets');
         Route::get('/asetrt/export', [App\Http\Controllers\AssetController::class, 'exportExcelRt'])->name('admin.asetrt.export');
@@ -86,7 +86,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
 
     // Route Pemeliharaan Korektif
-    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering'])->group(function () {
+    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering|user', 'readonly_user'])->group(function () {
         Route::get('/pemeliharaan-korektif', [App\Http\Controllers\PemeliharaanKorektifController::class, 'index'])->name('admin.pemeliharaan-korektif');
         Route::get('/pemeliharaan-korektif/pemeliharaanDataTable', [App\Http\Controllers\PemeliharaanKorektifController::class, 'pemeliharaanKorektifDataTable'])->name('admin.pemeliharaan-korektif.pemeliharaanDataTable');
         Route::get('/pemeliharaan-korektif/pemeliharaanDataTableSelesai', [App\Http\Controllers\PemeliharaanKorektifController::class, 'pemeliharaanKorektifDataTableSelesai'])->name('admin.pemeliharaan-korektif.pemeliharaanDataTableSelesai');
@@ -97,7 +97,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     });
 
     // Route Pemeliharaan Preventif
-    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering'])->group(function () {
+    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering|user', 'readonly_user'])->group(function () {
         Route::get('/pemeliharaan-preventif', [App\Http\Controllers\PemeliharaanPreventifController::class, 'index'])->name('admin.pemeliharaan-preventif');
         Route::get('/pemeliharaan-preventif/get-maintenance-schedules', [App\Http\Controllers\PemeliharaanPreventifController::class, 'getMaintenanceSchedules'])->name('admin.pemeliharaan-preventif.get-maintenance-schedules');
         Route::get('/pemeliharaan-preventif/get-categories/{id}', [App\Http\Controllers\PemeliharaanPreventifController::class, 'getCategories'])->name('admin.pemeliharaan-preventif.get-categories');
@@ -111,7 +111,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     });
 
     // Route Setting Atribut / Master Data
-    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering'])->group(function () {
+    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering|user', 'readonly_user'])->group(function () {
         Route::get('/setting_attr', [App\Http\Controllers\SetatributController::class, 'index'])->name('admin.setting_attr');
         // Route Setting Klasifikasi
         Route::get('/setting_attr/klasifikasi', [App\Http\Controllers\SetatributController::class, 'klasifikasi'])->name('admin.setting_attr.klasifikasi');
@@ -169,7 +169,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     });
 
     // Route Ticketing System
-    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering'])->group(function () {
+    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering|user', 'readonly_user'])->group(function () {
         Route::get('/tiket', [App\Http\Controllers\TiketController::class, 'index'])->name('admin.tiket');
         Route::get('/tiket/{id}', [App\Http\Controllers\TiketController::class, 'show'])->name('admin.tiket.show');
         Route::get('/servicedesk/print', [TiketController::class, 'print'])->name('servicedesk.print');
@@ -178,7 +178,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     });
 
     // Route Proyek
-    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering'])->group(function () {
+    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering|user', 'readonly_user'])->group(function () {
         Route::get('/proyek', [App\Http\Controllers\ProyekController::class, 'index'])->name('admin.proyek');
         Route::get('/proyek/get_Proyeks', [App\Http\Controllers\ProyekController::class, 'getProyeks'])->name('admin.proyek.get_Proyeks');
         Route::post('/proyek/store', [App\Http\Controllers\ProyekController::class, 'store'])->name('admin.proyek.store');
@@ -211,12 +211,12 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     });
 
     // Route Laporan
-    Route::middleware(['role:superadmin|admin_tik|admin_rt'])->group(function () {
+    Route::middleware(['role:superadmin|admin_tik|admin_rt|user', 'readonly_user'])->group(function () {
         Route::get('/laporan', [App\Http\Controllers\LaporanController::class, 'index'])->name('admin.laporan');
     });
 
     // Route Settings
-    Route::middleware(['role:superadmin|admin_tik|admin_rt'])->group(function () {
+    Route::middleware(['role:superadmin|admin_tik|admin_rt|user', 'readonly_user'])->group(function () {
         // Route User Manager
         Route::get('settings/usermanager', [App\Http\Controllers\UserController::class, 'index'])->name('admin.settings.usermanager');
         Route::get('settings/usermanager/get_users', [App\Http\Controllers\UserController::class, 'getUsers'])->name('admin.settings.usermanager.get_users');
@@ -228,6 +228,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::get('settings/usermanager/edit/{id}', [App\Http\Controllers\UserController::class, 'edit'])->name('admin.settings.usermanager.edit');
         // Route Import
         Route::get('settings/import', [App\Http\Controllers\ImportController::class, 'index'])->name('admin.settings.import');
+        Route::get('settings/import/template-user', [App\Http\Controllers\ImportController::class, 'templateUser'])->name('admin.settings.import.templateuser');
+        Route::post('settings/import/storeusermanagement', [App\Http\Controllers\ImportController::class, 'storeUserManagement'])->name('admin.settings.import.storeusermanagement');
         Route::post('settings/import/storelokasi', [App\Http\Controllers\ImportController::class, 'storeLokasi'])->name('admin.settings.import.storelokasi');
         Route::post('settings/import/storeasettik', [App\Http\Controllers\ImportController::class, 'storeAsetTik'])->name('admin.settings.import.storeasettik');
         Route::post('settings/import/storeasetrt', [App\Http\Controllers\ImportController::class, 'storeAsetRt'])->name('admin.settings.import.storeasetrt');

@@ -130,7 +130,7 @@
                                         <div class="input-group input-group-sm mb-0">
                                             <input class="form-control form-control-sm" placeholder="Response">
                                             <div class="input-group-append">
-                                                <button type="submit" class="btn btn-danger">Send</button>
+                                                <button type="submit" class="btn btn-danger" data-crud="true">Send</button>
                                             </div>
                                         </div>
                                     </form>
@@ -143,7 +143,7 @@
                                         <img class="img-circle img-bordered-sm" src="../../dist/img/user6-128x128.jpg" alt="User Image">
                                         <span class="username">
                                             <a href="#">Adam Jones</a>
-                                            <a href="#" class="float-right btn-tool"><i class="fas fa-times"></i></a>
+                                            <a href="#" class="float-right btn-tool" data-crud="true"><i class="fas fa-times"></i></a>
                                         </span>
                                         <span class="description">Posted 5 photos - 5 days ago</span>
                                     </div>
@@ -176,7 +176,7 @@
                                         <a href="#" class="link-black text-sm mr-2"><i class="fas fa-share mr-1"></i> Share</a>
                                         <a href="#" class="link-black text-sm"><i class="far fa-thumbs-up mr-1"></i> Like</a>
                                         <span class="float-right">
-                                            <a href="#" class="link-black text-sm">
+                                                <a href="#" class="link-black text-sm">
                                                 <i class="far fa-comments mr-1"></i> Comments (5)
                                             </a>
                                         </span>
@@ -214,7 +214,7 @@
                                             </div>
                                             <div class="timeline-footer">
                                                 <a href="#" class="btn btn-primary btn-sm">Read more</a>
-                                                <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                                                <a href="#" class="btn btn-danger btn-sm" data-crud="true">Delete</a>
                                             </div>
                                         </div>
                                     </div>
@@ -325,8 +325,8 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <div class="offset-sm-2 col-sm-10">
-                                            <button type="submit" class="btn btn-danger">Submit</button>
+                                            <div class="offset-sm-2 col-sm-10">
+                                            <button type="submit" class="btn btn-danger" data-crud="true">Submit</button>
                                         </div>
                                     </div>
                                 </form>

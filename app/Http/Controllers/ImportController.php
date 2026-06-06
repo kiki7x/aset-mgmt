@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 use Shuchkin\SimpleXLSX;
+use Shuchkin\SimpleXLSXGen;
 
 class ImportController extends Controller
 {
@@ -202,5 +206,169 @@ class ImportController extends Controller
             'status' => 'error',
             'message' => 'Gagal mengimport data.'
         ], 400);
+    }
+
+    public function templateUser()
+    {
+        $data = [
+            ['fullname', 'username', 'email', 'password'],
+            ['Budi Santoso', 'budi.santoso', 'budi@example.com', 'password123'],
+        ];
+
+        $date = now()->format('d-m-Y');
+
+        return SimpleXLSXGen::fromArray($data)->downloadAs("{$date}_sapa-ppl-user-management-template.xlsx");
+    }
+
+    public function storeUserManagement(Request $request): JsonResponse
+    {
+        $request->validate([
+            'fileusermanagement' => 'required|mimes:xlsx',
+        ]);
+
+        $role = Role::where('name', 'user')->first();
+        if (!$role) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Role user tidak ditemukan di sistem.'
+            ], 404);
+        }
+
+        if ($xlsx = SimpleXLSX::parse($request->file('fileusermanagement'))) {
+            $rows = $xlsx->rows();
+            array_shift($rows);
+
+            $knownUsernames = array_fill_keys(
+                \App\Models\User::query()->pluck('username')->filter()->all(),
+                true
+            );
+            $knownEmails = array_fill_keys(
+                \App\Models\User::query()->pluck('email')->filter()->all(),
+                true
+            );
+
+            $errors = [];
+            $pendingUsers = [];
+            $successCount = 0;
+            $timestamp = now();
+
+            foreach ($rows as $index => $row) {
+                $rowNumber = $index + 2;
+                $rowErrors = [];
+
+                $fullname = trim((string) ($row[0] ?? ''));
+                $usernameInput = trim((string) ($row[1] ?? ''));
+                $email = trim((string) ($row[2] ?? ''));
+                $password = trim((string) ($row[3] ?? ''));
+                $username = $this->normalizeImportedUsername($fullname, $usernameInput, $knownUsernames);
+
+                if ($fullname === '') {
+                    $rowErrors[] = "Kolom 'fullname' tidak boleh kosong.";
+                }
+                if ($usernameInput === '' && $fullname === '') {
+                    $rowErrors[] = "Kolom 'username' tidak boleh kosong.";
+                }
+                if ($email === '') {
+                    $rowErrors[] = "Kolom 'email' tidak boleh kosong.";
+                }
+                if ($password === '') {
+                    $rowErrors[] = "Kolom 'password' tidak boleh kosong.";
+                }
+
+                if ($email !== '' && isset($knownEmails[$email])) {
+                    $rowErrors[] = "Email '{$email}' sudah digunakan.";
+                }
+
+                if (!empty($rowErrors)) {
+                    foreach ($rowErrors as $message) {
+                        $errors[] = "Baris $rowNumber: {$message}";
+                    }
+                    continue;
+                }
+
+                $pendingUsers[] = [
+                    'fullname' => $fullname,
+                    'username' => $username,
+                    'email' => $email,
+                    'password' => bcrypt($password),
+                    'avatar' => null,
+                    'email_verified_at' => null,
+                    'created_at' => $timestamp,
+                    'updated_at' => $timestamp,
+                ];
+
+                $knownUsernames[$username] = true;
+                $knownEmails[$email] = true;
+            }
+
+            if (!empty($pendingUsers)) {
+                DB::transaction(function () use ($pendingUsers, $role, &$successCount) {
+                    \App\Models\User::insert($pendingUsers);
+
+                    $insertedUsers = \App\Models\User::query()
+                        ->whereIn('email', array_column($pendingUsers, 'email'))
+                        ->get(['id', 'email']);
+
+                    $pivotRows = [];
+                    foreach ($insertedUsers as $user) {
+                        $pivotRows[] = [
+                            'role_id' => $role->id,
+                            'model_type' => \App\Models\User::class,
+                            'model_id' => $user->id,
+                        ];
+                    }
+
+                    if (!empty($pivotRows)) {
+                        DB::table('model_has_roles')->insert($pivotRows);
+                    }
+
+                    $successCount = count($pendingUsers);
+                });
+            } else {
+                $successCount = 0;
+            }
+
+            return response()->json([
+                'status' => count($errors) > 0 ? 'partial_error' : 'success',
+                'success_count' => $successCount,
+                'errors' => $errors,
+                'message' => 'Data user management berhasil diimport.'
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Gagal mengimport data.'
+        ], 400);
+    }
+
+    private function normalizeImportedUsername(string $fullname, string $usernameInput, array &$knownUsernames): string
+    {
+        $base = Str::slug($usernameInput !== '' ? $usernameInput : $fullname, '.');
+        $base = str_replace('.', '_', $base);
+        $base = strtolower(trim($base, '-_'));
+
+        if ($base === '') {
+            $base = 'user';
+        }
+
+        $maxLength = 20;
+        $candidate = substr($base, 0, $maxLength);
+        $candidate = rtrim($candidate, '-_');
+
+        if ($candidate === '') {
+            $candidate = 'user';
+        }
+
+        $suffix = 1;
+        while (isset($knownUsernames[$candidate])) {
+            $suffixText = '-' . $suffix;
+            $candidate = substr($base, 0, $maxLength - strlen($suffixText));
+            $candidate = rtrim($candidate, '-_');
+            $candidate .= $suffixText;
+            $suffix++;
+        }
+
+        return $candidate;
     }
 }
