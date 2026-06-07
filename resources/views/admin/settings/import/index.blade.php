@@ -32,7 +32,7 @@
                                     <label for="fileasetrt">Import Aset Rumah Tangga <span class="text-danger">*</span></label>
                                     <div class="custom-file">
                                         <input type="file" class="form-control custom-file-input" id="fileasetrt" name="fileasetrt" accept=".xlsx" required>
-                                        <label class="custom-file-label" for="attachment">Import Aset Rumah Tangga</label>
+                                        <label class="custom-file-label" for="fileasetrt">Import Aset Rumah Tangga</label>
                                         <small class="form-text text-muted">Format: XLSX (Max: 2MB)</small>
                                     </div>
                                     <span id="error-fileasetrt" class="text-danger small"></span>
@@ -177,7 +177,7 @@
                                     <label for="filelokasi">Import Lokasi Ruangan <span class="text-danger">*</span></label>
                                     <div class="custom-file">
                                         <input type="file" class="form-control custom-file-input" id="filelokasi" name="filelokasi" accept=".xlsx" required>
-                                        <label class="custom-file-label" for="attachment">Import Lokasi Ruangan</label>
+                                        <label class="custom-file-label" for="filelokasi">Import Lokasi Ruangan</label>
                                         <small class="form-text text-muted">Format: XLSX (Max: 2MB)</small>
                                     </div>
                                     <span id="error-filelokasi" class="text-danger small"></span>
