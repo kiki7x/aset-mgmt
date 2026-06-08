@@ -9,12 +9,12 @@
 
         <nav id="navmenu" class="navmenu">
             <ul>
-                <li><a href="/" class="active">Home</a></li>
-                <li><a href="/profil">Profil</a></li>
-                <li><a href="/layanan">Layanan</a></li>
-                <li><a href="/statistik">Statistik</a></li>
-                <li><a href="/team">Team</a></li>
-                <li><a href="/faq">FAQ</a></li>
+              <li><a href="/" class="{{ Request::is('/') ? 'active' : '' }}">Home</a></li>
+                <li><a href="/profil" class="{{ Request::is('profil') ? 'active' : '' }}">Profil</a></li>
+                <li><a href="/layanan" class="{{ Request::is('layanan') ? 'active' : '' }}">Layanan</a></li>
+                <li><a href="/statistik" class="{{ Request::is('statistik') ? 'active' : '' }}">Statistik</a></li>
+                <li><a href="/team" class="{{ Request::is('team') ? 'active' : '' }}">Team</a></li>
+                <li><a href="/faq" class="{{ Request::is('faq') ? 'active' : '' }}">FAQ</a></li>
             </ul>
             <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
         </nav>
