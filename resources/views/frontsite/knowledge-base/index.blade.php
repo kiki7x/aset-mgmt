@@ -18,7 +18,7 @@
                 <ol>
                     <li><a href="/">Home</a></li>
                     <li class="">Layanan</li>
-                    <li class="current">Knowledge Base</li>
+                    <li class="current">Pusat Pengetahuan</li>
                 </ol>
             </nav>
         </div>
@@ -26,8 +26,8 @@
 
     <section class="">
         <div class="container">
-            <h2 class="text-center">Knowledge Base</h2>
-            <p class="text-center">Artikel panduan dan dokumentasi untuk membantu pengguna memanfaatkan fitur aplikasi.</p>
+            <h2 class="text-center">Pusat Pengetahuan</h2>
+            <p class="text-center">Artikel panduan dan dokumentasi untuk membantu pengguna memanfaatkan aset di lingkungan Poltekpar Lombok.</p>
         </div>
 
         <div class="container">

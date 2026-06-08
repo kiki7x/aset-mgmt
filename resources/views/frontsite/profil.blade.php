@@ -31,8 +31,7 @@
                 <div class="row gy-4">
                     <div class="col-lg-6 content" data-aos="fade-up" data-aos-delay="100">
                         <p>
-                            Sistem Pengelolaan Aset Poltekpar Lombok dikembangkan untuk mengotomasi proses pengelolaan BMN dan mendokumentasikannya secara digital, proses menjadi lebih akurat, cepat, dan efisien. Berbasis web diharapkan dapat
-                            menyajikan informasi pengelolaan BMN secara akurat dan terkini, serta menyediakan sistem monitoring online dan realtime.
+                            Sistem Pengelolaan Aset Poltekpar Lombok dikembangkan untuk mengotomasi proses pengelolaan Barang Milik Negara (BMN) dan mendokumentasikannya secara digital agar menjadi lebih akurat, cepat, dan efisien. Berbasis web, platform ini dirancang untuk menyajikan informasi pengelolaan secara real-time sekaligus menyediakan sistem monitoring yang terpusat.
                         </p>
                         <ul>
                             <li><i class="bi bi-check2-circle"></i> <span>Pendataan Aset Poltekpar Lombok</span></li>
@@ -42,9 +41,7 @@
                         </ul>
                     </div>
                     <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-                        <p>Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-                            officia
-                            deserunt mollit anim id est laborum. </p>
+                        <p>Kehadiran platform ini merupakan langkah strategis dalam meminimalisir risiko kerusakan fasilitas dan mempercepat penanganan kendala di lapangan. Integrasi teknologi di dalamnya tidak hanya menyederhanakan birokrasi internal, tetapi juga meningkatkan mutu pelayanan sarana prasarana secara berkelanjutan.</p>
                         <a href="#" class="read-more"><span>Read More</span><i class="bi bi-arrow-right"></i></a>
                     </div>
                 </div>

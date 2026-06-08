@@ -41,7 +41,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="font-weight-bold text-uppercase">Captcha</label>
+                        <label class="font-weight-bold text-uppercase d-flex align-items-start">Verifikasi Captcha</label>
                         <div class="d-flex align-items-center mb-2">
                             <img
                                 id="login-captcha-image"

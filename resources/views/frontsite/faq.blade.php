@@ -30,8 +30,7 @@
             <!-- Section Title -->
             <div class="container section-title" data-aos="fade-up">
                 <h2>Frequently Asked Questions</h2>
-                <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem
-                    hic quas.</p>
+                <p>Temukan jawaban atas pertanyaan yang paling sering diajukan mengenai penggunaan, fitur, dan sistem pelaporan aplikasi SAPA PPL di bawah ini.</p>
             </div><!-- End Section Title -->
 
             <div class="container">
@@ -40,49 +39,45 @@
                         <div class="faq-container">
                             <div class="faq-item faq-active" data-aos="fade-up" data-aos-delay="200">
                                 <i class="faq-icon bi bi-question-circle"></i>
-                                <h3>Non consectetur a erat nam at lectus urna duis?</h3>
+                                <h3>Apa itu aplikasi SAPA PPL?</h3>
                                 <div class="faq-content">
-                                    <p>Feugiat pretium nibh ipsum consequat. Tempus iaculis urna id volutpat lacus laoreet non curabitur gravida. Venenatis lectus magna fringilla urna porttitor rhoncus dolor purus non.</p>
+                                    <p>SAPA PPL adalah platform digital terintegrasi yang dirancang untuk mempermudah manajemen aset organisasi, mulai dari pendataan, pemeliharaan berkala, pelacakan posisi aset via QR Code, hingga sistem pelaporan kerusakan fasilitas berbasis tiket.</p>
                                 </div>
                                 <i class="faq-toggle bi bi-chevron-right"></i>
                             </div><!-- End Faq item-->
 
                             <div class="faq-item" data-aos="fade-up" data-aos-delay="300">
                                 <i class="faq-icon bi bi-question-circle"></i>
-                                <h3>Feugiat scelerisque varius morbi enim nunc faucibus a pellentesque?</h3>
+                                <h3>Bagaimana cara melaporkan kerusakan sarana atau prasarana?</h3>
                                 <div class="faq-content">
-                                    <p>Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend donec pretium. Est pellentesque elit ullamcorper
-                                        dignissim. Mauris ultrices eros in cursus turpis massa tincidunt dui.</p>
+                                    <p>Anda dapat masuk ke menu Service Desk, lalu buat tiket laporan baru. Isi detail kerusakan, lokasi fasilitas, dan unggah foto pendukung. Setelah dikirim, Anda dapat memantau status penanganan oleh tim teknisi secara langsung melalui aplikasi.</p>
                                 </div>
                                 <i class="faq-toggle bi bi-chevron-right"></i>
                             </div><!-- End Faq item-->
 
                             <div class="faq-item" data-aos="fade-up" data-aos-delay="400">
                                 <i class="faq-icon bi bi-question-circle"></i>
-                                <h3>Dolor sit amet consectetur adipiscing elit pellentesque?</h3>
+                                <h3>Siapa saja yang bisa menggunakan fitur Lacak Aset?</h3>
                                 <div class="faq-content">
-                                    <p>Eleifend mi in nulla posuere sollicitudin aliquam ultrices sagittis orci. Faucibus pulvinar elementum integer enim. Sem nulla pharetra diam sit amet nisl suscipit. Rutrum tellus pellentesque eu tincidunt. Lectus urna duis
-                                        convallis convallis tellus. Urna molestie at elementum eu facilisis sed odio morbi quis</p>
+                                    <p>Fitur ini dapat digunakan oleh petugas inventaris maupun pengguna umum yang memiliki akses. Cukup gunakan kamera perangkat Anda untuk memindai QR Code yang tertempel pada fisik aset untuk melihat informasi detail, status, dan riwayat mutasinya.</p>
                                 </div>
                                 <i class="faq-toggle bi bi-chevron-right"></i>
                             </div><!-- End Faq item-->
 
                             <div class="faq-item" data-aos="fade-up" data-aos-delay="500">
                                 <i class="faq-icon bi bi-question-circle"></i>
-                                <h3>Ac odio tempor orci dapibus. Aliquam eleifend mi in nulla?</h3>
+                                <h3>Bagaimana jika aset yang saya cari tidak terdaftar di sistem?</h3>
                                 <div class="faq-content">
-                                    <p>Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend donec pretium. Est pellentesque elit ullamcorper
-                                        dignissim. Mauris ultrices eros in cursus turpis massa tincidunt dui.</p>
+                                    <p>Hal ini bisa terjadi jika aset tersebut belum diinput oleh tim logistik. Silakan hubungi admin atau gunakan fitur Pendataan Aset (jika akun Anda memiliki hak akses) untuk mendaftarkan aset baru beserta spesifikasinya ke dalam basis data.</p>
                                 </div>
                                 <i class="faq-toggle bi bi-chevron-right"></i>
                             </div><!-- End Faq item-->
 
                             <div class="faq-item" data-aos="fade-up" data-aos-delay="600">
                                 <i class="faq-icon bi bi-question-circle"></i>
-                                <h3>Tempus quam pellentesque nec nam aliquam sem et tortor consequat?</h3>
+                                <h3>Apa fungsi dari menu Pusat Pengetahuan?</h3>
                                 <div class="faq-content">
-                                    <p>Molestie a iaculis at erat pellentesque adipiscing commodo. Dignissim suspendisse in est ante in. Nunc vel risus commodo viverra maecenas accumsan. Sit amet nisl suscipit adipiscing bibendum est. Purus gravida quis blandit
-                                        turpis cursus in</p>
+                                    <p>Pusat Pengetahuan (Knowledge Center) berisi panduan teks dan video mengenai cara penggunaan aplikasi, Standar Operasional Prosedur (SOP) perawatan fasilitas, serta tips penanganan pertama pada kendala teknis ringan sebelum teknisi tiba.</p>
                                 </div>
                                 <i class="faq-toggle bi bi-chevron-right"></i>
                             </div><!-- End Faq item-->

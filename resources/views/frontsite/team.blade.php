@@ -30,7 +30,7 @@
             <!-- Section Title -->
             <div class="container section-title" data-aos="fade-up">
                 <h2>Team</h2>
-                <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+                <p>Didukung oleh personil yang berdedikasi dan kompeten di bidangnya untuk memastikan pengelolaan, pemeliharaan, dan pelayanan aset sarana prasarana berjalan secara optimal.</p>
             </div><!-- End Section Title -->
 
             <div class="container">
@@ -42,7 +42,7 @@
                             <div class="member-info">
                                 <h4>Herry Sastrawan, S.IP., M.Si.</h4>
                                 <span>Kasubbag Administrasi Umum</span>
-                                <p>Explicabo voluptatem mollitia et repellat qui dolorum quasi</p>
+                                <p>Bertanggung jawab atas koordinasi menyeluruh administrasi, tata usaha, dan manajemen fasilitas organisasi.</p>
                                 <div class="social">
                                     <a href=""><i class="bi bi-twitter-x"></i></a>
                                     <a href=""><i class="bi bi-facebook"></i></a>
@@ -61,7 +61,7 @@
                             <div class="member-info">
                                 <h4>Wawan Apriandi, S.Si.</h4>
                                 <span>Koordinator BMN</span>
-                                <p>Explicabo voluptatem mollitia et repellat qui dolorum quasi</p>
+                                <p>Fokus pada standardisasi pendataan, inventarisasi, dan legalitas Barang Milik Negara.</p>
                                 <div class="social">
                                     <a href=""><i class="bi bi-twitter-x"></i></a>
                                     <a href=""><i class="bi bi-facebook"></i></a>
@@ -78,7 +78,7 @@
                             <div class="member-info">
                                 <h4>I Kadek Surianta, S.Sos.H., M.IKom.</h4>
                                 <span>Koordinator Rumah Tangga</span>
-                                <p>Aut maiores voluptates amet et quis praesentium qui senda para</p>
+                                <p>Mengawasi pemeliharaan fisik, kebersihan, dan kesiapan operasional sarana prasarana harian.</p>
                                 <div class="social">
                                     <a href=""><i class="bi bi-twitter-x"></i></a>
                                     <a href=""><i class="bi bi-facebook"></i></a>
@@ -95,7 +95,7 @@
                             <div class="member-info">
                                 <h4>Selamet Kiki Pranoto, S.Kom.</h4>
                                 <span>Koordinator TIK</span>
-                                <p>Quisquam facilis cum velit laborum corrupti fuga rerum quia</p>
+                                <p>Memastikan keandalan sistem informasi, jaringan, dan infrastruktur digital pendukung aplikasi."</p>
                                 <div class="social">
                                     <a href=""><i class="bi bi-twitter-x"></i></a>
                                     <a href=""><i class="bi bi-facebook"></i></a>
@@ -106,13 +106,15 @@
                         </div>
                     </div><!-- End Team Member -->
 
+                    <hr>
+
                     <div class="col-lg-4" data-aos="fade-up">
                         <div class="team-member d-flex align-items-start">
                             <div class="pic"><img src="{{ asset('assets/gambar/placeholder.jpg') }}" class="img-fluid" alt=""></div>
                             <div class="member-info">
                                 <h4>Ramli Morales, S.T.</h4>
                                 <span>Staf Driver</span>
-                                <p>Dolorum tempora officiis odit laborum officiis et et accusamus</p>
+                                <p>Bertanggung jawab atas operasional, keselamatan, dan pemeliharaan rutin kendaraan dinas guna mendukung mobilitas dan kelancaran tugas logistik organisasi.</p>
                                 <div class="social">
                                     <a href=""><i class="bi bi-twitter-x"></i></a>
                                     <a href=""><i class="bi bi-facebook"></i></a>
@@ -128,7 +130,7 @@
                             <div class="member-info">
                                 <h4>Zaenal Abidin, S.T.</h4>
                                 <span>Staf MEP</span>
-                                <p>Dolorum tempora officiis odit laborum officiis et et accusamus</p>
+                                <p>Mengelola dan memastikan seluruh sistem mekanikal, kelistrikan, serta instalasi air di lingkungan gedung dan fasilitas organisasi berfungsi dengan aman dan optimal.</p>
                                 <div class="social">
                                     <a href=""><i class="bi bi-twitter-x"></i></a>
                                     <a href=""><i class="bi bi-facebook"></i></a>
@@ -144,7 +146,7 @@
                             <div class="member-info">
                                 <h4>Rizhki P. Dwi Putra, S.Kom.</h4>
                                 <span>Staf TIK</span>
-                                <p>Dolorum tempora officiis odit laborum officiis et et accusamus</p>
+                                <p>Menangani dukungan teknis, pemeliharaan infrastruktur jaringan, serta memastikan keamanan dan ketersediaan sistem informasi/aplikasi operasional harian.</p>
                                 <div class="social">
                                     <a href=""><i class="bi bi-twitter-x"></i></a>
                                     <a href=""><i class="bi bi-facebook"></i></a>

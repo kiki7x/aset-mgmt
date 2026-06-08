@@ -1,4 +1,4 @@
-@extends('layouts.front', ['title' => 'Home - SAPA PPL'])
+@extends('layouts.front', ['title' => 'SAPA PPL'])
 
 {{-- @section('title', 'Kelola Aset TIK') --}}
 {{-- <x-slot:title>{{ $title }}</x-slot:title> --}}
@@ -14,11 +14,10 @@
                 <div class="row gy-4">
                     <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center" data-aos="zoom-out">
                         <h1>Sistem Aplikasi Pemeliharaan Aset Poltekpar Lombok</h1>
-                        <p>Layanan SAPA PPL bertujuan untuk mempermudah melacak pemanfaatan aset, penjadwalan pemeliharaan aset serta
-                            mempermudah penanganan laporan gangguan sarana dan prasarana bidang TIK dan Peralatan Rumah Tangga.</p>
+                        <p>SAPA PPL hadir untuk mengoptimalkan pengelolaan aset di Poltekpar Lombok. Sistem ini menyediakan platform terpusat untuk memantau utilisasi aset, mengelola jadwal pemeliharaan secara proaktif, dan merespons laporan gangguan pada sarana TIK serta Peralatan Rumah Tangga secara efisien.</p>
                         <div class="d-flex">
                             <a href="{{ route('login') }}" class="btn-get-started">Mulai</a>
-                            <a href="https://www.youtube.com/watch?v=92mqKMU2vuo&pp=ygUQcG9sdGVrcGFyIGxvbWJvaw%3D%3D" class="glightbox btn-watch-video d-flex align-items-center"><i class="bi bi-play-circle"></i><span>Tonton Video</span></a>
+                            <a href="{{ asset('assets/Video Profile sapa.ppl.ac.id.mp4') }}" class="glightbox btn-watch-video d-flex align-items-center"><i class="bi bi-play-circle"></i><span>Tonton Video</span></a>
                         </div>
                     </div>
                     <div id="carouselDepan" class="carousel slide col-lg-6 order-1 order-lg-2" data-bs-ride="carousel" data-aos="zoom-out" data-aos-delay="200">

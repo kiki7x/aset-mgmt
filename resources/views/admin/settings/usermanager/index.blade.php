@@ -46,8 +46,8 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Username</th>
                             <th>Nama Lengkap</th>
+                            <th>Username</th>
                             <th>Email</th>
                             <th>Tanggal Registrasi</th>
                             <th>Opsi</th>
@@ -255,12 +255,12 @@
                             name: 'id'
                         },
                         {
-                            data: 'username',
-                            name: 'username'
-                        },
-                        {
                             data: 'fullname',
                             name: 'fullname'
+                        },
+                        {
+                            data: 'username',
+                            name: 'username'
                         },
                         {
                             data: 'email',

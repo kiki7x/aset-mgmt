@@ -173,8 +173,19 @@
 
                     eventDidMount: function(info) {
                         // Tambahkan tooltip menggunakan Bootstrap
+                        let tooltipTitle = '';
+                        const isEvent = info.event.extendedProps.is_event;
+
+                        if (isEvent) {
+                            // 1. Jika ini adalah jadwal (is_event === true)
+                            tooltipTitle = 'Jadwal Pemeliharaan: ' + info.event.title + ' untuk aset ' + (info.event.extendedProps.description || 'Tidak ada deskripsi');
+                        } else {
+                            // 2. Jika ini adalah riwayat (is_event === false)
+                            tooltipTitle = 'Riwayat pemeliharaan: ' + (info.event.extendedProps.tag || 'No tag') + ' ' + (info.event.extendedProps.description || 'No description');
+                        }
+
                         var tooltip = new bootstrap.Tooltip(info.el, {
-                            title: 'Riwayat pemeliharaan selesai pada aset: ' + (info.event.extendedProps.tag || 'No tag') + ' ' + (info.event.extendedProps.description || 'No description'),
+                            title: tooltipTitle,
                             placement: 'auto',
                             trigger: 'hover',
                             container: 'body'

@@ -9,7 +9,7 @@
 
         <nav id="navmenu" class="navmenu">
             <ul>
-              <li><a href="/" class="{{ Request::is('/') ? 'active' : '' }}">Home</a></li>
+              <li><a href="/" class="{{ Request::is('/') ? 'active' : '' }}">Beranda</a></li>
                 <li><a href="/profil" class="{{ Request::is('profil') ? 'active' : '' }}">Profil</a></li>
                 <li><a href="/layanan" class="{{ Request::is('layanan') ? 'active' : '' }}">Layanan</a></li>
                 <li><a href="/statistik" class="{{ Request::is('statistik') ? 'active' : '' }}">Statistik</a></li>

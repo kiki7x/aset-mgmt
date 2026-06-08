@@ -38,15 +38,15 @@
                         <div class="service-item position-relative">
                             <div class="icon"><i class="bi bi-clipboard2-plus icon"></i> <span class="float-right badge bg-primary">{{ $assets->count() }}</span></div>
                             <h4><a href="" class="stretched-link">Pendataan Aset</a></h4>
-                            <p>Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
+                            <p>Sistem pencatatan aset secara digital yang komprehensif untuk mendokumentasikan volume, spesifikasi, nilai, dan status terkini dari seluruh properti organisasi dalam satu basis data terpusat.</p>
                         </div>
                     </div><!-- End Service Item -->
 
                     <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up">
                         <div class="service-item position-relative">
                             <div class="icon"><i class="bi bi-tools icon"></i></div>
-                            <h4><a href="" class="stretched-link">Pemeliharaan</a></h4>
-                            <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
+                            <h4><a href="" class="stretched-link">Pemeliharaan Terjadwal</a></h4>
+                            <p>Fasilitas manajemen perawatan aset secara berkala (preventif maupun korektif). Fitur ini memastikan setiap sarana dan prasarana selalu berada dalam kondisi prima untuk mendukung kelancaran operasional harian.</p>
                         </div>
                     </div><!-- End Service Item -->
 
@@ -54,7 +54,7 @@
                         <div class="service-item position-relative">
                             <div class="icon"><i class="bi bi-qr-code-scan"></i></div>
                             <h4><a href="{{ route('lacak') }}" class="stretched-link">Lacak Aset</a></h4>
-                            <p>Lacak aset yang sudah didistribusikan menggunakan fitur scan QR Code</p>
+                            <p>Sistem pemantauan distribusi dan mutasi lokasi aset secara real-time. Dengan integrasi teknologi QR Code, pengguna dapat melakukan pemindaian cepat untuk memverifikasi keaslian, histori, dan posisi fisik aset secara akurat.</p>
                         </div>
                     </div><!-- End Service Item -->
 
@@ -70,15 +70,15 @@
                         <div class="service-item position-relative">
                             <div class="icon"><i class="bi bi-telephone icon"></i></div>
                             <h4><a href="{{ route('servicedesk') }}" class="stretched-link">Service Desk Sarana & Prasarana berbasis Tiket</a></h4>
-                            <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia</p>
+                            <p>Layanan aduan dan pelaporan kerusakan fasilitas yang sistematis. Melalui sistem berbasis tiket ini, setiap kendala teknis dapat dilaporkan, diprioritaskan, dan Ditindaklanjuti oleh tim teknisi secara transparan dan akuntabel.</p>
                         </div>
                     </div><!-- End Service Item -->
 
                     <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up">
                         <div class="service-item position-relative">
                             <div class="icon"><i class="bi bi-lightbulb icon"></i></div>
-                            <h4><a href="{{ route('knowledge-base') }}" class="stretched-link">Knowledge Base</a></h4>
-                            <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia</p>
+                            <h4><a href="{{ route('knowledge-base') }}" class="stretched-link">Pusat Pengetahuan</a></h4>
+                            <p>Pusat edukasi dan dokumentasi digital yang menyediakan panduan pengguna, SOP pemeliharaan, serta tips perawatan mandiri untuk membangun budaya kepedulian terhadap aset di lingkungan organisasi.</p>
                         </div>
                     </div><!-- End Service Item -->
                 </div>
