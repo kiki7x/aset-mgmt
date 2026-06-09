@@ -15,14 +15,14 @@
                     <div class="row">
                         {{-- Nama Aset --}}
                         <div class="form-group col-md-8">
-                            <label for="name">Nama Aset <span class="text-danger">*</span></label>
+                            <label for="name" class="mb-n2">Nama Aset <span class="text-danger">*</span></label>
                             <input type="text" name="name" id="name" class="form-control">
                             <span class="text-danger small" id="error-name"></span>
                         </div>
 
                         {{-- Kategori --}}
                         <div class="form-group col-md-4">
-                            <label for="category_id">Kategori <span class="text-danger">*</span></label>
+                            <label for="category_id" class="mb-n2">Kategori <span class="text-danger">*</span></label>
                             <select name="category_id" id="category_id" class="form-control select2">
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -33,7 +33,7 @@
 
                         {{-- Manufacturer --}}
                         <div class="form-group col-md-4">
-                            <label for="manufacturer_id">Merk/Pabrikan <span class="text-danger">*</span></label>
+                            <label for="manufacturer_id" class="mb-n2">Merk/Pabrikan <span class="text-danger">*</span></label>
                             <select name="manufacturer_id[]" id="manufacturer_id" class="form-control select2tag"
                                 multiple>
                                 @foreach ($manufacturers as $manufacturer)
@@ -45,7 +45,7 @@
 
                         {{-- Model --}}
                         <div class="form-group col-md-4">
-                            <label for="model_id">Tipe/Model <span class="text-danger">*</span></label>
+                            <label for="model_id" class="mb-n2">Tipe/Model <span class="text-danger">*</span></label>
                             <select name="model_id[]" id="model_id" class="form-control select2tag" multiple>
                                 @foreach ($models as $model)
                                     <option value="{{ $model->id }}">{{ $model->name }}</option>
@@ -56,14 +56,14 @@
 
                         {{-- Serial --}}
                         <div class="form-group col-md-4">
-                            <label for="serial">Serial Number <span class="text-danger">*</span></label>
+                            <label for="serial" class="mb-n2">Serial Number <span class="text-danger">*</span></label>
                             <input type="text" name="serial" id="serial" class="form-control" placeholder="Unik">
                             <span class="text-danger small" id="error-serial"></span>
                         </div>
 
                         {{-- Supplier --}}
                         <div class="form-group col-md-4">
-                            <label for="supplier_id">Supplier <span class="text-danger">*</span></label>
+                            <label for="supplier_id" class="mb-n2">Supplier <span class="text-danger">*</span></label>
                             <select name="supplier_id[]" id="supplier_id" class="form-control select2tag" multiple>
                                 @foreach ($suppliers as $supplier)
                                     <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
@@ -74,7 +74,7 @@
 
                         {{-- Location --}}
                         <div class="form-group col-md-4">
-                            <label for="location_id">Penempatan <span class="text-danger">*</span></label>
+                            <label for="location_id" class="mb-n2">Penempatan <span class="text-danger">*</span></label>
                             <select name="location_id" id="location_id" class="form-control select2">
                                 @foreach ($locations as $location)
                                     <option value="{{ $location->id }}">{{ $location->name }}</option>
@@ -85,7 +85,7 @@
 
                         {{-- Status --}}
                         <div class="form-group col-md-4">
-                            <label for="status_id">Status <span class="text-danger">*</span></label>
+                            <label for="status_id" class="mb-n2">Status <span class="text-danger">*</span></label>
                             <select name="status_id" id="status_id" class="form-control select2">
                                 @foreach ($statuses as $status)
                                     <option value="{{ $status->id }}">{{ $status->name }}</option>
@@ -96,7 +96,7 @@
 
                         {{-- User --}}
                         <div class="form-group col-md-4">
-                            <label for="user_id">Pengguna Aset <span class="text-danger">*</span></label>
+                            <label for="user_id" class="mb-n2">Pengguna Aset <span class="text-danger">*</span></label>
                             <select name="user_id" id="user_id" class="form-control select2">
                                 @foreach ($users as $user)
                                     <option value="{{ $user->id }}">{{ $user->fullname }}</option>
@@ -107,7 +107,7 @@
 
                         {{-- Purchase Date --}}
                         <div class="form-group col-md-4">
-                            <label for="purchase_date">Tanggal Perolehan <span
+                            <label for="purchase_date" class="mb-n2">Tanggal Perolehan <span
                                     class="text-danger">*</span></label>
                             <input type="text" name="purchase_date" id="purchase_date" class="form-control" placeholder="Select date">
                             <span class="text-danger small" id="error-purchase_date"></span>
@@ -115,7 +115,7 @@
 
                         {{-- Warranty --}}
                         <div class="form-group col-md-4">
-                            <label for="warranty_months">Garansi <span class="text-danger">*</span></label>
+                            <label for="warranty_months" class="mb-n2">Garansi <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <input type="number" name="warranty_months" id="warranty_months"
                                     class="form-control">
@@ -127,15 +127,15 @@
                         </div>
 
                         {{-- Notes --}}
-                        <div class="form-group col-md-12">
-                            <label for="notes">Catatan</label>
+                        <div class="form-group col-md-6">
+                            <label for="notes" class="mb-n2">Catatan</label>
                             <textarea name="notes" id="notes" class="form-control" rows="2"></textarea>
                             <span class="text-danger small" id="error-notes"></span>
                         </div>
 
                         {{-- Image --}}
                         <div class="form-group col-md-6">
-                            <label for="image">Foto</label>
+                            <label for="image" class="mb-n2">Foto</label>
                             <input type="file" name="image" id="image" class="form-control">
                             <span class="text-danger small" id="error-image"></span>
                         </div>

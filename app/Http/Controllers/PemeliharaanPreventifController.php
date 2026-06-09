@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Validation\Rule;
 
 
@@ -90,28 +91,46 @@ class PemeliharaanPreventifController extends Controller
 
     public function completedDataTable(Request $request): JsonResponse
     {
-        $histories = \App\Models\MaintenancesModel::with(['maintenance_schedule.asset', 'pic'])
+        $query = \App\Models\MaintenancesModel::with(['maintenance_schedule.asset.classification', 'pic'])
             ->where('status', 'Selesai')
-            ->where('maintenance_schedule_id', '!=', null)
-            ->orderBy('period', 'desc')
-            ->get()
-            ->map(function ($history) {
-                return [
-                    'id' => $history->id,
-                    'classification_name' => $history->maintenance_schedule->asset->classification->name,
-                    'maintenance_name' => $history->name,
-                    'asset_id' => $history->maintenance_schedule->asset_id ?? '-',
-                    'asset_tag' => $history->maintenance_schedule->asset->tag ?? '-',
-                    'asset_name' => $history->maintenance_schedule->asset->name ?? '-',
-                    'pic_name' => $history->pic->fullname ?? '-',
-                    'period' => $history->period ? Carbon::parse($history->period)->format('d M Y') : '-',
-                    'cost' => $history->cost !== null ? number_format($history->cost, 0, ',', '.') : '-',
-                    'status' => $history->status,
-                    'notes' => $history->notes,
-                    'attachment_link' => $history->attachment_link,
-                ];
-            });
-        return response()->json($histories);
+            ->whereNotNull('maintenance_schedule_id');
+
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            try {
+                $startDate = Carbon::createFromFormat('Y-m-d', $request->start_date)->startOfDay();
+                $endDate = Carbon::createFromFormat('Y-m-d', $request->end_date)->endOfDay();
+                $query->whereBetween('period', [$startDate, $endDate]);
+            } catch (\Exception $e) {
+                Log::warning('Invalid date format for completedDataTable filter: ' . $e->getMessage());
+            }
+        }
+
+        return DataTables::of($query)
+            ->addColumn('classification_name', function ($history) {
+                return $history->maintenance_schedule->asset->classification->name ?? null;
+            })
+            ->addColumn('maintenance_name', function ($history) {
+                return $history->name;
+            })
+            ->addColumn('asset_id', function ($history) {
+                return $history->maintenance_schedule->asset_id ?? null;
+            })
+            ->addColumn('asset_tag', function ($history) {
+                return $history->maintenance_schedule->asset->tag ?? '-';
+            })
+            ->addColumn('asset_name', function ($history) {
+                return $history->maintenance_schedule->asset->name ?? '-';
+            })
+            ->addColumn('pic_name', function ($history) {
+                return $history->pic->fullname ?? '-';
+            })
+            ->editColumn('period', function ($history) {
+                return $history->period ? Carbon::parse($history->period)->format('d M Y') : '-';
+            })
+            ->editColumn('cost', function ($history) {
+                return $history->cost !== null ? number_format($history->cost, 0, ',', '.') : '-';
+            })
+            ->make(true);
     }
 
     public function scheduleStore(Request $request): JsonResponse

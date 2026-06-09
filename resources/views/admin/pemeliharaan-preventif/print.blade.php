@@ -302,7 +302,12 @@
         <table>
             <tbody>
                 <tr>
-                    <td width="20%"><strong>Digenerate dari</strong> </td>
+                    <td width="20%"><strong>Total biaya</strong></td>
+                    <td width="1%">:</td>
+                    <td>{{ 'Rp ' . ($totalCost ?? 0) }}</td>
+                </tr>
+                <tr>
+                    <td width="20%"><strong>Generate dari</strong> </td>
                     <td width="1%">:</td>
                     <td>{{ config('app.name') }} {{ config('app.url') }}</td>
                 </tr>

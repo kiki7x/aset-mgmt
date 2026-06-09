@@ -107,7 +107,7 @@
                     <input type="hidden" id="start" width="276" type="text" class="form-control" name="start" placeholder="yyyy-mm-dd" />
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                        <button id="submitJadwalPemeliharaan" type="submit" class="btn btn-success">Jadwalkan</button>
+                        <button id="submitJadwalPemeliharaan" type="submit" class="btn btn-primary">Jadwalkan</button>
                     </div>
                 </form>
             </div>

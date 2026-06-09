@@ -24,22 +24,22 @@
             </button>
         </div>
         <div class="card-body">
-            <div class="row">
-                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4 mt-auto">
-                    <div class="px-2 d-flex">
-                        <select id="roles" name="roles" class="ml-0 form-control mr-2">
-                            <option value="">Semua Role</option>
-                            @foreach ($roles as $role)
-                                <option value="{{ $role->id }}" {{ request('roles') == $role->id ? 'selected' : '' }}>
-                                    {{ ucwords(str_replace('_', ' ', $role->name)) }}
-                                    {{-- {{ $role->name }} --}}
-                                </option>
-                            @endforeach
-                        </select>
-                        <button type="submit" class="ml-0 btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Filter"><i class="fas fa-filter"></i></button>
-                    </div>
+            <div class="row g-2 mb-3 align-items-end">
+                <div class="col-12 col-md-3">
+                    <label for="roles" class="form-label mb-n1">Filter Role</label>
+                    <select id="roles" name="roles" class="ml-0 form-control mr-2">
+                        <option value="">Semua Role</option>
+                        @foreach ($roles as $role)
+                            <option value="{{ $role->id }}" {{ request('roles') == $role->id ? 'selected' : '' }}>
+                                {{ ucwords(str_replace('_', ' ', $role->name)) }}
+                                {{-- {{ $role->name }} --}}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
+
+            <hr>
 
             <div class="table-responsive">
                 <table id="tableUsers" class="table table-bordered table-striped table-hover table-sm">

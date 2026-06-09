@@ -42,6 +42,8 @@
     {{-- Bootstrap Datepicker --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="{{ asset('assets/plugins/daterangepicker/daterangepicker.css') }}">
     {{-- script-head --}}
     @stack('script-head')
     {{-- ./script-head --}}
@@ -125,6 +127,7 @@
     <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
     {{-- Bootstrap datepicker 1.9.0 --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="{{ asset('assets/plugins/daterangepicker/daterangepicker.js') }}"></script>
 
     <script>
         window.addEventListener('alert', (e) => {

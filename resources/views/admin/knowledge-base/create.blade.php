@@ -1,10 +1,13 @@
 @extends('layouts.backsite', [
     'title' => 'Tambah Artikel Knowledge Base | SAPA PPL',
     'welcome' => 'Tambah Artikel',
-    'breadcrumb' => '
-        <li class="breadcrumb-item"><a href="' . route('admin.knowledge-base') . '">Knowledge Base</a></li>
+    'breadcrumb' =>
+        '
+        <li class="breadcrumb-item"><a href="' .
+        route('admin.knowledge-base') .
+        '">Knowledge Base</a></li>
         <li class="breadcrumb-item active">Tambah Artikel</li>
-    '
+    ',
 ])
 
 @push('script-head')
@@ -13,80 +16,94 @@
 @endpush
 
 @section('content')
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Form Tambah Artikel Baru</h3>
-                    </div>
-                    <!-- /.card-header -->
-                    <form action="{{ route('admin.knowledge-base.store') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="title">Judul Artikel</label>
-                                <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" value="{{ old('title') }}" required>
-                                @error('title')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <div class="form-group">
-                                <label for="category_id">Kategori</label>
-                                <select class="form-control @error('category_id') is-invalid @enderror" id="category_id" name="category_id" required>
-                                    <option value="">Pilih Kategori</option>
-                                    @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                                            {{ $category->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('category_id')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <div class="form-group">
-                                <label for="featured_image">Featured Image</label>
-                                <input type="file" class="form-control-file @error('featured_image') is-invalid @enderror" id="featured_image" name="featured_image" accept="image/*">
-                                <div class="mt-2 d-none" id="featured_image_preview_wrap">
-                                    <img id="featured_image_preview" src="" alt="Featured Image Preview" class="img-thumbnail" style="max-width: 240px;">
-                                </div>
-                                <small class="form-text text-muted">Opsional. Format: JPG, PNG, GIF, atau WebP.</small>
-                                @error('featured_image')
-                                    <span class="invalid-feedback d-block" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <div class="form-group">
-                                <label for="content">Konten Artikel</label>
-                                <textarea id="summernote" name="content" class="form-control @error('content') is-invalid @enderror">{{ old('content') }}</textarea>
-                                @error('content')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <!-- /.card-body -->
-
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Simpan Artikel</button>
-                            <a href="{{ route('admin.knowledge-base') }}" class="btn btn-secondary">Batal</a>
-                        </div>
-                    </form>
-                </div>
-                <!-- /.card -->
-            </div>
-            <!-- /.col -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Form Tambah Artikel Baru</h3>
         </div>
-        <!-- /.row -->
+        <form action="{{ route('admin.knowledge-base.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="title">Judul Artikel</label>
+                    <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" value="{{ old('title') }}" required>
+                    @error('title')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <label for="category_id">Kategori</label>
+                    <select class="form-control @error('category_id') is-invalid @enderror" id="category_id" name="category_id" required>
+                        <option value="">Pilih Kategori</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('category_id')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <label for="featured_image">Featured Image</label>
+                    <input type="file" class="form-control-file @error('featured_image') is-invalid @enderror" id="featured_image" name="featured_image" accept="image/*">
+                    <div class="mt-2 d-none" id="featured_image_preview_wrap">
+                        <img id="featured_image_preview" src="" alt="Featured Image Preview" class="img-thumbnail" style="max-width: 240px;">
+                    </div>
+                    <small class="form-text text-muted">Opsional. Format: JPG, PNG, GIF, atau WebP.</small>
+                    @error('featured_image')
+                        <span class="invalid-feedback d-block" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <label for="content">Konten Artikel</label>
+                    <textarea id="summernote" name="content" class="form-control @error('content') is-invalid @enderror">{{ old('content') }}</textarea>
+                    @error('content')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Simpan Artikel</button>
+                <a href="{{ route('admin.knowledge-base') }}" class="btn btn-secondary">Batal</a>
+            </div>
+        </form>
     </div>
-    <!-- /.container-fluid -->
+    <!-- Video Insert Modal -->
+<div class="modal fade" id="kbVideoModal" tabindex="-1" role="dialog" aria-labelledby="kbVideoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="kbVideoModalLabel">Insert Video</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="video_url">Link Video (YouTube, Vimeo, Dailymotion, Youku)</label>
+                    <input type="text" id="video_url" class="form-control" placeholder="https://www.youtube.com/watch?v=...">
+                </div>
+                <div id="video_preview" class="mt-3" style="min-height:120px;">
+                    <!-- preview inserted here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                <button type="button" id="kbInsertVideoBtn" class="btn btn-primary">Insert Video</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('script-foot')
@@ -131,7 +148,9 @@
                         bindVideoToolbarButton();
                         // keep track of the current selection range so inserts happen at caret
                         $('#summernote').on('mouseup keyup focus', function() {
-                            try { $('#summernote').summernote('saveRange'); } catch (e) {}
+                            try {
+                                $('#summernote').summernote('saveRange');
+                            } catch (e) {}
                         });
                     },
                     onImageUpload: function(files) {
@@ -169,7 +188,9 @@
                     event.stopPropagation();
 
                     // save current range so we can restore it when inserting
-                    try { $('#summernote').summernote('saveRange'); } catch (e) {}
+                    try {
+                        $('#summernote').summernote('saveRange');
+                    } catch (e) {}
 
                     // Open modal to input video URL instead of prompt
                     $('#video_url').val('');
@@ -186,7 +207,9 @@
                     return;
                 }
 
-                try { $('#summernote').summernote('restoreRange'); } catch (e) {}
+                try {
+                    $('#summernote').summernote('restoreRange');
+                } catch (e) {}
                 $('#summernote').summernote('pasteHTML', embedHtml);
                 $('#video_url').val('');
             }
@@ -279,7 +302,9 @@
                     type: "POST",
                     success: function(response) {
                         if (response.type === 'video' && response.iframe) {
-                            try { $('#summernote').summernote('restoreRange'); } catch (e) {}
+                            try {
+                                $('#summernote').summernote('restoreRange');
+                            } catch (e) {}
                             $('#summernote').summernote('pasteHTML', response.iframe);
                         } else if (response.url) {
                             $('#summernote').summernote('insertImage', response.url);
@@ -326,7 +351,9 @@
                     return;
                 }
 
-                try { $('#summernote').summernote('restoreRange'); } catch (e) {}
+                try {
+                    $('#summernote').summernote('restoreRange');
+                } catch (e) {}
                 $('#summernote').summernote('pasteHTML', embedHtml);
                 $('#kbVideoModal').modal('hide');
                 $('#video_url').val('');
@@ -374,17 +401,41 @@
                         const $wrapper = $selectedVideo.closest('.embed-responsive');
 
                         if (act === 'align-left') {
-                            $wrapper.css({display: 'block', margin: '0', float: 'left', 'margin-right': '1rem'});
+                            $wrapper.css({
+                                display: 'block',
+                                margin: '0',
+                                float: 'left',
+                                'margin-right': '1rem'
+                            });
                         } else if (act === 'align-right') {
-                            $wrapper.css({display: 'block', margin: '0', float: 'right', 'margin-left': '1rem'});
+                            $wrapper.css({
+                                display: 'block',
+                                margin: '0',
+                                float: 'right',
+                                'margin-left': '1rem'
+                            });
                         } else if (act === 'align-center') {
-                            $wrapper.css({display: 'block', margin: '0 auto', float: 'none'});
+                            $wrapper.css({
+                                display: 'block',
+                                margin: '0 auto',
+                                float: 'none'
+                            });
                         } else if (act === 'w-100') {
-                            $selectedVideo.css({width: '100%', height: 'auto'});
-                            $wrapper.css({'max-width': '100%'});
+                            $selectedVideo.css({
+                                width: '100%',
+                                height: 'auto'
+                            });
+                            $wrapper.css({
+                                'max-width': '100%'
+                            });
                         } else if (act === 'w-50') {
-                            $selectedVideo.css({width: '100%', height: 'auto'});
-                            $wrapper.css({'max-width': '50%'});
+                            $selectedVideo.css({
+                                width: '100%',
+                                height: 'auto'
+                            });
+                            $wrapper.css({
+                                'max-width': '50%'
+                            });
                         } else if (act === 'edit') {
                             // open modal with current src
                             const src = $selectedVideo.attr('src') || '';
@@ -409,11 +460,16 @@
                     const top = rect.top + scrollTop - pop.outerHeight() - 8;
                     const left = rect.left + (rect.width / 2) - (pop.outerWidth() / 2);
 
-                    pop.css({top: top + 'px', left: Math.max(8, left) + 'px'}).addClass('show').show();
+                    pop.css({
+                        top: top + 'px',
+                        left: Math.max(8, left) + 'px'
+                    }).addClass('show').show();
 
                     // mark as just opened to ignore the immediate mouseup/click that follows
                     popoverJustOpened = true;
-                    setTimeout(function() { popoverJustOpened = false; }, 300);
+                    setTimeout(function() {
+                        popoverJustOpened = false;
+                    }, 300);
                 }
 
                 function hidePopover() {
@@ -475,29 +531,3 @@
     </script>
 @endpush
 
-<!-- Video Insert Modal -->
-<div class="modal fade" id="kbVideoModal" tabindex="-1" role="dialog" aria-labelledby="kbVideoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="kbVideoModalLabel">Insert Video</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="video_url">Link Video (YouTube, Vimeo, Dailymotion, Youku)</label>
-                    <input type="text" id="video_url" class="form-control" placeholder="https://www.youtube.com/watch?v=...">
-                </div>
-                <div id="video_preview" class="mt-3" style="min-height:120px;">
-                    <!-- preview inserted here -->
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                <button type="button" id="kbInsertVideoBtn" class="btn btn-primary">Insert Video</button>
-            </div>
-        </div>
-    </div>
-</div>

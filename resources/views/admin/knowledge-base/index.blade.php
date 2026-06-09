@@ -30,7 +30,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Featured Image</th>
+                        <th>Gambar</th>
                         <th>Judul Artikel</th>
                         <th>Kategori</th>
                         <th>Penulis</th>

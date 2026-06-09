@@ -6,7 +6,7 @@
 ])
 
 @push('script-head')
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css" />
+    {{-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css" /> --}}
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.1/css/dataTables.bootstrap4.css" />
 @endpush
 
@@ -22,13 +22,41 @@
     </div>
 
     <div class="card">
-        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-            <h3 class="card-title">Pemeliharaan Preventif Selesai</h3>
-            <button class="btn btn-success btn-sm"style="margin-left: auto;" onclick="printPreventifReport()">
-                <i class="fa fa-print"></i> Cetak PDF
-            </button>
+        <div class="card-header d-flex bd-highlight">
+            <h3 class="card-title mr-auto p-2 bd-highlight">Riwayat Pemeliharaan Preventif</h3>
+            <div class="bd-highlight mr-2">
+                <button class="btn btn-success btn-sm"style="margin-left: auto;" onclick="printPreventifReport()">
+                    <i class="fa fa-print"></i> Cetak PDF
+                </button>
+            </div>
         </div>
         <div class="card-body">
+            <div class="row g-2 mb-3 align-items-end">
+                <div class="col-12 col-md-3">
+                    <label for="filter_classification" class="form-label">Filter Klasifikasi</label>
+                    <select id="filter_classification" class="form-control form-control-sm w-100">
+                        <option value="">Semua Klasifikasi</option>
+                        <option value="Keluhan">TIK</option>
+                        <option value="Permintaan">Rumah Tangga</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-3">
+                    <label for="filter_date" class="form-label">Filter Waktu</label>
+                    <div class="bd-highlight">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="far fa-calendar-alt"></i>
+                                </span>
+                            </div>
+                            <input type="text" name="filter_date" class="form-control form-control-sm" id="reservation">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
             <div class="table-responsive">
                 <table id="completedPreventiveTable" class="table table-bordered table-hover" style="width:100%">
                     <thead>
@@ -197,11 +225,17 @@
                 if ($.fn.DataTable) {
                     window.completedPreventiveTable = $('#completedPreventiveTable').DataTable({
                         processing: true,
-                        serverSide: false,
+                        serverSide: true,
                         responsive: true,
                         ajax: {
                             url: '{{ route('admin.pemeliharaan-preventif.completed-data-table') }}',
-                            dataSrc: ''
+                            data: function(d) {
+                                var picker = $('#reservation').data('daterangepicker');
+                                if ($('#reservation').val()) {
+                                    d.start_date = picker.startDate.format('YYYY-MM-DD');
+                                    d.end_date = picker.endDate.format('YYYY-MM-DD');
+                                }
+                            }
                         },
                         columns: [{
                                 data: null,
@@ -254,10 +288,10 @@
                             }
                         ],
                         order: [
-                            [5, 'desc']
+                            [1, 'desc']
                         ],
                         language: {
-                            emptyTable: 'Tidak ada data pemeliharaan selesai.',
+                            emptyTable: 'Tidak ada data.',
                             processing: 'Memuat...',
                             search: 'Cari:',
                             lengthMenu: 'Tampilkan _MENU_ baris',
@@ -270,6 +304,28 @@
                         }
                     });
                 }
+            });
+        </script>
+
+        <script>
+            //Date range picker
+            $('#reservation').daterangepicker({
+                opens: 'left',
+                locale: {
+                    format: 'DD/MM/YYYY',
+                    cancelLabel: 'Clear'
+                },
+                autoUpdateInput: false
+            });
+
+            $('#reservation').on('apply.daterangepicker', function(ev, picker) {
+                $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+                window.completedPreventiveTable.draw();
+            });
+
+            $('#reservation').on('cancel.daterangepicker', function(ev, picker) {
+                $(this).val('');
+                window.completedPreventiveTable.draw();
             });
         </script>
 

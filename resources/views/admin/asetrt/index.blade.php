@@ -115,6 +115,18 @@
                                     'rt';
                             }
                         },
+                        language: {
+                            emptyTable: 'Tidak ada data.',
+                            processing: 'Memuat...',
+                            search: 'Cari:',
+                            lengthMenu: 'Tampilkan _MENU_ baris',
+                            info: 'Menampilkan _START_ sampai _END_ dari _TOTAL_ entri',
+                            infoEmpty: 'Menampilkan 0 sampai 0 dari 0 entri',
+                            paginate: {
+                                previous: 'Sebelumnya',
+                                next: 'Berikutnya'
+                            }
+                        },
                         columns: [{
                                 data: 'tag',
                                 name: 'tag'

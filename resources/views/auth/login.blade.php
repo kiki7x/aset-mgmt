@@ -1,7 +1,7 @@
 @extends('layouts.auth', ['title' => 'Login - SAPA PPL'])
 
 @section('content')
-    <div class="col-md-12 col-lg-6 text-center">
+    <div class="col-lg-6 col-md-10 col-sm-10 text-center">
         <div class="card border-0 shadow rounded">
             <div class="card-body">
                 @if (session('status'))
@@ -22,8 +22,8 @@
                 <form action="{{ route('login.post') }}" method="POST">
                     @csrf
                     <div class="form-group">
-                        <label class="font-weight-bold text-uppercase">Email address</label>
-                        <input type="email" name="email" value="{{ old('email') }}" class="form-control @error('email') is-invalid @enderror" placeholder="Masukkan Alamat Email">
+                        <label class="font-weight-bold text-uppercase mb-n2">Email address</label>
+                        <input type="email" name="email" value="{{ old('email') }}" class="form-control text-center @error('email') is-invalid @enderror" placeholder="Masukkan Alamat Email">
                         @error('email')
                             <div class="alert alert-danger mt-2">
                                 {{ $message }}
@@ -31,8 +31,8 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label class="font-weight-bold text-uppercase">Password</label>
-                        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="Masukkan Password">
+                        <label class="font-weight-bold text-uppercase mb-n2">Password</label>
+                        <input type="password" name="password" class="form-control text-center @error('password') is-invalid @enderror" placeholder="Masukkan Password">
                         @error('password')
                             <div class="alert alert-danger mt-2">
                                 {{ $message }}
@@ -40,9 +40,9 @@
                         @enderror
                     </div>
 
-                    <div class="form-group">
-                        <label class="font-weight-bold text-uppercase d-flex align-items-start">Verifikasi Captcha</label>
-                        <div class="d-flex align-items-center mb-2">
+                    <div class="form-group text-center">
+                        <label class="font-weight-bold text-uppercase w-100">Verifikasi Captcha</label>
+                        <div class="d-flex align-items-center justify-content-center mb-2">
                             <img
                                 id="login-captcha-image"
                                 src="{{ route('captcha.image', ['for' => 'login']) }}"
@@ -52,7 +52,7 @@
                                 <i class="fas fa-sync-alt"></i>
                             </button>
                         </div>
-                        <input type="text" name="captcha" id="login-captcha" class="form-control @error('captcha') is-invalid @enderror" placeholder="Captcha" maxlength="6" autocomplete="off" style="text-transform: uppercase;">
+                        <input type="text" name="captcha" id="login-captcha" class="form-control w-100 text-center @error('captcha') is-invalid @enderror" placeholder="Captcha" maxlength="6" autocomplete="off" style="text-transform: uppercase;">
                         @error('captcha')
                             <div class="alert alert-danger mt-2">
                                 {{ $message }}

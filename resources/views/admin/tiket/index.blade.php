@@ -51,7 +51,7 @@
         <div class="card-body">
             <div class="row g-2 mb-3 align-items-end">
                 <div class="col-12 col-md-3">
-                    <label for="filter_issuetype" class="form-label mb-1">Filter Jenis</label>
+                    <label for="filter_issuetype" class="form-label mb-n1">Filter Jenis</label>
                     <select id="filter_issuetype" class="form-control form-control-sm">
                         <option value="">Semua Jenis</option>
                         <option value="Keluhan">Keluhan</option>
@@ -59,7 +59,7 @@
                     </select>
                 </div>
                 <div class="col-12 col-md-3">
-                    <label for="filter_department" class="form-label mb-1">Filter Bidang</label>
+                    <label for="filter_department" class="form-label mb-n1">Filter Bidang</label>
                     <select id="filter_department" class="form-control form-control-sm">
                         <option value="">Semua Bidang</option>
                         <option value="TIK">TIK</option>
@@ -67,6 +67,9 @@
                     </select>
                 </div>
             </div>
+
+            <hr>
+            
             <div class="table-responsive">
                 <table id="tablePemeliharaan" class="table table-bordered table-striped table-hover table-sm">
                     <thead>
@@ -626,7 +629,19 @@
                             return btn.outerHTML;
                         }
                     }
-                ]
+                ],
+                language: {
+                            emptyTable: 'Tidak ada data pemeliharaan selesai.',
+                            processing: 'Memuat...',
+                            search: 'Cari:',
+                            lengthMenu: 'Tampilkan _MENU_ baris',
+                            info: 'Menampilkan _START_ sampai _END_ dari _TOTAL_ entri',
+                            infoEmpty: 'Menampilkan 0 sampai 0 dari 0 entri',
+                            paginate: {
+                                previous: 'Sebelumnya',
+                                next: 'Berikutnya'
+                            }
+                        }
             });
 
             $('#filter_issuetype, #filter_department').on('change', function() {

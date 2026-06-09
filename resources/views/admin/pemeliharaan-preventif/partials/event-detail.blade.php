@@ -3,7 +3,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="event-title">Detail Pemeliharaan</h5>
+                <h5 class="modal-title" id="event-title">Detail Riwayat Pemeliharaan</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -58,7 +58,7 @@
 
 <script>
     function showModalEventDetail(historyData) {
-        $('#event-title').text("Detail Pemeliharaan");
+        $('#event-title').text("Detail Riwayat Pemeliharaan");
         // Isi konten modal secara dinamis
         $('#eventTitle').text(historyData.title);
         $('#eventAsset').text(historyData.description || 'Tidak ada aset'); // Tampilkan aset jika ada, atau teks default jika tidak ada
