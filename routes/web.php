@@ -214,6 +214,10 @@ Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function ()
     Route::middleware(['role:superadmin|admin_tik|admin_rt|user', 'readonly_user'])->group(function () {
         Route::get('/laporan', [App\Http\Controllers\LaporanController::class, 'index'])->name('admin.laporan');
     });
+    // Route Logs
+    Route::get('/logs', [App\Http\Controllers\LogsController::class, 'index'])->name('admin.logs');
+    // Route Reminder
+    Route::get('/reminder', [App\Http\Controllers\ReminderController::class, 'index'])->name('admin.reminder');
 
     // Route Settings
     Route::middleware(['role:superadmin|admin_tik|admin_rt|user', 'readonly_user'])->group(function () {
@@ -233,8 +237,6 @@ Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function ()
         Route::post('settings/import/storelokasi', [App\Http\Controllers\ImportController::class, 'storeLokasi'])->name('admin.settings.import.storelokasi');
         Route::post('settings/import/storeasettik', [App\Http\Controllers\ImportController::class, 'storeAsetTik'])->name('admin.settings.import.storeasettik');
         Route::post('settings/import/storeasetrt', [App\Http\Controllers\ImportController::class, 'storeAsetRt'])->name('admin.settings.import.storeasetrt');
-        // Route Logs
-        Route::get('settings/logs', [App\Http\Controllers\LogsController::class, 'index'])->name('admin.settings.logs');
     });
 
     // Route Notifikasi

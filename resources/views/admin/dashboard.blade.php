@@ -139,7 +139,7 @@
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="fas fa-bullhorn"></i>
-                        Tiket Helpdesk Terbaru
+                        Tiket Terbaru
                     </h3>
                 </div>
                 <!-- /.card-header -->

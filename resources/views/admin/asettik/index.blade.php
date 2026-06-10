@@ -52,7 +52,7 @@
                             <th>Nama Aset</th>
                             <th>Kategori</th>
                             <th>Tipe/Model</th>
-                            <th>Pengguna</th>
+                            <th>Foto</th>
                             <th>Perubahan Terakhir</th>
                             <th>Opsi</th>
                         </tr>
@@ -128,8 +128,14 @@
                         name: 'model'
                     },
                     {
-                        data: 'user',
-                        name: 'user'
+                        data: null,
+                        name: 'image',
+                        render: function(data) {
+                            if (data.image && data.image !== '-') {
+                                        return `<img src="{{ asset('storage') }}/${data.image}" alt="Foto Aset" class="img-fluid" style="max-width: 100px;"/>`;
+                                    }
+                                    return '-';
+                        }
                     },
                     {
                         data: null,

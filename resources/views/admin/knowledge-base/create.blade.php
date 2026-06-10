@@ -49,7 +49,7 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="featured_image">Featured Image</label>
+                    <label for="featured_image">Gambar Depan</label>
                     <input type="file" class="form-control-file @error('featured_image') is-invalid @enderror" id="featured_image" name="featured_image" accept="image/*">
                     <div class="mt-2 d-none" id="featured_image_preview_wrap">
                         <img id="featured_image_preview" src="" alt="Featured Image Preview" class="img-thumbnail" style="max-width: 240px;">
@@ -72,8 +72,8 @@
                 </div>
             </div>
 
-            <div class="card-footer">
-                <button type="submit" class="btn btn-primary">Simpan Artikel</button>
+            <div class="card-footer d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary mr-2">Simpan</button>
                 <a href="{{ route('admin.knowledge-base') }}" class="btn btn-secondary">Batal</a>
             </div>
         </form>

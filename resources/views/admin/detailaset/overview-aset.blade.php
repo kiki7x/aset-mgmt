@@ -31,12 +31,16 @@
                                             <td>{{ $asset->tag ?? 'N/A' }}</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>Name:</strong></td>
-                                            <td>{{ $asset->name ?? 'N/A' }}</td>
-                                        </tr>
-                                        <tr>
                                             <td><strong>Lokasi:</strong></td>
                                             <td>{{ $asset->location->name ?? 'N/A' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Pengguna Aset:</strong></td>
+                                            <td>{{ $asset->user->username ?? 'N/A' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Name:</strong></td>
+                                            <td>{{ $asset->name ?? 'N/A' }}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Merk/Pabrikan:</strong></td>
@@ -57,10 +61,6 @@
                                         <tr>
                                             <td><strong>Pengelola Aset:</strong></td>
                                             <td>{{ $asset->admin->username ?? 'N/A' }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Pengguna Aset:</strong></td>
-                                            <td>{{ $asset->user->username ?? 'N/A' }}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Waktu Perolehan:</strong></td>

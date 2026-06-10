@@ -90,21 +90,21 @@
                     <span id="error-status_id" class="text-danger small"></span>
                 </div>
                 <div class="form-group col-md-4">
-                    <label for="useraset">User Aset</label>
+                    <label for="useraset">Pengguna Aset</label>
                     <select name="user_id" id="useraset" class="form-control select2">
                         <option value="">Pilih...</option>
                         @foreach ($users as $user)
-                            <option value="{{ $user->id }}" {{ isset($asset->user_id) && $asset->user_id == $user->id ? 'selected' : '' }}>{{ $user->username }}</option>
+                            <option value="{{ $user->id }}" {{ isset($asset->user_id) && $asset->user_id == $user->id ? 'selected' : '' }}>{{ $user->fullname }}</option>
                         @endforeach
                     </select>
                     <span id="error-user_id" class="text-danger small"></span>
                 </div>
                 <div class="form-group col-md-4">
-                    <label for="adminaset">Admin Aset</label>
+                    <label for="adminaset">Pengelola Aset</label>
                     <select name="admin_id" id="adminaset" class="form-control select2">
                         <option value="">Pilih...</option>
                         @foreach ($users as $user)
-                            <option value="{{ $user->id }}" {{ isset($asset->admin_id) && $asset->admin_id == $user->id ? 'selected' : '' }}>{{ $user->username }}</option>
+                            <option value="{{ $user->id }}" {{ isset($asset->admin_id) && $asset->admin_id == $user->id ? 'selected' : '' }}>{{ $user->fullname }}</option>
                         @endforeach
                     </select>
                     <span id="error-admin_id" class="text-danger small"></span>

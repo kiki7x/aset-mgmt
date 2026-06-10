@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-class LogsController extends Controller
+class ReminderController extends Controller
 {
     public function index(): View
     {
-        return view('admin.logs.index');
+        return view('admin.reminder.index');
     }
 }

@@ -125,8 +125,8 @@ class AssetController extends Controller
                 <span class="badge" style="background-color: ' . e($asset->status->color ?? '#999') . '; color: white;">' . e($asset->status->name ?? '-') . '</span> <br>
                 <span class="text-muted">Lokasi: </span>
                 ' . e($asset->location->name ?? '-') . '<br>
-                <span class="text-muted">Dikelola oleh: </span>
-                ' . e($asset->admin->fullname ?? '-') . '<br>
+                <span class="text-muted">Pengguna: </span>
+                ' . e($asset->user->fullname ?? '-') . '<br>
                 <span class="text-muted">Tahun Perolehan: </span>' . e( Carbon::parse($asset->purchase_date)->format('Y')) . '<br>
             ';
             })
@@ -139,8 +139,8 @@ class AssetController extends Controller
             ->addColumn('model', function ($asset) {
                 return e($asset->model->name ?? '-');
             })
-            ->addColumn('user', function ($asset) {
-                return e($asset->user->username ?? '-');
+            ->addColumn('image', function ($asset) {
+                return e($asset->image ?? '-');
             })
             ->addColumn('timestamp', function ($asset) {
                 return $asset->updated_at;
@@ -170,7 +170,7 @@ class AssetController extends Controller
                 </div>
             ';
             })
-            ->rawColumns(['tag', 'name', 'category', 'model', 'user', 'timestamp', 'action'])
+            ->rawColumns(['tag', 'name', 'category', 'model', 'image', 'timestamp', 'action'])
             ->make(true);
     }
 

@@ -194,6 +194,17 @@ class UsersSeeder extends Seeder
                 'password' => Hash::make('password'),
             ],
             [
+                'username' => 'tah',
+                'email' => 'tah@ppl.ac.id',
+                'nickname' => 'Prodi TAH',
+                'fullname' => 'Prodi TAH',
+                'role_to_assign' => 'user',
+                'client_id' => '1',
+                'title' => 'Prodi TAH',
+                'mobile' => '087777777777',
+                'password' => Hash::make('password'),
+            ],
+            [
                 'username' => 'spm',
                 'email' => 'spm@ppl.ac.id',
                 'nickname' => 'SPM',

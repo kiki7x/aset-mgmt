@@ -204,11 +204,23 @@
                       </a>
                   </li>
                   <li class="nav-item" data-toggle="tooltip" title="coming soon..." data-placement="top">
-                      <a href="{{ route('admin.laporan') }}" class="nav-link {{ request()->is('admin/laporan') ? 'active' : '' }}">
-                          <i class="nav-icon fa fa-bar-chart"></i>
-                          <p>Laporan</p>
-                      </a>
-                  </li>
+                      <a href="{{ route('admin.logs') }}" class="nav-link {{ request()->is('admin/settings/logs') ? 'active' : '' }}">
+                          <i class="nav-icon fa-solid fa-clock-rotate-left"></i>
+                          <p>Logs</p>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" title="coming soon..." data-placement="top">
+                        <a href="{{ route('admin.reminder') }}" class="nav-link {{ request()->is('admin/settings/logs') ? 'active' : '' }}">
+                            <i class="nav-icon fa-regular fa-bell"></i>
+                            <p>Reminder</p>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" title="coming soon..." data-placement="top">
+                        <a href="{{ route('admin.laporan') }}" class="nav-link {{ request()->is('admin/laporan') ? 'active' : '' }}">
+                            <i class="nav-icon fa fa-bar-chart"></i>
+                            <p>Laporan</p>
+                        </a>
+                    </li>
                   <li class="nav-header">SETTING</li>
                   <li class="nav-item {{ request()->is('admin/settings*') ? 'menu-open' : '' }}">
                       <a href="#" class="nav-link {{ request()->is('admin/setting*') ? 'active' : '' }}">
@@ -229,12 +241,6 @@
                               <a href="{{ route('admin.settings.import') }}" class="nav-link {{ request()->is('admin/settings/import') ? 'active' : '' }}">
                                   <i class="nav-icon fa-solid fa-cloud-arrow-up"></i>
                                   <p>Import</p>
-                              </a>
-                          </li>
-                          <li class="nav-item">
-                              <a href="{{ route('admin.settings.logs') }}" class="nav-link {{ request()->is('admin/settings/logs') ? 'active' : '' }}">
-                                  <i class="nav-icon fa-solid fa-clock-rotate-left"></i>
-                                  <p>Logs</p>
                               </a>
                           </li>
                       </ul>

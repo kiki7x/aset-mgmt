@@ -1,5 +1,4 @@
-<div class="modal fade" data-backdrop="static" tabindex="-1" id="qrCodeModal" role="dialog"
-    aria-labelledby="qrCodeModalLabel" aria-hidden="true">
+<div class="modal fade" data-backdrop="static" tabindex="-1" id="qrCodeModal" role="dialog" aria-labelledby="qrCodeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
         <div class="modal-content text-center">
             <div class="modal-header">
@@ -12,6 +11,7 @@
                 <div id="qrCodeName" class="d-flex justify-content-center mb-2"></div>
                 <div id="qrcode" class="d-flex justify-content-center"></div>
                 <p class="mt-2" id="qrTagLabel"></p>
+                <p><u>sapa.ppl.ac.id</u></p>
             </div>
             <div class="modal-footer">
                 <button type="button" id="btnPrintQrCode" class="btn btn-primary">Print</button>
@@ -43,28 +43,46 @@
             }
 
             function printQrCode() {
-                const qrContent = document.getElementById('qrCodeContainer').innerHTML;
+                const qrCodeName = document.getElementById('qrCodeName').innerHTML;
+                const qrcode = document.getElementById('qrcode').innerHTML;
+                const qrTagLabel = document.getElementById('qrTagLabel').innerHTML;
+
                 const printWindow = window.open('', '', 'width=800,height=800');
                 printWindow.document.write(
                     `<html>
-        <head>
-            <title>Cetak QR Aset</title>
-            <style>
-                body {
-                    display: flex; /* Menggunakan flexbox untuk tata letak */
-                    flex-direction: column;
-                    justify-content: center; /* Pusatkan vertikal */
-                    align-items: center; /* Pusatkan horizontal */
-                    min-height: 100vh; /* Pastikan body setinggi viewport */
-                    margin: 0; /* Hilangkan margin default body */
-                }
-            </style>
-        </head>
-        <body>
-            <h3>Cetak QR Aset</h3>
-            ${qrContent}
-        </body>
-        </html>`);
+                    <head>
+                        <title>Cetak QR Aset</title>
+                        <style>
+                            body {
+                            display: flex; /* Menggunakan flexbox untuk tata letak */
+                            flex-direction: column;
+                            justify-content: center; /* Pusatkan vertikal */
+                            align-items: center; /* Pusatkan horizontal */
+                            min-height: 100vh; /* Pastikan body setinggi viewport */
+                            margin: 0; /* Hilangkan margin default body */
+                            }
+                            .asset-name {
+                                max-width: 250px;
+                                word-wrap: break-word;
+                                text-align: center;
+                            }
+                            .homelink {
+                                text-decoration: underline;
+                                margin-top: 5px;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="asset-name">${qrCodeName}</div>
+                        <br>
+                        ${qrcode}
+                        <br>
+                        ${qrTagLabel}
+                        <br>
+                        <div class="homelink">sapa.ppl.ac.id</div>
+                    </body>
+                    </html>`
+                );
                 printWindow.document.close();
                 printWindow.focus();
                 printWindow.print();

@@ -12,8 +12,8 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-            <h3 class="card-title">Kalender Pemeliharaan</h3>
+        <div class="card-header d-flex bd-highlight">
+            <h3 class="card-title font-weight-bold mr-auto p-2 bd-highlight"><i class="fa-regular fa-calendar"></i> Kalender Pemeliharaan</h3>
         </div>
         <div class="card-body">
             <!-- THE CALENDAR -->
@@ -23,7 +23,7 @@
 
     <div class="card">
         <div class="card-header d-flex bd-highlight">
-            <h3 class="card-title mr-auto p-2 bd-highlight">Riwayat Pemeliharaan Preventif</h3>
+            <h3 class="card-title font-weight-bold mr-auto p-2 bd-highlight"><i class="fa-regular fa-calendar-check"></i> Riwayat Pemeliharaan Preventif</h3>
             <div class="bd-highlight mr-2">
                 <button class="btn btn-success btn-sm"style="margin-left: auto;" onclick="printPreventifReport()">
                     <i class="fa fa-print"></i> Cetak PDF

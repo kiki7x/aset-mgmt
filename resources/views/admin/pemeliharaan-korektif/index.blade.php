@@ -19,7 +19,7 @@
 @section('content')
     <div class="card">
         <div class="card-header d-flex bd-highlight">
-            <h3 class="card-title font-weight-bold mr-auto p-2 bd-highlight"><i class="fa-solid fa-list-check"></i> Pemeliharaan Korektif <span class="badge bg-info text-light">{{ $totalPemeliharaan }} </span></h3>
+            <h3 class="card-title font-weight-bold mr-auto p-2 bd-highlight"><i class="fa-solid fa-wrench"></i> Pemeliharaan Korektif <span class="badge bg-info text-light">{{ $totalPemeliharaan }} </span></h3>
                 <div>
                 <button class="btn btn-outline-primary bd-highlight mr-2" onclick="openModalCreate()" data-toggle="tooltip" data-placement="top" title="Tambah Data" data-crud="true"><i class="fa-regular fa-plus"></i></button>
             </div>
@@ -75,7 +75,7 @@
 
     <div class="card">
         <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-            <h3 class="card-title font-weight-bold"><i class="fa-solid fa-list-check"></i> Riwayat Pemeliharaan Korektif <span class="badge end-0 mr-3 bg-info text-light"> {{ $totalPemeliharaanSelesai }} </span></h3>
+            <h3 class="card-title font-weight-bold"><i class="fa-solid fa-clipboard-check"></i> Riwayat Pemeliharaan Korektif <span class="badge end-0 mr-3 bg-info text-light"> {{ $totalPemeliharaanSelesai }} </span></h3>
             {{-- <button class="btn btn-outline-primary" onclick="openModalCreate()" style="margin-left: auto;" data-toggle="tooltip" data-placement="top" title="Tambah Data"><i class="fa-regular fa-plus"></i></button> --}}
         </div>
         <!-- /.card-header -->
