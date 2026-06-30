@@ -76,7 +76,6 @@
                         <div class="form-group col-md-4">
                             <label for="location_id">Penempatan <span class="text-danger">*</span></label>
                             <select name="location_id" id="location_id" class="form-control select2">
-                                <option value="">None</option>
                                 @foreach ($locations as $location)
                                     <option value="{{ $location->id }}">{{ $location->name }}</option>
                                 @endforeach
@@ -88,7 +87,6 @@
                         <div class="form-group col-md-4">
                             <label for="status_id">Status <span class="text-danger">*</span></label>
                             <select name="status_id" id="status_id" class="form-control select2">
-                                <option value="">None</option>
                                 @foreach ($statuses as $status)
                                     <option value="{{ $status->id }}">{{ $status->name }}</option>
                                 @endforeach
