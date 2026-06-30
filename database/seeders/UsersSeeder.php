@@ -131,7 +131,7 @@ class UsersSeeder extends Seeder
                 'username' => 'ramli',
                 'email' => 'ramli@ppl.ac.id',
                 'nickname' => 'ramli',
-                'fullname' => 'Ramli Morales',
+                'fullname' => 'Ramli',
                 'role_to_assign' => 'staf_driver',
                 'client_id' => '1',
                 'title' => 'staf driver',
