@@ -36,8 +36,8 @@
                     <label for="filter_classification" class="form-label">Filter Klasifikasi</label>
                     <select id="filter_classification" class="form-control form-control-sm w-100">
                         <option value="">Semua Klasifikasi</option>
-                        <option value="Keluhan">TIK</option>
-                        <option value="Permintaan">Rumah Tangga</option>
+                        <option value="TIK">TIK</option>
+                        <option value="Kendaraan,Mesin/Elektronik">Rumah Tangga</option>
                     </select>
                 </div>
                 <div class="col-12 col-md-3">
@@ -230,6 +230,7 @@
                         ajax: {
                             url: '{{ route('admin.pemeliharaan-preventif.completed-data-table') }}',
                             data: function(d) {
+                                d.classification = $('#filter_classification').val();
                                 var picker = $('#reservation').data('daterangepicker');
                                 if ($('#reservation').val()) {
                                     d.start_date = picker.startDate.format('YYYY-MM-DD');
@@ -327,6 +328,10 @@
                 $(this).val('');
                 window.completedPreventiveTable.draw();
             });
+
+            $('#filter_classification').on('change', function() {
+                window.completedPreventiveTable.draw();
+            });
         </script>
 
         <script>
@@ -336,6 +341,7 @@
                 }
 
                 let search = completedPreventiveTable.search() || '';
+                let classification = $('#filter_classification').val() || '';
                 // let issuetype = $('#filter_issuetype').val() || '';
                 // let department = $('#filter_department').val() || '';
                 let url = "{{ route('admin.pemeliharaan-preventif.print') }}";
@@ -348,6 +354,10 @@
 
                 if (search) {
                     queryParts.push('search=' + encodeURIComponent(search));
+                }
+
+                if (classification) {
+                    queryParts.push('classification=' + encodeURIComponent(classification));
                 }
 
                 // if (issuetype) {

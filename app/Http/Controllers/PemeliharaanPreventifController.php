@@ -105,6 +105,17 @@ class PemeliharaanPreventifController extends Controller
             }
         }
 
+        $classification = trim((string) $request->input('classification', ''));
+        if ($classification !== '') {
+            $classifications = array_filter(array_map('trim', explode(',', $classification)));
+
+            if (!empty($classifications)) {
+                $query->whereHas('maintenance_schedule.asset.classification', function ($classificationQuery) use ($classifications) {
+                    $classificationQuery->whereIn('name', $classifications);
+                });
+            }
+        }
+
         return DataTables::of($query)
             ->addColumn('classification_name', function ($history) {
                 return $history->maintenance_schedule->asset->classification->name ?? null;
@@ -260,17 +271,48 @@ class PemeliharaanPreventifController extends Controller
     {
         $search = trim($request->query('search', ''));
 
-        $pemeliharaanpreventif = \App\Models\MaintenancesModel::with('maintenance_schedule.asset', 'pic')
-        // hanya yang berisi nilai maintenance_schedule_id
-        ->whereNotNull('maintenance_schedule_id')
-        ->get()
-        ->map(function ($preventif) {
+        $classification = trim($request->query('classification', ''));
+
+        $query = \App\Models\MaintenancesModel::with('maintenance_schedule.asset.classification', 'pic')
+            ->whereNotNull('maintenance_schedule_id');
+
+        if ($classification !== '') {
+            $classifications = array_filter(array_map('trim', explode(',', $classification)));
+
+            if (!empty($classifications)) {
+                $query->whereHas('maintenance_schedule.asset.classification', function ($classificationQuery) use ($classifications) {
+                    $classificationQuery->whereIn('name', $classifications);
+                });
+            }
+        }
+
+        if ($search !== '') {
+            $query->where(function ($searchQuery) use ($search) {
+                $searchQuery->where('period', 'like', "%{$search}%")
+                    ->orWhere('name', 'like', "%{$search}%")
+                    ->orWhere('cost', 'like', "%{$search}%")
+                    ->orWhere('status', 'like', "%{$search}%")
+                    ->orWhere('notes', 'like', "%{$search}%")
+                    ->orWhere('attachment_link', 'like', "%{$search}%")
+                    ->orWhereRaw("DATE_FORMAT(created_at, '%d %b %Y') LIKE ?", ["%{$search}%"])
+                    ->orWhereHas('pic', function ($picQuery) use ($search) {
+                        $picQuery->where('fullname', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('maintenance_schedule.asset', function ($assetQuery) use ($search) {
+                        $assetQuery->where('tag', 'like', "%{$search}%")
+                            ->orWhere('name', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        $pemeliharaanpreventif = $query->get()->map(function ($preventif) {
             return [
                 'id' => $preventif->id,
                 'period' => $preventif->period ? Carbon::parse($preventif->period)->format('d M Y') : '-',
                 'name' => $preventif->name,
                 'asset_tag' => optional($preventif->maintenance_schedule->asset)->tag ?? '-',
                 'asset_name' => optional($preventif->maintenance_schedule->asset)->name ?? '-',
+                'classification_name' => optional(optional($preventif->maintenance_schedule->asset)->classification)->name ?? '-',
                 'pic_name' => optional($preventif->pic)->fullname ?? '-',
                 // 'cost' => $preventif->cost !== null ? number_format($preventif->cost, 0, ',', '.') : '-',
                 'cost' => $preventif->cost !== null ? 'Rp ' . number_format($preventif->cost, 0, ',', '.') : '-',
@@ -279,23 +321,6 @@ class PemeliharaanPreventifController extends Controller
                 'attachment_link' => $preventif->attachment_link,
             ];
         });
-
-        // dd($pemeliharaanpreventif);
-
-        if ($search !== '') {
-            $pemeliharaanpreventif
-                ->where(function ($query) use ($search) {
-                    $query->where('period', 'like', "%{$search}%")
-                        ->orWhere('name', 'like', "%{$search}%")
-                        ->orWhere('pic_id', 'like', "%{$search}%")
-                        ->orWhere('asset_tag', 'like', "%{$search}%")
-                        ->orWhere('asset_name', 'like', "%{$search}%")
-                        ->orWhere('cost', 'like', "%{$search}%")
-                        ->orWhere('status', 'like', "%{$search}%")
-                        ->orWhereRaw("DATE_FORMAT(created_at, '%d %b %Y') LIKE ?", ["%{$search}%"]);
-                });
-        }
-        // dd($pemeliharaanpreventif);
 
         return view('admin.pemeliharaan-preventif.print', [
             'search' => $search,
