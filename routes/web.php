@@ -116,9 +116,15 @@ Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function ()
         Route::get('/license/next-tag', [App\Http\Controllers\LicensesController::class, 'nextTag'])->name('admin.license.next_tag');
         Route::get('/license/get_license', [App\Http\Controllers\LicensesController::class, 'getData'])->name('admin.license.get_license');
         Route::post('/license/store', [App\Http\Controllers\LicensesController::class, 'store'])->name('admin.license.store');
-        Route::get('/license/edit/{id}', [App\Http\Controllers\LicensesController::class, 'edit'])->name('admin.license.edit');
+        Route::get('/license/{id}/overview', [App\Http\Controllers\LicensesController::class, 'overview'])->name('admin.license.overview');
+        Route::get('/license/{id}/edit', [App\Http\Controllers\LicensesController::class, 'editDetail'])->name('admin.license.edit');
         Route::patch('/license/update/{id}', [App\Http\Controllers\LicensesController::class, 'update'])->name('admin.license.update');
         Route::delete('/license/delete/{id}', [App\Http\Controllers\LicensesController::class, 'destroy'])->name('admin.license.delete');
+        Route::get('/license/{id}/get-assets', [App\Http\Controllers\LicensesController::class, 'getAssignedAssets'])->name('admin.license.get_assigned_assets');
+        Route::get('/license/{id}/available-assets', [App\Http\Controllers\LicensesController::class, 'availableAssets'])->name('admin.license.available_assets');
+        Route::get('/license/{id}/select2-assets', [App\Http\Controllers\LicensesController::class, 'select2Assets'])->name('admin.license.select2_assets');
+        Route::post('/license/{id}/attach-asset', [App\Http\Controllers\LicensesController::class, 'attachAsset'])->name('admin.license.attach_asset');
+        Route::delete('/license/{id}/detach-asset/{assetId}', [App\Http\Controllers\LicensesController::class, 'detachAsset'])->name('admin.license.detach_asset');
     });
 
     // Route Setting Atribut / Master Data

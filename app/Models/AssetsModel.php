@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class AssetsModel extends Model
 {
@@ -97,6 +98,12 @@ class AssetsModel extends Model
     public function maintenances_schedule()
     {
         return $this->hasMany(Maintenances_scheduleModel::class);
+    }
+
+    public function licenses(): BelongsToMany
+    {
+        return $this->belongsToMany(LicensesModel::class, 'licenses_assets', 'asset_id', 'license_id')
+            ->withTimestamps();
     }
 
 }

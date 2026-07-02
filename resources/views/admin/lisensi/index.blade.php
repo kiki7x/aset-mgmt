@@ -29,13 +29,10 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Tag</th>
-                                    <th>Nama</th>
-                                    <th>Serial</th>
-                                    <th>Status</th>
                                     <th>Kategori</th>
-                                    <th>Supplier</th>
+                                    <th>Nama</th>
                                     <th>Seats</th>
-                                    <th>Notes</th>
+                                    <th>Status</th>
                                     <th>Timestamp</th>
                                     <th>Opsi</th>
                                 </tr>
@@ -75,13 +72,12 @@
                             </div>
                             <div class="form-group col-4">
                                 <label for="serial">Serial <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="serial" name="serial" placeholder="Masukkan serial" required>
+                                <input type="text" class="form-control" id="serial" name="serial" placeholder="Masukkan serial/password" required>
                                 <span id="error-serial" class="text-danger small"></span>
                             </div>
                             <div class="form-group col-4">
                                 <label for="status_id">Status <span class="text-danger">*</span></label>
                                 <select class="form-control select2" id="status_id" name="status_id" required>
-                                    <option value="">-- Pilih Status --</option>
                                     @foreach (\App\Models\LabelsModel::get() as $label)
                                         <option value="{{ $label->id }}">{{ $label->name }}</option>
                                     @endforeach
@@ -91,7 +87,6 @@
                             <div class="form-group col-4">
                                 <label for="category_id">Kategori <span class="text-danger">*</span></label>
                                 <select class="form-control select2" id="category_id" name="category_id" required>
-                                    <option value="">-- Pilih Kategori --</option>
                                     @foreach (\App\Models\LicensecategoriesModel::get() as $category)
                                         <option value="{{ $category->id }}">{{ $category->name }}</option>
                                     @endforeach
@@ -101,7 +96,6 @@
                             <div class="form-group col-4">
                                 <label for="supplier_id">Supplier <span class="text-danger">*</span></label>
                                 <select class="form-control select2" id="supplier_id" name="supplier_id" required>
-                                    <option value="">-- Pilih Supplier --</option>
                                     @foreach (\App\Models\SuppliersModel::get() as $supplier)
                                         <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
                                     @endforeach
@@ -112,11 +106,6 @@
                                 <label for="seats">Seats/Jumlah <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="seats" name="seats" placeholder="Misal: 1, 10, unlimited" required>
                                 <span id="error-seats" class="text-danger small"></span>
-                            </div>
-                            <div class="form-group col-12">
-                                <label for="notes">Notes</label>
-                                <textarea name="notes" class="form-control" id="notes" rows="2" placeholder="Catatan (opsional)"></textarea>
-                                <span id="error-notes" class="text-danger small"></span>
                             </div>
                         </div>
                     </div>
@@ -129,86 +118,6 @@
         </div>
     </div>
 
-    {{-- Modal Edit --}}
-    <div id="editModal" title="Edit Lisensi" data-backdrop="static" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Lisensi</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form action="" method="POST" id="formEditLicense">
-                    @csrf
-                    @method('PATCH')
-                    <div class="modal-body">
-                        <div class="row form-group">
-                            <div class="form-group col-4">
-                                <label for="edit_name">Nama Lisensi <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="edit_name" name="name" required>
-                                <span id="error-edit_name" class="text-danger small"></span>
-                            </div>
-                            <div class="form-group col-4">
-                                <label for="edit_tag">Tag <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="edit_tag" name="tag" required>
-                                <span id="error-edit_tag" class="text-danger small"></span>
-                            </div>
-                            <div class="form-group col-4">
-                                <label for="edit_serial">Serial <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="edit_serial" name="serial" required>
-                                <span id="error-edit_serial" class="text-danger small"></span>
-                            </div>
-                            <div class="form-group col-4">
-                                <label for="edit_status_id">Status <span class="text-danger">*</span></label>
-                                <select class="form-control select2" id="edit_status_id" name="status_id" required>
-                                    <option value="">-- Pilih Status --</option>
-                                    @foreach (\App\Models\LabelsModel::get() as $label)
-                                        <option value="{{ $label->id }}">{{ $label->name }}</option>
-                                    @endforeach
-                                </select>
-                                <span id="error-edit_status_id" class="text-danger small"></span>
-                            </div>
-                            <div class="form-group col-4">
-                                <label for="edit_category_id">Kategori <span class="text-danger">*</span></label>
-                                <select class="form-control select2" id="edit_category_id" name="category_id" required>
-                                    <option value="">-- Pilih Kategori --</option>
-                                    @foreach (\App\Models\LicensecategoriesModel::get() as $category)
-                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                    @endforeach
-                                </select>
-                                <span id="error-edit_category_id" class="text-danger small"></span>
-                            </div>
-                            <div class="form-group col-4">
-                                <label for="edit_supplier_id">Supplier <span class="text-danger">*</span></label>
-                                <select class="form-control select2" id="edit_supplier_id" name="supplier_id" required>
-                                    <option value="">-- Pilih Supplier --</option>
-                                    @foreach (\App\Models\SuppliersModel::get() as $supplier)
-                                        <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                                    @endforeach
-                                </select>
-                                <span id="error-edit_supplier_id" class="text-danger small"></span>
-                            </div>
-                            <div class="form-group col-4">
-                                <label for="edit_seats">Seats/Jumlah <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="edit_seats" name="seats" required>
-                                <span id="error-edit_seats" class="text-danger small"></span>
-                            </div>
-                            <div class="form-group col-12">
-                                <label for="edit_notes">Notes</label>
-                                <textarea name="notes" class="form-control" id="edit_notes" rows="2" placeholder="Catatan (opsional)"></textarea>
-                                <span id="error-edit_notes" class="text-danger small"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-warning" data-crud="true">Perbarui</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 @endsection
 
 @push('script-foot')
@@ -226,14 +135,23 @@
                 ajax: `{{ url('admin/license/get_license') }}`,
                 columns: [
                     { data: 'DT_RowIndex', name: 'DT_RowIndex', searchable: false, orderable: false },
-                    { data: 'tag', name: 'tag' },
-                    { data: 'name', name: 'name' },
-                    { data: 'serial', name: 'serial' },
-                    { data: 'status', name: 'status', searchable: false, orderable: false },
+                    {
+                        data: 'tag',
+                        name: 'tag',
+                        render: function(data, type, row) {
+                            return '<a href="{{ url('admin/license') }}/' + row.id + '/overview">' + data + '</a>';
+                        }
+                    },
                     { data: 'category', name: 'category', searchable: false, orderable: false },
-                    { data: 'supplier', name: 'supplier', searchable: false, orderable: false },
+                    {
+                        data: 'name',
+                        name: 'name',
+                        render: function(data, type, row) {
+                            return '<a href="{{ url('admin/license') }}/' + row.id + '/overview" class="font-weight-bold">' + data + '</a>';
+                        }
+                    },
                     { data: 'seats', name: 'seats' },
-                    { data: 'notes', name: 'notes' },
+                    { data: 'status', name: 'status', searchable: false, orderable: false },
                     {
                         data: null,
                         name: 'timestamp',
@@ -298,67 +216,6 @@
                         }
                     }
                 });
-            });
-        });
-
-        $('#tableLicenses').on('click', '#edit-license', function() {
-            const id = $(this).data('id');
-            $.ajax({
-                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                url: `{{ url('admin/license/edit') }}/${id}`,
-                type: 'GET',
-                success: function(response) {
-                    $('#edit_name').val(response.name);
-                    $('#edit_tag').val(response.tag);
-                    $('#edit_serial').val(response.serial);
-                    $('#edit_status_id').val(response.status_id).trigger('change');
-                    $('#edit_category_id').val(response.category_id).trigger('change');
-                    $('#edit_supplier_id').val(response.supplier_id).trigger('change');
-                    $('#edit_seats').val(response.seats);
-                    $('#edit_notes').val(response.notes);
-                    $('#formEditLicense').data('id', response.id);
-
-                    $('#editModal .select2').select2({
-                        theme: 'bootstrap4',
-                        dropdownParent: $('#editModal')
-                    });
-
-                    $('#editModal').modal('show');
-                },
-                error: function(xhr) {
-                    toastr.error('Terjadi kesalahan, silakan coba lagi.');
-                }
-            });
-        });
-
-        $('#formEditLicense').on('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            const id = $(this).data('id');
-            $.ajax({
-                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                url: `{{ url('admin/license/update') }}/${id}`,
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    $('#editModal').modal('hide');
-                    $('#tableLicenses').DataTable().ajax.reload();
-                    Swal.fire({ icon: 'success', title: 'Sukses', text: 'Lisensi berhasil diperbarui.' });
-                    $('#formEditLicense')[0].reset();
-                    $('.text-danger').text('');
-                },
-                error: function(xhr) {
-                    if (xhr.status === 422) {
-                        const errors = xhr.responseJSON.errors;
-                        $.each(errors, function(key, value) {
-                            $('#error-edit_' + key).text(value[0]);
-                        });
-                    } else {
-                        toastr.error('Terjadi kesalahan, silakan coba lagi.');
-                    }
-                }
             });
         });
 

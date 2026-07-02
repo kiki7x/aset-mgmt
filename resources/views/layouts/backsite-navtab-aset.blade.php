@@ -16,7 +16,7 @@
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('admin.asetrt.overview') || request()->routeIs('admin.asettik.overview') ? 'active' : '' }}" id="overview-tab" role="tab" aria-controls="overview" aria-selected="false"
                            href="{{ $classification_id == 2 ? route('admin.asettik.overview', $id) : route('admin.asetrt.overview', $id) }}">
-                            Overview
+                            Ringkasan
                         </a>
                     </li>
                     <li class="nav-item">
