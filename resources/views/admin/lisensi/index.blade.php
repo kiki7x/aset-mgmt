@@ -142,7 +142,17 @@
                             return '<a href="{{ url('admin/license') }}/' + row.id + '/overview">' + data + '</a>';
                         }
                     },
-                    { data: 'category', name: 'category', searchable: false, orderable: false },
+                    {
+                        data: null,
+                        name: 'category',
+                        render: function(data) {
+                            var name = (data.category && data.category.name) ? data.category.name : '-';
+                            var color = (data.category && data.category.color) ? data.category.color : '#355ea7';
+                            return '<span style="background:#FFF;color:' + color + ';border:1px solid ' + color + ';border-radius:4px;padding:2px 8px;display:inline-block;font-size:12px;">' + name + '</span>';
+                        },
+                        searchable: false,
+                        orderable: false
+                    },
                     {
                         data: 'name',
                         name: 'name',
@@ -150,7 +160,17 @@
                             return '<a href="{{ url('admin/license') }}/' + row.id + '/overview" class="font-weight-bold">' + data + '</a>';
                         }
                     },
-                    { data: 'seats', name: 'seats' },
+                    {
+                        data: null,
+                        name: 'seats',
+                        render: function(data) {
+                            var used = data.assets_count || 0;
+                            var total = data.seats || '0';
+                            return '<span style="background:#FFF;color:#029ca1;border:1px solid #029ca1;border-radius:4px;padding:2px 8px;display:inline-block;font-size:12px;">' + used + '/' + total + '</span>';
+                        },
+                        searchable: false,
+                        orderable: false
+                    },
                     { data: 'status', name: 'status', searchable: false, orderable: false },
                     {
                         data: null,

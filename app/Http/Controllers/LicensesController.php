@@ -57,14 +57,11 @@ class LicensesController extends Controller
 
     public function getData(Request $request): JsonResponse
     {
-        $licenses = LicensesModel::with(['status', 'category', 'supplier'])->get();
+        $licenses = LicensesModel::with(['status', 'category', 'supplier'])->withCount('assets')->get();
         return DataTables::of($licenses)
             ->addIndexColumn()
             ->addColumn('status', function ($licenses) {
                 return $licenses->status ? $licenses->status->name : '-';
-            })
-            ->addColumn('category', function ($licenses) {
-                return $licenses->category ? $licenses->category->name : '-';
             })
             ->addColumn('supplier', function ($licenses) {
                 return $licenses->supplier ? $licenses->supplier->name : '-';
