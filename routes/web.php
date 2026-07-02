@@ -110,6 +110,17 @@ Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function ()
 
     });
 
+    // Route Licenses
+    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering|user', 'readonly_user'])->group(function () {
+        Route::get('/license', [App\Http\Controllers\LicensesController::class, 'index'])->name('admin.license');
+        Route::get('/license/next-tag', [App\Http\Controllers\LicensesController::class, 'nextTag'])->name('admin.license.next_tag');
+        Route::get('/license/get_license', [App\Http\Controllers\LicensesController::class, 'getData'])->name('admin.license.get_license');
+        Route::post('/license/store', [App\Http\Controllers\LicensesController::class, 'store'])->name('admin.license.store');
+        Route::get('/license/edit/{id}', [App\Http\Controllers\LicensesController::class, 'edit'])->name('admin.license.edit');
+        Route::patch('/license/update/{id}', [App\Http\Controllers\LicensesController::class, 'update'])->name('admin.license.update');
+        Route::delete('/license/delete/{id}', [App\Http\Controllers\LicensesController::class, 'destroy'])->name('admin.license.delete');
+    });
+
     // Route Setting Atribut / Master Data
     Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering|user', 'readonly_user'])->group(function () {
         Route::get('/setting_attr', [App\Http\Controllers\SetatributController::class, 'index'])->name('admin.setting_attr');

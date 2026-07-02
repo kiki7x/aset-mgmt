@@ -127,8 +127,8 @@
                                   <p>Aset TIK</p>
                               </a>
                           </li>
-                          <li class="nav-item" data-toggle="tooltip" title="coming soon..." data-placement="top">
-                              <a href="#" class="nav-link {{ request()->is('admin/lisensi*') ? 'active' : '' }}">
+                          <li class="nav-item">
+                              <a href="{{ route('admin.license') }}" class="nav-link {{ request()->is('admin/license*') ? 'active' : '' }}">
                                   &nbsp;&nbsp;
                                   <i class="nav-icon fa-regular fa-file-code"></i>
                                   <p>Lisensi</p>

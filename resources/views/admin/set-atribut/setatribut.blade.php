@@ -75,12 +75,12 @@
                 </a>
             </div><!-- /.col -->
             <div class="col-md-3 col-sm-6 col-lg-3">
-                <a href="{{ route('admin.setting_attr') }}">
+                <a href="{{ route('admin.license') }}">
                 <div class="info-box">
-                    <span class="info-box-icon bg-info"><i class="fa-solid fa-database"></i></span>
+                    <span class="info-box-icon bg-info"><i class="fa-regular fa-file-code"></i></span>
                     <div class="info-box-content">
-                        <span class="info-box-text font-weight-bold">Kategori Lisensi</span>
-                        <span class="info-box-number font-weight-normal">none</span>
+                        <span class="info-box-text font-weight-bold">Lisensi</span>
+                        <span class="info-box-number font-weight-normal">Kelola</span>
                     </div><!-- /.info-box-content -->
                 </div><!-- /.info-box -->
                 </a>

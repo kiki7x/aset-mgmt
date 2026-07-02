@@ -420,11 +420,6 @@ class SetatributController extends Controller
         return response()->json(['message' => 'Label ' . $label->name . ' berhasil dihapus.']);
     }
 
-    public function kategorilisensi()
-    {
-        return view('admin.setkategorilisensi', ['title' => 'Setting Kategori Lisensi']);
-    }
-
     public function lokasi()
     {
         return view('admin.set-atribut.setlokasi');
