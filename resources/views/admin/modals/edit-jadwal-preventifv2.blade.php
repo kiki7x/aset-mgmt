@@ -58,3 +58,89 @@
         </div>
     </div>
 </div>
+
+@push('script-foot')
+    <script>
+        $('#editv2_end').datepicker({
+            format: "dd M yyyy",
+            autoclose: true,
+            todayHighlight: true,
+            orientation: "auto",
+            todayBtn: "linked",
+        });
+
+        function showModalEditJadwalV2(id) {
+            $.ajax({
+                url: "{{ route('admin.aset.pemeliharaan.scheduleEdit', ':id') }}".replace(':id', id),
+                type: "GET",
+                success: function(res) {
+                    let m = $('#edit-schedulev2');
+                    $('#edit-schedulev2-label').text('Edit Jadwal Pemeliharaan Preventif');
+                    m.find('#editv2_id').val(res.id);
+                    m.find('#editv2_name').val(res.name);
+                    m.find('#editv2_frequency').val(res.frequency);
+                    m.find('#editv2_end').val(res.end ? moment(res.end).format('DD MMM YYYY') : '');
+                    m.find('#editv2_reminder').val(res.reminder);
+                    m.find('#editv2_status').val(res.status);
+                    m.modal('show');
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            $('#formEditJadwalV2').on('submit', function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(this);
+                const id = $('#editv2_id').val();
+
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: "{{ route('admin.aset.pemeliharaan.scheduleUpdate', ['id' => ':id']) }}".replace(':id', id),
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        $('#edit-schedulev2').modal('hide');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.message,
+                        }).then(() => {
+                            location.reload();
+                        });
+                    },
+                    error: function(xhr) {
+                        $('.text-danger').text('');
+
+                        if (xhr.status === 422) {
+                            const res = xhr.responseJSON;
+                            let errorMsg = res?.message || 'Data tidak valid';
+
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Perhatian',
+                                text: errorMsg,
+                            });
+
+                            if (res?.errors) {
+                                $.each(res.errors, function(key, value) {
+                                    $(`#error-editv2_${key.replace('edit_', '')}`).text(value[0]);
+                                });
+                            }
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Kesalahan Sistem',
+                                text: xhr.status === 500 ? 'Terjadi kesalahan pada server.' : 'Terjadi kesalahan yang tidak diketahui.',
+                            });
+                        }
+                    },
+                });
+            });
+        });
+    </script>
+@endpush

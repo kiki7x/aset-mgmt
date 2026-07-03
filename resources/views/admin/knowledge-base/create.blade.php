@@ -1,11 +1,11 @@
 @extends('layouts.backsite', [
-    'title' => 'Tambah Artikel Knowledge Base | SAPA PPL',
+    'title' => 'Tambah Artikel Pusat Pengetahuan | SAPA PPL',
     'welcome' => 'Tambah Artikel',
     'breadcrumb' =>
         '
         <li class="breadcrumb-item"><a href="' .
         route('admin.knowledge-base') .
-        '">Knowledge Base</a></li>
+        '">Pusat Pengetahuan</a></li>
         <li class="breadcrumb-item active">Tambah Artikel</li>
     ',
 ])

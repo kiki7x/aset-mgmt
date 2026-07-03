@@ -1,7 +1,7 @@
 @extends('layouts.backsite', [
-    'title' => 'Data Lisensi | SAPA PPL',
-    'welcome' => 'Data Lisensi',
-    'breadcrumb' => '<li class="breadcrumb-item active">Data Lisensi</li>',
+    'title' => 'Lisensi | SAPA PPL',
+    'welcome' => 'Lisensi',
+    'breadcrumb' => '<li class="breadcrumb-item active">Lisensi</li>',
 ])
 
 @push('script-head')

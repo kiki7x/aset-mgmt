@@ -133,7 +133,7 @@ class PemeliharaanController extends Controller
             $data = [
                 'name' => $request->input('edit_name'),
                 'frequency' => $request->input('edit_frequency'),
-                'start' => Carbon::parse($request->input('edit_start'))->format('Y-m-d H:i:s'), // format agar dapat diterima format database
+                'start' => Carbon::parse($request->input('edit_end'))->format('Y-m-d H:i:s'), // format agar dapat diterima format database
                 'end' => Carbon::parse($request->input('edit_end'))->format('Y-m-d H:i:s'), // Default end sama dengan start, akan dihitung ulang jika frequency dan start valid
                 'reminder' => $request->input('edit_reminder'),
                 'status' => $request->input('edit_status'),
@@ -152,9 +152,16 @@ class PemeliharaanController extends Controller
     public function scheduleDelete(Request $request, $id): JsonResponse
     {
         $maintenance_schedule = \App\Models\Maintenances_scheduleModel::findOrFail($id);
+
+        if ($maintenance_schedule->maintenances()->exists()) {
+            return response()->json([
+                'message' => 'Tidak dapat menghapus jadwal yang sudah memiliki riwayat pemeliharaan. Nonaktifkan status saja jika tidak ingin digunakan.'
+            ], 409);
+        }
+
         $maintenance_schedule->delete();
         return response()->json([
-            'message' => 'Data deleted successfully',
+            'message' => 'Data berhasil dihapus.',
         ]);
     }
 

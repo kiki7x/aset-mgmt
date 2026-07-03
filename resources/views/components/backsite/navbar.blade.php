@@ -105,13 +105,13 @@
               <ul class="nav nav-pills nav-sidebar flex-column nav-legacy nav-compact nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
                   <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-                  <li class="nav-header">MENU</li>
-                  <li class="nav-item">
-                      <a href="{{ route('admin.index') }}" class="nav-link {{ request()->is('admin') ? 'active' : '' }}">
-                          <i class="nav-icon fas fa-tachometer-alt"></i>
-                          <p>Dashboard</p>
-                      </a>
-                  </li>
+               <li class="nav-item">
+                   <a href="{{ route('admin.index') }}" class="nav-link {{ request()->is('admin') ? 'active' : '' }}">
+                       <i class="nav-icon fas fa-tachometer-alt"></i>
+                       <p>Dashboard</p>
+                    </a>
+                </li>
+                <li class="nav-header">MENU</li>
                   <li class="nav-item {{ request()->is('admin/aset*') || request()->is('admin/lisensi*') || request()->is('admin/komponen*') || request()->is('admin/setting_attr*') ? 'menu-open' : 'menu-open' }}">
                       <a href="#" class="nav-link {{ request()->is('admin/*') ? 'active' : '' }}">
                           <i class="nav-icon fa-solid fa-warehouse"></i>
@@ -127,17 +127,17 @@
                                   <p>Aset TIK</p>
                               </a>
                           </li>
-                          <li class="nav-item">
+                          <li class="nav-item ml-4">
                               <a href="{{ route('admin.license') }}" class="nav-link {{ request()->is('admin/license*') ? 'active' : '' }}">
                                   &nbsp;&nbsp;
-                                  <i class="nav-icon fa-regular fa-file-code"></i>
+                                  {{-- <i class="nav-icon fa-regular fa-file-code"></i> --}}
                                   <p>Lisensi</p>
                               </a>
                           </li>
-                          <li class="nav-item" data-toggle="tooltip" title="coming soon..." data-placement="top">
+                          <li class="nav-item ml-4" data-toggle="tooltip" title="coming soon..." data-placement="top">
                               <a href="#" class="nav-link {{ request()->is('admin/komponen*') ? 'active' : '' }}">
                                   &nbsp;&nbsp;
-                                  <i class="nav-icon fa-regular fa-keyboard"></i>
+                                  {{-- <i class="nav-icon fa-regular fa-keyboard"></i> --}}
                                   <p>Komponen</p>
                               </a>
                           </li>
@@ -193,7 +193,7 @@
                   </li>
                   <li class="nav-item" data-toggle="tooltip" data-placement="top">
                       <a href="{{ route('admin.knowledge-base') }}" class="nav-link {{ request()->is('admin/knowledge-base*') ? 'active' : '' }}">
-                          <i class="nav-icon fa-solid fa-book"></i>
+                          <i class="nav-icon fa-solid fa-info"></i>
                           <p>Pusat Pengetahuan</p>
                       </a>
                   </li>

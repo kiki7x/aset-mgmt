@@ -9,8 +9,12 @@
             </div>
             <div class="modal-body">
                 <form id="formJadwalV2">
-                    <input type="hidden" id="v2_name" name="name">
-                    <input type="hidden" id="v2_start" name="start">
+                    {{-- Nama Barang & Hidden Input --}}
+                    <div class="form-group">
+                        <p class="h5">{{ $asset->tag }} - {{ $asset->name }}</p>
+                        <input type="hidden" id="v2_name" name="name">
+                        <input type="hidden" id="v2_start" name="start">
+                    </div>
                     <div class="form-group">
                         <label for="v2_frequency">Frekuensi Pemeliharaan <span class="text-danger">*</span></label>
                         <select class="form-control" id="v2_frequency" name="frequency" required>
@@ -41,3 +45,84 @@
         </div>
     </div>
 </div>
+
+@push('script-foot')
+    <script>
+        $('#v2_end').datepicker({
+            format: "dd M yyyy",
+            autoclose: true,
+            todayHighlight: true,
+            orientation: "auto",
+            todayBtn: "linked",
+        });
+
+        $('#v2_end').on('change', function() {
+            $('#v2_start').val($(this).val());
+        });
+
+        function showModalAddJadwalV2(name) {
+            $('#add-schedulev2-label').text('Setup Jadwal ' + name);
+            $('#add-schedulev2').modal('show');
+            $('#add-schedulev2').find('#v2_name').val(name);
+        }
+
+        $(document).ready(function() {
+            $('#formJadwalV2').on('submit', function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(this);
+
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: "{{ route('admin.aset.pemeliharaan.scheduleStore', $asset->id) }}",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        $('#add-schedulev2').modal('hide');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.message,
+                        }).then(() => {
+                            location.reload();
+                        });
+                    },
+                    error: function(xhr) {
+                        $('.text-danger').text('');
+
+                        if (xhr.status === 422) {
+                            const res = xhr.responseJSON;
+                            let errorMsg = res?.message || 'Data tidak valid';
+
+                            if (res?.message === 'The name has already been taken.') {
+                                errorMsg = 'Jadwal pemeliharaan ini sudah ada.';
+                            }
+
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Perhatian',
+                                text: errorMsg,
+                            });
+
+                            if (res?.errors) {
+                                $.each(res.errors, function(key, value) {
+                                    $(`#error-v2_${key}`).text(value[0]);
+                                });
+                            }
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Kesalahan Sistem',
+                                text: xhr.status === 500 ? 'Terjadi kesalahan pada server.' : 'Terjadi kesalahan yang tidak diketahui.',
+                            });
+                        }
+                    },
+                });
+            });
+        });
+    </script>
+@endpush

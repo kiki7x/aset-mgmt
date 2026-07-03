@@ -95,7 +95,7 @@
                             @endphp
 
                             @if ($imageUrl)
-                                <img src="{{ $imageUrl }}" alt="Asset Image" id="image" class="img-fluid" style="max-height:400px; cursor:pointer" data-toggle="modal" data-target="#modalImage"
+                                <img src="{{ $imageUrl }}" alt="Asset Image" id="image" class="img-fluid" style="max-height:300px; cursor:pointer" data-toggle="modal" data-target="#modalImage"
                                      onclick="document.getElementById('imgPreview').src='{{ $imageUrl }}'">
                             @else
                                 <p class="text-muted">Belum ada foto.</p>
