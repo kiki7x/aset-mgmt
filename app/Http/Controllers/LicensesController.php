@@ -60,9 +60,6 @@ class LicensesController extends Controller
         $licenses = LicensesModel::with(['status', 'category', 'supplier'])->withCount('assets')->get();
         return DataTables::of($licenses)
             ->addIndexColumn()
-            ->addColumn('status', function ($licenses) {
-                return $licenses->status ? $licenses->status->name : '-';
-            })
             ->addColumn('supplier', function ($licenses) {
                 return $licenses->supplier ? $licenses->supplier->name : '-';
             })

@@ -171,7 +171,17 @@
                         searchable: false,
                         orderable: false
                     },
-                    { data: 'status', name: 'status', searchable: false, orderable: false },
+                    {
+                        data: null,
+                        name: 'status',
+                        render: function(data) {
+                            var name = (data.status && data.status.name) ? data.status.name : '-';
+                            var color = (data.status && data.status.color) ? data.status.color : '#3479da';
+                            return '<span class="badge" style="background-color:' + color + ';color:#FFF">' + name + '</span>';
+                        },
+                        searchable: false,
+                        orderable: false
+                    },
                     {
                         data: null,
                         name: 'timestamp',

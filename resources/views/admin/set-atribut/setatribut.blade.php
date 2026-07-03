@@ -75,12 +75,12 @@
                 </a>
             </div><!-- /.col -->
             <div class="col-md-3 col-sm-6 col-lg-3">
-                <a href="{{ route('admin.license') }}">
+                <a href="{{ route('admin.setting_attr.kategorilisensi') }}">
                 <div class="info-box">
                     <span class="info-box-icon bg-info"><i class="fa-regular fa-file-code"></i></span>
                     <div class="info-box-content">
-                        <span class="info-box-text font-weight-bold">Lisensi</span>
-                        <span class="info-box-number font-weight-normal">Kelola</span>
+                        <span class="info-box-text font-weight-bold">Lisensi Kategori</span>
+                        <span class="info-box-number font-weight-normal">{{ $hitungkategorilisensi }}</span>
                     </div><!-- /.info-box-content -->
                 </div><!-- /.info-box -->
                 </a>

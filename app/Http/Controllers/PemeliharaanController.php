@@ -16,11 +16,17 @@ class PemeliharaanController extends Controller
 {
     public function index($id): View
     {
-        $maintenances_schedule = \App\Models\Maintenances_scheduleModel::where('asset_id', $id)->get(); // Menggunakan model Maintenance::with('item')->latest()->get();
-        // $assets = \App\Models\AssetsModel::findOrFail($id); // Untuk dropdown di form tambah
+        $maintenances_schedule = \App\Models\Maintenances_scheduleModel::where('asset_id', $id)->get();
         $asset = \App\Models\AssetsModel::findOrFail($id);
+
+        $isKendaraan = $asset->classification_id == 3;
+
+        $scheduleCekKondisi = $maintenances_schedule->firstWhere('name', 'Cek Kondisi & Service Berkala');
+        $schedulePajakSTNK = $maintenances_schedule->firstWhere('name', 'Pajak STNK');
+        $scheduleServiceBerkala = $maintenances_schedule->firstWhere('name', 'Service Berkala');
+
         Log::info("Loading Penjadwalan for asset ID: $id");
-        return view('admin.detailaset.pemeliharaan', compact('id', 'maintenances_schedule', 'asset'));
+        return view('admin.detailaset.pemeliharaan', compact('id', 'maintenances_schedule', 'asset', 'isKendaraan', 'scheduleCekKondisi', 'schedulePajakSTNK', 'scheduleServiceBerkala'));
     }
 
     public function scheduleDataTable(Request $request, $id): JsonResponse

@@ -172,6 +172,13 @@ Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function ()
         Route::get('/setting_attr/label/edit/{id}', [App\Http\Controllers\SetatributController::class, 'editLabel'])->name('admin.setting_attr.label.edit');
         Route::patch('/setting_attr/label/update/{id}', [App\Http\Controllers\SetatributController::class, 'updateLabel'])->name('admin.setting_attr.label.update');
         Route::delete('/setting_attr/label/delete/{id}', [App\Http\Controllers\SetatributController::class, 'deleteLabel'])->name('admin.setting_attr.label.delete');
+        // Route Setting Kategori Lisensi
+        Route::get('/setting_attr/kategorilisensi', [App\Http\Controllers\SetatributController::class, 'kategorilisensi'])->name('admin.setting_attr.kategorilisensi');
+        Route::get('/setting_attr/kategorilisensi/get_kategorilisensi', [App\Http\Controllers\SetatributController::class, 'getKategorilisensi'])->name('admin.setting_attr.kategorilisensi.get_kategorilisensi');
+        Route::post('/setting_attr/kategorilisensi/store', [App\Http\Controllers\SetatributController::class, 'storeKategorilisensi'])->name('admin.setting_attr.kategorilisensi.store');
+        Route::get('/setting_attr/kategorilisensi/edit/{id}', [App\Http\Controllers\SetatributController::class, 'editKategorilisensi'])->name('admin.setting_attr.kategorilisensi.edit');
+        Route::patch('/setting_attr/kategorilisensi/update/{id}', [App\Http\Controllers\SetatributController::class, 'updateKategorilisensi'])->name('admin.setting_attr.kategorilisensi.update');
+        Route::delete('/setting_attr/kategorilisensi/delete/{id}', [App\Http\Controllers\SetatributController::class, 'deleteKategorilisensi'])->name('admin.setting_attr.kategorilisensi.delete');
         // Route Setting Lokasi
         Route::get('/setting_attr/lokasi', [App\Http\Controllers\SetatributController::class, 'lokasi'])->name('admin.setting_attr.lokasi');
         Route::get('/setting_attr/lokasi/get_lokasi', [App\Http\Controllers\SetatributController::class, 'getLokasi'])->name('admin.setting_attr.lokasi.get_lokasi');

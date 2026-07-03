@@ -10,6 +10,98 @@
 
 @section('content-tab')
     <div class="container-fluid">
+        <div class="row">
+            @if(!$isKendaraan)
+                <div class="col-md-4">
+                    <div class="card border border-success {{ $scheduleCekKondisi ? 'bg-white' : 'bg-light' }}" style="{{ $scheduleCekKondisi ? '' : 'opacity:0.65' }}">
+                        <div class="card-body">
+                            <h5 class="card-title mb-2"><i class="fa-solid fa-wrench text-success"></i> Cek Kondisi & Service Berkala</h5>
+                            <p class="mb-2">
+                                @if($scheduleCekKondisi)
+                                    <span class="badge badge-success"><i class="fa-regular fa-check-circle"></i> Terjadwal</span>
+                                @else
+                                    <span class="badge badge-secondary"><i class="fa-regular fa-clock"></i> Belum Terjadwal</span>
+                                @endif
+                            </p>
+
+                            @if($scheduleCekKondisi)
+                                <div class="small mb-2 text-muted">
+                                    <div><strong>Frekuensi:</strong> Setiap {{ $scheduleCekKondisi->frequency }} bulan sekali</div>
+                                    <div><strong>Periode:</strong> {{ \Carbon\Carbon::parse($scheduleCekKondisi->end)->format('d M Y') }} <span class="badge badge-info"><i class="fa-solid fa-stopwatch"></i> <span class="countdown" data-date="{{ $scheduleCekKondisi->end }}"></span></span></div>
+                                    <div><strong>Reminder:</strong> {{ $scheduleCekKondisi->reminder }} hari sebelum jatuh tempo</div>
+                                </div>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-primary" onclick="showModalEditJadwalV2({{ $scheduleCekKondisi->id }})"><i class="fa-regular fa-pen-to-square"></i> Edit</button>
+                                    <button class="btn btn-outline-success" onclick="showModalAddPreventifV2({{ $scheduleCekKondisi->id }})"><i class="fa-regular fa-circle-check"></i> TL</button>
+                                </div>
+                            @else
+                                <button class="btn btn-outline-primary btn-sm" onclick="showModalAddJadwalV2('Cek Kondisi & Service Berkala')"><i class="fa-regular fa-plus"></i> Atur Jadwal</button>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            @if($isKendaraan)
+                <div class="col-md-6">
+                    <div class="card border border-warning {{ $schedulePajakSTNK ? 'bg-white' : 'bg-light' }}" style="{{ $schedulePajakSTNK ? '' : 'opacity:0.65' }}">
+                        <div class="card-body">
+                            <h5 class="card-title mb-2"><i class="fa-solid fa-file-invoice text-warning"></i> Pajak STNK</h5>
+                            <p class="mb-2">
+                                @if($schedulePajakSTNK)
+                                    <span class="badge badge-success"><i class="fa-regular fa-check-circle"></i> Terjadwal</span>
+                                @else
+                                    <span class="badge badge-secondary"><i class="fa-regular fa-clock"></i> Belum Terjadwal</span>
+                                @endif
+                            </p>
+
+                            @if($schedulePajakSTNK)
+                                <div class="small mb-2 text-muted">
+                                    <div><strong>Frekuensi:</strong> Setiap {{ $schedulePajakSTNK->frequency }} bulan sekali</div>
+                                    <div><strong>Periode:</strong> {{ \Carbon\Carbon::parse($schedulePajakSTNK->end)->format('d M Y') }} <span class="badge badge-info"><i class="fa-solid fa-stopwatch"></i> <span class="countdown" data-date="{{ $schedulePajakSTNK->end }}"></span></span></div>
+                                    <div><strong>Reminder:</strong> {{ $schedulePajakSTNK->reminder }} hari sebelum jatuh tempo</div>
+                                </div>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-primary" onclick="showModalEditJadwalV2({{ $schedulePajakSTNK->id }})"><i class="fa-regular fa-pen-to-square"></i> Edit</button>
+                                    <button class="btn btn-outline-success" onclick="showModalAddPreventifV2({{ $schedulePajakSTNK->id }})"><i class="fa-regular fa-circle-check"></i> TL</button>
+                                </div>
+                            @else
+                                <button class="btn btn-outline-primary btn-sm" onclick="showModalAddJadwalV2('Pajak STNK')"><i class="fa-regular fa-plus"></i> Atur Jadwal</button>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card border border-primary {{ $scheduleServiceBerkala ? 'bg-white' : 'bg-light' }}" style="{{ $scheduleServiceBerkala ? '' : 'opacity:0.65' }}">
+                        <div class="card-body">
+                            <h5 class="card-title mb-2"><i class="fa-solid fa-tools text-primary"></i> Service Berkala</h5>
+                            <p class="mb-2">
+                                @if($scheduleServiceBerkala)
+                                    <span class="badge badge-success"><i class="fa-regular fa-check-circle"></i> Terjadwal</span>
+                                @else
+                                    <span class="badge badge-secondary"><i class="fa-regular fa-clock"></i> Belum Terjadwal</span>
+                                @endif
+                            </p>
+
+                            @if($scheduleServiceBerkala)
+                                <div class="small mb-2 text-muted">
+                                    <div><strong>Frekuensi:</strong> Setiap {{ $scheduleServiceBerkala->frequency }} bulan sekali</div>
+                                    <div><strong>Periode:</strong> {{ \Carbon\Carbon::parse($scheduleServiceBerkala->end)->format('d M Y') }} <span class="badge badge-info"><i class="fa-solid fa-stopwatch"></i> <span class="countdown" data-date="{{ $scheduleServiceBerkala->end }}"></span></span></div>
+                                    <div><strong>Reminder:</strong> {{ $scheduleServiceBerkala->reminder }} hari sebelum jatuh tempo</div>
+                                </div>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-primary" onclick="showModalEditJadwalV2({{ $scheduleServiceBerkala->id }})"><i class="fa-regular fa-pen-to-square"></i> Edit</button>
+                                    <button class="btn btn-outline-success" onclick="showModalAddPreventifV2({{ $scheduleServiceBerkala->id }})"><i class="fa-regular fa-circle-check"></i> TL</button>
+                                </div>
+                            @else
+                                <button class="btn btn-outline-primary btn-sm" onclick="showModalAddJadwalV2('Service Berkala')"><i class="fa-regular fa-plus"></i> Atur Jadwal</button>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endif
+        </div>
+
         <div class="row align-items-center">
             {{-- <p class="col-12 h4 d-flex justify-content-center"><u>{{ $asset->tag }} - {{ $asset->name }}</u></p> --}}
             <p class="col-12 h4">Jadwal Pemeliharaan <button class="btn btn-outline-primary" onclick="showModalAddJadwalPemeliharaan()" data-toggle="tooltip" data-placement="top" title="Tambah Jadwal" data-crud="true"><i class="fa-regular fa-plus"></i></button></p>
@@ -88,6 +180,9 @@
         @include('admin.modals.add-preventif')
         @include('admin.modals.edit-preventif')
         @include('admin.modals.add_korektif')
+        @include('admin.modals.add-jadwal-preventifv2')
+        @include('admin.modals.edit-jadwal-preventifv2')
+        @include('admin.modals.add-tugas-preventifv2')
 
 
     </div>
@@ -346,6 +441,48 @@
                 }
             });
         }
+
+        function showModalAddJadwalV2(name) {
+            $('#add-schedulev2').modal('show');
+            $('#add-schedulev2').find('#v2_name').val(name);
+        }
+
+        function showModalEditJadwalV2(id) {
+            $.ajax({
+                url: "{{ route('admin.aset.pemeliharaan.scheduleEdit', ':id') }}".replace(':id', id),
+                type: "GET",
+                success: function(res) {
+                    let m = $('#edit-schedulev2');
+                    m.find('#editv2_id').val(res.id);
+                    m.find('#editv2_name').val(res.name);
+                    m.find('#editv2_frequency').val(res.frequency);
+                    m.find('#editv2_end').val(res.end);
+                    m.find('#editv2_reminder').val(res.reminder);
+                    m.modal('show');
+                }
+            });
+        }
+
+        function showModalAddPreventifV2(schedule_id) {
+            $('#add-tugas-preventifv2').modal('show');
+            $('#add-tugas-preventifv2').find('input[name="jadwal_preventif_id"]').val(schedule_id);
+        }
+
+        // Countdown
+        $(document).ready(function() {
+            $('.countdown').each(function() {
+                let target = new Date($(this).data('date'));
+                let now = new Date();
+                let diff = Math.ceil((target - now) / (1000 * 60 * 60 * 24));
+                if (diff > 0) {
+                    $(this).text(diff + ' hari lagi');
+                } else if (diff === 0) {
+                    $(this).text('Hari ini');
+                } else {
+                    $(this).text('Terlambat ' + Math.abs(diff) + ' hari');
+                }
+            });
+        });
 
         function tablePemeliharaanKorektif() {
             $('#tablePemeliharaanKorektif').DataTable({

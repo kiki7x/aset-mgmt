@@ -19,9 +19,9 @@ class SetatributController extends Controller
         $hitungmodel = \App\Models\ModelsModel::all()->count();
         $hitungsupplier = \App\Models\SuppliersModel::all()->count();
         $hitunglabel = \App\Models\LabelsModel::all()->count();
-        // $kategorilisensi = \App\Models\LicensecategoriesModel::get();
+        $hitungkategorilisensi = \App\Models\LicensecategoriesModel::all()->count();
         $hitunglokasi = \App\Models\LocationsModel::all()->count();
-        return view('admin.set-atribut.setatribut', compact('hitungklasifikasi', 'hitungkategori', 'hitungmerk', 'hitungmodel', 'hitungsupplier', 'hitunglabel', 'hitunglokasi')
+        return view('admin.set-atribut.setatribut', compact('hitungklasifikasi', 'hitungkategori', 'hitungmerk', 'hitungmodel', 'hitungsupplier', 'hitunglabel', 'hitungkategorilisensi', 'hitunglokasi')
         );
     }
 
@@ -418,6 +418,64 @@ class SetatributController extends Controller
         $label->delete();
 
         return response()->json(['message' => 'Label ' . $label->name . ' berhasil dihapus.']);
+    }
+
+    public function kategorilisensi(): View
+    {
+        return view('admin.set-atribut.setkategorilisensi');
+    }
+
+    public function getKategorilisensi(): JsonResponse
+    {
+        $kategorilisensis = \App\Models\LicensecategoriesModel::get();
+        return DataTables::of($kategorilisensis)
+            ->addIndexColumn()
+            ->addColumn('action', function ($row) {
+                return '
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" title="More..."></button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li><span class="mx-3" id="edit-kategorilisensi" data-id="' . $row->id . '" data-name="' . e($row->name) . '" data-color="' . e($row->color) . '" style="cursor: pointer; color: #007bff;">Edit</span></li>
+                            <li><span class="mx-3" id="delete-kategorilisensi" data-id="' . $row->id . '" data-name="' . e($row->name) . '" style="cursor: pointer; color: #007bff;">Delete</span></li>
+                        </ul>
+                    </div>
+                ';
+            })
+            ->make();
+    }
+
+    public function storeKategorilisensi(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'name' => 'required|unique:licensecategories,name|string|max:255',
+            'color' => 'nullable|string|max:7',
+        ]);
+        \App\Models\LicensecategoriesModel::Create($data);
+        return response()->json(['message' => 'Kategori Lisensi berhasil ditambahkan.']);
+    }
+
+    public function editKategorilisensi($id): JsonResponse
+    {
+        $kategori = \App\Models\LicensecategoriesModel::findOrFail($id);
+        return response()->json($kategori);
+    }
+
+    public function updateKategorilisensi(Request $request, $id): JsonResponse
+    {
+        $kategori = \App\Models\LicensecategoriesModel::findOrFail($id);
+        $data = $request->validate([
+            'name' => 'required|unique:licensecategories,name,' . $kategori->id . '|string|max:255',
+            'color' => 'nullable|string|max:7',
+        ]);
+        $kategori->update($data);
+        return response()->json(['message' => 'Kategori Lisensi berhasil diperbarui.']);
+    }
+
+    public function deleteKategorilisensi($id): JsonResponse
+    {
+        $kategori = \App\Models\LicensecategoriesModel::findOrFail($id);
+        $kategori->delete();
+        return response()->json(['message' => 'Kategori Lisensi ' . $kategori->name . ' berhasil dihapus.']);
     }
 
     public function lokasi()
