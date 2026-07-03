@@ -103,6 +103,43 @@
                         </div>
                     </div>
                     <div class="card">
+                        <div class="card-header">Lisensi</div>
+                        <div class="card-body">
+                            @if ($asset->licenses->count())
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-striped mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Tag</th>
+                                                <th>Kategori</th>
+                                                <th>Nama</th>
+                                                <th>Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($asset->licenses as $license)
+                                                <tr>
+                                                    <td>{{ $license->tag }}</td>
+                                                    <td>{{ $license->category->name ?? 'N/A' }}</td>
+                                                    <td>{{ $license->name }}</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-danger btn-detach-license"
+                                                            data-license-id="{{ $license->id }}"
+                                                            data-license-name="{{ $license->name }}">
+                                                            <i class="fa-regular fa-trash-can"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            @else
+                                <p class="text-muted mb-0">Tidak ada lisensi terkait.</p>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="card">
                         <div class="card-header">Catatan</div>
                         <div class="card-body">
                             @if (isset($asset->notes) && !empty($asset->notes))
@@ -129,4 +166,41 @@
 @endsection
 
 @push('script-foot')
+    <script>
+        $(document).ready(function() {
+            $(document).on('click', '.btn-detach-license', function() {
+                const licenseId = $(this).data('license-id');
+                const licenseName = $(this).data('license-name');
+
+                Swal.fire({
+                    title: 'Hapus Lisensi',
+                    text: `Apakah Anda yakin ingin menghapus lisensi "${licenseName}" dari aset ini?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, Hapus!',
+                    cancelButtonText: 'Batal',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "{{ route('admin.license.detach_asset', ['id' => ':licenseId', 'assetId' => $asset->id]) }}".replace(':licenseId', licenseId),
+                            type: "DELETE",
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function(response) {
+                                Swal.fire('Berhasil!', response.message, 'success').then(() => {
+                                    location.reload();
+                                });
+                            },
+                            error: function(xhr) {
+                                Swal.fire('Gagal!', xhr.responseJSON?.message || 'Gagal menghapus lisensi.', 'error');
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 @endpush

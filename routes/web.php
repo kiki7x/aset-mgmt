@@ -49,6 +49,8 @@ Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function ()
         // Route::get('/asettik/{id}/penugasan', [App\Http\Controllers\ShowAsetController::class, 'getPenugasanContent'])->name('admin.asettik.penugasan');
         Route::get('/asettik/{id}/tickets', [App\Http\Controllers\ShowAsetController::class, 'getTicketsContent'])->name('admin.asettik.tickets');
         Route::get('/asettik/{id}/files', [App\Http\Controllers\ShowAsetController::class, 'getFilesContent'])->name('admin.asettik.files');
+        Route::post('/asettik/{id}/files/upload', [App\Http\Controllers\ShowAsetController::class, 'uploadFile'])->name('admin.asettik.files.upload');
+        Route::delete('/asettik/{id}/files/{fileId}', [App\Http\Controllers\ShowAsetController::class, 'deleteFile'])->name('admin.asettik.files.delete');
         Route::get('/asettik/{id}/timelog', [App\Http\Controllers\ShowAsetController::class, 'getTimeLogContent'])->name('admin.asettik.timelog');
         Route::get('/asettik/{id}/edit', [App\Http\Controllers\ShowAsetController::class, 'getEditAssetContent'])->name('admin.asettik.edit');
     });
@@ -63,6 +65,8 @@ Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function ()
         Route::get('/asetrt/{id}/overview', [App\Http\Controllers\ShowAsetController::class, 'getOverviewContent'])->name('admin.asetrt.overview');
         Route::get('/asetrt/{id}/tickets', [App\Http\Controllers\ShowAsetController::class, 'getTicketsContent'])->name('admin.asetrt.tickets');
         Route::get('/asetrt/{id}/files', [App\Http\Controllers\ShowAsetController::class, 'getFilesContent'])->name('admin.asetrt.files');
+        Route::post('/asetrt/{id}/files/upload', [App\Http\Controllers\ShowAsetController::class, 'uploadFile'])->name('admin.asetrt.files.upload');
+        Route::delete('/asetrt/{id}/files/{fileId}', [App\Http\Controllers\ShowAsetController::class, 'deleteFile'])->name('admin.asetrt.files.delete');
         Route::get('/asetrt/{id}/timelog', [App\Http\Controllers\ShowAsetController::class, 'getTimeLogContent'])->name('admin.asetrt.timelog');
         Route::get('/asetrt/{id}/edit', [App\Http\Controllers\ShowAsetController::class, 'getEditAssetContent'])->name('admin.asetrt.edit');
     });

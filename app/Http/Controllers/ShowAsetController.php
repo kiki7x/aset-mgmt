@@ -6,8 +6,10 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Models\MaintenancesModel;
+use App\Models\FilesModel;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class ShowAsetController extends Controller
 {
@@ -47,15 +49,46 @@ class ShowAsetController extends Controller
 
     public function getFilesContent($id)
     {
-        // Logika untuk mengambil data Files berdasarkan $id
-        // Contoh data dummy:
-        $files = [
-            ['name' => 'Manual Book.pdf', 'size' => '2.5 MB', 'uploaded_at' => '2024-01-15'],
-            ['name' => 'Invoice Pembelian.jpg', 'size' => '0.8 MB', 'uploaded_at' => '2023-12-01'],
-        ];
-        $asset = \App\Models\AssetsModel::findOrFail($id);
+        $asset = \App\Models\AssetsModel::with('files')->findOrFail($id);
         Log::info("Loading Files for asset ID: $id");
-        return view('admin.detailaset.files', compact('id', 'files', 'asset'));
+        return view('admin.detailaset.files', compact('id', 'asset'));
+    }
+
+    public function uploadFile(Request $request, $id): JsonResponse
+    {
+        $request->validate([
+            'file' => 'required|file|max:10240|mimes:pdf,jpg,jpeg,png',
+            'name' => 'nullable|string|max:255',
+        ]);
+
+        $asset = \App\Models\AssetsModel::findOrFail($id);
+        $file = $request->file('file');
+        $originalName = $file->getClientOriginalName();
+        $fileName = time() . '_' . $originalName;
+        $filePath = $file->store('asset_files', 'public');
+
+        $displayName = $request->filled('name') ? $request->input('name') : $originalName;
+
+        FilesModel::create([
+            'asset_id' => $asset->id,
+            'name' => $displayName,
+            'file' => $filePath,
+        ]);
+
+        return response()->json(['message' => 'File berhasil diupload.']);
+    }
+
+    public function deleteFile($id, $fileId): JsonResponse
+    {
+        $file = FilesModel::where('asset_id', $id)->findOrFail($fileId);
+
+        if (Storage::disk('public')->exists($file->file)) {
+            Storage::disk('public')->delete($file->file);
+        }
+
+        $file->delete();
+
+        return response()->json(['message' => 'File berhasil dihapus.']);
     }
 
     public function getTimeLogContent($id)

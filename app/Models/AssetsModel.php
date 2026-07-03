@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AssetsModel extends Model
 {
@@ -104,6 +105,11 @@ class AssetsModel extends Model
     {
         return $this->belongsToMany(LicensesModel::class, 'licenses_assets', 'asset_id', 'license_id')
             ->withTimestamps();
+    }
+
+    public function files(): HasMany
+    {
+        return $this->hasMany(FilesModel::class, 'asset_id');
     }
 
 }
