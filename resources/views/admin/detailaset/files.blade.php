@@ -5,8 +5,8 @@
 
 @section('content-tab')
     <div class="d-flex justify-content-end mb-3">
-        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalUploadFile">
-            <i class="fas fa-upload"></i> Upload File
+        <button type="button" class="btn btn-outline-primary btn-upload-file" data-toggle="modal" data-target="#modalUploadFile" title="Upload File" data-placement="bottom">
+            <i class="fas fa-upload"></i>
         </button>
     </div>
 
@@ -37,7 +37,7 @@
                     $formatted = $size . ' B';
                 }
             @endphp
-            <li class="border bg-white shadow-sm rounded m-2 p-2" style="width:260px;height:70px;">
+            <li class="border bg-white shadow-sm rounded m-2 p-2" style="width:260px;height:80px;">
                 <div class="row align-items-center flex-nowrap h-100">
                     <div class="col-2 text-center px-0">
                         <i class="{{ $icon }} fa-2x"></i>
@@ -99,6 +99,12 @@
     <script>
         $(document).ready(function() {
             bsCustomFileInput.init();
+
+            $('.btn-upload-file').tooltip();
+
+            $('#modalUploadFile').on('hidden.bs.modal', function () {
+                $('.btn-upload-file').tooltip('hide');
+            });
 
             $('#formUploadFile').on('submit', function(e) {
                 e.preventDefault();

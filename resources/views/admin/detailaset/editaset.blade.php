@@ -49,9 +49,8 @@
                     <label for="location">Lokasi</label>
                     <select name="location_id" id="location" class="form-control select2">
                         <option value="">Pilih...</option>
-                        dd()
                         @foreach ($locations as $loc)
-                            <option value="{{ $loc->id }}" {{ isset($asset->location_id) && $asset->location_id == $loc->id ? 'selected' : '' }}>{{ $loc->name }}</option>
+                            <option value="{{ $loc->id }}" {{ isset($asset->location_id) && $asset->location_id == $loc->id ? 'selected' : '' }}>{{ $loc->building?->name ?? '-' }} - Lt {{ $loc->floor ?? '-' }} - {{ $loc->name }}</option>
                         @endforeach
                     </select>
                     <span id="error-location_id" class="text-danger small"></span>

@@ -13,9 +13,6 @@
 @endpush
 
 @section('content')
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">Form Edit Artikel</h3>
@@ -55,6 +52,18 @@
                                 @enderror
                             </div>
                             <div class="form-group">
+                                <label for="is_published">Status</label>
+                                <select class="form-control @error('is_published') is-invalid @enderror" id="is_published" name="is_published">
+                                    <option value="0" {{ old('is_published', $article->is_published) == 0 ? 'selected' : '' }}>Draft</option>
+                                    <option value="1" {{ old('is_published', $article->is_published) == 1 ? 'selected' : '' }}>Published</option>
+                                </select>
+                                @error('is_published')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="form-group">
                                 <label for="featured_image">Featured Image</label>
                                 @if ($article->featured_image_url)
                                     <div class="mb-2">
@@ -84,22 +93,14 @@
                         </div>
                         <!-- /.card-body -->
 
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Perbarui Artikel</button>
+                        <div class="card-footer d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary mr-2">Perbarui Artikel</button>
                             <a href="{{ route('admin.knowledge-base') }}" class="btn btn-secondary">Batal</a>
                         </div>
                     </form>
                 </div>
                 <!-- /.card -->
-            </div>
-            <!-- /.col -->
-        </div>
-        <!-- /.row -->
-    </div>
-    <!-- /.container-fluid -->
-@endsection
-
-<!-- Video Insert Modal -->
+            <!-- Video Insert Modal -->
 <div class="modal fade" id="kbVideoModal" tabindex="-1" role="dialog" aria-labelledby="kbVideoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -125,6 +126,8 @@
         </div>
     </div>
 </div>
+
+@endsection
 
 @push('script-foot')
     <!-- Summernote JS -->

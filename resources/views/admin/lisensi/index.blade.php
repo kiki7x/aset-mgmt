@@ -33,7 +33,7 @@
                                     <th>Nama</th>
                                     <th>Seats</th>
                                     <th>Status</th>
-                                    <th>Timestamp</th>
+                                    <th>Tanggal</th>
                                     <th>Opsi</th>
                                 </tr>
                             </thead>
@@ -186,8 +186,10 @@
                         data: null,
                         name: 'timestamp',
                         render: function(data) {
-                            return `<span class="text-muted small">Dibuat: ${moment(data.created_at).format('lll')} <br>
-                            Diupdate: ${moment(data.updated_at).format('lll')}</span>`;
+                            return `
+                                    <small class="text-muted">Dibuat: ${moment(data.created_at).format('DD MMM YYYY HH:mm')}</small><br>
+                                    <small class="text-muted">Diperbarui: ${moment(data.updated_at).format('DD MMM YYYY HH:mm')}</small>
+                                    `;
                         }
                     },
                     { data: 'action', name: 'action', orderable: false, searchable: false }

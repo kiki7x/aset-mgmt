@@ -77,7 +77,7 @@
                             <label for="location_id" class="mb-n2">Penempatan <span class="text-danger">*</span></label>
                             <select name="location_id" id="location_id" class="form-control select2">
                                 @foreach ($locations as $location)
-                                    <option value="{{ $location->id }}">{{ $location->name }}</option>
+                                    <option value="{{ $location->id }}">{{ $location->building?->name ?? '-' }} - Lt {{ $location->floor ?? '-' }} - {{ $location->name }}</option>
                                 @endforeach
                             </select>
                             <span class="text-danger small" id="error-location_id"></span>

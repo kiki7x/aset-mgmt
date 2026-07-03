@@ -49,6 +49,18 @@
                     @enderror
                 </div>
                 <div class="form-group">
+                    <label for="is_published">Status</label>
+                    <select class="form-control @error('is_published') is-invalid @enderror" id="is_published" name="is_published">
+                        <option value="0" {{ old('is_published') == '0' ? 'selected' : '' }}>Draft</option>
+                        <option value="1" {{ old('is_published') == '1' ? 'selected' : '' }}>Published</option>
+                    </select>
+                    @error('is_published')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+                <div class="form-group">
                     <label for="featured_image">Gambar Depan</label>
                     <input type="file" class="form-control-file @error('featured_image') is-invalid @enderror" id="featured_image" name="featured_image" accept="image/*">
                     <div class="mt-2 d-none" id="featured_image_preview_wrap">

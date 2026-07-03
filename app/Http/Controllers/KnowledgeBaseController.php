@@ -32,6 +32,7 @@ class KnowledgeBaseController extends Controller
             'title' => 'required|string|max:255|unique:kb_articles,title',
             'category_id' => 'required|exists:kb_categories,id',
             'content' => 'required',
+            'is_published' => 'nullable|boolean',
             'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
@@ -50,7 +51,8 @@ class KnowledgeBaseController extends Controller
             'category_id' => $request->category_id,
             'content' => $content,
             'author_id' => Auth::id(),
-            'slug' => Str::slug($request->title), // Sudah di boot model, tapi bisa dipertegas
+            'slug' => Str::slug($request->title),
+            'is_published' => $request->boolean('is_published'),
         ];
 
         if ($supportsFeaturedImageColumn) {
@@ -74,6 +76,7 @@ class KnowledgeBaseController extends Controller
             'title' => 'required|string|max:255|unique:kb_articles,title,' . $article->id,
             'category_id' => 'required|exists:kb_categories,id',
             'content' => 'required',
+            'is_published' => 'nullable|boolean',
             'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
@@ -97,7 +100,8 @@ class KnowledgeBaseController extends Controller
             'title' => $request->title,
             'category_id' => $request->category_id,
             'content' => $content,
-            'slug' => Str::slug($request->title), // Sudah di boot model, tapi bisa dipertegas
+            'slug' => Str::slug($request->title),
+            'is_published' => $request->boolean('is_published'),
         ];
 
         if ($supportsFeaturedImageColumn) {

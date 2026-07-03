@@ -34,9 +34,9 @@
                         <th>Judul Artikel</th>
                         <th>Kategori</th>
                         <th>Penulis</th>
-                        <th>Dibuat Pada</th>
-                        <th>Terakhir Diperbarui</th>
-                        <th>Aksi</th>
+                        <th>Status</th>
+                        <th>Tanggal</th>
+                        <th>Opsi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -50,22 +50,39 @@
                                     <span class="text-muted">-</span>
                                 @endif
                             </td>
-                            <td>{{ $article->title }}</td>
-                            <td>{{ $article->category->name ?? 'Tidak Ada' }}</td>
-                            <td>{{ $article->author->name ?? 'Pengguna Tidak Dikenal' }}</td>
-                            <td>{{ $article->created_at->format('d M Y H:i') }}</td>
-                            <td>{{ $article->updated_at->format('d M Y H:i') }}</td>
                             <td>
-                                <a href="{{ route('admin.knowledge-base.edit', $article->id) }}" class="btn btn-sm btn-warning" title="Edit" data-crud="true">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form action="{{ route('admin.knowledge-base.destroy', $article->id) }}" method="POST" class="d-inline delete-form">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" title="Hapus" data-crud="true">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
+                                <a href="{{ route('knowledge-base.show', $article->slug) }}" target="_blank" rel="noopener">{{ $article->title }}</a>
+                            </td>
+                            <td>{{ $article->category->name ?? 'Tidak Ada' }}</td>
+                            <td>{{ $article->author->fullname ?? 'Pengguna Tidak Dikenal' }}</td>
+                            <td>
+                                @if ($article->is_published)
+                                    <span class="badge badge-success">Published</span>
+                                @else
+                                    <span class="badge badge-warning">Draft</span>
+                                @endif
+                            </td>
+                            <td>
+                                <small class="text-muted">Dibuat: {{ $article->created_at->format('d M Y H:i') }}</small>
+                                <br>
+                                <small class="text-muted">Diperbarui: {{ $article->updated_at->format('d M Y H:i') }}</small>
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" title="More..."></button>
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                            <li><a class="mx-3" href="{{ route('admin.knowledge-base.edit', $article->id) }}" data-crud="true">Edit</a></li>
+                                            <li>
+                                                <form action="{{ route('admin.knowledge-base.destroy', $article->id) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <span class="mx-3 btn-delete-article" style="cursor:pointer;color:#007bff;" data-id="{{ $article->id }}">Delete</span>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     @endforeach
@@ -105,7 +122,7 @@
                         <thead>
                             <tr>
                                 <th>Nama</th>
-                                <th>Aksi</th>
+                        <th>Opsi</th>
                             </tr>
                         </thead>
                         <tbody id="categoryList">
@@ -159,8 +176,8 @@
             }).buttons().container().appendTo('#articlesTable_wrapper .col-md-6:eq(0)');
 
             // Handle Article Delete
-            $('.delete-form').on('submit', function(e) {
-                e.preventDefault();
+            $(document).on('click', '.btn-delete-article', function() {
+                const form = $(this).closest('form');
                 Swal.fire({
                     title: 'Apakah Anda yakin?',
                     text: "Artikel ini akan dihapus secara permanen!",
@@ -172,7 +189,7 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        this.submit();
+                        form.submit();
                     }
                 });
             });

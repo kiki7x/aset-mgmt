@@ -54,7 +54,7 @@
                             <th>Kategori</th>
                             <th>Tipe/Model</th>
                             <th>Foto</th>
-                            <th>Perubahan Terakhir</th>
+                            <th>Tanggal</th>
                             <th>Opsi</th>
                         </tr>
                     </thead>
@@ -158,8 +158,8 @@
                                 name: 'timestamp',
                                 render: function(data) {
                                     return `
-                                    <span class="text-muted small">
-                                    ${moment(data.updated_at).format('DD MMM YYYY HH:mm')} </span><br>
+                                    <small class="text-muted">Dibuat: ${moment(data.created_at).format('DD MMM YYYY HH:mm')}</small><br>
+                                    <small class="text-muted">Diperbarui: ${moment(data.updated_at).format('DD MMM YYYY HH:mm')}</small>
                                     `;
                                 }
                             },

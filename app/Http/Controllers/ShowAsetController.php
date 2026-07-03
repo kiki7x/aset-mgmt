@@ -124,7 +124,7 @@ class ShowAsetController extends Controller
         $manufacturers = \App\Models\ManufacturersModel::all();
         $models = \App\Models\ModelsModel::all();
         $suppliers = \App\Models\SuppliersModel::all();
-        $locations = \App\Models\LocationsModel::all();
+        $locations = \App\Models\LocationsModel::with('building')->get();
         $statuses = \App\Models\LabelsModel::all();
 
         Log::info("Loading Edit Asset for asset ID: $id");

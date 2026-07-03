@@ -40,7 +40,7 @@ class AssetController extends Controller
         $manufacturers = ManufacturersModel::get();
         $models = ModelsModel::get();
         $suppliers = SuppliersModel::get();
-        $locations = LocationsModel::get();
+        $locations = LocationsModel::with('building')->get();
         $statuses = LabelsModel::get();
         $users = User::get();
         $categories = AssetcategoriesModel::whereIn('classification_id', [2])->get();
@@ -63,7 +63,7 @@ class AssetController extends Controller
         $manufacturers = ManufacturersModel::get();
         $models = ModelsModel::get();
         $suppliers = SuppliersModel::get();
-        $locations = LocationsModel::get();
+        $locations = LocationsModel::with('building')->get();
         $statuses = LabelsModel::get();
         $users = User::get();
 
