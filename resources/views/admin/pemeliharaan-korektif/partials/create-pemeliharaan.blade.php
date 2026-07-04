@@ -14,7 +14,7 @@
                     <div class="row">
                         <!-- Judul -->
                         <div class="form-group col-md-12">
-                            <label for="name">Judul Penugasan / Tindakan Korektif<span class="text-danger">*</span></label>
+                            <label class="mb-n1" for="name">Judul Penugasan / Tindakan Korektif<span class="text-danger">*</span></label>
                             <input type="text" name="name" class="form-control" id="name" placeholder="Contoh: 'Install software MS Office' / 'Perbaikan Kendaraan ABC atau Mesin XYZ'">
                             <span class="text-danger small" id="error-name"></span>
                         </div>
@@ -22,7 +22,7 @@
                         <!-- Tipe -->
                         <div class="form-group col-md-6">
                             <div>
-                                <label for="issuetype">Tipe <span class="text-danger">*</span></label>
+                                <label class="mb-n1" for="issuetype">Tipe <span class="text-danger">*</span></label>
                                 <select name="issuetype" id="issuetype" class="form-control select2" for="issuetype">
                                     <option name="None" id="None" value="">None</option>
                                     <option name="Tugas" id="Tugas" data-icon="fa-regular fa-square-check fa-fw text-primary" value="Tugas">Tugas</option>
@@ -39,7 +39,7 @@
                         <!-- Petugas -->
                         <div class="form-group col-md-6">
                             <div>
-                                <label for="pic_id">Tugaskan kpd <span class="text-danger">*</span></label>
+                                <label class="mb-n1" for="pic_id">Tugaskan kpd <span class="text-danger">*</span></label>
                                 <select name="pic_id" id="pic_id" class="form-control select2">
                                     <option name="pic_id" id="pic_id" value="">None</option>
                                     @foreach ($users as $user)
@@ -52,7 +52,7 @@
 
                         <!-- Aset -->
                         <div class="form-group col-md-12">
-                            <label for="asset_id">Pilih Aset Terkait</label>
+                            <label class="mb-n1" for="asset_id">Pilih Aset Terkait</label>
                             <select name="asset_id" id="asset_id" class="form-control select2tag" multiple>
                                 <option name="asset_id" value="">None</option>
                                 @foreach ($assets as $asset)
@@ -98,7 +98,7 @@
                         <!-- Skala Prioritas -->
                         <div class="form-group col-md-6">
                             <div>
-                                <label for="priority">Prioritas <span class="text-danger">*</span></label>
+                                <label class="mb-n1" for="priority">Prioritas <span class="text-danger">*</span></label>
                                 <select name="priority" id="priority" class="form-control select2 @error('form.priority') is-invalid @enderror" for="priority">
                                     <option name="Pilih" id="Pilih" value="">None</option>
                                     <option name="Rendah" id="Rendah" value="Rendah" data-icon="fas fa-flag text-secondary">Rendah</option>
@@ -111,7 +111,7 @@
 
                         <!-- Batas Waktu -->
                         <div class="form-group col-md-6">
-                            <label>Batas Waktu <span class="text-danger">*</span></label>
+                            <label class="mb-n1">Batas Waktu <span class="text-danger">*</span></label>
                             <div>
                                 <input type="text" class="form-control" id="duedate" name="duedate" placeholder="Select date" />
                             </div>
@@ -120,7 +120,7 @@
 
                         <!-- Catatan -->
                         <div class="form-group col-md-12">
-                            <label for="description">Deskripsi</label> <span class="text-muted font-italic">deskripsikan rincian perintah tugas</span>
+                            <label class="mb-n1" for="description">Deskripsi</label> <span class="text-muted font-italic">deskripsikan rincian perintah tugas</span>
                             <textarea name="description" id="description" rows="4" class="form-control" placeholder="Write description here..."></textarea>
                             <span id="error-description" class="text-danger small"></span>
                         </div>

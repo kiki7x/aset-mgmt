@@ -241,5 +241,48 @@ class PemeliharaanKorektifController extends Controller
         return response()->json(['message' => 'Status pemeliharaan berhasil diubah.', 'data' => $maintenance], 200);
     }
 
+    public function update(Request $request, $id): JsonResponse
+    {
+        $maintenance = \App\Models\MaintenancesModel::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'issuetype' => 'required|string|max:100',
+            'asset_id' => 'required|exists:assets,id',
+            'pic_id' => 'required|exists:users,id',
+            'priority' => 'required|string|max:50',
+            'duedate' => 'required|date',
+        ]);
+
+        try {
+            $data = [
+                'name' => $request->name,
+                'description' => $request->description,
+                'issuetype' => $request->issuetype,
+                'asset_id' => $request->asset_id,
+                'pic_id' => $request->pic_id,
+                'priority' => $request->priority,
+                'duedate' => Carbon::parse($request->duedate)->format('Y-m-d'),
+            ];
+            $maintenance->update($data);
+
+            return response()->json(['message' => 'Pemeliharaan korektif berhasil diperbarui.', 'data' => $maintenance], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Pemeliharaan korektif gagal diperbarui.', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function destroy($id): JsonResponse
+    {
+        $maintenance = \App\Models\MaintenancesModel::findOrFail($id);
+
+        try {
+            $maintenance->delete();
+            return response()->json(['message' => 'Pemeliharaan korektif berhasil dihapus.'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Pemeliharaan korektif gagal dihapus.', 'error' => $e->getMessage()], 500);
+        }
+    }
 
 }

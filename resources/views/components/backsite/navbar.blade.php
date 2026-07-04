@@ -156,7 +156,7 @@
                           </li>
                       </ul>
                   </li>
-                  <li class="nav-item {{ request()->is('admin/pemeliharaan*') || request()->is('admin/tiket*') || request()->is('admin/proyek*') ? 'menu-open' : 'menu-open' }}">
+                  <li class="nav-item {{ request()->is('admin/pemeliharaan*') || request()->is('admin/tiket*') ? 'menu-open' : 'menu-open' }}">
                       <a href="#" class="nav-link {{ request()->is('admin/pemeliharaan*') ? 'active' : '' }}">
                           <i class="nav-icon fa-solid fa-screwdriver-wrench"></i>
                           <p>
@@ -182,14 +182,8 @@
                                   <i class="nav-icon fa-solid fa-ticket"></i>
                                   <p>Tiket</p>
                               </a>
-                          </li>
-                          {{-- <li class="nav-item" data-toggle="tooltip" title="coming soon..." data-placement="top">
-                              <a href="{{ route('admin.proyek') }}" class="nav-link {{ request()->is('admin/proyek') ? 'active' : '' }}">
-                                  <i class="nav-icon fa-solid fa-thumbtack"></i>
-                                  <p>Proyek</p>
-                              </a>
-                          </li> --}}
-                      </ul>
+                           </li>
+                       </ul>
                   </li>
                   <li class="nav-item" data-toggle="tooltip" data-placement="top">
                       <a href="{{ route('admin.knowledge-base') }}" class="nav-link {{ request()->is('admin/knowledge-base*') ? 'active' : '' }}">
@@ -243,6 +237,14 @@
                                   <p>Import</p>
                               </a>
                           </li>
+                          @role('superadmin')
+                          <li class="nav-item">
+                              <a href="{{ route('admin.settings.permission') }}" class="nav-link {{ request()->is('admin/settings/permission') ? 'active' : '' }}">
+                                  <i class="nav-icon fa-solid fa-shield-halved"></i>
+                                  <p>Permission</p>
+                              </a>
+                          </li>
+                          @endrole
                       </ul>
                   </li>
               </ul>

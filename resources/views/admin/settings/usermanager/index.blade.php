@@ -46,10 +46,12 @@
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>Foto</th>
                             <th>Nama Lengkap</th>
                             <th>Username</th>
                             <th>Email</th>
-                            <th>Tanggal Registrasi</th>
+                            <th>Role</th>
+                            <th>Tanggal</th>
                             <th>Opsi</th>
                         </tr>
                     </thead>
@@ -77,42 +79,42 @@
                         <div class="row">
                             {{-- Full Name --}}
                             <div class="form-group col-12">
-                                <label for="fullname">Nama Lengkap <span class="text-danger">*</span></label>
+                                <label class="mb-n1" for="fullname">Nama Lengkap <span class="text-danger">*</span></label>
                                 <input type="text" name="fullname" id="fullname" class="form-control">
                                 <span class="text-danger small" id="error-fullname"></span>
                             </div>
 
                             {{-- Username --}}
                             <div class="form-group col-12">
-                                <label for="username">Username <span class="text-danger">*</span></label>
+                                <label class="mb-n1" for="username">Username <span class="text-danger">*</span></label>
                                 <input type="text" name="username" id="username" class="form-control">
                                 <span class="text-danger small" id="error-username"></span>
                             </div>
 
                             {{-- Email --}}
                             <div class="form-group col-12">
-                                <label for="email">Email <span class="text-danger">*</span></label>
+                                <label class="mb-n1" for="email">Email <span class="text-danger">*</span></label>
                                 <input type="email" name="email" id="email" class="form-control">
                                 <span class="text-danger small" id="error-email"></span>
                             </div>
 
                             {{-- Password --}}
                             <div class="form-group col-12">
-                                <label for="password">Password <span class="text-danger">*</span></label>
+                                <label class="mb-n1" for="password">Password <span class="text-danger">*</span></label>
                                 <input type="password" name="password" id="password" class="form-control">
                                 <span class="text-danger small" id="error-password"></span>
                             </div>
 
                             {{-- Confirm Password --}}
                             <div class="form-group col-12">
-                                <label for="password_confirmation">Konfirmasi Password <span class="text-danger">*</span></label>
+                                <label class="mb-n1" for="password_confirmation">Konfirmasi Password <span class="text-danger">*</span></label>
                                 <input type="password" name="password_confirmation" id="password_confirmation" class="form-control">
                                 <span class="text-danger small" id="error-password_confirmation"></span>
                             </div>
 
                             {{-- Image Upload --}}
                             <div class="form-group col-12">
-                                <label for="avatar">Upload Avatar</label>
+                                <label class="mb-n1" for="avatar">Upload Avatar</label>
                                 <input type="file" name="avatar" id="avatar" class="form-control" accept="image/jpeg,image/jpg,image/png">
                                 <small class="form-text text-muted">Format: JPG, JPEG, PNG (Max: 2MB)</small>
                                 <span class="text-danger small" id="error-avatar"></span>
@@ -120,7 +122,7 @@
 
                             {{-- Role --}}
                             <div class="form-group col-12">
-                                <label for="role">Role <span class="text-danger">*</span></label>
+                                <label class="mb-n1" for="role">Role <span class="text-danger">*</span></label>
                                 <select name="role" id="role" class="form-control select2">
                                     <option value="" disabled selected>-- Pilih Role --</option>
                                     @foreach ($roles as $role)
@@ -161,54 +163,54 @@
                         <div class="row">
                             {{-- Full Name --}}
                             <div class="form-group col-12">
-                                <label for="edit_fullname">Nama Lengkap <span class="text-danger">*</span></label>
+                                <label class="mb-n1" for="edit_fullname">Nama Lengkap <span class="text-danger">*</span></label>
                                 <input type="text" name="fullname" id="edit_fullname" class="form-control">
                                 <span class="text-danger small" id="error-edit_fullname"></span>
                             </div>
 
                             {{-- Username --}}
                             <div class="form-group col-12">
-                                <label for="edit_username">Username <span class="text-danger">*</span></label>
+                                <label class="mb-n1" for="edit_username">Username <span class="text-danger">*</span></label>
                                 <input type="text" name="username" id="edit_username" class="form-control" readonly>
                                 <span class="text-danger small" id="error-edit_username"></span>
                             </div>
 
                             {{-- Email --}}
                             <div class="form-group col-12">
-                                <label for="edit_email">Email <span class="text-danger">*</span></label>
+                                <label class="mb-n1" for="edit_email">Email <span class="text-danger">*</span></label>
                                 <input type="email" name="email" id="edit_email" class="form-control">
                                 <span class="text-danger small" id="error-edit_email"></span>
                             </div>
 
                             {{-- Password --}}
                             <div class="form-group col-12">
-                                <label for="edit_password">Password <span class="text-danger">*</span></label>
+                                <label class="mb-n1" for="edit_password">Password <span class="text-danger">*</span></label>
                                 <input type="password" name="password" id="edit_password" class="form-control" placeholder="Kosongkan jika tidak ingin mengubah password">
                                 <span class="text-danger small" id="error-edit_password"></span>
                             </div>
 
                             {{-- Confirm Password --}}
                             <div class="form-group col-12">
-                                <label for="edit_password_confirmation">Konfirmasi Password <span class="text-danger">*</span></label>
+                                <label class="mb-n1" for="edit_password_confirmation">Konfirmasi Password <span class="text-danger">*</span></label>
                                 <input type="password" name="password_confirmation" id="edit_password_confirmation" class="form-control" placeholder="Kosongkan jika tidak ingin mengubah password">
                                 <span class="text-danger small" id="error-edit_password_confirmation"></span>
                             </div>
 
                             {{-- Image Upload --}}
                             <div class="form-group col-6">
-                                <label for="edit_avatar">Ganti Avatar</label>
+                                <label class="mb-n1" for="edit_avatar">Ganti Avatar</label>
                                 <input type="file" name="avatar" id="edit_avatar" class="form-control" accept="image/jpeg,image/jpg,image/png">
                                 <span class="text-danger small" id="error-edit_avatar"></span>
                             </div>
                             <div class="form-group col-6">
-                                <label>Preview Avatar Saat Ini</label><br>
+                                <label class="mb-n1">Preview Avatar Saat Ini</label><br>
                                 <img id="currentAvatarPreview" src="" alt="Preview Avatar" class="img-thumbnail" style="max-width: 100px; max-height: 100px;">
                                 <span class="text-danger small" id="error-edit_avatar"></span>
                             </div>
 
                             {{-- Role --}}
                             <div class="form-group col-12">
-                                <label for="edit_role">Role <span class="text-danger">*</span></label>
+                                <label class="mb-n1" for="edit_role">Role <span class="text-danger">*</span></label>
                                 <select name="role" id="edit_role" class="form-control select2">
                                     @foreach ($roles as $role)
                                         <option value="{{ $role->name }}">{{ ucwords(str_replace('_', ' ', $role->name)) }}</option>
@@ -255,6 +257,18 @@
                             name: 'id'
                         },
                         {
+                            data: 'foto',
+                            name: 'foto',
+                            render: function(data, type, row) {
+                                if (row.avatar) {
+                                    return '<img src="{{ asset('storage') }}/' + row.avatar + '" alt="Avatar" class="img-circle" width="40" height="40">';
+                                }
+                                return '<img src="{{ asset('storage/avatar/default-avatar.jpg') }}" alt="Avatar" class="img-circle" width="40" height="40">';
+                            },
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
                             data: 'fullname',
                             name: 'fullname'
                         },
@@ -265,6 +279,12 @@
                         {
                             data: 'email',
                             name: 'email'
+                        },
+                        {
+                            data: 'role',
+                            name: 'role',
+                            orderable: false,
+                            searchable: false
                         },
                         {
                             data: null,
@@ -368,7 +388,7 @@
                         $('#currentAvatarPreview').attr('src', '{{ asset('storage') }}/' + response.avatar);
                         $('#edit_role').val(response.roles[0]?.name).trigger('change');
 
-                        $('#editModal').modal('show'); // Buka modal edit
+                        $('#editModal').data('id', id).modal('show');
                     },
                     error: function(xhr) {
                         Swal.fire({
@@ -376,6 +396,41 @@
                             title: 'Gagal',
                             text: 'Terjadi kesalahan saat mengambil data kategori.',
                         });
+                    }
+                });
+            });
+
+            // Handle Submit Edit
+            $('#formEditUser').on('submit', function(e) {
+                e.preventDefault();
+                var id = $('#editModal').data('id');
+                var formData = new FormData(this);
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: `{{ url('/admin/settings/usermanager/update') }}/${id}`,
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: response.message,
+                        }).then(() => {
+                            $('#editModal').modal('hide');
+                            $('#tableUsers').DataTable().ajax.reload();
+                        });
+                    },
+                    error: function(xhr) {
+                        if (xhr.responseJSON?.errors) {
+                            $('.text-danger.small').text('');
+                            $.each(xhr.responseJSON.errors, function(key, value) {
+                                $('#error-edit_' + key).text(value[0]);
+                            });
+                        }
                     }
                 });
             });

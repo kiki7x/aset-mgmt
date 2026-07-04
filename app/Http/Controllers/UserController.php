@@ -30,6 +30,17 @@ class UserController extends Controller
 
         return DataTables::of($users)
             ->addIndexColumn()
+            ->addColumn('foto', function ($users) {
+                if ($users->avatar) {
+                    return '<img src="' . asset('storage/' . $users->avatar) . '" alt="Avatar" class="img-circle" width="40" height="40">';
+                }
+                return '<img src="' . asset('storage/avatar/default-avatar.jpg') . '" alt="Avatar" class="img-circle" width="40" height="40">';
+            })
+            ->addColumn('role', function ($users) {
+                return $users->roles->pluck('name')->map(function ($role) {
+                    return ucwords(str_replace('_', ' ', $role));
+                })->implode(', ');
+            })
             ->addColumn('action', function ($users) {
                 return
                     '
@@ -84,6 +95,40 @@ class UserController extends Controller
             $query->select('id', 'name');
         }])->findOrFail($id);
         return response()->json($user);
+    }
+
+    public function update(Request $request, $id): JsonResponse
+    {
+        $user = \App\Models\User::findOrFail($id);
+
+        $request->validate([
+            'fullname' => 'required|string|max:100',
+            'email' => 'required|string|email|max:50|unique:users,email,' . $id,
+            'password' => 'nullable|string|min:8|confirmed',
+            'avatar' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            'role' => 'required|string|exists:roles,name',
+        ]);
+
+        $data = [
+            'fullname' => $request->fullname,
+            'email' => $request->email,
+        ];
+
+        if ($request->filled('password')) {
+            $data['password'] = bcrypt($request->password);
+        }
+
+        if ($request->hasFile('avatar')) {
+            if ($user->avatar) {
+                \Storage::disk('public')->delete($user->avatar);
+            }
+            $data['avatar'] = $request->file('avatar')->store('avatar', 'public');
+        }
+
+        $user->update($data);
+        $user->syncRoles([$request->role]);
+
+        return response()->json(['message' => 'User berhasil diperbarui.']);
     }
 
     public function delete($id): JsonResponse

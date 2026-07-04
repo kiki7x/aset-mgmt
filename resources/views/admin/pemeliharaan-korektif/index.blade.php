@@ -52,31 +52,9 @@
         </div>
     </div>
 
-    <!-- Modal Konfirmasi -->
-    <div class="modal fade" data-backdrop="static" role="dialog" id="modalDelete">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Konfirmasi Penghapusan !</h5>
-                    <button type="button" class="close" aria-label="Close">
-                        <span>×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Apakah Anda yakin ingin menghapus data ini?
-                </div>
-                <div class="modal-footer">
-                    <button wire:click="$dispatch('closeModalDelete')" type="button" class="btn btn-secondary">Batal</button>
-                    <button wire:click="$dispatch('delete', { id:  })" type="button" class="btn btn-danger" data-crud="true">Ya, Hapus</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="card">
         <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
             <h3 class="card-title font-weight-bold"><i class="fa-solid fa-clipboard-check"></i> Riwayat Pemeliharaan Korektif <span class="badge end-0 mr-3 bg-info text-light"> {{ $totalPemeliharaanSelesai }} </span></h3>
-            {{-- <button class="btn btn-outline-primary" onclick="openModalCreate()" style="margin-left: auto;" data-toggle="tooltip" data-placement="top" title="Tambah Data"><i class="fa-regular fa-plus"></i></button> --}}
         </div>
         <!-- /.card-header -->
         <div class="card-body">
@@ -103,28 +81,6 @@
         </div>
     </div>
 
-    <!-- Modal Konfirmasi -->
-    <div class="modal fade" data-backdrop="static" role="dialog" id="modalDelete">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Konfirmasi Penghapusan !</h5>
-                    <button type="button" class="close" aria-label="Close">
-                        <span>×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Apakah Anda yakin ingin menghapus data ini?
-                </div>
-                <div class="modal-footer">
-                    <button wire:click="$dispatch('closeModalDelete')" type="button" class="btn btn-secondary">Batal</button>
-                    <button wire:click="$dispatch('delete', { id:  })" type="button" class="btn btn-danger" data-crud="true">Ya, Hapus</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- Komponen Modal/CreateAsetTik --}}
     @include('admin.pemeliharaan-korektif.partials.create-pemeliharaan')
     @include('admin.pemeliharaan-korektif.partials.tl-pemeliharaan')
     @include('admin.pemeliharaan-korektif.partials.edit-pemeliharaan')
@@ -366,6 +322,46 @@
                     ],
                 })
             };
+
+            function deletePemeliharaan(id) {
+                Swal.fire({
+                    title: 'Konfirmasi Penghapusan!',
+                    text: 'Apakah Anda yakin ingin menghapus data ini?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Ya, Hapus',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            url: "{{ route('admin.pemeliharaan-korektif.destroy', ['id' => ':id']) }}".replace(':id', id),
+                            type: 'DELETE',
+                            success: function(response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil!',
+                                    text: response.message,
+                                }).then(() => {
+                                    $('#tablePemeliharaan').DataTable().ajax.reload();
+                                    $('#tablePemeliharaanSelesai').DataTable().ajax.reload();
+                                });
+                            },
+                            error: function(xhr) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Terjadi kesalahan saat menghapus data.',
+                                });
+                            }
+                        });
+                    }
+                });
+            }
         </script>
     @endpush
 @endsection

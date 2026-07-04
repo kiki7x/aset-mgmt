@@ -25,6 +25,8 @@ class DatabaseSeeder extends Seeder
             ModelsSeeder::class,
             SuppliersSeeder::class,
             KnowledgeBaseSeeder::class,
+            PermissionSeeder::class,
+            RoleHasPermissionSeeder::class,
             // AssetsRTSeeder::class,
             // AssetsTIKSeeder::class,
         ]);

@@ -18,7 +18,7 @@
 @section('content')
     <div class="row">
         {{-- Import Aset Rumah Tangga --}}
-        <div class="col-lg-12 col-md-12">
+        <div class="col-lg-4 col-md-12">
             <div class="card">
                 <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                     <h3 class="card-title font-weight-bold"><i class="fa-solid fa-building"></i> Import Aset Rumah Tangga <span class="badge end-0 mr-3 bg-info text-light"></span></h3>
@@ -51,12 +51,8 @@
                 </form>
             </div>
         </div>
-    </div>
-    <hr>
-
-    {{-- Import Aset TIK --}}
-    <div class="row">
-        <div class="col-lg-12 col-md-12">
+        {{-- Import Aset TIK --}}
+        <div class="col-lg-4 col-md-12">
             <div class="card">
                 <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                     <h3 class="card-title font-weight-bold"><i class="fa-solid fa-computer"></i> Import Aset TIK <span class="badge end-0 mr-3 bg-info text-light"></span></h3>
@@ -89,81 +85,8 @@
                 </form>
             </div>
         </div>
-
-        {{-- Import Komponen TIK --}}
-        {{-- <div class="col-lg-6 col-md-12">
-            <div class="card">
-                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3 class="card-title font-weight-bold"><i class="fa-solid fa-mouse"></i> Import Komponen TIK <span class="badge end-0 mr-3 bg-info text-light"></span></h3>
-                </div>
-                <form id="formImportKomponentTik" method="POST" autocomplete="off" enctype="multipart/form-data">
-                    @csrf
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-auto">
-                                <div class="form-group">
-                                    <label for="filekomponentik">Import Komponen TIK <span class="text-danger">*</span></label>
-                                    <div class="custom-file">
-                                        <input type="file" class="form-control custom-file-input" id="filekomponentik" name="filekomponentik" accept=".xlsx" required>
-                                        <label class="custom-file-label" for="filekomponentik">Import Komponen TIK</label>
-                                        <small class="form-text text-muted">Format: XLSX (Max: 2MB)</small>
-                                    </div>
-                                    <span id="error-filekomponentik" class="text-danger small"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-end">
-                        <a href="javascript:void(0)" id="btnTemplateKomponenTik" class="btn btn-secondary mr-2">
-                            <i class="fas fa-file-download"></i> Download Template
-                        </a>
-                        <button type="submit" id="btnImportKomponenTik" class="btn btn-primary">
-                            <i class="fas fa-file-import"></i> Import
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div> --}}
-        {{-- Import Lisensi TIK --}}
-        {{-- <div class="col-lg-6 col-md-12">
-            <div class="card">
-                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3 class="card-title font-weight-bold"><i class="fa-solid fa-key"></i> Import Lisensi TIK <span class="badge end-0 mr-3 bg-info text-light"></span></h3>
-                </div>
-                <form id="formImportLisensitTik" method="POST" autocomplete="off" enctype="multipart/form-data">
-                    @csrf
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-auto">
-                                <div class="form-group">
-                                    <label for="attachment">Import Lisensi TIK <span class="text-danger">*</span></label>
-                                    <div class="custom-file">
-                                        <input type="file" class="form-control custom-file-input" id="importlisensitik" name="attachment" accept=".xlsx" required>
-                                        <label class="custom-file-label" for="attachment">Import Lisensi TIK</label>
-                                        <small class="form-text text-muted">Format: XLSX (Max: 2MB)</small>
-                                    </div>
-                                    <span id="error-attachment" class="text-danger small"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-end">
-                        <a href="javascript:void(0)" id="btnTemplateLisensiTik" class="btn btn-secondary mr-2">
-                            <i class="fas fa-file-download"></i> Download Template
-                        </a>
-                        <button type="submit" id="btnImportLisensiTik" class="btn btn-primary">
-                            <i class="fas fa-file-import"></i> Import
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div> --}}
-    </div>
-    <hr>
-
-    {{-- Import Lokasi --}}
-    <div class="row">
-        <div class="col-lg-12 col-md-12">
+        {{-- Import Lokasi --}}
+        <div class="col-lg-4 col-md-12">
             <div class="card">
                 <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                     <h3 class="card-title font-weight-bold"><i class="fa-regular fa-building"></i> Import Lokasi <span class="badge end-0 mr-3 bg-info text-light"></span></h3>
@@ -196,16 +119,10 @@
                 </form>
             </div>
         </div>
-    </div>
-
-    <hr>
-
-    {{-- Import User Management --}}
-    <div class="row">
-        <div class="col-lg-12 col-md-12">
+        <div class="col-lg-4 col-md-12">
             <div class="card">
                 <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3 class="card-title font-weight-bold"><i class="fa-solid fa-users"></i> Import User Management <span class="badge end-0 mr-3 bg-info text-light"></span></h3>
+                    <h3 class="card-title font-weight-bold"><i class="fa-solid fa-users"></i> Import User <span class="badge end-0 mr-3 bg-info text-light"></span></h3>
                 </div>
                 <form id="formImportUserManagement" method="POST" enctype="multipart/form-data" data-crud="true">
                     @csrf
@@ -236,7 +153,6 @@
             </div>
         </div>
     </div>
-
 
     @push('script-foot')
         <script>
@@ -401,7 +317,9 @@
                         const alertConfig = isPartialError ? {
                             icon: 'warning',
                             title: 'Sebagian data gagal diimport',
-                            html: '<div class="text-left"><p>Berhasil disimpan: <strong>' + res.success_count + '</strong></p><ul class="mb-0">' + res.errors.map(function(err) { return '<li>' + err + '</li>'; }).join('') + '</ul></div>'
+                            html: '<div class="text-left"><p>Berhasil disimpan: <strong>' + res.success_count + '</strong></p><ul class="mb-0">' + res.errors.map(function(err) {
+                                return '<li>' + err + '</li>';
+                            }).join('') + '</ul></div>'
                         } : {
                             icon: 'success',
                             title: 'Berhasil!',

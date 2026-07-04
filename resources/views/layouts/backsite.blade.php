@@ -49,9 +49,7 @@
     {{-- ./script-head --}}
     @php
         $isReadOnlyUser = auth()->check() && auth()->user()->hasRole('user');
-        // current admin module (second URL segment under /admin/{module}/...)
         $currentModule = request()->segment(2);
-        // per-module forbidden roles (server-side mapping must match middleware)
         $forbiddenByModule = [
             'asetrt' => ['admin_tik', 'staf_tik'],
             'asettik' => ['admin_rt', 'staf_driver', 'staf_engineering'],

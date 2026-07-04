@@ -13,7 +13,7 @@
                 <div class="modal-body">
                     {{-- form ubah status --}}
                     <div class="form-group">
-                        <label for="status">Ubah Status <span class="text-danger">*</span></label>
+                        <label class="mb-n1" for="status">Ubah Status <span class="text-danger">*</span></label>
                         <select class="form-control" id="ubahstatus" name="status">
                             <option name="status" value="">-- Pilih Status --</option>
                             <option name="status" value="Sedang Dikerjakan">Sedang Dikerjakan</option>
@@ -23,7 +23,7 @@
                     </div>
                     {{-- buat inpu textarea untuk alasan ditahan --}}
                     <div class="form-group">
-                        <label for="notes">Alasan Ditahan <span class="text-danger">*</span></label>
+                        <label class="mb-n1" for="notes">Alasan Ditahan <span class="text-danger">*</span></label>
                         <textarea class="form-control" rows="5" id="notes" name="notes"></textarea>
                         <span id="error-notes" class="text-danger small"></span>
                     </div>
@@ -53,20 +53,20 @@
                 <div class="modal-body">
                     {{-- Bukti dukung --}}
                     <div class="form-group">
-                        <label for="attachment_link">Bukti dukung <span class="text-danger">*</span></label>
+                        <label class="mb-n1" for="attachment_link">Bukti dukung <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="attachment_link" name="attachment_link">
                         <small class="form-text text-muted">Masukkan link bukti dukung</small>
                         <span id="error-attachment_link" class="text-danger small"></span>
                     </div>
                     {{-- Biaya --}}
                     <div class="form-group">
-                        <label for="cost">Biaya <span class="text-danger">*</span></label>
+                        <label class="mb-n1" for="cost">Biaya <span class="text-danger">*</span></label>
                         <input type="string" class="form-control" id="cost" name="cost" placeholder="Rp 0">
                         <span id="error-cost" class="text-danger small"></span>
                     </div>
                     {{-- Catatan --}}
                     <div class="form-group">
-                        <label for="notes">Catatan <span class="text-danger">*</span></label>
+                        <label class="mb-n1" for="notes">Catatan <span class="text-danger">*</span></label>
                         <textarea class="form-control" rows="5" id="notes" name="notes"></textarea>
                         <span id="error-notes" class="text-danger small"></span>
                     </div>

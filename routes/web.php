@@ -36,7 +36,7 @@ Route::post('/servicedesk/store', [TiketController::class, 'store'])->name('serv
 Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function () {
     Route::get('/', [App\Http\Controllers\AdminController::class, 'index'])->name('admin.index');
     // Route Aset TIK
-    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering|user', 'readonly_user'])->group(function () {
+    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering|user', 'readonly_user', 'module_restriction'])->group(function () {
         Route::get('/asettik', [App\Http\Controllers\AssetController::class, 'index_tik'])->name('admin.asettik');
         Route::get('/asettik/get_assets', [App\Http\Controllers\AssetController::class, 'get_assets'])->name('admin.asettik.get_assets');
         Route::post('/asettik/store/{classification}', [App\Http\Controllers\AssetController::class, 'store'])->name('admin.asettik.store');
@@ -55,7 +55,7 @@ Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function ()
         Route::get('/asettik/{id}/edit', [App\Http\Controllers\ShowAsetController::class, 'getEditAssetContent'])->name('admin.asettik.edit');
     });
     // Route Aset Rumah Tangga
-    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering|user', 'readonly_user'])->group(function () {
+    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering|user', 'readonly_user', 'module_restriction'])->group(function () {
         Route::get('/asetrt', [App\Http\Controllers\AssetController::class, 'index_rt'])->name('admin.asetrt');
         Route::get('/asetrt/get_assets', [App\Http\Controllers\AssetController::class, 'get_assets'])->name('admin.asetrt.get_assets');
         Route::get('/asetrt/export', [App\Http\Controllers\AssetController::class, 'exportExcelRt'])->name('admin.asetrt.export');
@@ -98,6 +98,8 @@ Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function ()
         Route::get('/pemeliharaan-korektif/edit/{id}', [App\Http\Controllers\PemeliharaanKorektifController::class, 'edit'])->name('admin.pemeliharaan-korektif.edit');
         Route::patch('/pemeliharaan-korektif/ubahstatus/{id}', [App\Http\Controllers\PemeliharaanKorektifController::class, 'ubahStatus'])->name('admin.pemeliharaan-korektif.ubahstatus');
         Route::patch('/pemeliharaan-korektif/tindaklanjut/{id}', [App\Http\Controllers\PemeliharaanKorektifController::class, 'tindakLanjut'])->name('admin.pemeliharaan-korektif.tindaklanjut');
+        Route::put('/pemeliharaan-korektif/update/{id}', [App\Http\Controllers\PemeliharaanKorektifController::class, 'update'])->name('admin.pemeliharaan-korektif.update');
+        Route::delete('/pemeliharaan-korektif/delete/{id}', [App\Http\Controllers\PemeliharaanKorektifController::class, 'destroy'])->name('admin.pemeliharaan-korektif.destroy');
     });
 
     // Route Pemeliharaan Preventif
@@ -205,16 +207,6 @@ Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function ()
 
     });
 
-    // Route Proyek
-    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering|user', 'readonly_user'])->group(function () {
-        Route::get('/proyek', [App\Http\Controllers\ProyekController::class, 'index'])->name('admin.proyek');
-        Route::get('/proyek/get_Proyeks', [App\Http\Controllers\ProyekController::class, 'getProyeks'])->name('admin.proyek.get_Proyeks');
-        Route::post('/proyek/store', [App\Http\Controllers\ProyekController::class, 'store'])->name('admin.proyek.store');
-        Route::get('/proyek/edit/{id}', [App\Http\Controllers\ProyekController::class, 'edit'])->name('admin.proyek.edit');
-        Route::patch('/proyek/update/{id}', [App\Http\Controllers\ProyekController::class, 'update'])->name('admin.proyek.update');
-        Route::delete('/proyek/delete/{id}', [App\Http\Controllers\ProyekController::class, 'delete'])->name('admin.proyek.delete');
-    });
-
     // Route Knowledge Base
     Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering'])->group(function () {
         Route::get('/knowledge-base', [App\Http\Controllers\KnowledgeBaseController::class, 'index'])->name('admin.knowledge-base');
@@ -247,6 +239,16 @@ Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function ()
     // Route Reminder
     Route::get('/reminder', [App\Http\Controllers\ReminderController::class, 'index'])->name('admin.reminder');
 
+    // Route Permission Manager (Superadmin only)
+    Route::middleware(['role:superadmin'])->group(function () {
+        Route::get('settings/permission', [App\Http\Controllers\PermissionController::class, 'index'])->name('admin.settings.permission');
+        Route::get('settings/permission/get_roles', [App\Http\Controllers\PermissionController::class, 'getRoles'])->name('admin.settings.permission.get_roles');
+        Route::post('settings/permission/store', [App\Http\Controllers\PermissionController::class, 'store'])->name('admin.settings.permission.store');
+        Route::get('settings/permission/{id}/edit', [App\Http\Controllers\PermissionController::class, 'edit'])->name('admin.settings.permission.edit');
+        Route::patch('settings/permission/{id}/update', [App\Http\Controllers\PermissionController::class, 'update'])->name('admin.settings.permission.update');
+        Route::delete('settings/permission/{id}/destroy', [App\Http\Controllers\PermissionController::class, 'destroy'])->name('admin.settings.permission.destroy');
+    });
+
     // Route Settings
     Route::middleware(['role:superadmin|admin_tik|admin_rt|user', 'readonly_user'])->group(function () {
         // Route User Manager
@@ -254,10 +256,9 @@ Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function ()
         Route::get('settings/usermanager/get_users', [App\Http\Controllers\UserController::class, 'getUsers'])->name('admin.settings.usermanager.get_users');
         Route::post('settings/usermanager/store', [App\Http\Controllers\UserController::class, 'store'])->name('admin.settings.usermanager.store');
         Route::get('settings/usermanager/edit/{id}', [App\Http\Controllers\UserController::class, 'edit'])->name('admin.settings.usermanager.edit');
-        Route::post('settings/usermanager/update/{id}', [App\Http\Controllers\UserController::class, 'update'])->name('admin.settings.usermanager.update');
+        Route::patch('settings/usermanager/update/{id}', [App\Http\Controllers\UserController::class, 'update'])->name('admin.settings.usermanager.update');
         Route::delete('settings/usermanager/delete/{id}', [App\Http\Controllers\UserController::class, 'delete'])->name('admin.settings.usermanager.delete');
         Route::get('settings/usermanager/profil/{id}', [App\Http\Controllers\UserController::class, 'profil'])->name('admin.settings.usermanager.profil');
-        Route::get('settings/usermanager/edit/{id}', [App\Http\Controllers\UserController::class, 'edit'])->name('admin.settings.usermanager.edit');
         // Route Import
         Route::get('settings/import', [App\Http\Controllers\ImportController::class, 'index'])->name('admin.settings.import');
         Route::get('settings/import/template-user', [App\Http\Controllers\ImportController::class, 'templateUser'])->name('admin.settings.import.templateuser');
