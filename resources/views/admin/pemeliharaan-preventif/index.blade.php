@@ -24,11 +24,7 @@
     <div class="card">
         <div class="card-header d-flex bd-highlight">
             <h3 class="card-title font-weight-bold mr-auto p-2 bd-highlight"><i class="fa-regular fa-calendar-check"></i> Riwayat Pemeliharaan Preventif</h3>
-            <div class="bd-highlight mr-2">
-                <button class="btn btn-success btn-sm"style="margin-left: auto;" onclick="printPreventifReport()">
-                    <i class="fa fa-print"></i> Cetak PDF
-                </button>
-            </div>
+
         </div>
         <div class="card-body">
             <div class="row g-2 mb-3 align-items-end">
@@ -332,48 +328,6 @@
             $('#filter_classification').on('change', function() {
                 window.completedPreventiveTable.draw();
             });
-        </script>
-
-        <script>
-            function printPreventifReport() {
-                if (!completedPreventiveTable) {
-                    return;
-                }
-
-                let search = completedPreventiveTable.search() || '';
-                let classification = $('#filter_classification').val() || '';
-                // let issuetype = $('#filter_issuetype').val() || '';
-                // let department = $('#filter_department').val() || '';
-                let url = "{{ route('admin.pemeliharaan-preventif.print') }}";
-
-                if (search) {
-                    url += '?search=' + encodeURIComponent(search);
-                }
-
-                let queryParts = [];
-
-                if (search) {
-                    queryParts.push('search=' + encodeURIComponent(search));
-                }
-
-                if (classification) {
-                    queryParts.push('classification=' + encodeURIComponent(classification));
-                }
-
-                // if (issuetype) {
-                //     queryParts.push('issuetype=' + encodeURIComponent(issuetype));
-                // }
-
-                // if (department) {
-                //     queryParts.push('department=' + encodeURIComponent(department));
-                // }
-
-                if (queryParts.length) {
-                    url = "{{ route('admin.pemeliharaan-preventif.print') }}" + '?' + queryParts.join('&');
-                }
-
-                window.open(url, '_blank');
-            }
         </script>
 
         <style>

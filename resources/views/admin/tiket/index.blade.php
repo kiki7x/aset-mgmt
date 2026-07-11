@@ -44,9 +44,6 @@
     <div class="card">
         <div class="card-header d-flex align-items-center justify-content-between">
             <h5 class="card-title mb-0">List Tiket Service Desk</h5>
-            <button class="btn btn-success btn-sm"style="margin-left: auto;" onclick="printTicketReport()">
-                <i class="fa fa-print"></i> Cetak PDF
-            </button>
         </div>
         <div class="card-body">
             <div class="row g-2 mb-3 align-items-end">
@@ -493,41 +490,6 @@
                 openTicketDetail(window.ticketToOpen);
                 window.ticketToOpen = null;
             });
-        }
-
-        function printTicketReport() {
-            if (!tiketTable) {
-                return;
-            }
-
-            let search = tiketTable.search() || '';
-            let issuetype = $('#filter_issuetype').val() || '';
-            let department = $('#filter_department').val() || '';
-            let url = "{{ route('servicedesk.print') }}";
-
-            if (search) {
-                url += '?search=' + encodeURIComponent(search);
-            }
-
-            let queryParts = [];
-
-            if (search) {
-                queryParts.push('search=' + encodeURIComponent(search));
-            }
-
-            if (issuetype) {
-                queryParts.push('issuetype=' + encodeURIComponent(issuetype));
-            }
-
-            if (department) {
-                queryParts.push('department=' + encodeURIComponent(department));
-            }
-
-            if (queryParts.length) {
-                url = "{{ route('servicedesk.print') }}" + '?' + queryParts.join('&');
-            }
-
-            window.open(url, '_blank');
         }
 
         function tablePemeliharaan() {

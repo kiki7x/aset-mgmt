@@ -23,9 +23,6 @@
                 <div>
                 <button class="btn btn-outline-primary bd-highlight mr-2" onclick="openModalCreate()" data-toggle="tooltip" data-placement="top" title="Tambah Data" data-crud="true"><i class="fa-regular fa-plus"></i></button>
             </div>
-            <div>
-                <button class="btn btn-outline-success bd-highlight" onclick="printPreventifReport()" data-toggle="tooltip" data-placement="top" title="Cetak PDF"><i class="fa-solid fa-print"></i></button>
-            </div>
         </div>
         <!-- /.card-header -->
         <div class="card-body">

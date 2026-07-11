@@ -112,7 +112,6 @@ Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function ()
         Route::post('/pemeliharaan-preventif/preventif-store/{id}', [App\Http\Controllers\PemeliharaanPreventifController::class, 'preventifStore'])->name('admin.pemeliharaan-preventif.preventif-store');
         Route::post('/pemeliharaan-preventif/schedule-store', [App\Http\Controllers\PemeliharaanPreventifController::class, 'scheduleStore'])->name('admin.pemeliharaan-preventif.scheduleStore');
         Route::get('/pemeliharaan-preventif/completed-data-table', [App\Http\Controllers\PemeliharaanPreventifController::class, 'completedDataTable'])->name('admin.pemeliharaan-preventif.completed-data-table');
-        Route::get('/pemeliharaan-preventif/print', [App\Http\Controllers\PemeliharaanPreventifController::class, 'print'])->name('admin.pemeliharaan-preventif.print');
 
     });
 
@@ -202,7 +201,6 @@ Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function ()
     Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering|user', 'readonly_user'])->group(function () {
         Route::get('/tiket', [App\Http\Controllers\TiketController::class, 'index'])->name('admin.tiket');
         Route::get('/tiket/{id}', [App\Http\Controllers\TiketController::class, 'show'])->name('admin.tiket.show');
-        Route::get('/servicedesk/print', [TiketController::class, 'print'])->name('servicedesk.print');
         Route::post('/tiket/update-status', [TiketController::class, 'updateStatus'])->name('admin.tiket.updateStatus');
 
     });
@@ -231,8 +229,10 @@ Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function ()
     });
 
     // Route Laporan
-    Route::middleware(['role:superadmin|admin_tik|admin_rt|user', 'readonly_user'])->group(function () {
+    Route::middleware(['role:superadmin|admin_tik|admin_rt', 'readonly_user'])->group(function () {
         Route::get('/laporan', [App\Http\Controllers\LaporanController::class, 'index'])->name('admin.laporan');
+        Route::post('/laporan/export-excel', [App\Http\Controllers\LaporanController::class, 'exportExcel'])->name('admin.laporan.export_excel');
+        Route::get('/laporan/export-pdf', [App\Http\Controllers\LaporanController::class, 'exportPdf'])->name('admin.laporan.export_pdf');
     });
     // Route Logs
     Route::get('/logs', [App\Http\Controllers\LogsController::class, 'index'])->name('admin.logs');

@@ -209,7 +209,7 @@
                             <p>Reminder</p>
                         </a>
                     </li>
-                    <li class="nav-item" data-toggle="tooltip" title="coming soon..." data-placement="top">
+                    <li class="nav-item" data-toggle="tooltip" data-placement="top">
                         <a href="{{ route('admin.laporan') }}" class="nav-link {{ request()->is('admin/laporan') ? 'active' : '' }}">
                             <i class="nav-icon fa fa-bar-chart"></i>
                             <p>Laporan</p>
