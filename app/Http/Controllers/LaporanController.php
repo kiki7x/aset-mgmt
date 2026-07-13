@@ -418,7 +418,7 @@ class LaporanController extends Controller
 
         $data = [
             ['No', 'Tiket', 'Nama', 'Email', 'WhatsApp', 'Subjek', 'Jenis', 'Bidang',
-                'Prioritas', 'Status', 'Tanggal']
+                'Prioritas', 'Status', 'Deskripsi', 'Tanggal']
         ];
 
         foreach ($query->get() as $i => $ticket) {
@@ -433,6 +433,7 @@ class LaporanController extends Controller
                 $ticket->department,
                 $ticket->priority,
                 $ticket->status,
+                $this->descriptionToText($ticket->description),
                 $ticket->created_at->format('d M Y H:i'),
             ];
         }
@@ -450,7 +451,48 @@ class LaporanController extends Controller
             'search' => $request->input('search', ''),
             'issuetype' => $request->input('jenis_tiket', ''),
             'department' => $request->input('departemen', ''),
+            'descriptionToText' => function ($html) {
+                return $this->descriptionToText($html);
+            },
         ]);
+    }
+
+    /**
+     * Konversi HTML description (dari Summernote) ke teks terbaca.
+     * Berguna untuk export Excel dan cetak PDF agar list tetap rapi.
+     */
+    private function descriptionToText($html): string
+    {
+        if (!$html) return '';
+
+        // Konversi <ol><li>...</li></ol> → 1. ...\n2. ...
+        $html = preg_replace_callback('/<ol[^>]*>(.*?)<\/ol>/si', function ($m) {
+            $items = [];
+            preg_match_all('/<li[^>]*>(.*?)<\/li>/si', $m[1], $matches);
+            foreach ($matches[1] as $i => $item) {
+                $items[] = ($i + 1) . '. ' . trim(strip_tags($item));
+            }
+            return "\n" . implode("\n", $items) . "\n";
+        }, $html);
+
+        // Konversi <ul><li>...</li></ul> → • ...\n• ...
+        $html = preg_replace_callback('/<ul[^>]*>(.*?)<\/ul>/si', function ($m) {
+            $items = [];
+            preg_match_all('/<li[^>]*>(.*?)<\/li>/si', $m[1], $matches);
+            foreach ($matches[1] as $item) {
+                $items[] = '• ' . trim(strip_tags($item));
+            }
+            return "\n" . implode("\n", $items) . "\n";
+        }, $html);
+
+        // <br> → newline
+        $html = preg_replace('/<br\s*\/?>/i', "\n", $html);
+        // </p> → double newline
+        $html = preg_replace('/<\/p>/i', "\n\n", $html);
+        // <p> → nothing (opening tag)
+        $html = preg_replace('/<p[^>]*>/i', '', $html);
+
+        return trim(strip_tags($html));
     }
 
     private function buildTiketQuery(Request $request)

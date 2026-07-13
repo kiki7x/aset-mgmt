@@ -1,4 +1,8 @@
 {{-- Modal Create --}}
+@push('script-head')
+    {{-- Summernote CSS --}}
+    <link rel="stylesheet" href="{{ asset('assets/plugins/summernote/summernote-bs5.min.css') }}">
+@endpush
 <div class="modal fade" data-bs-backdrop="static" id="form-tiket" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -148,12 +152,12 @@
                     {{-- Deskripsi --}}
                     <div class="form-group row mb-3">
                         <label class="col-3 col-form-label"><strong>Deskripsi</strong></label>
-                        <div class="col-9">
-                            <textarea name="description" class="form-control @error('description') is-invalid @enderror" rows="3">{{ old('description') }}</textarea>
+                        {{-- <div class="col-9"> --}}
+                            <textarea id="summernote" name="description" class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
                             @error('description')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
-                        </div>
+                        {{-- </div> --}}
                     </div>
 
                     {{-- Attachment --}}
@@ -217,7 +221,13 @@
 </div>
 
 @push('script-foot')
+    {{-- Summernote JS --}}
+    <script src="{{ asset('assets/plugins/summernote/summernote-bs5.min.js') }}"></script>
     <script>
+        $(document).ready(function() {
+            // Summernote diinit di event shown.bs.modal agar dimensi akurat
+        });
+
         function openModalCreate() {
             $('#form-tiket').modal('show');
         }
@@ -245,7 +255,21 @@
 
         // Reset form and CAPTCHA when modal is shown
         $('#form-tiket').on('shown.bs.modal', function() {
+            if (!window.summernoteInitialized) {
+                $('#summernote').summernote({
+                    height: 200,
+                    placeholder: 'Tulis deskripsi tiket...',
+                    toolbar: [
+                        ['font', ['bold', 'italic', 'underline', 'clear']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['insert', ['link']],
+                        ['view', ['codeview']]
+                    ]
+                });
+                window.summernoteInitialized = true;
+            }
             $('#formCreateTicket')[0].reset();
+            $('#summernote').summernote('code', '');
             clearTicketInlineErrors();
             refreshTicketCaptchaImage();
             $('#ticket-nama').trigger('focus');
@@ -300,6 +324,7 @@
             }
 
             let formData = new FormData(this);
+            formData.set('description', $('#summernote').summernote('code'));
 
             clearTicketValidationErrors();
 

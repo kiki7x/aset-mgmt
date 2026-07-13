@@ -233,7 +233,7 @@
                     <td>{{ $ticket->nama }}</td>
                     <td>{{ $ticket->issuetype }} - {{ $ticket->department }}</td>
                     <td>{{ $ticket->subject }}</td>
-                    <td>{{ $ticket->description }}</td>
+                    <td>{{ $descriptionToText($ticket->description) }}</td>
                     <td class="text-center"><span class="badge priority-{{ $priorityClass }}">{{ $ticket->priority }}</span></td>
                     <td class="text-center"><span class="badge status-{{ $statusClass }}">{{ $ticket->status }}</span></td>
                     <td class="text-center">{{ $ticket->created_at->format('d M Y H:i') }}</td>

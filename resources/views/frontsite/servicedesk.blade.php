@@ -46,7 +46,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="tablePemeliharaan" class="table table-bordered table-striped table-hover table-sm table-responsive-md">
+                            <table id="tableServicedesk" class="table table-bordered table-striped table-hover table-sm table-responsive-md">
                                 <thead>
                                     <tr>
                                         <th>Tiket</th>
@@ -78,11 +78,11 @@
     @push('script-foot')
         <script>
             $(document).ready(function() {
-                tablePemeliharaan();
+                tableServicedesk();
             });
 
-            function tablePemeliharaan() {
-                $('#tablePemeliharaan').DataTable({
+            function tableServicedesk() {
+                $('#tableServicedesk').DataTable({
                     processing: true,
                     serverSide: true,
                     responsive: true,
@@ -115,7 +115,10 @@
                         {
                             data: 'description',
                             name: 'description',
-                            searchable: true
+                            searchable: true,
+                            render: function(data) {
+                                return data ? $('<div>').html(data).text() : '-';
+                            }
                         },
                         {
                             data: 'priority',
@@ -236,7 +239,7 @@
                     $('#row_notes').hide()
                 }
 
-                $('#d_description').text($(this).data('description'))
+                $('#d_description').html($(this).data('description'))
 
                 let gambar = $(this).data('attachments')
 

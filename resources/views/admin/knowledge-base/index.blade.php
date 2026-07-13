@@ -13,8 +13,8 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Daftar Artikel</h3>
+        <div class="card-header d-flex bd-highlight">
+            <h3 class="card-title font-weight-bold mr-auto p-2 bd-highlight"><i class="fa-solid fa-circle-info"></i> Daftar Artikel</h3>
             <div class="card-tools">
                 <a href="{{ route('admin.knowledge-base.create') }}" class="btn btn-primary btn-sm" data-crud="true">
                     <i class="fas fa-plus"></i> Tambah Artikel

@@ -276,7 +276,7 @@
 
             $('#d_priority').html(label);
             $('#d_status').html(renderTicketStatus(ticket.status));
-            $('#d_description').text(ticket.description);
+            $('#d_description').html(ticket.description);
 
             var status = ticket.status;
             var reason = ticket.reason || '';
@@ -335,7 +335,7 @@
             var notes = $(this).data('notes') || '';
 
             $('#d_status').html(renderTicketStatus(status));
-            $('#d_description').text($(this).data('description'));
+            $('#d_description').html($(this).data('description'));
 
             if (status === 'Pending') {
                 $('#row_reason').show();
@@ -543,7 +543,10 @@
                     {
                         data: 'description',
                         name: 'description',
-                        searchable: true
+                        searchable: true,
+                        render: function(data) {
+                            return data ? $('<div>').html(data).text() : '-';
+                        }
                     },
                     {
                         data: 'priority',

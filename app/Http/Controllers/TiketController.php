@@ -253,6 +253,9 @@ class TiketController extends Controller
                 $file->storeAs('attachments', $fileName, 'public');
             }
 
+            $allowedTags = '<p><br><strong><em><u><ol><ul><li><a>';
+            $validated['description'] = strip_tags($validated['description'], $allowedTags);
+
             \App\Models\TicketsModel::create([
 
                 'ticket' => $ticketNumber,
