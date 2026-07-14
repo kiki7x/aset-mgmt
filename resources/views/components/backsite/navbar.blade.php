@@ -41,18 +41,20 @@
                   <span class="badge badge-warning navbar-badge">{{ auth()->user()->unreadNotifications->count() }}</span>
               </a>
               <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" onclick="event.stopPropagation()">
-                  <span class="dropdown-item dropdown-header">15 Notifications</span>
+                  <span class="dropdown-item dropdown-header">{{ auth()->user()->unreadNotifications->count() }} Notifikasi Baru</span>
                   <div class="dropdown-divider"></div>
-                  <a href="#" class="dropdown-item">
-                      <i class="fas fa-envelope mr-2"></i> {{ auth()->user()->unreadNotifications->count() }} new
-                      messages
-                      <span class="float-right text-muted text-sm">
-                          {{ auth()->user() && auth()->user()->unreadNotifications->isNotEmpty() ? auth()->user()->unreadNotifications->sortByDesc('created_at')->first()->created_at->diffForHumans() : '' }}
-                      </span>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <a href="{{ route('admin.notifikasi') }}" class="dropdown-item dropdown-footer">See All
-                      Notifications</a>
+                  @forelse(auth()->user()->unreadNotifications->sortByDesc('created_at')->take(5) as $notification)
+                      <a href="{{ $notification->data['url'] ?? '#' }}" class="dropdown-item">
+                          <i class="fas fa-circle mr-2 text-{{ $notification->data['color'] ?? 'info' }}" style="font-size: 0.6rem;"></i>
+                          {{ $notification->data['message'] ?? 'Notifikasi' }}
+                          <span class="float-right text-muted text-sm">{{ $notification->created_at->diffForHumans() }}</span>
+                      </a>
+                      <div class="dropdown-divider"></div>
+                  @empty
+                      <span class="dropdown-item text-muted">Tidak ada notifikasi</span>
+                      <div class="dropdown-divider"></div>
+                  @endforelse
+                  <a href="{{ route('admin.notifikasi') }}" class="dropdown-item dropdown-footer">Lihat Semua Notifikasi</a>
               </div>
           </li>
 
@@ -166,15 +168,15 @@
                       </a>
                       <ul class="nav nav-treeview">
                           <li class="nav-item">
-                              <a href="{{ route('admin.pemeliharaan-korektif') }}" class="nav-link {{ request()->is('admin/pemeliharaan-korektif*') ? 'active' : '' }}">
-                                  <i class="nav-icon fa-solid fa-list-check"></i>
-                                  <p>Pemeliharaan Korektif</p>
-                              </a>
-                          </li>
-                          <li class="nav-item">
                               <a href="{{ route('admin.pemeliharaan-preventif') }}" class="nav-link {{ request()->is('admin/pemeliharaan-preventif*') ? 'active' : '' }}">
                                   <i class="nav-icon fa-solid fa-calendar"></i>
                                   <p>Pemeliharaan Preventif</p>
+                              </a>
+                          </li>
+                          <li class="nav-item">
+                              <a href="{{ route('admin.pemeliharaan-korektif') }}" class="nav-link {{ request()->is('admin/pemeliharaan-korektif*') ? 'active' : '' }}">
+                                  <i class="nav-icon fa-solid fa-list-check"></i>
+                                  <p>Pemeliharaan Korektif</p>
                               </a>
                           </li>
                           <li class="nav-item" data-toggle="tooltip" data-placement="top">
@@ -191,20 +193,20 @@
                           <p>Pusat Pengetahuan</p>
                       </a>
                   </li>
-                  <li class="nav-item" data-toggle="tooltip" title="coming soon..." data-placement="top">
-                      <a href="{{ route('admin.monitoring') }}" class="nav-link {{ request()->is('admin/monitoring') ? 'active' : '' }}">
+                  <li class="nav-item" data-toggle="tooltip" title="Monitoring" data-placement="top">
+                      <a href="{{ route('admin.monitoring') }}" class="nav-link {{ request()->is('admin/monitoring*') ? 'active' : '' }}">
                           <i class="nav-icon fa-solid fa-heart-pulse"></i>
                           <p>Monitoring</p>
                       </a>
                   </li>
-                  <li class="nav-item" data-toggle="tooltip" title="coming soon..." data-placement="top">
-                      <a href="{{ route('admin.logs') }}" class="nav-link {{ request()->is('admin/settings/logs') ? 'active' : '' }}">
+                  <li class="nav-item" data-toggle="tooltip" title="Logs Aktivitas" data-placement="top">
+                      <a href="{{ route('admin.logs') }}" class="nav-link {{ request()->is('admin/logs*') ? 'active' : '' }}">
                           <i class="nav-icon fa-solid fa-clock-rotate-left"></i>
                           <p>Logs</p>
                         </a>
                     </li>
-                    <li class="nav-item" data-toggle="tooltip" title="coming soon..." data-placement="top">
-                        <a href="{{ route('admin.reminder') }}" class="nav-link {{ request()->is('admin/settings/logs') ? 'active' : '' }}">
+                    <li class="nav-item" data-toggle="tooltip" title="Reminder" data-placement="top">
+                        <a href="{{ route('admin.reminder') }}" class="nav-link {{ request()->is('admin/reminder*') ? 'active' : '' }}">
                             <i class="nav-icon fa-regular fa-bell"></i>
                             <p>Reminder</p>
                         </a>
@@ -245,6 +247,12 @@
                               </a>
                           </li>
                           @endrole
+                          <li class="nav-item">
+                              <a href="{{ route('admin.settings.config') }}" class="nav-link {{ request()->is('admin/settings/config') ? 'active' : '' }}">
+                                  <i class="nav-icon fa-solid fa-sliders"></i>
+                                  <p>Config</p>
+                              </a>
+                          </li>
                       </ul>
                   </li>
               </ul>

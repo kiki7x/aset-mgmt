@@ -5,15 +5,15 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
-class DeleteAsetRT extends Notification
+class TicketCreated extends Notification
 {
     use Queueable;
 
-    protected $asetrt;
+    protected $ticket;
 
-    public function __construct($asetrt)
+    public function __construct($ticket)
     {
-        $this->asetrt = $asetrt;
+        $this->ticket = $ticket;
     }
 
     public function via(object $notifiable): array
@@ -24,10 +24,10 @@ class DeleteAsetRT extends Notification
     public function toDatabase(object $notifiable): array
     {
         return [
-            'message' => 'Aset RT dihapus: ' . $this->asetrt->name,
-            'asetrt_id' => $this->asetrt->id,
-            'url' => route('admin.asetrt'),
-            'color' => 'danger',
+            'message' => 'Tiket baru: ' . $this->ticket->ticket . ' - ' . $this->ticket->subject,
+            'ticket_id' => $this->ticket->id,
+            'url' => route('admin.tiket.show', $this->ticket->id),
+            'color' => 'info',
         ];
     }
 

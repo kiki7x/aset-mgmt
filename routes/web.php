@@ -226,6 +226,13 @@ Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function ()
     // Route Monitoring
     Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering'])->group(function () {
         Route::get('/monitoring', [App\Http\Controllers\MonitoringController::class, 'index'])->name('admin.monitoring');
+        Route::get('/monitoring/data', [App\Http\Controllers\MonitoringController::class, 'data'])->name('admin.monitoring.data');
+        Route::post('/monitoring/store', [App\Http\Controllers\MonitoringController::class, 'store'])->name('admin.monitoring.store');
+        Route::get('/monitoring/{id}/edit', [App\Http\Controllers\MonitoringController::class, 'edit'])->name('admin.monitoring.edit');
+        Route::patch('/monitoring/{id}/update', [App\Http\Controllers\MonitoringController::class, 'update'])->name('admin.monitoring.update');
+        Route::delete('/monitoring/{id}/destroy', [App\Http\Controllers\MonitoringController::class, 'destroy'])->name('admin.monitoring.destroy');
+        Route::post('/monitoring/{id}/check', [App\Http\Controllers\MonitoringController::class, 'checkNow'])->name('admin.monitoring.check');
+        Route::get('/monitoring/{id}/chart', [App\Http\Controllers\MonitoringController::class, 'chartData'])->name('admin.monitoring.chart');
     });
 
     // Route Laporan
@@ -236,8 +243,10 @@ Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function ()
     });
     // Route Logs
     Route::get('/logs', [App\Http\Controllers\LogsController::class, 'index'])->name('admin.logs');
+    Route::get('/logs/data', [App\Http\Controllers\LogsController::class, 'data'])->name('admin.logs.data');
     // Route Reminder
     Route::get('/reminder', [App\Http\Controllers\ReminderController::class, 'index'])->name('admin.reminder');
+    Route::get('/reminder/data', [App\Http\Controllers\ReminderController::class, 'data'])->name('admin.reminder.data');
 
     // Route Permission Manager (Superadmin only)
     Route::middleware(['role:superadmin'])->group(function () {
@@ -266,6 +275,9 @@ Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function ()
         Route::post('settings/import/storelokasi', [App\Http\Controllers\ImportController::class, 'storeLokasi'])->name('admin.settings.import.storelokasi');
         Route::post('settings/import/storeasettik', [App\Http\Controllers\ImportController::class, 'storeAsetTik'])->name('admin.settings.import.storeasettik');
         Route::post('settings/import/storeasetrt', [App\Http\Controllers\ImportController::class, 'storeAsetRt'])->name('admin.settings.import.storeasetrt');
+        // Route Config
+        Route::get('settings/config', [App\Http\Controllers\ConfigController::class, 'index'])->name('admin.settings.config');
+        Route::post('settings/config/update', [App\Http\Controllers\ConfigController::class, 'update'])->name('admin.settings.config.update');
     });
 
     // Route Notifikasi

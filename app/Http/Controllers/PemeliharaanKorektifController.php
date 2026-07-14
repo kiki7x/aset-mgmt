@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
-use App\Jobs\SendWhatsappNotification;
+use App\Models\User;
+use App\Notifications\CreatePemeliharaanKorektif;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 
@@ -144,12 +145,20 @@ class PemeliharaanKorektifController extends Controller
                 $asset = \App\Models\AssetsModel::findOrFail($request->asset_id);
             }
 
+            // kirim notifikasi database
+            $users = User::whereHas('roles', function ($query) {
+                $query->whereIn('name', ['superadmin', 'admin_tik', 'admin_rt']);
+            })->get();
+            foreach ($users as $user) {
+                $user->notify(new CreatePemeliharaanKorektif($maintenance));
+            }
+
             // kirim notifikasi WA
-            $target = env('FONNTE_GROUP_ID');
+            $fonnte = new \App\Services\FonnteService();
             $message = "Halo, Pemeliharaan Korektif baru saja ditambahkan";
-            $message .= "\nAset Tag" . $maintenance->asset->tag;
+            $message .= "\nAset Tag " . $maintenance->asset->tag;
             $message .= "\nNama: " . $maintenance->name;
-            SendWhatsappNotification::dispatch($target, $message);
+            $fonnte->sendMessage(config('fonnte.group_id'), $message);
 
             return response()->json(['message' => 'Pemeliharaan korektif berhasil ditambahkan.', 'data' => $maintenance], 201);
         } catch (\Exception $e) {

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Notifications\TicketCreated;
+use App\Notifications\TicketStatusChanged;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -256,7 +259,7 @@ class TiketController extends Controller
             $allowedTags = '<p><br><strong><em><u><ol><ul><li><a>';
             $validated['description'] = strip_tags($validated['description'], $allowedTags);
 
-            \App\Models\TicketsModel::create([
+            $ticket = \App\Models\TicketsModel::create([
 
                 'ticket' => $ticketNumber,
 
@@ -285,6 +288,13 @@ class TiketController extends Controller
                 'reason' => null
 
             ]);
+
+            $users = User::whereHas('roles', function ($query) {
+                $query->whereIn('name', ['superadmin', 'admin_tik', 'admin_rt', 'staf_tik']);
+            })->get();
+            foreach ($users as $user) {
+                $user->notify(new TicketCreated($ticket));
+            }
 
             session()->forget('captcha_code');
 
@@ -338,7 +348,15 @@ class TiketController extends Controller
             $updateData['notes'] = $request->notes;
         }
 
+        $oldStatus = $ticket->getOriginal('status');
         $ticket->update($updateData);
+
+        $users = User::whereHas('roles', function ($query) {
+            $query->whereIn('name', ['superadmin', 'admin_tik', 'admin_rt', 'staf_tik']);
+        })->get();
+        foreach ($users as $user) {
+            $user->notify(new TicketStatusChanged($ticket->fresh(), $oldStatus, $request->status));
+        }
 
         return response()->json([
             'success' => true,

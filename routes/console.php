@@ -9,4 +9,10 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote')->hourly();
 
 // Mengeksekusi command reminder setiap hari pada pukul 08:00 pagi
-Schedule::command('reminder:whatsapp-reminder-command')->dailyAt('07:30');
+Schedule::command('app:whatsapp-reminder-command')->dailyAt('07:30');
+
+// Monitoring heartbeat: jalan tiap menit, command menentukan monitor mana yang due
+Schedule::command('app:monitor-heartbeat')->everyMinute();
+
+// Cleanup data heartbeat lama, tiap hari pukul 01:00
+Schedule::command('app:monitor-cleanup')->dailyAt('01:00');

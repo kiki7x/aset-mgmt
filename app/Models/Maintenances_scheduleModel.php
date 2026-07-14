@@ -20,6 +20,7 @@ class Maintenances_scheduleModel extends Model
         'end',
         'frequency',
         'reminder',
+        'last_reminder_sent_at',
         'status',
         'customfields'
     ];

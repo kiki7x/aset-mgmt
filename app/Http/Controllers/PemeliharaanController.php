@@ -86,6 +86,13 @@ class PemeliharaanController extends Controller
 
             $maintenance_schedule = \App\Models\Maintenances_scheduleModel::create($data);
 
+            $users = User::whereHas('roles', function ($query) {
+                $query->whereIn('name', ['superadmin', 'admin_rt']);
+            })->get();
+            foreach ($users as $user) {
+                $user->notify(new CreateJadwalPemeliharaanAsetRT($maintenance_schedule));
+            }
+
             return response()->json([
                 'message' => 'Data saved successfully',
             ]);
@@ -95,18 +102,6 @@ class PemeliharaanController extends Controller
                 'message' => 'Error saving data: ' . $e->getMessage(),
             ], 500);
         }
-
-        // Kirim notifikasi
-        $users = User::whereHas('roles', function ($query) {
-            $query->whereIn('name', ['superadmin', 'admin_rt']);
-        })->get();
-        foreach ($users as $user) {
-            $user->notify(new CreateJadwalPemeliharaanAsetRT($maintenance_schedule));
-        }
-
-        return response()->json([
-            'message' => 'Data saved successfully',
-        ]);
     }
 
     public function scheduleEdit(Request $request, $id): JsonResponse

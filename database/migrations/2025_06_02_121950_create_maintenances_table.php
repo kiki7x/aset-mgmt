@@ -19,6 +19,7 @@ return new class extends Migration
             $table->dateTime('start')->nullable(); // Tanggal manual untuk Korektif
             $table->dateTime('end')->nullable();
             $table->integer('reminder')->nullable(); // Jumlah hari sebelum jadwal untuk mengirim pengingat
+            $table->timestamp('last_reminder_sent_at')->nullable(); // Waktu terakhir reminder dikirim
             $table->string('status')->nullable();
             $table->text('customfields')->nullable();
             $table->timestamps();

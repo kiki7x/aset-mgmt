@@ -1,7 +1,9 @@
 @extends('layouts.backsite', [
     'title' => 'Pusat Notifikasi | SAPA PPL',
     'welcome' => 'Pusat Notifikasi',
-    'breadcrumb' => 'Pusat Notifikasi',
+    'breadcrumb' => '
+    <li class="breadcrumb-item active">Pusat Notifikasi</li>
+    ',
 ])
 
 
