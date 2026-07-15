@@ -11,6 +11,7 @@ class ConfigController extends Controller
 {
     public function index(): View
     {
+        abort_unless(auth()->user()->can('settings-config-view'), 403);
         // Fonnte
         $fonnteToken = DB::table('config')->where('name', 'fonnte_token')->value('value') ?? config('fonnte.token');
         $fonnteSender = DB::table('config')->where('name', 'fonnte_sender')->value('value') ?? config('fonnte.sender');
@@ -47,6 +48,8 @@ class ConfigController extends Controller
 
     public function update(Request $request): JsonResponse
     {
+        abort_unless(auth()->user()->can('settings-config-edit'), 403);
+
         $request->validate([
             'fonnte_token' => 'nullable|string',
             'fonnte_sender' => 'nullable|string',

@@ -123,8 +123,7 @@
                             {{-- Role --}}
                             <div class="form-group col-12">
                                 <label class="mb-n1" for="role">Role <span class="text-danger">*</span></label>
-                                <select name="role" id="role" class="form-control select2">
-                                    <option value="" disabled selected>-- Pilih Role --</option>
+                                <select name="role[]" id="role" class="form-control select2" multiple>
                                     @foreach ($roles as $role)
                                         <option value="{{ $role->name }}">{{ ucwords(str_replace('_', ' ', $role->name)) }}</option>
                                     @endforeach
@@ -211,7 +210,7 @@
                             {{-- Role --}}
                             <div class="form-group col-12">
                                 <label class="mb-n1" for="edit_role">Role <span class="text-danger">*</span></label>
-                                <select name="role" id="edit_role" class="form-control select2">
+                                <select name="role[]" id="edit_role" class="form-control select2" multiple>
                                     @foreach ($roles as $role)
                                         <option value="{{ $role->name }}">{{ ucwords(str_replace('_', ' ', $role->name)) }}</option>
                                     @endforeach
@@ -386,7 +385,7 @@
                         $('#edit_password').val('');
                         $('#edit_password_confirmation').val('');
                         $('#currentAvatarPreview').attr('src', '{{ asset('storage') }}/' + response.avatar);
-                        $('#edit_role').val(response.roles[0]?.name).trigger('change');
+                        $('#edit_role').val(response.roles.map(r => r.name)).trigger('change');
 
                         $('#editModal').data('id', id).modal('show');
                     },

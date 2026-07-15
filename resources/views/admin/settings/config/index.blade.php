@@ -159,6 +159,16 @@
                                                     <td>Harian, 07:30</td>
                                                     <td>Reminder WhatsApp pemeliharaan aset</td>
                                                 </tr>
+                                                <tr>
+                                                    <td><code>app:monitor-heartbeat</code></td>
+                                                    <td>Tiap menit</td>
+                                                    <td>Cek heartbeat monitor aktif</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><code>app:monitor-cleanup</code></td>
+                                                    <td>Harian, 01:00</td>
+                                                    <td>Bersihkan log heartbeat lama</td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -198,9 +208,11 @@
                             </div>
                         </div>
                     </div>
+                    @can('settings-config-edit')
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk mr-1"></i> Simpan</button>
                     </div>
+                    @endcan
                 </div>
             </form>
         </div>

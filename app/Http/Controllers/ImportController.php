@@ -16,11 +16,13 @@ class ImportController extends Controller
 {
     public function index(): View
     {
+        abort_unless(auth()->user()->can('settings-import-view'), 403);
         return view('admin.settings.import.index');
     }
 
     public function storeAsetRt(Request $request): JsonResponse
     {
+        abort_unless(auth()->user()->can('settings-import-create'), 403);
         if ($xlsx = SimpleXLSX::parse($request->file('fileasetrt'))) {
             $rows = $xlsx->rows();
             array_shift($rows); // Menghapus baris pertama (header)
@@ -96,6 +98,7 @@ class ImportController extends Controller
 
     public function storeAsetTik(Request $request): JsonResponse
     {
+        abort_unless(auth()->user()->can('settings-import-create'), 403);
         if ($xlsx = SimpleXLSX::parse($request->file('fileasettik'))) {
             $rows = $xlsx->rows();
             array_shift($rows); // Menghapus baris pertama (header)
@@ -171,6 +174,7 @@ class ImportController extends Controller
 
     public function storeLokasi(Request $request): JsonResponse
     {
+        abort_unless(auth()->user()->can('settings-import-create'), 403);
         $request->validate([
             'filelokasi' => 'required|mimes:xlsx',
         ]);
@@ -224,6 +228,7 @@ class ImportController extends Controller
 
     public function storeUserManagement(Request $request): JsonResponse
     {
+        abort_unless(auth()->user()->can('settings-import-create'), 403);
         try {
             // Increase execution time untuk import (bcrypt banyak password bisa timeout)
             set_time_limit(300); // 5 menit untuk batch import

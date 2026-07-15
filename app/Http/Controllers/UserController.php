@@ -65,7 +65,8 @@ class UserController extends Controller
             'email' => 'required|string|email|max:50|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
             'avatar' => 'required|image|mimes:jpeg,jpg,png|max:2048',
-            'role' => 'required|string|exists:roles,name',
+            'role' => 'required|array|min:1',
+            'role.*' => 'string|exists:roles,name',
         ]);
 
         // Penanganan upload gambar
@@ -82,7 +83,7 @@ class UserController extends Controller
             'avatar' => $file_path,
         ]);
 
-        $user->assignRole($request->role);
+        $user->syncRoles($request->role);
 
         return response()->json([
             'message' => 'Data berhasil disimpan.'
@@ -106,7 +107,8 @@ class UserController extends Controller
             'email' => 'required|string|email|max:50|unique:users,email,' . $id,
             'password' => 'nullable|string|min:8|confirmed',
             'avatar' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
-            'role' => 'required|string|exists:roles,name',
+            'role' => 'required|array|min:1',
+            'role.*' => 'string|exists:roles,name',
         ]);
 
         $data = [
@@ -126,7 +128,7 @@ class UserController extends Controller
         }
 
         $user->update($data);
-        $user->syncRoles([$request->role]);
+        $user->syncRoles($request->role);
 
         return response()->json(['message' => 'User berhasil diperbarui.']);
     }

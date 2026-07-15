@@ -233,12 +233,14 @@
                                   <p>User Management</p>
                               </a>
                           </li>
+                          @can('settings-import-view')
                           <li class="nav-item">
                               <a href="{{ route('admin.settings.import') }}" class="nav-link {{ request()->is('admin/settings/import') ? 'active' : '' }}">
                                   <i class="nav-icon fa-solid fa-cloud-arrow-up"></i>
                                   <p>Import</p>
                               </a>
                           </li>
+                          @endcan
                           @role('superadmin')
                           <li class="nav-item">
                               <a href="{{ route('admin.settings.permission') }}" class="nav-link {{ request()->is('admin/settings/permission') ? 'active' : '' }}">
@@ -247,12 +249,14 @@
                               </a>
                           </li>
                           @endrole
+                          @can('settings-config-view')
                           <li class="nav-item">
                               <a href="{{ route('admin.settings.config') }}" class="nav-link {{ request()->is('admin/settings/config') ? 'active' : '' }}">
                                   <i class="nav-icon fa-solid fa-sliders"></i>
                                   <p>Config</p>
                               </a>
                           </li>
+                          @endcan
                       </ul>
                   </li>
               </ul>

@@ -19,12 +19,16 @@ class RoleHasPermissionSeeder extends Seeder
             'aset-tik-view', 'aset-tik-create', 'aset-tik-edit', 'aset-tik-delete',
             'aset-rt-view',
             'lisensi-view', 'lisensi-create', 'lisensi-edit', 'lisensi-delete',
+            'setting-atribut-view', 'setting-atribut-create', 'setting-atribut-edit',
             'pemeliharaan-view', 'pemeliharaan-create', 'pemeliharaan-edit', 'pemeliharaan-delete',
             'tiket-view', 'tiket-create', 'tiket-edit', 'tiket-delete',
             'knowledge-base-view', 'knowledge-base-create', 'knowledge-base-edit', 'knowledge-base-delete',
-            'monitoring-view',
+            'monitoring-view', 'monitoring-create', 'monitoring-edit',
+            'logs-view',
+            'reminder-view',
             'laporan-view',
-            'settings-view', 'settings-usermanager-create', 'settings-usermanager-edit', 'settings-usermanager-delete', 'settings-import',
+            'settings-usermanager-view', 'settings-usermanager-create', 'settings-usermanager-edit',
+            'settings-config-view',
         ]);
 
         $admin_rt = Role::findOrCreate('admin_rt');
@@ -46,6 +50,10 @@ class RoleHasPermissionSeeder extends Seeder
             'pemeliharaan-view', 'pemeliharaan-create', 'pemeliharaan-edit',
             'tiket-view', 'tiket-create',
             'knowledge-base-view', 'knowledge-base-create', 'knowledge-base-edit',
+            'monitoring-view',
+            'logs-view',
+            'reminder-view',
+            'laporan-view',
         ]);
 
         $staf_engineering = Role::findOrCreate('staf_engineering');

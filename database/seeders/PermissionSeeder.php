@@ -35,16 +35,28 @@ class PermissionSeeder extends Seeder
             'knowledge-base-edit',
             'knowledge-base-delete',
             'monitoring-view',
+            'monitoring-create',
+            'monitoring-edit',
+            'monitoring-delete',
+            'logs-view',
+            'reminder-view',
             'laporan-view',
-            'settings-view',
+            'setting-atribut-view',
+            'setting-atribut-create',
+            'setting-atribut-edit',
+            'setting-atribut-delete',
+            'settings-usermanager-view',
             'settings-usermanager-create',
             'settings-usermanager-edit',
             'settings-usermanager-delete',
-            'settings-import',
+            'settings-import-view',
+            'settings-import-create',
+            'settings-config-view',
+            'settings-config-edit',
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            Permission::findOrCreate($permission);
         }
     }
 }

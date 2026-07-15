@@ -36,7 +36,7 @@ class UsersSeeder extends Seeder
                 'email' => 'wawan@ppl.ac.id',
                 'nickname' => 'wawan',
                 'fullname' => 'Wawan Apriandi',
-                'role_to_assign' => 'superadmin',
+                'role_to_assign' => ['admin_tik', 'admin_rt'],
                 'client_id' => '1',
                 'title' => 'admin bmn',
                 'mobile' => '087765432100',
@@ -48,7 +48,7 @@ class UsersSeeder extends Seeder
                 'email' => 'sahroni.fajrin@ppl.ac.id',
                 'nickname' => 'roni',
                 'fullname' => 'Sahroni Fajrin',
-                'role_to_assign' => 'superadmin',
+                'role_to_assign' => ['admin_tik', 'admin_rt'],
                 'client_id' => '1',
                 'title' => 'admin bmn',
                 'mobile' => '082339966007',
@@ -352,7 +352,7 @@ class UsersSeeder extends Seeder
             );
 
             // Assign role ke user yang baru dibuat atau yang sudah ada
-            $user->assignRole($roleToAssign);
+            $user->syncRoles(is_array($roleToAssign) ? $roleToAssign : [$roleToAssign]);
         }
     }
 }
