@@ -18,6 +18,7 @@ class RoleHasPermissionSeeder extends Seeder
         $admin_tik->givePermissionTo([
             'aset-tik-view', 'aset-tik-create', 'aset-tik-edit', 'aset-tik-delete',
             'aset-rt-view',
+            'peminjaman-view', 'peminjaman-create', 'peminjaman-edit', 'peminjaman-delete',
             'lisensi-view', 'lisensi-create', 'lisensi-edit', 'lisensi-delete',
             'setting-atribut-view', 'setting-atribut-create', 'setting-atribut-edit',
             'pemeliharaan-view', 'pemeliharaan-create', 'pemeliharaan-edit', 'pemeliharaan-delete',
@@ -35,6 +36,7 @@ class RoleHasPermissionSeeder extends Seeder
         $admin_rt->givePermissionTo([
             'aset-tik-view',
             'aset-rt-view', 'aset-rt-create', 'aset-rt-edit', 'aset-rt-delete',
+            'peminjaman-view', 'peminjaman-create', 'peminjaman-edit', 'peminjaman-delete',
             'pemeliharaan-view', 'pemeliharaan-create', 'pemeliharaan-edit', 'pemeliharaan-delete',
             'tiket-view', 'tiket-create', 'tiket-edit', 'tiket-delete',
             'knowledge-base-view', 'knowledge-base-create', 'knowledge-base-edit', 'knowledge-base-delete',
@@ -46,6 +48,7 @@ class RoleHasPermissionSeeder extends Seeder
         $staf_tik->givePermissionTo([
             'aset-tik-view', 'aset-tik-create', 'aset-tik-edit',
             'aset-rt-view',
+            'peminjaman-view', 'peminjaman-create', 'peminjaman-edit',
             'lisensi-view', 'lisensi-create', 'lisensi-edit',
             'pemeliharaan-view', 'pemeliharaan-create', 'pemeliharaan-edit',
             'tiket-view', 'tiket-create',
@@ -60,6 +63,7 @@ class RoleHasPermissionSeeder extends Seeder
         $staf_engineering->givePermissionTo([
             'aset-tik-view',
             'aset-rt-view', 'aset-rt-create', 'aset-rt-edit',
+            'peminjaman-view', 'peminjaman-create', 'peminjaman-edit',
             'pemeliharaan-view', 'pemeliharaan-create', 'pemeliharaan-edit',
             'tiket-view', 'tiket-create',
         ]);
@@ -68,6 +72,7 @@ class RoleHasPermissionSeeder extends Seeder
         $staf_driver->givePermissionTo([
             'aset-tik-view',
             'aset-rt-view', 'aset-rt-create', 'aset-rt-edit',
+            'peminjaman-view', 'peminjaman-create', 'peminjaman-edit',
             'pemeliharaan-view', 'pemeliharaan-create', 'pemeliharaan-edit',
             'tiket-view', 'tiket-create',
         ]);
@@ -76,6 +81,7 @@ class RoleHasPermissionSeeder extends Seeder
         $user->givePermissionTo([
             'aset-tik-view',
             'aset-rt-view',
+            'peminjaman-view',
             'pemeliharaan-view',
             'tiket-view', 'tiket-create',
             'laporan-view',

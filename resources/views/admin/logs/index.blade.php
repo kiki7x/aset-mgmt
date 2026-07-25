@@ -39,7 +39,7 @@
                     <select id="filter-user" class="form-control select2" style="width: 100%;">
                         <option value="">Semua User</option>
                         @foreach ($users as $user)
-                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            <option value="{{ $user->id }}">{{ $user->fullname }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -77,7 +77,6 @@
         $(document).ready(function () {
             $('.select2').select2({
                 theme: 'bootstrap4',
-                placeholder: 'Pilih...',
                 allowClear: true,
                 width: '100%'
             });

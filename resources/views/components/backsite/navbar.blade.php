@@ -140,10 +140,16 @@
                       </a>
                   </li>
                   <li class="nav-item">
+                      <a href="{{ route('admin.peminjaman') }}" class="nav-link {{ request()->is('admin/peminjaman*') ? 'active' : '' }}">
+                          <i class="nav-icon fa-solid fa-handshake"></i>
+                          <p>Peminjaman</p>
+                      </a>
+                  </li>
+                  <li class="nav-item">
                       <a href="{{ route('admin.setting_attr') }}" class="nav-link {{ request()->is('admin/setting_attr*') ? 'active' : '' }}">
                           {{-- <i class="far fa-circle nav-icon"></i> --}}
                           <i class="nav-icon fa-solid fa-gears"></i>
-                          <p>Setting Atribut</p>
+                          <p>Data Atribut</p>
                       </a>
                   </li>
                   <li class="nav-header">PEMELIHARAAN</li>

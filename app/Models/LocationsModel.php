@@ -15,6 +15,7 @@ class LocationsModel extends Model
         'building_id',
         'name',
         'floor',
+        'status',
     ];
 
     public function building()

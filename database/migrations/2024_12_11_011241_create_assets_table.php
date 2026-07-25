@@ -75,6 +75,7 @@ return new class extends Migration
             $table->text('customfields')->nullable();
             $table->text('qrvalue')->nullable();
             $table->timestamps(); // adds created_at and updated_at
+            $table->softDeletes();
         });
     }
 

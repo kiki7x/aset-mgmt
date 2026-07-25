@@ -70,6 +70,18 @@ Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function ()
         Route::get('/asetrt/{id}/edit', [App\Http\Controllers\ShowAsetController::class, 'getEditAssetContent'])->name('admin.asetrt.edit');
     });
 
+    // Route Peminjaman Aset
+    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering', 'readonly_user'])->group(function () {
+        Route::get('/peminjaman', [App\Http\Controllers\BorrowingsController::class, 'index'])->name('admin.peminjaman');
+        Route::get('/peminjaman/data', [App\Http\Controllers\BorrowingsController::class, 'getData'])->name('admin.peminjaman.data');
+        Route::post('/peminjaman/store', [App\Http\Controllers\BorrowingsController::class, 'store'])->name('admin.peminjaman.store');
+        Route::get('/peminjaman/{id}', [App\Http\Controllers\BorrowingsController::class, 'show'])->name('admin.peminjaman.show');
+        Route::post('/peminjaman/{id}/return', [App\Http\Controllers\BorrowingsController::class, 'processReturn'])->name('admin.peminjaman.return');
+        Route::get('/peminjaman/{id}/print', [App\Http\Controllers\BorrowingsController::class, 'print'])->name('admin.peminjaman.print');
+        Route::get('/peminjaman/available/locations', [App\Http\Controllers\BorrowingsController::class, 'getAvailableLocations'])->name('admin.peminjaman.available.locations');
+        Route::get('/peminjaman/available/assets', [App\Http\Controllers\BorrowingsController::class, 'getAvailableAssets'])->name('admin.peminjaman.available.assets');
+    });
+
     // Route Individual Pemeliharaan Aset
     Route::get('/aset/{id}/pemeliharaan', [App\Http\Controllers\PemeliharaanController::class, 'index'])->name('admin.asetrt.pemeliharaan');
     Route::get('/aset/{id}/pemeliharaan/scheduleDataTable', [App\Http\Controllers\PemeliharaanController::class, 'scheduledataTable'])->name('admin.aset.pemeliharaan.scheduleDataTable');
