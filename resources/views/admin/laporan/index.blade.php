@@ -16,7 +16,7 @@
     <div class="row">
         {{-- Aset TIK --}}
         <div class="col-12 col-md-6 col-lg-4 mb-3">
-            <div class="card collapsed-card" data-card-widget="collapse">
+            <div class="card collapsed-card">
                 <div class="card-header">
                     <h5 class="card-title mb-0"><i class="fa-solid fa-computer mr-1"></i> Aset TIK</h5>
                     <div class="card-tools">
@@ -77,7 +77,7 @@
 
         {{-- Aset RT --}}
         <div class="col-12 col-md-6 col-lg-4 mb-3">
-            <div class="card collapsed-card" data-card-widget="collapse">
+            <div class="card collapsed-card">
                 <div class="card-header">
                     <h5 class="card-title mb-0"><i class="fa-solid fa-building mr-1"></i> Aset Rumah Tangga</h5>
                     <div class="card-tools">
@@ -139,7 +139,7 @@
         {{-- Lisensi --}}
         <div class="col-12 col-md-6 col-lg-4 mb-3">
             <div class="card collapsed-card">
-                <div class="card-header" data-card-widget="collapse">
+                <div class="card-header">
                     <h5 class="card-title mb-0"><i class="fa-solid fa-file-code mr-1"></i> Lisensi</h5>
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -168,7 +168,7 @@
         {{-- Pemeliharaan Preventif --}}
         <div class="col-12 col-md-6 col-lg-4 mb-3">
             <div class="card collapsed-card">
-                <div class="card-header" data-card-widget="collapse">
+                <div class="card-header">
                     <h5 class="card-title mb-0"><i class="fa-solid fa-calendar mr-1"></i> Pemeliharaan Preventif</h5>
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -220,7 +220,7 @@
 
         {{-- Pemeliharaan Korektif --}}
         <div class="col-12 col-md-6 col-lg-4 mb-3">
-            <div class="card collapsed-card" data-card-widget="collapse">
+            <div class="card collapsed-card">
                 <div class="card-header">
                     <h5 class="card-title mb-0"><i class="fa-solid fa-wrench mr-1"></i> Pemeliharaan Korektif</h5>
                     <div class="card-tools">
@@ -274,7 +274,7 @@
 
         {{-- Tiket --}}
         <div class="col-12 col-md-6 col-lg-4 mb-3">
-            <div class="card collapsed-card" data-card-widget="collapse">
+            <div class="card collapsed-card">
                 <div class="card-header">
                     <h5 class="card-title mb-0"><i class="fa-solid fa-ticket mr-1"></i> Tiket</h5>
                     <div class="card-tools">

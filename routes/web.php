@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
-use App\Http\Controllers\TiketController;
 
 
 // Auth Controller
@@ -29,8 +28,8 @@ Route::get('/servicedesk', [App\Http\Controllers\FrontController::class, 'servic
 Route::get('/captcha-image', [App\Http\Controllers\FrontController::class, 'captchaImage'])->name('captcha.image');
 Route::get('/refresh-captcha', [App\Http\Controllers\FrontController::class, 'refreshCaptcha'])->name('refresh.captcha');
 // Public endpoints for frontsite Service Desk (used by public UI)
-Route::get('/servicedesk/data', [TiketController::class, 'data'])->name('servicedesk.data.public');
-Route::post('/servicedesk/store', [TiketController::class, 'store'])->name('servicedesk.store.public');
+Route::get('/servicedesk/data', [App\Http\Controllers\TiketController::class, 'data'])->name('servicedesk.data.public');
+Route::post('/servicedesk/store', [App\Http\Controllers\TiketController::class, 'store'])->name('servicedesk.store.public');
 
 //Admin Area
 Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function () {
@@ -201,7 +200,7 @@ Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function ()
     Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering|user', 'readonly_user'])->group(function () {
         Route::get('/tiket', [App\Http\Controllers\TiketController::class, 'index'])->name('admin.tiket');
         Route::get('/tiket/{id}', [App\Http\Controllers\TiketController::class, 'show'])->name('admin.tiket.show');
-        Route::post('/tiket/update-status', [TiketController::class, 'updateStatus'])->name('admin.tiket.updateStatus');
+        Route::post('/tiket/update-status', [App\Http\Controllers\TiketController::class, 'updateStatus'])->name('admin.tiket.updateStatus');
 
     });
 

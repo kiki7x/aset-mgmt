@@ -120,14 +120,14 @@ class AssetController extends Controller
             ->addColumn('name', function ($asset) use ($routePrefix) {
                 return '
                 <a href="' . route("admin.$routePrefix.overview", ['id' => $asset->id]) . '" class="font-weight-bold">' . e($asset->name) . '</a><br>
-                <span class="text-muted">Serial No: </span>' . e($asset->serial) . '<br>
-                <span class="text-muted">Status: </span>
+                <span class="text-muted text-sm">Serial No: </span>' . e($asset->serial) . '<br>
+                <span class="text-muted text-sm">Status: </span>
                 <span class="badge" style="background-color: ' . e($asset->status->color ?? '#999') . '; color: white;">' . e($asset->status->name ?? '-') . '</span> <br>
-                <span class="text-muted">Lokasi: </span>
+                <span class="text-muted text-sm">Lokasi: </span>
                 ' . e($asset->location->name ?? '-') . '<br>
-                <span class="text-muted">Pengguna: </span>
+                <span class="text-muted text-sm">Pengguna: </span>
                 ' . e($asset->user->fullname ?? '-') . '<br>
-                <span class="text-muted">Tahun Perolehan: </span>' . e( Carbon::parse($asset->purchase_date)->format('Y')) . '<br>
+                <span class="text-muted text-sm">Tahun Perolehan: </span>' . e( Carbon::parse($asset->purchase_date)->format('Y')) . '<br>
             ';
             })
             ->addColumn('category', function ($asset) {

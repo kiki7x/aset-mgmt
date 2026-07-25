@@ -45,9 +45,8 @@
                   <div class="dropdown-divider"></div>
                   @forelse(auth()->user()->unreadNotifications->sortByDesc('created_at')->take(5) as $notification)
                       <a href="{{ $notification->data['url'] ?? '#' }}" class="dropdown-item">
-                          <i class="fas fa-circle mr-2 text-{{ $notification->data['color'] ?? 'info' }}" style="font-size: 0.6rem;"></i>
-                          {{ $notification->data['message'] ?? 'Notifikasi' }}
-                          <span class="float-right text-muted text-sm">{{ $notification->created_at->diffForHumans() }}</span>
+                          <p class="text-sm"><i class="fas fa-circle mr-2 text-{{ $notification->data['color'] ?? 'info' }}"></i> {{ $notification->data['message'] ?? 'Notifikasi' }}</p>
+                          <span class="float-right text-muted text-sm font-italic">{{ $notification->created_at->diffForHumans() }}</span>
                       </a>
                       <div class="dropdown-divider"></div>
                   @empty
@@ -107,85 +106,64 @@
               <ul class="nav nav-pills nav-sidebar flex-column nav-legacy nav-compact nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
                   <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-               <li class="nav-item">
-                   <a href="{{ route('admin.index') }}" class="nav-link {{ request()->is('admin') ? 'active' : '' }}">
-                       <i class="nav-icon fas fa-tachometer-alt"></i>
-                       <p>Dashboard</p>
-                    </a>
-                </li>
-                <li class="nav-header">MENU</li>
-                  <li class="nav-item {{ request()->is('admin/aset*') || request()->is('admin/lisensi*') || request()->is('admin/komponen*') || request()->is('admin/setting_attr*') ? 'menu-open' : 'menu-open' }}">
-                      <a href="#" class="nav-link {{ request()->is('admin/*') ? 'active' : '' }}">
-                          <i class="nav-icon fa-solid fa-warehouse"></i>
-                          <p>
-                              Inventaris
-                              <i class="right fas fa-angle-left"></i>
-                          </p>
+                  <li class="nav-item">
+                      <a href="{{ route('admin.index') }}" class="nav-link {{ request()->is('admin') ? 'active' : '' }}">
+                          <i class="nav-icon fas fa-tachometer-alt"></i>
+                          <p>Dashboard</p>
                       </a>
-                      <ul class="nav nav-treeview">
-                          <li class="nav-item">
-                              <a href="{{ route('admin.asettik') }}" class="nav-link {{ request()->is('admin/asettik*') ? 'active' : '' }}">
-                                  <i class="nav-icon fa-solid fa-computer"></i>
-                                  <p>Aset TIK</p>
-                              </a>
-                          </li>
-                          <li class="nav-item ml-4">
-                              <a href="{{ route('admin.license') }}" class="nav-link {{ request()->is('admin/license*') ? 'active' : '' }}">
-                                  &nbsp;&nbsp;
-                                  {{-- <i class="nav-icon fa-regular fa-file-code"></i> --}}
-                                  <p>Lisensi</p>
-                              </a>
-                          </li>
-                          <li class="nav-item ml-4" data-toggle="tooltip" title="coming soon..." data-placement="top">
-                              <a href="#" class="nav-link {{ request()->is('admin/komponen*') ? 'active' : '' }}">
-                                  &nbsp;&nbsp;
-                                  {{-- <i class="nav-icon fa-regular fa-keyboard"></i> --}}
-                                  <p>Komponen</p>
-                              </a>
-                          </li>
-                          <li class="nav-item">
-                              <a href="{{ route('admin.asetrt') }}" class="nav-link {{ request()->is('admin/asetrt*') ? 'active' : '' }}">
-                                  <i class="nav-icon fa-solid fa-building"></i>
-                                  <p>Aset Rumah Tangga</p>
-                              </a>
-                          </li>
-                          <li class="nav-item">
-                              <a href="{{ route('admin.setting_attr') }}" class="nav-link {{ request()->is('admin/setting_attr*') ? 'active' : '' }}">
-                                  {{-- <i class="far fa-circle nav-icon"></i> --}}
-                                  <i class="nav-icon fa-solid fa-gears"></i>
-                                  <p>Setting Atribut</p>
-                              </a>
-                          </li>
-                      </ul>
                   </li>
-                  <li class="nav-item {{ request()->is('admin/pemeliharaan*') || request()->is('admin/tiket*') ? 'menu-open' : 'menu-open' }}">
-                      <a href="#" class="nav-link {{ request()->is('admin/pemeliharaan*') ? 'active' : '' }}">
-                          <i class="nav-icon fa-solid fa-screwdriver-wrench"></i>
-                          <p>
-                              Pemeliharaan
-                              <i class="right fas fa-angle-left"></i>
-                          </p>
+                  <li class="nav-header">INVENTARIS</li>
+                  <li class="nav-item">
+                      <a href="{{ route('admin.asettik') }}" class="nav-link {{ request()->is('admin/asettik*') ? 'active' : '' }}">
+                          <i class="nav-icon fa-solid fa-computer"></i>
+                          <p>Aset TIK</p>
                       </a>
-                      <ul class="nav nav-treeview">
-                          <li class="nav-item">
-                              <a href="{{ route('admin.pemeliharaan-preventif') }}" class="nav-link {{ request()->is('admin/pemeliharaan-preventif*') ? 'active' : '' }}">
-                                  <i class="nav-icon fa-solid fa-calendar"></i>
-                                  <p>Pemeliharaan Preventif</p>
-                              </a>
-                          </li>
-                          <li class="nav-item">
-                              <a href="{{ route('admin.pemeliharaan-korektif') }}" class="nav-link {{ request()->is('admin/pemeliharaan-korektif*') ? 'active' : '' }}">
-                                  <i class="nav-icon fa-solid fa-list-check"></i>
-                                  <p>Pemeliharaan Korektif</p>
-                              </a>
-                          </li>
-                          <li class="nav-item" data-toggle="tooltip" data-placement="top">
-                              <a href="{{ route('admin.tiket') }}" class="nav-link {{ request()->is('admin/tiket*') ? 'active' : '' }}">
-                                  <i class="nav-icon fa-solid fa-ticket"></i>
-                                  <p>Tiket</p>
-                              </a>
-                           </li>
-                       </ul>
+                  </li>
+                  <li class="nav-item ml-4">
+                      <a href="{{ route('admin.license') }}" class="nav-link {{ request()->is('admin/license*') ? 'active' : '' }}">
+                          &nbsp;&nbsp;
+                          {{-- <i class="nav-icon fa-regular fa-file-code"></i> --}}
+                          <p>Lisensi</p>
+                      </a>
+                  </li>
+                  <li class="nav-item ml-4" data-toggle="tooltip" title="coming soon..." data-placement="top" hidden>
+                      <a href="#" class="nav-link {{ request()->is('admin/komponen*') ? 'active' : '' }}">
+                          &nbsp;&nbsp;
+                          {{-- <i class="nav-icon fa-regular fa-keyboard"></i> --}}
+                          <p>Komponen</p>
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <a href="{{ route('admin.asetrt') }}" class="nav-link {{ request()->is('admin/asetrt*') ? 'active' : '' }}">
+                          <i class="nav-icon fa-solid fa-building"></i>
+                          <p>Aset Rumah Tangga</p>
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <a href="{{ route('admin.setting_attr') }}" class="nav-link {{ request()->is('admin/setting_attr*') ? 'active' : '' }}">
+                          {{-- <i class="far fa-circle nav-icon"></i> --}}
+                          <i class="nav-icon fa-solid fa-gears"></i>
+                          <p>Setting Atribut</p>
+                      </a>
+                  </li>
+                  <li class="nav-header">PEMELIHARAAN</li>
+                  <li class="nav-item">
+                      <a href="{{ route('admin.pemeliharaan-preventif') }}" class="nav-link {{ request()->is('admin/pemeliharaan-preventif*') ? 'active' : '' }}">
+                          <i class="nav-icon fa-solid fa-calendar"></i>
+                          <p>Pemeliharaan Preventif</p>
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <a href="{{ route('admin.pemeliharaan-korektif') }}" class="nav-link {{ request()->is('admin/pemeliharaan-korektif*') ? 'active' : '' }}">
+                          <i class="nav-icon fa-solid fa-list-check"></i>
+                          <p>Pemeliharaan Korektif</p>
+                      </a>
+                  </li>
+                  <li class="nav-item" data-toggle="tooltip" data-placement="top">
+                      <a href="{{ route('admin.tiket') }}" class="nav-link {{ request()->is('admin/tiket*') ? 'active' : '' }}">
+                          <i class="nav-icon fa-solid fa-ticket"></i>
+                          <p>Tiket</p>
+                      </a>
                   </li>
                   <li class="nav-item" data-toggle="tooltip" data-placement="top">
                       <a href="{{ route('admin.knowledge-base') }}" class="nav-link {{ request()->is('admin/knowledge-base*') ? 'active' : '' }}">
@@ -202,63 +180,52 @@
                   <li class="nav-item" data-toggle="tooltip" title="Logs Aktivitas" data-placement="top">
                       <a href="{{ route('admin.logs') }}" class="nav-link {{ request()->is('admin/logs*') ? 'active' : '' }}">
                           <i class="nav-icon fa-solid fa-clock-rotate-left"></i>
-                          <p>Logs</p>
-                        </a>
-                    </li>
-                    <li class="nav-item" data-toggle="tooltip" title="Reminder" data-placement="top">
-                        <a href="{{ route('admin.reminder') }}" class="nav-link {{ request()->is('admin/reminder*') ? 'active' : '' }}">
-                            <i class="nav-icon fa-regular fa-bell"></i>
-                            <p>Reminder</p>
-                        </a>
-                    </li>
-                    <li class="nav-item" data-toggle="tooltip" data-placement="top">
-                        <a href="{{ route('admin.laporan') }}" class="nav-link {{ request()->is('admin/laporan') ? 'active' : '' }}">
-                            <i class="nav-icon fa fa-bar-chart"></i>
-                            <p>Laporan</p>
-                        </a>
-                    </li>
-                  <li class="nav-header">SETTING</li>
-                  <li class="nav-item {{ request()->is('admin/settings*') ? 'menu-open' : '' }}">
-                      <a href="#" class="nav-link {{ request()->is('admin/setting*') ? 'active' : '' }}">
-                          <i class="nav-icon fa-solid fa-gear"></i>
-                          <p>
-                              Settings
-                              <i class="right fas fa-angle-left"></i>
-                          </p>
+                          <p>Riwayat</p>
                       </a>
-                      <ul class="nav nav-treeview">
-                          <li class="nav-item">
-                              <a href="{{ route('admin.settings.usermanager') }}" class="nav-link {{ request()->is('admin/settings/usermanager') ? 'active' : '' }}">
-                                  <i class="nav-icon fa-solid fa-users-gear"></i>
-                                  <p>User Management</p>
-                              </a>
-                          </li>
-                          @can('settings-import-view')
-                          <li class="nav-item">
-                              <a href="{{ route('admin.settings.import') }}" class="nav-link {{ request()->is('admin/settings/import') ? 'active' : '' }}">
-                                  <i class="nav-icon fa-solid fa-cloud-arrow-up"></i>
-                                  <p>Import</p>
-                              </a>
-                          </li>
-                          @endcan
-                          @role('superadmin')
-                          <li class="nav-item">
-                              <a href="{{ route('admin.settings.permission') }}" class="nav-link {{ request()->is('admin/settings/permission') ? 'active' : '' }}">
-                                  <i class="nav-icon fa-solid fa-shield-halved"></i>
-                                  <p>Permission</p>
-                              </a>
-                          </li>
-                          @endrole
-                          @can('settings-config-view')
-                          <li class="nav-item">
-                              <a href="{{ route('admin.settings.config') }}" class="nav-link {{ request()->is('admin/settings/config') ? 'active' : '' }}">
-                                  <i class="nav-icon fa-solid fa-sliders"></i>
-                                  <p>Config</p>
-                              </a>
-                          </li>
-                          @endcan
-                      </ul>
                   </li>
+                  <li class="nav-item" data-toggle="tooltip" title="Reminder" data-placement="top">
+                      <a href="{{ route('admin.reminder') }}" class="nav-link {{ request()->is('admin/reminder*') ? 'active' : '' }}">
+                          <i class="nav-icon fa-regular fa-bell"></i>
+                          <p>Pengingat</p>
+                      </a>
+                  </li>
+                  <li class="nav-item" data-toggle="tooltip" data-placement="top">
+                      <a href="{{ route('admin.laporan') }}" class="nav-link {{ request()->is('admin/laporan') ? 'active' : '' }}">
+                          <i class="nav-icon fa fa-bar-chart"></i>
+                          <p>Laporan</p>
+                      </a>
+                  </li>
+                  <li class="nav-header">SETTING</li>
+                  <li class="nav-item">
+                      <a href="{{ route('admin.settings.usermanager') }}" class="nav-link {{ request()->is('admin/settings/usermanager') ? 'active' : '' }}">
+                          <i class="nav-icon fa-solid fa-users-gear"></i>
+                          <p>User Management</p>
+                      </a>
+                  </li>
+                  @can('settings-import-view')
+                      <li class="nav-item">
+                          <a href="{{ route('admin.settings.import') }}" class="nav-link {{ request()->is('admin/settings/import') ? 'active' : '' }}">
+                              <i class="nav-icon fa-solid fa-cloud-arrow-up"></i>
+                              <p>Import</p>
+                          </a>
+                      </li>
+                  @endcan
+                  @role('superadmin')
+                      <li class="nav-item">
+                          <a href="{{ route('admin.settings.permission') }}" class="nav-link {{ request()->is('admin/settings/permission') ? 'active' : '' }}">
+                              <i class="nav-icon fa-solid fa-shield-halved"></i>
+                              <p>Permission</p>
+                          </a>
+                      </li>
+                  @endrole
+                  @can('settings-config-view')
+                      <li class="nav-item">
+                          <a href="{{ route('admin.settings.config') }}" class="nav-link {{ request()->is('admin/settings/config') ? 'active' : '' }}">
+                              <i class="nav-icon fa-solid fa-sliders"></i>
+                              <p>Config</p>
+                          </a>
+                      </li>
+                  @endcan
               </ul>
           </nav><!-- /.sidebar-menu -->
       </div><!-- /.sidebar -->
