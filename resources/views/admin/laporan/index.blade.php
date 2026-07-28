@@ -342,6 +342,67 @@
                 </div>
             </div>
         </div>
+
+        {{-- Peminjaman --}}
+        <div class="col-12 col-md-6 col-lg-4 mb-3">
+            <div class="card collapsed-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0"><i class="fa-solid fa-handshake mr-1"></i> Peminjaman</h5>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body py-2">
+                    <form class="form-laporan" data-type="peminjaman">
+                        @csrf
+                        <div class="form-group">
+                            <label class="mb-n1 small">Jenis</label>
+                            <select name="type" class="form-control form-control-sm">
+                                <option value="">Semua</option>
+                                <option value="ruangan">Ruangan</option>
+                                <option value="barang">Barang</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="mb-n1 small">Status</label>
+                            <select name="status" class="form-control form-control-sm">
+                                <option value="">Semua</option>
+                                <option value="dipinjam">Dipinjam</option>
+                                <option value="dikembalikan">Dikembalikan</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="mb-n1 small">Tahun</label>
+                                    <select name="tahun" class="form-control form-control-sm">
+                                        <option value="">Semua</option>
+                                        @for ($y = date('Y'); $y >= date('Y') - 10; $y--)
+                                            <option value="{{ $y }}">{{ $y }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="mb-n1 small">Bulan</label>
+                                    <select name="bulan" class="form-control form-control-sm">
+                                        <option value="">Semua</option>
+                                        @foreach (['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] as $i => $b)
+                                            <option value="{{ $i + 1 }}">{{ $b }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-success btn-sm btn-export-excel"><i class="fa-solid fa-file-excel mr-1"></i>Excel</button>
+                        <button type="button" class="btn btn-danger btn-sm btn-export-pdf"><i class="fa-solid fa-file-pdf mr-1"></i>PDF</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 

@@ -37,6 +37,15 @@
                         @endforeach
                     </select>
                 </div>
+                <div class="col-12 col-md-3">
+                    <label for="location" class="form-label mb-1">Filter Lokasi</label>
+                    <select id="location" class="ml-0 form-control mr-2">
+                        <option value="">Semua Lokasi</option>
+                        @foreach ($locations as $loc)
+                            <option value="{{ $loc->id }}">{{ $loc->building?->name ?? '' }} - Lt {{ $loc->floor }} - {{ $loc->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
 
             <div class="table-responsive">
@@ -90,6 +99,7 @@
                     url: "{{ route('admin.asettik.get_assets') }}",
                     data: function(d) {
                         d.category = $('#category').val();
+                        d.location = $('#location').val();
                         d.classification =
                             'tik';
                     }
@@ -152,7 +162,7 @@
             });
         }
 
-        $('#category').on('change', function() {
+        $('#category, #location').on('change', function() {
             $('#tableAsettik').DataTable().ajax.reload();
         });
 

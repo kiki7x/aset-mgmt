@@ -89,6 +89,7 @@ class AssetController extends Controller
     public function get_assets(Request $request): JsonResponse
     {
         $category = $request->category;
+        $location = $request->location;
         $classification = $request->classification;
         $maintenances_schedule = \App\Models\Maintenances_scheduleModel::get();
 
@@ -104,6 +105,7 @@ class AssetController extends Controller
             ->when($classification === 'tik', fn($q) => $q->where('classification_id', 2))
             ->when($classification === 'rt', fn($q) => $q->whereIn('classification_id', [3, 4]))
             ->when($category, fn($query) => $query->where('category_id', $category))
+            ->when($location, fn($query) => $query->where('location_id', $location))
             ->latest();
 
         return DataTables::of($assets)

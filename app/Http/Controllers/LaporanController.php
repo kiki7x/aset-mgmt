@@ -13,6 +13,7 @@ use App\Models\MaintenancesModel;
 use App\Models\TicketsModel;
 use App\Models\AssetclassificationsModel;
 use App\Models\AssetcategoriesModel;
+use App\Models\BorrowingsModel;
 
 class LaporanController extends Controller
 {
@@ -32,6 +33,7 @@ class LaporanController extends Controller
         'preventif'=> 'Preventif',
         'korektif' => 'Korektif',
         'tiket'    => 'Tiket',
+        'peminjaman' => 'Peminjaman',
     ];
 
     public function exportExcel(Request $request)
@@ -520,5 +522,97 @@ class LaporanController extends Controller
         }
 
         return $query;
+    }
+
+    // ─── PEMINJAMAN ────────────────────────────────────────
+
+    private function exportPeminjamanExcel(Request $request)
+    {
+        $query = $this->buildPeminjamanQuery($request);
+
+        $data = [
+            ['No', 'Jenis', 'Barang/Ruangan', 'Peminjam', 'NIP', 'Unit',
+                'Tgl Mulai', 'Tgl Akhir', 'Tgl Kembali', 'Tujuan', 'Status']
+        ];
+
+        foreach ($query->get() as $i => $item) {
+            $itemName = '-';
+            if ($item->type === 'ruangan' && $item->location) {
+                $itemName = $item->location->name . ' (' . optional($item->location->building)->name . ' Lt ' . $item->location->floor . ')';
+            } elseif ($item->type === 'barang' && $item->asset) {
+                $itemName = $item->asset->name . ' (' . $item->asset->tag . ')';
+            }
+
+            $data[] = [
+                $i + 1,
+                ucfirst($item->type),
+                $itemName,
+                $item->borrower_name,
+                $item->borrower_nip ?? '-',
+                $item->borrower_unit ?? '-',
+                Carbon::parse($item->borrow_start)->format('d-m-Y H:i'),
+                Carbon::parse($item->borrow_end)->format('d-m-Y H:i'),
+                $item->return_date ? Carbon::parse($item->return_date)->format('d-m-Y H:i') : '-',
+                $item->purpose,
+                $item->status === 'dipinjam' ? 'Dipinjam' : 'Dikembalikan',
+            ];
+        }
+
+        return SimpleXLSXGen::fromArray($data)
+            ->downloadAs(Carbon::now()->format('d-m-Y') . '_sapa-ppl-peminjaman.xlsx');
+    }
+
+    private function exportPeminjamanPdf(Request $request)
+    {
+        $query = $this->buildPeminjamanQuery($request);
+        $borrowings = $query->get();
+        $filterLabels = $this->getPeminjamanFilterLabels($request);
+
+        return view('admin.laporan.print-peminjaman', [
+            'borrowings' => $borrowings,
+            'filterLabels' => $filterLabels,
+        ]);
+    }
+
+    private function buildPeminjamanQuery(Request $request)
+    {
+        $query = BorrowingsModel::with('location.building', 'asset');
+
+        if ($request->filled('type')) {
+            $query->where('type', $request->input('type'));
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        if ($request->filled('tahun')) {
+            $query->whereYear('borrow_start', $request->input('tahun'));
+        }
+
+        if ($request->filled('bulan')) {
+            $query->whereMonth('borrow_start', $request->input('bulan'));
+        }
+
+        return $query->latest();
+    }
+
+    private function getPeminjamanFilterLabels(Request $request): array
+    {
+        $labels = [];
+        if ($request->filled('type')) {
+            $labels[] = 'Jenis: ' . ucfirst($request->input('type'));
+        }
+        if ($request->filled('status')) {
+            $labels[] = 'Status: ' . ucfirst($request->input('status'));
+        }
+        if ($request->filled('tahun')) {
+            $labels[] = 'Tahun: ' . $request->input('tahun');
+        }
+        if ($request->filled('bulan')) {
+            $bulanNama = Carbon::create()->month($request->input('bulan'))->locale('id')->monthName;
+            $labels[] = 'Bulan: ' . $bulanNama;
+        }
+        return $labels;
     }
 }
