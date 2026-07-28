@@ -6,7 +6,7 @@
 
 
 @section('content')
-    {{-- Rangkum Aset --}}
+    {{-- #1 --}}
     <div class="row">
         <div class="col-md-2 col-lg-3 col-6">
             <!-- small card -->
@@ -68,8 +68,9 @@
                 </a>
             </div>
         </div><!-- ./col -->
-    </div>{{-- /Rangkum Aset --}}
+    </div>{{-- /#1 --}}
 
+    {{-- #2 --}}
     <div class="row">
         <div class="col-md-2 col-lg-2 col-6">
             <!-- small card -->
@@ -108,6 +109,21 @@
                 <div class="inner">
                     <h3>{{ $totalTickets }}</h3>
 
+                    <p>Peminjaman Aset</p>
+                </div>
+                <div class="icon">
+                    <i class="fa-regular fa-handshake"></i>
+                </div>
+                <a href="{{ route('admin.tiket') }}" class="small-box-footer">
+                    Selengkapnya <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div><!-- ./col -->
+        <div class="col-md-2 col-lg-2 col-6">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>{{ $totalTickets }}</h3>
+
                     <p>Helpdesk Tiket</p>
                 </div>
                 <div class="icon">
@@ -118,6 +134,37 @@
                 </a>
             </div>
         </div><!-- ./col -->
+        <div class="col-md-2 col-lg-2 col-6">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>{{ $totalTickets }}</h3>
+                    <p>Artikel</p>
+                </div>
+                <div class="icon">
+                    <i class="fa-regular fa-newspaper"></i>
+                </div>
+                <a href="{{ route('admin.tiket') }}" class="small-box-footer">
+                    Selengkapnya <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div><!-- ./col -->
+        <div class="col-md-2 col-lg-2 col-6">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>{{ $totalTickets }}</h3>
+                    <p>Pengguna</p>
+                </div>
+                <div class="icon">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <a href="{{ route('admin.tiket') }}" class="small-box-footer">
+                    Selengkapnya <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div><!-- ./col -->
+    </div> {{-- /#2 --}}
+    
+    <div class="row">
         <div class="col-md-6">
             <div class="card card-default">
                 <div class="card-header">
@@ -133,8 +180,9 @@
         </div><!-- ./col -->
     </div>
 
+    {{-- #3 --}}
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-6">
             <div class="card card-default">
                 <div class="card-header">
                     <h3 class="card-title">
@@ -169,10 +217,10 @@
                 </div><!-- /.card-body -->
             </div><!-- /.card -->
         </div><!-- /.col -->
-    </div>
+    </div> {{-- /#3 --}}
 
+    {{-- #4 --}}
     <div class="row">
-
         <div class="col-md-6">
             <div class="card card-default">
                 <div class="card-header">
