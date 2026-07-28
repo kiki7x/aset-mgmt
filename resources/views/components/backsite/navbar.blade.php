@@ -57,24 +57,28 @@
               </div>
           </li>
 
+          {{-- Profile --}}
+          @php
+              $avatarUrl = Auth::user()->avatar
+                  ? asset('storage/' . Auth::user()->avatar)
+                  : asset('assets/dist/img/user1-128x128.jpg');
+          @endphp
           <li class="nav-item dropdown user user-menu">
-              <!-- User Account: style can be found in dropdown.less -->
               <a href="#" class="nav-link" data-toggle="dropdown">
-                  <img src="{{ asset('assets/dist/img/user1-128x128.jpg') }}" class="user-image img-size-10 img-circle" alt="User Image">
+                  <img src="{{ $avatarUrl }}" class="user-image img-size-10 img-circle" alt="User Image">
                   <span class="hidden-xs"><i class="caret"></i></span>
               </a>
               <ul class="dropdown-menu" onclick="event.stopPropagation()">
-                  <!-- User image -->
                   <li class="user-header">
-                      <img src="{{ asset('assets/dist/img/user1-128x128.jpg') }}" class="img-circle">
+                      <img src="{{ $avatarUrl }}" class="img-circle">
                       <p>
-                          {{ Auth::user()->name }} - <small>{{ Auth::user()->email }}</small>
+                          {{ Auth::user()->fullname }}
+                          <small>{{ Auth::user()->title ?? Auth::user()->email }}</small>
                       </p>
                   </li>
-                  <!-- Menu Footer-->
                   <li class="user-footer">
                       <div class="float-left">
-                          <a href="#" class="btn btn-default btn-flat">Profile</a>
+                          <a href="{{ route('admin.profile') }}" class="btn btn-default btn-flat">Profile</a>
                       </div>
                       <div class="float-right">
                           <a href="{{ route('logout') }}" onclick="event.preventDefault();

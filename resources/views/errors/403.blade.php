@@ -1,4 +1,8 @@
-@extends('layouts.errors', ['title' => 'Access Denied - SAPA PPL'])
+@extends('layouts.backsite', [
+    'title' => 'Access Denied | SAPA PPL',
+    'welcome' => 'Access Denied',
+    'breadcrumb' => '<li class="breadcrumb-item active">Access Denied</li>',
+])
 
 @section('content')
     <style>

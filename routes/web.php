@@ -270,7 +270,7 @@ Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function ()
     });
 
     // Route Settings
-    Route::middleware(['role:superadmin|admin_tik|admin_rt|user', 'readonly_user'])->group(function () {
+    Route::middleware(['role:superadmin|user', 'readonly_user'])->group(function () {
         // Route User Manager
         Route::get('settings/usermanager', [App\Http\Controllers\UserController::class, 'index'])->name('admin.settings.usermanager');
         Route::get('settings/usermanager/get_users', [App\Http\Controllers\UserController::class, 'getUsers'])->name('admin.settings.usermanager.get_users');
@@ -321,6 +321,12 @@ Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function ()
         auth()->user()->unreadNotifications->markAsRead();
         return back();
     })->name('admin.tandai-notifikasi-telah-dibaca');
+
+    // Route Profile
+    Route::get('/profile', [App\Http\Controllers\UserController::class, 'profile'])->name('admin.profile');
+    Route::post('/profile/update', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('admin.profile.update');
+    Route::post('/profile/password', [App\Http\Controllers\UserController::class, 'updatePassword'])->name('admin.profile.password');
+    Route::post('/profile/avatar', [App\Http\Controllers\UserController::class, 'updateAvatar'])->name('admin.profile.avatar');
 });
 
 // Route fetch untuk mengambil id whatsapp group, dipakai cukup hanya sekali saja

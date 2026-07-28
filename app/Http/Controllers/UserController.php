@@ -151,4 +151,94 @@ class UserController extends Controller
         $user = \App\Models\User::findOrFail($id);
         return view('admin.userprofil', compact('user'));
     }
+
+    /**
+     * Tampilkan halaman profile user yang sedang login.
+     */
+    public function profile(): View
+    {
+        $user = auth()->user();
+        $user->load('roles');
+        return view('admin.settings.usermanager.userprofil', compact('user'));
+    }
+
+    /**
+     * Update profile data (fullname, email, mobile, address, title).
+     */
+    public function updateProfile(Request $request): JsonResponse
+    {
+        $user = auth()->user();
+
+        $request->validate([
+            'fullname' => 'required|string|max:100',
+            'email' => 'required|string|email|max:50|unique:users,email,' . $user->id,
+            'mobile' => 'nullable|string|max:64',
+            'address' => 'nullable|string|max:255',
+            'title' => 'nullable|string|max:64',
+        ]);
+
+        $user->update($request->only(['fullname', 'email', 'mobile', 'address', 'title']));
+
+        return response()->json(['message' => 'Profile berhasil diperbarui.']);
+    }
+
+    /**
+     * Update password user yang sedang login.
+     */
+    public function updatePassword(Request $request): JsonResponse
+    {
+        $request->validate([
+            'current_password' => 'required|string',
+            'new_password' => 'required|string|min:8|confirmed',
+        ], [
+            'current_password.required' => 'Password saat ini wajib diisi.',
+            'new_password.required' => 'Password baru wajib diisi.',
+            'new_password.min' => 'Password baru minimal 8 karakter.',
+            'new_password.confirmed' => 'Konfirmasi password tidak cocok.',
+        ]);
+
+        $user = auth()->user();
+
+        if (!\Illuminate\Support\Facades\Hash::check($request->current_password, $user->password)) {
+            return response()->json(['errors' => ['current_password' => ['Password saat ini salah.']]], 422);
+        }
+
+        $user->update(['password' => bcrypt($request->new_password)]);
+
+        return response()->json(['message' => 'Password berhasil diperbarui.']);
+    }
+
+    /**
+     * Upload avatar untuk user yang sedang login.
+     */
+    public function updateAvatar(Request $request): JsonResponse
+    {
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,jpg,png|max:2048',
+        ], [
+            'avatar.required' => 'File avatar wajib diupload.',
+            'avatar.image' => 'File harus berupa gambar.',
+            'avatar.mimes' => 'Format gambar harus jpeg, jpg, atau png.',
+            'avatar.max' => 'Ukuran gambar maksimal 2MB.',
+        ]);
+
+        $user = auth()->user();
+
+        if ($request->hasFile('avatar')) {
+            if ($user->avatar) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($user->avatar);
+            }
+            $path = $request->file('avatar')->store('avatar', 'public');
+            $user->update(['avatar' => $path]);
+        }
+
+        $avatarUrl = $user->avatar
+            ? asset('storage/' . $user->avatar)
+            : asset('assets/dist/img/user1-128x128.jpg');
+
+        return response()->json([
+            'message' => 'Avatar berhasil diperbarui.',
+            'avatar_url' => $avatarUrl,
+        ]);
+    }
 }
