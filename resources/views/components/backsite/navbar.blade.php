@@ -59,9 +59,7 @@
 
           {{-- Profile --}}
           @php
-              $avatarUrl = Auth::user()->avatar
-                  ? asset('storage/' . Auth::user()->avatar)
-                  : asset('assets/dist/img/user1-128x128.jpg');
+              $avatarUrl = Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : asset('assets/dist/img/user1-128x128.jpg');
           @endphp
           <li class="nav-item dropdown user user-menu">
               <a href="#" class="nav-link" data-toggle="dropdown">
@@ -206,12 +204,14 @@
                       </a>
                   </li>
                   <li class="nav-header">SETTING</li>
-                  <li class="nav-item">
-                      <a href="{{ route('admin.settings.usermanager') }}" class="nav-link {{ request()->is('admin/settings/usermanager') ? 'active' : '' }}">
-                          <i class="nav-icon fa-solid fa-users-gear"></i>
-                          <p>User Management</p>
-                      </a>
-                  </li>
+                  @can('settings-usermanager-view')
+                      <li class="nav-item">
+                          <a href="{{ route('admin.settings.usermanager') }}" class="nav-link {{ request()->is('admin/settings/usermanager') ? 'active' : '' }}">
+                              <i class="nav-icon fa-solid fa-users-gear"></i>
+                              <p>User Management</p>
+                          </a>
+                      </li>
+                  @endcan
                   @can('settings-import-view')
                       <li class="nav-item">
                           <a href="{{ route('admin.settings.import') }}" class="nav-link {{ request()->is('admin/settings/import') ? 'active' : '' }}">

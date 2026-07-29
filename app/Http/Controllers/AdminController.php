@@ -10,7 +10,7 @@ use Illuminate\Support\Carbon;
 
 class AdminController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $totalAssetTik = \App\Models\AssetsModel::where('classification_id', 2)->count();
         $totalAssetRt = \App\Models\AssetsModel::whereIn('classification_id', [3, 4])->count();
@@ -69,6 +69,56 @@ class AdminController extends Controller
             ->take(5)
             ->get();
 
+        // Counter tambahan
+        $totalBorrowings = \App\Models\BorrowingsModel::count();
+        $totalArticles = \App\Models\KbArticlesModel::where('is_published', true)->count();
+        $totalUsers = \App\Models\User::count();
+
+        // Chart Pemeliharaan bulanan
+        $year = $request->get('year', date('Y'));
+        $chartBelum = array_fill(0, 12, 0);
+        $chartSudah = array_fill(0, 12, 0);
+        $chartKorektif = array_fill(0, 12, 0);
+
+        $belumRaw = \App\Models\Maintenances_scheduleModel::selectRaw('MONTH(start) as bulan, COUNT(*) as total')
+            ->whereYear('start', $year)
+            ->whereDoesntHave('maintenances', function ($q) {
+                $q->where('status', 'Selesai');
+            })
+            ->groupByRaw('MONTH(start)')
+            ->pluck('total', 'bulan')
+            ->toArray();
+
+        foreach ($belumRaw as $bulan => $total) {
+            $chartBelum[$bulan - 1] = (int) $total;
+        }
+
+        $sudahRaw = \App\Models\MaintenancesModel::selectRaw('MONTH(start) as bulan, COUNT(*) as total')
+            ->whereYear('start', $year)
+            ->whereNotNull('maintenance_schedule_id')
+            ->where('status', 'Selesai')
+            ->groupByRaw('MONTH(start)')
+            ->pluck('total', 'bulan')
+            ->toArray();
+
+        foreach ($sudahRaw as $bulan => $total) {
+            $chartSudah[$bulan - 1] = (int) $total;
+        }
+
+        $korektifRaw = \App\Models\MaintenancesModel::selectRaw('MONTH(start) as bulan, COUNT(*) as total')
+            ->whereYear('start', $year)
+            ->whereNull('maintenance_schedule_id')
+            ->groupByRaw('MONTH(start)')
+            ->pluck('total', 'bulan')
+            ->toArray();
+
+        foreach ($korektifRaw as $bulan => $total) {
+            $chartKorektif[$bulan - 1] = (int) $total;
+        }
+
+        $currentYear = (int) date('Y');
+        $years = range($currentYear - 5, $currentYear + 1);
+
         return view('admin.dashboard', compact(
             'totalAssetTik',
             'totalAssetRt',
@@ -83,7 +133,15 @@ class AdminController extends Controller
             'latestKorektifDitahan',
             'latestKorektifSelesai',
             'latestKorektifItems',
-            'latestPreventifUpcoming'
+            'latestPreventifUpcoming',
+            'totalBorrowings',
+            'totalArticles',
+            'totalUsers',
+            'chartBelum',
+            'chartSudah',
+            'chartKorektif',
+            'year',
+            'years'
         ));
         
     }

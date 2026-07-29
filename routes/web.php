@@ -127,7 +127,7 @@ Route::prefix('admin')->middleware(['auth', 'readonly_user'])->group(function ()
     });
 
     // Route Licenses
-    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering|user', 'readonly_user'])->group(function () {
+    Route::middleware(['role:superadmin|admin_tik|admin_rt|staf_tik|staf_driver|staf_engineering|user', 'readonly_user', 'module_restriction'])->group(function () {
         Route::get('/license', [App\Http\Controllers\LicensesController::class, 'index'])->name('admin.license');
         Route::get('/license/next-tag', [App\Http\Controllers\LicensesController::class, 'nextTag'])->name('admin.license.next_tag');
         Route::get('/license/get_license', [App\Http\Controllers\LicensesController::class, 'getData'])->name('admin.license.get_license');

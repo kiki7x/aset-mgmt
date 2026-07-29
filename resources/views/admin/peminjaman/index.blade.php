@@ -19,7 +19,7 @@
             <h3 class="card-title font-weight-bold mr-auto p-2 bd-highlight">
                 <i class="fa-solid fa-handshake"></i> Peminjaman Aset
             </h3>
-            <div class="p-2 bd-highlight">
+            <div class="bd-highlight">
                 <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#createRuanganModal">
                     <i class="fas fa-door-open"></i> Pinjam Ruangan
                 </button>

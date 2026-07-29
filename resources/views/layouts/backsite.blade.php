@@ -53,6 +53,8 @@
         $forbiddenByModule = [
             'asetrt' => ['admin_tik', 'staf_tik'],
             'asettik' => ['admin_rt', 'staf_driver', 'staf_engineering'],
+            'license' => ['admin_rt', 'staf_driver', 'staf_engineering'],
+            'monitoring' => ['admin_rt', 'staf_driver', 'staf_engineering'],
         ];
         $isModuleRestricted = false;
         if ($currentModule && auth()->check() && isset($forbiddenByModule[$currentModule])) {

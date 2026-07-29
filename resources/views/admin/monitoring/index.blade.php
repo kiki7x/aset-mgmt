@@ -105,9 +105,9 @@
 
     {{-- TABEL CRUD MONITOR --}}
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h3 class="card-title font-weight-bold"><i class="fa-solid fa-list"></i> Daftar Monitor</h3>
-            <button class="btn btn-primary btn-sm" id="btn-add"><i class="fa-solid fa-plus mr-1"></i> Tambah Monitor</button>
+        <div class="card-header d-flex bd-highlight">
+            <h3 class="card-title font-weight-bold mr-auto p-2 bd-highlight"><i class="fa-solid fa-list"></i> Daftar Monitor</h3>
+            <button class="btn btn-outline-primary" id="btn-add"><i class="fa-solid fa-plus"></i></button>
         </div>
         <div class="card-body">
             <div class="table-responsive">

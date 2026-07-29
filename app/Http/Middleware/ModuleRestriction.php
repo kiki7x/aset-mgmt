@@ -15,6 +15,7 @@ class ModuleRestriction
         $forbiddenByModule = [
             'asetrt' => ['admin_tik', 'staf_tik'],
             'asettik' => ['admin_rt', 'staf_driver', 'staf_engineering'],
+            'license' => ['admin_rt', 'staf_driver', 'staf_engineering'],
         ];
 
         $module = $request->segment(2);

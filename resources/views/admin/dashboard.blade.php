@@ -107,14 +107,14 @@
         <div class="col-md-2 col-lg-2 col-6">
             <div class="small-box bg-info">
                 <div class="inner">
-                    <h3>{{ $totalTickets }}</h3>
+                    <h3>{{ $totalBorrowings }}</h3>
 
                     <p>Peminjaman Aset</p>
                 </div>
                 <div class="icon">
                     <i class="fa-regular fa-handshake"></i>
                 </div>
-                <a href="{{ route('admin.tiket') }}" class="small-box-footer">
+                <a href="{{ route('admin.peminjaman') }}" class="small-box-footer">
                     Selengkapnya <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
@@ -137,13 +137,13 @@
         <div class="col-md-2 col-lg-2 col-6">
             <div class="small-box bg-info">
                 <div class="inner">
-                    <h3>{{ $totalTickets }}</h3>
+                    <h3>{{ $totalArticles }}</h3>
                     <p>Artikel</p>
                 </div>
                 <div class="icon">
                     <i class="fa-regular fa-newspaper"></i>
                 </div>
-                <a href="{{ route('admin.tiket') }}" class="small-box-footer">
+                <a href="{{ route('admin.knowledge-base') }}" class="small-box-footer">
                     Selengkapnya <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
@@ -151,13 +151,13 @@
         <div class="col-md-2 col-lg-2 col-6">
             <div class="small-box bg-info">
                 <div class="inner">
-                    <h3>{{ $totalTickets }}</h3>
+                    <h3>{{ $totalUsers }}</h3>
                     <p>Pengguna</p>
                 </div>
                 <div class="icon">
                     <i class="fa-solid fa-users"></i>
                 </div>
-                <a href="{{ route('admin.tiket') }}" class="small-box-footer">
+                <a href="{{ route('admin.settings.usermanager') }}" class="small-box-footer">
                     Selengkapnya <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
@@ -168,20 +168,23 @@
         <div class="col-md-6">
             <div class="card card-default">
                 <div class="card-header">
-                    <h3 class="card-title">
+                    <h3 class="card-title float-left">
                         <i class="fas fa-chart-bar"></i>
                         Status Pemeliharaan Aset
                     </h3>
+                    <div class="card-tools float-right">
+                        <select id="yearFilter" class="form-control form-control-sm" style="width:auto;">
+                            @foreach ($years as $y)
+                                <option value="{{ $y }}" {{ (int)$year === $y ? 'selected' : '' }}>{{ $y }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
                 <div class="card-body">
                     <canvas id="maintenanceStatusChart" style="min-height: 250px; height: 250px; max-width: 100%;"></canvas>
                 </div>
             </div>
         </div><!-- ./col -->
-    </div>
-
-    {{-- #3 --}}
-    <div class="row">
         <div class="col-md-6">
             <div class="card card-default">
                 <div class="card-header">
@@ -217,6 +220,11 @@
                 </div><!-- /.card-body -->
             </div><!-- /.card -->
         </div><!-- /.col -->
+    </div>
+
+    {{-- #3 --}}
+    <div class="row">
+        
     </div> {{-- /#3 --}}
 
     {{-- #4 --}}
@@ -297,15 +305,29 @@
             var ctx = document.getElementById('maintenanceStatusChart');
             if (!ctx) return;
 
+            var months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+
             new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Aset Terpelihara', 'Menunggu Pemeliharaan'],
+                    labels: months,
                     datasets: [{
-                        label: 'Jumlah Aset',
-                        data: [{{ $totalAssetsMaintained }}, {{ $totalAssetsPendingMaintenance }}],
-                        backgroundColor: ['#28a745', '#ffc107'],
-                        borderColor: ['#28a745', '#ffc107'],
+                        label: 'Belum Dipelihara',
+                        data: @json($chartBelum),
+                        backgroundColor: 'rgba(255, 193, 7, 0.7)',
+                        borderColor: '#ffc107',
+                        borderWidth: 1
+                    }, {
+                        label: 'Sudah Dipelihara',
+                        data: @json($chartSudah),
+                        backgroundColor: 'rgba(40, 167, 69, 0.7)',
+                        borderColor: '#28a745',
+                        borderWidth: 1
+                    }, {
+                        label: 'Korektif',
+                        data: @json($chartKorektif),
+                        backgroundColor: 'rgba(220, 53, 69, 0.7)',
+                        borderColor: '#dc3545',
                         borderWidth: 1
                     }]
                 },
@@ -313,14 +335,28 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     scales: {
+                        x: {
+                            stacked: false
+                        },
                         y: {
                             beginAtZero: true,
                             ticks: {
                                 precision: 0
                             }
                         }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
                     }
                 }
+            });
+
+            document.getElementById('yearFilter').addEventListener('change', function() {
+                var url = new URL(window.location.href);
+                url.searchParams.set('year', this.value);
+                window.location.href = url.toString();
             });
         });
     </script>

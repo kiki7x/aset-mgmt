@@ -28,8 +28,6 @@ class RoleHasPermissionSeeder extends Seeder
             'logs-view',
             'reminder-view',
             'laporan-view',
-            'settings-usermanager-view', 'settings-usermanager-create', 'settings-usermanager-edit',
-            'settings-config-view',
         ]);
 
         $admin_rt = Role::findOrCreate('admin_rt');
@@ -37,10 +35,14 @@ class RoleHasPermissionSeeder extends Seeder
             'aset-tik-view',
             'aset-rt-view', 'aset-rt-create', 'aset-rt-edit', 'aset-rt-delete',
             'peminjaman-view', 'peminjaman-create', 'peminjaman-edit', 'peminjaman-delete',
+            'lisensi-view',
+            'setting-attribut-view',
             'pemeliharaan-view', 'pemeliharaan-create', 'pemeliharaan-edit', 'pemeliharaan-delete',
             'tiket-view', 'tiket-create', 'tiket-edit', 'tiket-delete',
             'knowledge-base-view', 'knowledge-base-create', 'knowledge-base-edit', 'knowledge-base-delete',
             'monitoring-view',
+            'logs-view',
+            'reminder-view',
             'laporan-view',
         ]);
 
@@ -84,6 +86,9 @@ class RoleHasPermissionSeeder extends Seeder
             'peminjaman-view',
             'pemeliharaan-view',
             'tiket-view', 'tiket-create',
+            'monitoring-view',
+            'logs-view',
+            'reminder-view',
             'laporan-view',
         ]);
     }
