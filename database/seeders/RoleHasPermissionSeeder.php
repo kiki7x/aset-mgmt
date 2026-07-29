@@ -36,7 +36,7 @@ class RoleHasPermissionSeeder extends Seeder
             'aset-rt-view', 'aset-rt-create', 'aset-rt-edit', 'aset-rt-delete',
             'peminjaman-view', 'peminjaman-create', 'peminjaman-edit', 'peminjaman-delete',
             'lisensi-view',
-            'setting-attribut-view',
+            'setting-atribut-view',
             'pemeliharaan-view', 'pemeliharaan-create', 'pemeliharaan-edit', 'pemeliharaan-delete',
             'tiket-view', 'tiket-create', 'tiket-edit', 'tiket-delete',
             'knowledge-base-view', 'knowledge-base-create', 'knowledge-base-edit', 'knowledge-base-delete',
