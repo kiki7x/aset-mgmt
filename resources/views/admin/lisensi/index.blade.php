@@ -14,10 +14,10 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title"><i class="fa-solid fa-file-code"></i> Daftar Lisensi</h3>
-                    <div class="card-tools">
-                        <button type="button" id="btnOpenCreateModal" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Tambah Data" data-crud="true">
+                <div class="card-header d-flex bd-highlight">
+                    <h3 class="card-title font-weight-bold mr-auto p-2 bd-highlight"><i class="fa-solid fa-file-code"></i> Daftar Lisensi <span class="badge end-0 mr-3 bg-info text-light">{{ $totalLicenses }}</span></h3>
+                    <div>
+                        <button type="button" id="btnOpenCreateModal" class="btn btn-outline-primary bd-highlight" data-toggle="tooltip" data-placement="top" title="Tambah Data" data-crud="true">
                             <i class="fas fa-plus"></i>
                         </button>
                     </div>

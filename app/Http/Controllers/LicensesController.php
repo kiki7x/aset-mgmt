@@ -20,7 +20,10 @@ class LicensesController extends Controller
 
     public function index(): View
     {
-        return view('admin.lisensi.index');
+        $totalLicenses = LicensesModel::count();
+        return view('admin.lisensi.index', compact(
+            'totalLicenses'
+        ));
     }
 
     public function overview($id): View
