@@ -104,6 +104,14 @@
 
                     <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up">
                         <div class="service-item position-relative">
+                            <div class="icon"><i class="fa-regular fa-handshake"></i></div>
+                            <h4><a href="" class="stretched-link">Peminjaman Ruangan dan Barang</a></h4>
+                            <p>Kelola dan ajukan peminjaman fasilitas serta inventaris dengan lebih mudah. Cek ketersediaan secara real-time, ajukan izin secara digital, dan pantau status persetujuan dalam satu sarana terpadu.</p>
+                        </div>
+                    </div><!-- End Service Item -->
+
+                    <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up">
+                        <div class="service-item position-relative">
                             <div class="icon"><i class="bi bi-qr-code-scan"></i></div>
                             <h4><a href="{{ route('lacak') }}" class="stretched-link">Lacak Aset</a></h4>
                             <p>Sistem pemantauan distribusi dan mutasi lokasi aset secara real-time. Dengan integrasi teknologi QR Code, pengguna dapat melakukan pemindaian cepat untuk memverifikasi keaslian, histori, dan posisi fisik aset secara akurat.</p>
