@@ -9,12 +9,18 @@
 
         <nav id="navmenu" class="navmenu">
             <ul>
-              <li><a href="/" class="{{ Request::is('/') ? 'active' : '' }}">Beranda</a></li>
-                <li><a href="/profil" class="{{ Request::is('profil') ? 'active' : '' }}">Profil</a></li>
-                <li><a href="/layanan" class="{{ Request::is('layanan') ? 'active' : '' }}">Layanan</a></li>
-                <li><a href="/statistik" class="{{ Request::is('statistik') ? 'active' : '' }}">Statistik</a></li>
-                <li><a href="/team" class="{{ Request::is('team') ? 'active' : '' }}">Team</a></li>
-                <li><a href="/faq" class="{{ Request::is('faq') ? 'active' : '' }}">FAQ</a></li>
+                <li><a href="/" class="{{ Request::is('/') ? 'active' : '' }}">Beranda</a></li>
+                <li><a href="#profil" class="{{ Request::is('profil') ? 'active' : '' }}">Profil</a></li>
+                <li class="dropdown"><a href="#services" class="{{ Request::is('layanan') ? 'active' : '' }}"><span>Layanan</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                    <ul>
+                        <li><a href="/lacak">Lacak Aset</a></li>
+                        <li><a href="/servicedesk">Service Desk</a></li>
+                        <li><a href="/knowledge-base">Pusat Pengetahuan</a></li>
+                    </ul>
+                </li>
+                <li><a href="#statistik" class="{{ Request::is('statistik') ? 'active' : '' }}">Statistik</a></li>
+                <li><a href="#team" class="{{ Request::is('team') ? 'active' : '' }}">Team</a></li>
+                <li><a href="#faq" class="{{ Request::is('faq') ? 'active' : '' }}">FAQ</a></li>
             </ul>
             <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
         </nav>
