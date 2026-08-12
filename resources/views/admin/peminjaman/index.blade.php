@@ -163,11 +163,10 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="form-group col-md-12">
-                                <label>Barang <span class="text-danger">*</span></label>
-                                <select name="asset_id" class="form-control select2" required>
-                                    <option value="">-- Pilih Barang --</option>
+                                <label>Barang <span class="text-danger">*</span> <small class="text-muted">(bisa pilih lebih dari satu)</small></label>
+                                <select name="asset_ids[]" class="form-control select2" multiple required>
                                 </select>
-                                <span class="text-danger small" id="error-barang-asset_id"></span>
+                                <span class="text-danger small" id="error-barang-asset_ids"></span>
                             </div>
                             <div class="form-group col-md-6">
                                 <label>Nama Peminjam <span class="text-danger">*</span></label>
@@ -340,8 +339,8 @@
 
         function loadAvailableAssets() {
             $.get('{{ route("admin.peminjaman.available.assets") }}', function(data) {
-                var $select = $('#createBarangModal select[name="asset_id"]');
-                $select.empty().append('<option value="">-- Pilih Barang --</option>');
+                var $select = $('#createBarangModal select[name="asset_ids[]"]');
+                $select.empty();
                 $.each(data, function(i, asset) {
                     var label = asset.tag + ' - ' + asset.name;
                     if (asset.classification) label += ' (' + asset.classification.name + ')';
@@ -350,6 +349,7 @@
                 $select.select2({
                     theme: 'bootstrap4',
                     width: '100%',
+                    placeholder: '-- Pilih Barang (bisa lebih dari satu) --',
                     dropdownParent: $('#createBarangModal'),
                 });
             });
@@ -476,8 +476,22 @@
                 if (data.type === 'ruangan' && data.location) {
                     html += '<tr><th>Ruangan</th><td>' + (data.location.name || '-') + '<br><small class="text-muted">' + (data.location.building ? data.location.building.name : '') + ' Lt ' + (data.location.floor || '') + '</small></td></tr>';
                 }
-                if (data.type === 'barang' && data.asset) {
-                    html += '<tr><th>Barang</th><td>' + (data.asset.name || '-') + '<br><small class="text-muted">' + (data.asset.tag || '') + '</small></td></tr>';
+                if (data.type === 'barang') {
+                    html += '<tr><th>Barang</th><td>';
+                    if (data.items && data.items.length > 0) {
+                        var listItems = [];
+                        $.each(data.items, function(i, item) {
+                            if (item.asset) {
+                                listItems.push((i + 1) + '. ' + item.asset.name + ' <small class="text-muted">(' + item.asset.tag + ')</small>');
+                            }
+                        });
+                        html += listItems.join('<br>');
+                    } else if (data.asset) {
+                        html += data.asset.name + '<br><small class="text-muted">' + (data.asset.tag || '') + '</small>';
+                    } else {
+                        html += '-';
+                    }
+                    html += '</td></tr>';
                 }
 
                 html += '<tr><th>Peminjam</th><td>' + (data.borrower_name || '-');

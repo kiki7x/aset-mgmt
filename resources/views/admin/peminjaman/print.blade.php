@@ -66,11 +66,23 @@
             <td>{{ $borrowing->location->name }} ({{ $borrowing->location->building?->name ?? '-' }} Lt {{ $borrowing->location->floor ?? '-' }})</td>
         </tr>
         @endif
-        @if ($borrowing->type === 'barang' && $borrowing->asset)
+        @if ($borrowing->type === 'barang')
         <tr>
             <td>Barang</td>
             <td>:</td>
-            <td>{{ $borrowing->asset->name }} ({{ $borrowing->asset->tag }})</td>
+            <td>
+                @if ($borrowing->items->isNotEmpty())
+                    @foreach ($borrowing->items as $item)
+                        @if ($item->asset)
+                            {{ $loop->iteration }}. {{ $item->asset->name }} ({{ $item->asset->tag }})<br>
+                        @endif
+                    @endforeach
+                @elseif ($borrowing->asset)
+                    {{ $borrowing->asset->name }} ({{ $borrowing->asset->tag }})
+                @else
+                    -
+                @endif
+            </td>
         </tr>
         @endif
         <tr>

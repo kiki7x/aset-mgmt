@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Peminjaman Aset</title>
+    <title>Laporan Pusat Pengetahuan</title>
     <style>
         body { font-family: 'Times New Roman', Times, serif; margin: 20px; color: #000; line-height: 1.5; }
         .header { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 12px 0 16px; border-bottom: 2px solid #000; margin-bottom: 18px; }
@@ -22,6 +22,7 @@
         .text-center { text-align: center; }
         .report-footer { margin-top: 10pt; font-size: 12px; }
         .report-footer table tr td { border: none; }
+        .isi-cell { white-space: pre-wrap; word-break: break-word; }
         @media print { body { margin: 0.5cm; } .no-print { display: none; } }
     </style>
 </head>
@@ -38,7 +39,7 @@
         <div class="header-right"><img src="{{ asset('ppl-icon.png') }}"></div>
     </div>
 
-    <div class="report-title"><h2>Daftar Peminjaman Aset</h2></div>
+    <div class="report-title"><h2>Laporan Pusat Pengetahuan</h2></div>
 
     @if (!empty($filterLabels))
         <div class="report-info">
@@ -52,56 +53,29 @@
         <thead>
             <tr>
                 <th>No.</th>
-                <th>Jenis</th>
-                <th>Barang/Ruangan</th>
-                <th>Peminjam</th>
-                <th>NIP</th>
-                <th>Unit</th>
-                <th>Tgl Mulai</th>
-                <th>Tgl Akhir</th>
-                <th>Tgl Kembali</th>
-                <th>Tujuan</th>
+                <th>Judul</th>
+                <th>Kategori</th>
+                <th>Penulis</th>
                 <th>Status</th>
+                <th>Views</th>
+                <th>Tanggal Dibuat</th>
+                <th>Isi</th>
             </tr>
         </thead>
         <tbody>
-            @forelse ($borrowings as $item)
+            @forelse ($articles as $article)
                 <tr>
                     <td class="text-center">{{ $loop->iteration }}</td>
-                    <td class="text-center">{{ ucfirst($item->type) }}</td>
-                    <td>
-                        @if ($item->type === 'ruangan' && $item->location)
-                            {{ $item->location->name }}<br>
-                            <small>({{ $item->location->building?->name ?? '' }} Lt {{ $item->location->floor }})</small>
-                        @elseif ($item->type === 'barang')
-                            @if ($item->items->isNotEmpty())
-                                @foreach ($item->items as $lineItem)
-                                    @if ($lineItem->asset)
-                                        {{ $loop->iteration }}. {{ $lineItem->asset->name }}<br>
-                                        <small>({{ $lineItem->asset->tag }})</small><br>
-                                    @endif
-                                @endforeach
-                            @elseif ($item->asset)
-                                {{ $item->asset->name }}<br>
-                                <small>({{ $item->asset->tag }})</small>
-                            @else
-                                -
-                            @endif
-                        @else
-                            -
-                        @endif
-                    </td>
-                    <td>{{ $item->borrower_name }}</td>
-                    <td>{{ $item->borrower_nip ?? '-' }}</td>
-                    <td>{{ $item->borrower_unit ?? '-' }}</td>
-                    <td class="text-center">{{ \Carbon\Carbon::parse($item->borrow_start)->format('d/m/Y H:i') }}</td>
-                    <td class="text-center">{{ \Carbon\Carbon::parse($item->borrow_end)->format('d/m/Y H:i') }}</td>
-                    <td class="text-center">{{ $item->return_date ? \Carbon\Carbon::parse($item->return_date)->format('d/m/Y H:i') : '-' }}</td>
-                    <td>{{ $item->purpose }}</td>
-                    <td class="text-center">{{ $item->status === 'dipinjam' ? 'Dipinjam' : 'Dikembalikan' }}</td>
+                    <td>{{ $article->title }}</td>
+                    <td>{{ optional($article->category)->name ?? '-' }}</td>
+                    <td>{{ optional($article->author)->fullname ?? '-' }}</td>
+                    <td class="text-center">{{ $article->is_published ? 'Terbit' : 'Draf' }}</td>
+                    <td class="text-center">{{ $article->views ?? 0 }}</td>
+                    <td class="text-center">{{ $article->created_at ? \Carbon\Carbon::parse($article->created_at)->format('d/m/Y') : '-' }}</td>
+                    <td class="isi-cell">{{ $descriptionToText($article->content) }}</td>
                 </tr>
             @empty
-                <tr><td colspan="11" class="text-center">Data tidak ditemukan.</td></tr>
+                <tr><td colspan="8" class="text-center">Data tidak ditemukan.</td></tr>
             @endforelse
         </tbody>
     </table>

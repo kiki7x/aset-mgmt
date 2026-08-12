@@ -403,6 +403,126 @@
                 </div>
             </div>
         </div>
+
+        {{-- Pusat Pengetahuan --}}
+        <div class="col-12 col-md-6 col-lg-4 mb-3">
+            <div class="card collapsed-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0"><i class="fa-solid fa-info mr-1"></i> Pusat Pengetahuan</h5>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body py-2">
+                    <form class="form-laporan" data-type="pusat-pengetahuan">
+                        @csrf
+                        <div class="form-group">
+                            <label class="mb-n1 small">Kategori</label>
+                            <select name="kategori[]" class="form-control form-control-sm select2-multi" multiple data-placeholder="Pilih...">
+                                @foreach ($kategoriKb as $k)
+                                    <option value="{{ $k->id }}">{{ $k->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="mb-n1 small">Penulis</label>
+                            <select name="penulis[]" class="form-control form-control-sm select2-multi" multiple data-placeholder="Pilih...">
+                                @foreach ($penulisKb as $p)
+                                    <option value="{{ $p->id }}">{{ $p->fullname }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="mb-n1 small">Status</label>
+                            <select name="status" class="form-control form-control-sm">
+                                <option value="">Semua</option>
+                                <option value="1">Terbit</option>
+                                <option value="0">Draf</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="mb-n1 small">Tahun</label>
+                                    <select name="tahun" class="form-control form-control-sm">
+                                        <option value="">Semua</option>
+                                        @for ($y = date('Y'); $y >= date('Y') - 10; $y--)
+                                            <option value="{{ $y }}">{{ $y }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="mb-n1 small">Bulan</label>
+                                    <select name="bulan" class="form-control form-control-sm">
+                                        <option value="">Semua</option>
+                                        @foreach (['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] as $i => $b)
+                                            <option value="{{ $i + 1 }}">{{ $b }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-success btn-sm btn-export-excel"><i class="fa-solid fa-file-excel mr-1"></i>Excel</button>
+                        <button type="button" class="btn btn-danger btn-sm btn-export-pdf"><i class="fa-solid fa-file-pdf mr-1"></i>PDF</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        {{-- Monitoring --}}
+        <div class="col-12 col-md-6 col-lg-4 mb-3">
+            <div class="card collapsed-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0"><i class="fa-solid fa-heart-pulse mr-1"></i> Monitoring</h5>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body py-2">
+                    <form class="form-laporan" data-type="monitoring">
+                        @csrf
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="mb-n1 small">Tanggal Dari</label>
+                                    <input type="date" name="dari" class="form-control form-control-sm">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="mb-n1 small">Tanggal Sampai</label>
+                                    <input type="date" name="sampai" class="form-control form-control-sm">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="mb-n1 small">Jenis</label>
+                            <select name="jenis" class="form-control form-control-sm">
+                                <option value="">Semua</option>
+                                <option value="website">Website</option>
+                                <option value="server">Server</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="mb-n1 small">Status Monitor</label>
+                            <select name="status_monitor" class="form-control form-control-sm">
+                                <option value="">Semua</option>
+                                <option value="1">Aktif</option>
+                                <option value="0">Nonaktif</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-success btn-sm btn-export-excel"><i class="fa-solid fa-file-excel mr-1"></i>Excel</button>
+                        <button type="button" class="btn btn-danger btn-sm btn-export-pdf"><i class="fa-solid fa-file-pdf mr-1"></i>PDF</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 

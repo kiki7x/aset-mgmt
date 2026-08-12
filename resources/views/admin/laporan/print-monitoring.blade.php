@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Peminjaman Aset</title>
+    <title>Laporan Monitoring</title>
     <style>
         body { font-family: 'Times New Roman', Times, serif; margin: 20px; color: #000; line-height: 1.5; }
         .header { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 12px 0 16px; border-bottom: 2px solid #000; margin-bottom: 18px; }
@@ -20,6 +20,7 @@
         table th, table td { border: 1px solid #444; padding: 6px 8px; vertical-align: top; }
         table th { background: #f4f4f4; text-align: center; }
         .text-center { text-align: center; }
+        .text-right { text-align: right; }
         .report-footer { margin-top: 10pt; font-size: 12px; }
         .report-footer table tr td { border: none; }
         @media print { body { margin: 0.5cm; } .no-print { display: none; } }
@@ -38,7 +39,7 @@
         <div class="header-right"><img src="{{ asset('ppl-icon.png') }}"></div>
     </div>
 
-    <div class="report-title"><h2>Daftar Peminjaman Aset</h2></div>
+    <div class="report-title"><h2>Laporan Monitoring</h2></div>
 
     @if (!empty($filterLabels))
         <div class="report-info">
@@ -48,61 +49,56 @@
         </div>
     @endif
 
+    @php
+        $totalMonitor = count($rekap);
+        $totalCek = array_sum(array_column($rekap, 'total'));
+        $totalUp = array_sum(array_column($rekap, 'up'));
+        $globalUptime = $totalCek > 0 ? round(($totalUp / $totalCek) * 100, 2) : 0;
+    @endphp
+
     <table>
         <thead>
             <tr>
                 <th>No.</th>
+                <th>Nama Monitor</th>
                 <th>Jenis</th>
-                <th>Barang/Ruangan</th>
-                <th>Peminjam</th>
-                <th>NIP</th>
-                <th>Unit</th>
-                <th>Tgl Mulai</th>
-                <th>Tgl Akhir</th>
-                <th>Tgl Kembali</th>
-                <th>Tujuan</th>
-                <th>Status</th>
+                <th>URL</th>
+                <th>Status Terakhir</th>
+                <th>Total Cek</th>
+                <th>Up</th>
+                <th>Down</th>
+                <th>Uptime %</th>
+                <th>Avg Response (ms)</th>
             </tr>
         </thead>
         <tbody>
-            @forelse ($borrowings as $item)
+            @forelse ($rekap as $row)
                 <tr>
                     <td class="text-center">{{ $loop->iteration }}</td>
-                    <td class="text-center">{{ ucfirst($item->type) }}</td>
-                    <td>
-                        @if ($item->type === 'ruangan' && $item->location)
-                            {{ $item->location->name }}<br>
-                            <small>({{ $item->location->building?->name ?? '' }} Lt {{ $item->location->floor }})</small>
-                        @elseif ($item->type === 'barang')
-                            @if ($item->items->isNotEmpty())
-                                @foreach ($item->items as $lineItem)
-                                    @if ($lineItem->asset)
-                                        {{ $loop->iteration }}. {{ $lineItem->asset->name }}<br>
-                                        <small>({{ $lineItem->asset->tag }})</small><br>
-                                    @endif
-                                @endforeach
-                            @elseif ($item->asset)
-                                {{ $item->asset->name }}<br>
-                                <small>({{ $item->asset->tag }})</small>
-                            @else
-                                -
-                            @endif
-                        @else
-                            -
-                        @endif
-                    </td>
-                    <td>{{ $item->borrower_name }}</td>
-                    <td>{{ $item->borrower_nip ?? '-' }}</td>
-                    <td>{{ $item->borrower_unit ?? '-' }}</td>
-                    <td class="text-center">{{ \Carbon\Carbon::parse($item->borrow_start)->format('d/m/Y H:i') }}</td>
-                    <td class="text-center">{{ \Carbon\Carbon::parse($item->borrow_end)->format('d/m/Y H:i') }}</td>
-                    <td class="text-center">{{ $item->return_date ? \Carbon\Carbon::parse($item->return_date)->format('d/m/Y H:i') : '-' }}</td>
-                    <td>{{ $item->purpose }}</td>
-                    <td class="text-center">{{ $item->status === 'dipinjam' ? 'Dipinjam' : 'Dikembalikan' }}</td>
+                    <td>{{ $row['name'] }}</td>
+                    <td class="text-center">{{ $row['type'] }}</td>
+                    <td>{{ $row['url'] }}</td>
+                    <td class="text-center">{{ $row['last_status'] === '-' ? '-' : strtoupper($row['last_status']) }}</td>
+                    <td class="text-center">{{ $row['total'] }}</td>
+                    <td class="text-center">{{ $row['up'] }}</td>
+                    <td class="text-center">{{ $row['down'] }}</td>
+                    <td class="text-center">{{ $row['uptime'] }}%</td>
+                    <td class="text-right">{{ $row['avg_response'] ?? '-' }}</td>
                 </tr>
             @empty
-                <tr><td colspan="11" class="text-center">Data tidak ditemukan.</td></tr>
+                <tr><td colspan="10" class="text-center">Data tidak ditemukan.</td></tr>
             @endforelse
+            @if ($totalCek > 0)
+                <tr>
+                    <td colspan="4" class="text-right"><strong>Total</strong></td>
+                    <td class="text-center"><strong>{{ $totalMonitor }} monitor</strong></td>
+                    <td class="text-center"><strong>{{ $totalCek }}</strong></td>
+                    <td class="text-center"><strong>{{ $totalUp }}</strong></td>
+                    <td class="text-center"><strong>{{ $totalCek - $totalUp }}</strong></td>
+                    <td class="text-center"><strong>{{ $globalUptime }}%</strong></td>
+                    <td></td>
+                </tr>
+            @endif
         </tbody>
     </table>
 

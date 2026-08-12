@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use App\Models\BorrowingsModel;
+use App\Models\BorrowingItem;
 use App\Models\AssetsModel;
 use App\Models\LocationsModel;
 use App\Models\User;
@@ -30,7 +31,7 @@ class BorrowingsController extends Controller
     {
         $type = $request->type;
 
-        $borrowings = BorrowingsModel::with('location.building', 'asset', 'user', 'creator')
+        $borrowings = BorrowingsModel::with('location.building', 'asset', 'items.asset', 'user', 'creator')
             ->when($type, fn($q) => $q->where('type', $type))
             ->latest();
 
@@ -53,6 +54,15 @@ class BorrowingsController extends Controller
                 if ($borrowing->type === 'ruangan') {
                     $loc = $borrowing->location;
                     return e($loc->name ?? '-') . '<br><small class="text-muted">' . e($loc->building?->name ?? '') . ' Lt ' . e($loc->floor ?? '') . '</small>';
+                }
+                if ($borrowing->items->isNotEmpty()) {
+                    $lines = [];
+                    foreach ($borrowing->items as $item) {
+                        if ($item->asset) {
+                            $lines[] = e($item->asset->name) . ' <small class="text-muted">(' . e($item->asset->tag) . ')</small>';
+                        }
+                    }
+                    return implode('<br>', $lines);
                 }
                 $asset = $borrowing->asset;
                 return e($asset->name ?? '-') . '<br><small class="text-muted">' . e($asset->tag ?? '') . '</small>';
@@ -109,7 +119,8 @@ class BorrowingsController extends Controller
         if ($type === 'ruangan') {
             $rules['location_id'] = 'required|exists:locations,id';
         } elseif ($type === 'barang') {
-            $rules['asset_id'] = 'required|exists:assets,id';
+            $rules['asset_ids'] = 'required|array|min:1';
+            $rules['asset_ids.*'] = 'exists:assets,id';
         }
 
         $messages = [
@@ -121,8 +132,9 @@ class BorrowingsController extends Controller
             'purpose.required' => 'Tujuan peminjaman wajib diisi.',
             'location_id.required' => 'Ruangan wajib dipilih.',
             'location_id.exists' => 'Ruangan yang dipilih tidak valid.',
-            'asset_id.required' => 'Barang wajib dipilih.',
-            'asset_id.exists' => 'Barang yang dipilih tidak valid.',
+            'asset_ids.required' => 'Barang wajib dipilih.',
+            'asset_ids.min' => 'Minimal pilih 1 barang.',
+            'asset_ids.*.exists' => 'Barang yang dipilih tidak valid.',
         ];
 
         $request->validate($rules, $messages);
@@ -146,13 +158,18 @@ class BorrowingsController extends Controller
             $borrowing = BorrowingsModel::create($data);
             $location->update(['status' => 'Dipinjam']);
         } elseif ($type === 'barang') {
-            $asset = AssetsModel::findOrFail($request->asset_id);
-            $data['asset_id'] = $asset->id;
-            $data['original_asset_status'] = $asset->status_id;
+            $assets = AssetsModel::whereIn('id', $request->asset_ids)->get();
             $borrowing = BorrowingsModel::create($data);
             $newStatusLabel = \App\Models\LabelsModel::where('name', 'Dipinjam')->first();
-            if ($newStatusLabel) {
-                $asset->update(['status_id' => $newStatusLabel->id]);
+            foreach ($assets as $asset) {
+                BorrowingItem::create([
+                    'borrowing_id' => $borrowing->id,
+                    'asset_id' => $asset->id,
+                    'original_asset_status' => $asset->status_id,
+                ]);
+                if ($newStatusLabel) {
+                    $asset->update(['status_id' => $newStatusLabel->id]);
+                }
             }
         }
 
@@ -163,7 +180,7 @@ class BorrowingsController extends Controller
 
     public function show($id): JsonResponse
     {
-        $borrowing = BorrowingsModel::with('location.building', 'asset', 'user', 'creator')
+        $borrowing = BorrowingsModel::with('location.building', 'asset', 'items.asset', 'user', 'creator')
             ->findOrFail($id);
 
         return response()->json($borrowing);
@@ -180,10 +197,9 @@ class BorrowingsController extends Controller
 
     public function getAvailableAssets(Request $request): JsonResponse
     {
-        $borrowedAssetIds = BorrowingsModel::where('type', 'barang')
-            ->where('status', 'dipinjam')
-            ->pluck('asset_id')
-            ->toArray();
+        $borrowedAssetIds = BorrowingItem::whereHas('borrowing', function ($q) {
+            $q->where('type', 'barang')->where('status', 'dipinjam');
+        })->pluck('asset_id')->toArray();
 
         $assets = AssetsModel::with('status', 'classification', 'location')
             ->whereNotIn('id', $borrowedAssetIds)
@@ -228,8 +244,15 @@ class BorrowingsController extends Controller
 
         if ($borrowing->type === 'ruangan' && $borrowing->location) {
             $borrowing->location->update(['status' => 'Tersedia']);
-        } elseif ($borrowing->type === 'barang' && $borrowing->asset) {
-            $borrowing->asset->update(['status_id' => $borrowing->original_asset_status]);
+        } elseif ($borrowing->type === 'barang') {
+            foreach ($borrowing->items as $item) {
+                if ($item->asset) {
+                    $item->asset->update(['status_id' => $item->original_asset_status]);
+                }
+            }
+            if ($borrowing->items->isEmpty() && $borrowing->asset) {
+                $borrowing->asset->update(['status_id' => $borrowing->original_asset_status]);
+            }
         }
 
         return response()->json([
@@ -239,7 +262,7 @@ class BorrowingsController extends Controller
 
     public function print($id): View
     {
-        $borrowing = BorrowingsModel::with('location.building', 'asset.classification', 'asset.category', 'user', 'creator')
+        $borrowing = BorrowingsModel::with('location.building', 'asset.classification', 'asset.category', 'items.asset.classification', 'items.asset.category', 'user', 'creator')
             ->findOrFail($id);
 
         return view('admin.peminjaman.print', compact('borrowing'));

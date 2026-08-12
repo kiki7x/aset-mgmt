@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Carbon\Carbon;
 use Shuchkin\SimpleXLSXGen;
@@ -14,6 +15,11 @@ use App\Models\TicketsModel;
 use App\Models\AssetclassificationsModel;
 use App\Models\AssetcategoriesModel;
 use App\Models\BorrowingsModel;
+use App\Models\KbArticlesModel;
+use App\Models\KbCategoriesModel;
+use App\Models\Monitor;
+use App\Models\MonitorHeartbeat;
+use App\Models\User;
 
 class LaporanController extends Controller
 {
@@ -22,8 +28,10 @@ class LaporanController extends Controller
         $klasifikasi = AssetclassificationsModel::all();
         $kategoriAset = AssetcategoriesModel::with('classification')->get();
         $kategoriLisensi = LicensecategoriesModel::all();
+        $kategoriKb = KbCategoriesModel::all();
+        $penulisKb = User::whereIn('id', KbArticlesModel::select('author_id'))->orderBy('fullname')->get();
 
-        return view('admin.laporan.index', compact('klasifikasi', 'kategoriAset', 'kategoriLisensi'));
+        return view('admin.laporan.index', compact('klasifikasi', 'kategoriAset', 'kategoriLisensi', 'kategoriKb', 'penulisKb'));
     }
 
     private const METHOD_MAP = [
@@ -34,6 +42,8 @@ class LaporanController extends Controller
         'korektif' => 'Korektif',
         'tiket'    => 'Tiket',
         'peminjaman' => 'Peminjaman',
+        'pusat-pengetahuan' => 'Kb',
+        'monitoring' => 'Monitoring',
     ];
 
     public function exportExcel(Request $request)
@@ -539,8 +549,18 @@ class LaporanController extends Controller
             $itemName = '-';
             if ($item->type === 'ruangan' && $item->location) {
                 $itemName = $item->location->name . ' (' . optional($item->location->building)->name . ' Lt ' . $item->location->floor . ')';
-            } elseif ($item->type === 'barang' && $item->asset) {
-                $itemName = $item->asset->name . ' (' . $item->asset->tag . ')';
+            } elseif ($item->type === 'barang') {
+                if ($item->items->isNotEmpty()) {
+                    $lines = [];
+                    foreach ($item->items as $lineItem) {
+                        if ($lineItem->asset) {
+                            $lines[] = $lineItem->asset->name . ' (' . $lineItem->asset->tag . ')';
+                        }
+                    }
+                    $itemName = implode(PHP_EOL, $lines);
+                } elseif ($item->asset) {
+                    $itemName = $item->asset->name . ' (' . $item->asset->tag . ')';
+                }
             }
 
             $data[] = [
@@ -576,7 +596,7 @@ class LaporanController extends Controller
 
     private function buildPeminjamanQuery(Request $request)
     {
-        $query = BorrowingsModel::with('location.building', 'asset');
+        $query = BorrowingsModel::with('location.building', 'asset', 'items.asset');
 
         if ($request->filled('type')) {
             $query->where('type', $request->input('type'));
@@ -612,6 +632,265 @@ class LaporanController extends Controller
         if ($request->filled('bulan')) {
             $bulanNama = Carbon::create()->month($request->input('bulan'))->locale('id')->monthName;
             $labels[] = 'Bulan: ' . $bulanNama;
+        }
+        return $labels;
+    }
+
+    // ─── PUSAT PENGETAHUAN ─────────────────────────────────
+
+    private function exportKbExcel(Request $request)
+    {
+        $query = $this->buildKbQuery($request);
+
+        $data = [
+            ['No', 'Judul', 'Kategori', 'Penulis', 'Status', 'Views', 'Tanggal Dibuat', 'Isi']
+        ];
+
+        foreach ($query->get() as $i => $article) {
+            $data[] = [
+                $i + 1,
+                $article->title,
+                optional($article->category)->name ?? '-',
+                optional($article->author)->fullname ?? '-',
+                $article->is_published ? 'Terbit' : 'Draf',
+                $article->views ?? 0,
+                $article->created_at ? Carbon::parse($article->created_at)->format('d M Y') : '-',
+                $this->descriptionToText($article->content),
+            ];
+        }
+
+        return SimpleXLSXGen::fromArray($data)
+            ->downloadAs(Carbon::now()->format('d-m-Y') . '_sapa-ppl-pusat-pengetahuan.xlsx');
+    }
+
+    private function exportKbPdf(Request $request)
+    {
+        $query = $this->buildKbQuery($request);
+        $articles = $query->get();
+        $filterLabels = $this->getKbFilterLabels($request);
+
+        return view('admin.laporan.print-kb', [
+            'articles' => $articles,
+            'filterLabels' => $filterLabels,
+            'descriptionToText' => function ($html) {
+                return $this->descriptionToText($html);
+            },
+        ]);
+    }
+
+    private function buildKbQuery(Request $request)
+    {
+        $query = KbArticlesModel::with('category', 'author');
+
+        if ($request->filled('kategori')) {
+            $query->whereIn('category_id', (array) $request->input('kategori'));
+        }
+
+        if ($request->filled('status')) {
+            $query->where('is_published', $request->input('status'));
+        }
+
+        if ($request->filled('penulis')) {
+            $query->whereIn('author_id', (array) $request->input('penulis'));
+        }
+
+        if ($request->filled('tahun')) {
+            $query->whereYear('created_at', $request->input('tahun'));
+        }
+
+        if ($request->filled('bulan')) {
+            $query->whereMonth('created_at', $request->input('bulan'));
+        }
+
+        return $query->latest();
+    }
+
+    private function getKbFilterLabels(Request $request): array
+    {
+        $labels = [];
+        if ($request->filled('kategori')) {
+            $names = KbCategoriesModel::whereIn('id', (array) $request->input('kategori'))->pluck('name')->toArray();
+            $labels[] = 'Kategori: ' . implode(', ', $names);
+        }
+        if ($request->filled('status')) {
+            $labels[] = 'Status: ' . ($request->input('status') == 1 ? 'Terbit' : 'Draf');
+        }
+        if ($request->filled('penulis')) {
+            $names = User::whereIn('id', (array) $request->input('penulis'))->pluck('fullname')->toArray();
+            $labels[] = 'Penulis: ' . implode(', ', $names);
+        }
+        if ($request->filled('tahun')) {
+            $labels[] = 'Tahun: ' . $request->input('tahun');
+        }
+        if ($request->filled('bulan')) {
+            $bulanNama = Carbon::create()->month($request->input('bulan'))->locale('id')->monthName;
+            $labels[] = 'Bulan: ' . $bulanNama;
+        }
+        return $labels;
+    }
+
+    // ─── MONITORING ─────────────────────────────────────────
+
+    private function getMonitoringRange(Request $request): array
+    {
+        $dari = $request->filled('dari') ? Carbon::parse($request->input('dari'))->startOfDay() : null;
+        $sampai = $request->filled('sampai') ? Carbon::parse($request->input('sampai'))->endOfDay() : null;
+
+        return [$dari, $sampai];
+    }
+
+    private function buildMonitorFilter(Request $request)
+    {
+        $query = Monitor::query();
+
+        if ($request->filled('jenis')) {
+            $query->where('type', $request->input('jenis'));
+        }
+
+        if ($request->filled('status_monitor')) {
+            $query->where('is_active', $request->input('status_monitor'));
+        }
+
+        return $query;
+    }
+
+    private function getMonitoringRekap(Request $request): array
+    {
+        [$dari, $sampai] = $this->getMonitoringRange($request);
+
+        $monitors = $this->buildMonitorFilter($request)->orderBy('name')->get();
+        $rows = [];
+
+        foreach ($monitors as $monitor) {
+            $hb = $monitor->heartbeats();
+            if ($dari) $hb->where('checked_at', '>=', $dari);
+            if ($sampai) $hb->where('checked_at', '<=', $sampai);
+
+            $total = (clone $hb)->count();
+            $up = (clone $hb)->where('status', 'up')->count();
+            $down = $total - $up;
+
+            $stats = (clone $hb)->select(
+                DB::raw('AVG(response_time) as avg_resp'),
+                DB::raw('MIN(response_time) as min_resp'),
+                DB::raw('MAX(response_time) as max_resp')
+            )->first();
+
+            $rows[] = [
+                'name' => $monitor->name,
+                'type' => $monitor->type === 'server' ? 'Server' : 'Website',
+                'url' => $monitor->url,
+                'last_status' => $monitor->last_status ?? '-',
+                'is_active' => $monitor->is_active ? 'Aktif' : 'Nonaktif',
+                'total' => $total,
+                'up' => $up,
+                'down' => $down,
+                'uptime' => $total > 0 ? round(($up / $total) * 100, 2) : 0,
+                'avg_response' => $stats->avg_resp !== null ? (int) round($stats->avg_resp) : null,
+                'min_response' => $stats->min_resp !== null ? (int) $stats->min_resp : null,
+                'max_response' => $stats->max_resp !== null ? (int) $stats->max_resp : null,
+            ];
+        }
+
+        return $rows;
+    }
+
+    private function getMonitoringDetail(Request $request)
+    {
+        [$dari, $sampai] = $this->getMonitoringRange($request);
+
+        $query = MonitorHeartbeat::with('monitor');
+
+        if ($request->filled('jenis')) {
+            $query->whereHas('monitor', function ($q) use ($request) {
+                $q->where('type', $request->input('jenis'));
+            });
+        }
+
+        if ($request->filled('status_monitor')) {
+            $query->whereHas('monitor', function ($q) use ($request) {
+                $q->where('is_active', $request->input('status_monitor'));
+            });
+        }
+
+        if ($dari) $query->where('checked_at', '>=', $dari);
+        if ($sampai) $query->where('checked_at', '<=', $sampai);
+
+        return $query->orderByDesc('checked_at')->get();
+    }
+
+    private function exportMonitoringExcel(Request $request)
+    {
+        $rekap = $this->getMonitoringRekap($request);
+        $detail = $this->getMonitoringDetail($request);
+
+        $rekapData = [
+            ['No', 'Nama Monitor', 'Jenis', 'URL', 'Status Terakhir', 'Total Cek', 'Up', 'Down', 'Uptime %', 'Avg Response (ms)', 'Min Response (ms)', 'Max Response (ms)']
+        ];
+
+        foreach ($rekap as $i => $row) {
+            $rekapData[] = [
+                $i + 1,
+                $row['name'],
+                $row['type'],
+                $row['url'],
+                $row['last_status'] === '-' ? '-' : strtoupper($row['last_status']),
+                $row['total'],
+                $row['up'],
+                $row['down'],
+                $row['uptime'],
+                $row['avg_response'] ?? '-',
+                $row['min_response'] ?? '-',
+                $row['max_response'] ?? '-',
+            ];
+        }
+
+        $detailData = [
+            ['No', 'Monitor', 'Jenis', 'Waktu Cek', 'Status', 'Response (ms)', 'Status Code', 'Error']
+        ];
+
+        foreach ($detail as $i => $hb) {
+            $detailData[] = [
+                $i + 1,
+                optional($hb->monitor)->name ?? '-',
+                optional($hb->monitor)->type === 'server' ? 'Server' : 'Website',
+                $hb->checked_at ? Carbon::parse($hb->checked_at)->format('d M Y H:i:s') : '-',
+                strtoupper($hb->status),
+                $hb->response_time ?? '-',
+                $hb->status_code ?? '-',
+                $hb->error ?? '-',
+            ];
+        }
+
+        $xlsx = new SimpleXLSXGen();
+        $xlsx->addSheet($rekapData, 'Rekap');
+        $xlsx->addSheet($detailData, 'Detail');
+
+        return $xlsx->downloadAs(Carbon::now()->format('d-m-Y') . '_sapa-ppl-monitoring.xlsx');
+    }
+
+    private function exportMonitoringPdf(Request $request)
+    {
+        $rekap = $this->getMonitoringRekap($request);
+        $filterLabels = $this->getMonitoringFilterLabels($request);
+
+        return view('admin.laporan.print-monitoring', [
+            'rekap' => $rekap,
+            'filterLabels' => $filterLabels,
+        ]);
+    }
+
+    private function getMonitoringFilterLabels(Request $request): array
+    {
+        $labels = [];
+        if ($request->filled('dari') || $request->filled('sampai')) {
+            $labels[] = 'Periode: ' . ($request->input('dari') ?? '-') . ' s/d ' . ($request->input('sampai') ?? '-');
+        }
+        if ($request->filled('jenis')) {
+            $labels[] = 'Jenis: ' . ($request->input('jenis') === 'server' ? 'Server' : 'Website');
+        }
+        if ($request->filled('status_monitor')) {
+            $labels[] = 'Status Monitor: ' . ($request->input('status_monitor') == 1 ? 'Aktif' : 'Nonaktif');
         }
         return $labels;
     }
