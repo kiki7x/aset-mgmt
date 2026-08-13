@@ -16,7 +16,17 @@ class FrontController extends Controller
     public function index()
     {
         $assets = \App\Models\AssetsModel::get();
-        return view('frontsite.index', compact('assets'));
+        $articles = $this->latestArticles();
+        return view('frontsite.index', compact('assets', 'articles'));
+    }
+
+    public function latestArticles()
+    {
+        return \App\Models\KbArticlesModel::with('category', 'author')
+            ->where('is_published', 1)
+            ->latest()
+            ->take(3)
+            ->get();
     }
 
     public function profil()

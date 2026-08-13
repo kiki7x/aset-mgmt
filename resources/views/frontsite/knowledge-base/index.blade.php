@@ -25,7 +25,7 @@
         </div><!-- End Page Title -->
 
         <section id="recent-blog-postst" class="recent-blog-postst section">
-            <div class="container">
+            <div class="container section-title" data-aos="fade-up">
                 <h2 class="text-center">Pusat Pengetahuan</h2>
                 <p class="text-center">Artikel panduan dan dokumentasi untuk membantu pengguna memanfaatkan aset di lingkungan Poltekpar Lombok.</p>
             </div>
@@ -43,7 +43,7 @@
                                     <h3 class="post-title">{{ $article->title }}</h3>
                                     <div class="meta d-flex align-items-center">
                                         <div class="d-flex align-items-center">
-                                            <i class="bi bi-person"></i> <span class="ps-2">{{ $article->author->name ?? 'Poltekpar' }}</span>
+                                            <i class="bi bi-person"></i> <span class="ps-2">{{ $article->author->fullname ?? 'Poltekpar' }}</span>
                                         </div>
                                         <span class="px-3 text-black-50">/</span>
                                         <div class="d-flex align-items-center">

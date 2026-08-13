@@ -180,6 +180,9 @@
                         </div><!-- End post item -->
                     @endforeach
                 </div>
+                <div class="text-center mt-4" data-aos="fade-up">
+                    <a href="{{ route('knowledge-base') }}" class="btn btn-primary">Selengkapnya <i class="bi bi-arrow-right"></i></a>
+                </div>
             </div>
 
         </section><!-- /Recent Blog Postst Section -->

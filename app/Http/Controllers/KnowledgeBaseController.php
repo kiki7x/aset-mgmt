@@ -225,7 +225,12 @@ class KnowledgeBaseController extends Controller
     public function publicIndex()
     {
         $categories = \App\Models\KbCategoriesModel::all();
-        $articles = \App\Models\KbArticlesModel::with('category', 'author')->where('is_published', 1)->latest()->get();
+        $articles = \App\Models\KbArticlesModel::with('category', 'author')
+            ->where('is_published', 1)
+            ->when(request('category'), function ($q, $slug) {
+                $q->whereHas('category', fn ($q) => $q->where('slug', $slug));
+            })
+            ->latest()->get();
 
         return view('frontsite.knowledge-base.index', compact('articles', 'categories'));
     }
@@ -243,7 +248,11 @@ class KnowledgeBaseController extends Controller
 
         $related = \App\Models\KbArticlesModel::with('category')->where('category_id', $article->category_id)->where('id', '!=', $article->id)->where('is_published', 1)->take(5)->get();
 
-        return view('frontsite.knowledge-base.show', compact('article', 'related'));
+        $categories = \App\Models\KbCategoriesModel::withCount(['articles as published_count' => function ($q) {
+            $q->where('is_published', 1);
+        }])->get();
+
+        return view('frontsite.knowledge-base.show', compact('article', 'related', 'categories'));
     }
 
     public function uploadImage(Request $request)

@@ -143,7 +143,7 @@
 
                 <h1 class="mb-2">{{ $article->title }}</h1>
                 <p class="text-muted mb-4">
-                    {{ $article->category->name ?? 'Umum' }} · {{ $article->created_at->format('d M Y H:i') }} · oleh {{ $article->author->name ?? 'Tim' }}
+                    {{ $article->category->name ?? 'Umum' }} · {{ $article->created_at->format('d M Y H:i') }} · oleh {{ $article->author->fullname ?? 'Tim' }}
                 </p>
 
                 <div class="article-content">
@@ -157,6 +157,19 @@
                         <ul class="list-unstyled mb-0">
                             @foreach($related as $r)
                                 <li class="mb-2"><a href="{{ route('knowledge-base.show', $r->slug) }}">{{ $r->title }}</a></li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-header">Kategori Artikel</div>
+                    <div class="card-body">
+                        <ul class="list-unstyled mb-0">
+                            @foreach($categories as $cat)
+                                <li class="mb-2 d-flex justify-content-between align-items-center">
+                                    <a href="{{ route('knowledge-base', ['category' => $cat->slug]) }}">{{ $cat->name }}</a>
+                                    <span class="badge bg-secondary">{{ $cat->published_count }}</span>
+                                </li>
                             @endforeach
                         </ul>
                     </div>
