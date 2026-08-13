@@ -360,7 +360,7 @@
         </section><!-- /Team Section -->
 
         <!-- Faq 2 Section -->
-        <section id="faq" class="faq-2 section">
+        <section id="faq" class="faq-2 section dark-background">
 
             <!-- Section Title -->
             <div class="container section-title" data-aos="fade-up">
