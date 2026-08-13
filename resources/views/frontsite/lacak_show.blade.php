@@ -1,187 +1,197 @@
 @extends('layouts.front', ['title' => 'Lacak - SAPA PPL'])
 
-{{-- @section('title', 'Kelola Aset TIK') --}}
-{{-- <x-slot:title>{{ $title }}</x-slot:title> --}}
-
-@push('scripts-head')
+@push('script-head')
 <style>
-    body {
-        background-color: #f8f9fa;
-    }
-    .container {
-        margin-top: 20px;
-    }
-    .card {
-        margin-bottom: 15px;
+    .lacak-result .card {
+        margin-bottom: 18px;
         border: 1px solid #dee2e6;
-        border-radius: 0.25rem;
+        border-radius: 0.5rem;
     }
-    .card-header {
+    .lacak-result .card-header {
         background-color: #e9ecef;
-        padding: 0.75rem 1.25rem;
-        margin-bottom: 0;
+        font-weight: 600;
         border-bottom: 1px solid #dee2e6;
-        font-weight: bold;
     }
-    .card-body {
-        padding: 1.25rem;
+    .lacak-result .table th {
+        width: 38%;
+    }
+    .status-badge {
+        font-size: 0.95rem;
+        padding: 0.4em 0.9em;
+        border-radius: 0.375rem;
+        color: #fff;
+    }
+    .asset-image {
+        max-height: 200px;
+        object-fit: contain;
+        border-radius: 0.375rem;
+        border: 1px solid #dee2e6;
     }
 </style>
 @endpush
 
 @section('content')
-    <main class="main">
-        <!-- Hero Section -->
-        <section id="hero" class="hero section dark-background">
-            <div class="container">
+<main class="main">
+<section id="hero" class="hero section dark-background">
+    <div class="container section-title" data-aos="fade-up">
+        <h2><i class="bi bi-qr-code-scan"></i> Lacak Aset</h2>
+        <p>Fitur lacak aset dengan scan QR Code</p>
+    </div>
 
-                <div class="container section-title" data-aos="fade-up">
-                    <h2><i class="bi bi-qr-code-scan"></i> Lacak Aset</h2>
-                    <p>Fitur lacak aset dengan scan QR Code</p>
-                </div><!-- End Section Title -->
+    <div class="container lacak-result" data-aos="fade-up" data-aos-delay="100">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                @if ($asset)
+                    <div class="alert alert-success text-center" role="alert">
+                        <i class="bi bi-check-circle-fill me-1"></i> Aset ditemukan!
+                        <br><small class="text-muted">Kode/Tag: <strong>{{ $asset->tag }}</strong></small>
+                    </div>
 
-                  <div class="alert alert-success col-md-6 mx-auto text-center" role="alert">
-                    Aset ditemukan!
-                  </div>
-                  <div class="alert alert-danger col-md-6 mx-auto text-center" role="alert">
-                    Aset tidak ditemukan!
-                  </div>
-
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-md-8">
-                            <div class="card">
-                                <div class="card-header"><i class="fas fa-user mr-2"></i> Pemilik Barang</div>
-                                <div class="card-body">
-                                    <table class="table table-sm">
-                                        <tbody>
-                                            <tr>
-                                                <th scope="row">Kode Satker</th>
-                                                <td>040012300418314000KD</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Nama Satker</th>
-                                                <td>POLITEKNIK PARIWISATA LOMBOK</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                    {{-- Identitas Barang --}}
+                    <div class="card">
+                        <div class="card-header"><i class="bi bi-box-seam me-1"></i> Identitas Barang</div>
+                        <div class="card-body">
+                            @if ($asset->image)
+                                <div class="text-center mb-3">
+                                    <img src="{{ asset('storage') }}/{{ $asset->image }}" alt="Foto Aset" class="asset-image">
                                 </div>
-                            </div>
+                            @endif
+                            <table class="table table-sm mb-0">
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">Kode Barang (Tag)</th>
+                                        <td>{{ $asset->tag }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Nama Barang</th>
+                                        <td>{{ $asset->name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Klasifikasi</th>
+                                        <td>{{ optional($asset->classification)->name ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Kategori</th>
+                                        <td>{{ optional($asset->category)->name ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Merk / Pabrikan</th>
+                                        <td>{{ optional($asset->manufacturer)->name ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Model</th>
+                                        <td>{{ optional($asset->model)->name ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">No. Seri</th>
+                                        <td>{{ $asset->serial ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Supplier</th>
+                                        <td>{{ optional($asset->supplier)->name ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Tanggal Perolehan</th>
+                                        <td>{{ $asset->purchase_date ? \Carbon\Carbon::parse($asset->purchase_date)->translatedFormat('d F Y') : '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Garansi</th>
+                                        <td>{{ $asset->warranty_months ? $asset->warranty_months . ' bulan' : '-' }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                </div>
 
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-md-8">
-                            <div class="card">
-                                <div class="card-header">
-                                    <i class="fas fa-box mr-2"></i> Identitas Barang
-                                </div>
-                                <div class="card-body">
-                                    <table class="table table-sm">
-                                        <tbody>
-                                            <tr>
-                                                <th scope="row">Kode Barang</th>
-                                                <td>3100204039</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">NUP</th>
-                                                <td>1</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Nama Barang</th>
-                                                <td>CCTV Camera, 12v</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Merk</th>
-                                                <td>CCTV - NVR 32 Channel Poe, Lab. Komputer</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Jenis BMN</th>
-                                                <td>MESIN PERALATAN KHUSUS TIK</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Tgl Perolehan</th>
-                                                <td>2021-12-24</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Kondisi</th>
-                                                <td>Baik</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                    {{-- Pemilik & Pengelola --}}
+                    <div class="card">
+                        <div class="card-header"><i class="bi bi-person-vcard me-1"></i> Pemilik & Pengelola</div>
+                        <div class="card-body">
+                            <table class="table table-sm mb-0">
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">Satuan Kerja</th>
+                                        <td>POLITEKNIK PARIWISATA LOMBOK</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Pengelola</th>
+                                        <td>{{ optional($asset->admin)->fullname ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Pengguna</th>
+                                        <td>{{ optional($asset->user)->fullname ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Lokasi</th>
+                                        <td>
+                                            @if ($asset->location)
+                                                {{ $asset->location->name }}
+                                                @if ($asset->location->building)
+                                                    ({{ $asset->location->building->name }}{{ $asset->location->floor ? ' - Lt ' . $asset->location->floor : '' }})
+                                                @endif
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                </div>
 
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-md-8">
-                            <div class="card">
-                                <div class="card-header">
-                                    Kondisi BMN Hasil Sensus
+                    {{-- Status & Kondisi --}}
+                    <div class="card">
+                        <div class="card-header"><i class="bi bi-clipboard-check me-1"></i> Status & Kondisi</div>
+                        <div class="card-body">
+                            @if ($asset->status)
+                                <div class="mb-3">
+                                    <span class="status-badge" style="background-color: {{ $asset->status->color ?? '#6c757d' }};">
+                                        {{ $asset->status->name }}
+                                    </span>
                                 </div>
-                                <div class="card-body">
-                                    <div class="form-group">
-                                        <label for="kondisiBMN">Kondisi</label>
-                                        <select class="form-control" id="kondisiBMN">
-                                            <option>Baik</option>
-                                            <option>Kurang Baik</option>
-                                            <option>Rusak Berat</option>
-                                        </select>
-                                    </div>
+                            @endif
+
+                            @if ($borrowing)
+                                <div class="alert alert-warning py-2 mb-3">
+                                    <strong><i class="bi bi-exclamation-triangle-fill me-1"></i> Sedang Dipinjam</strong>
+                                    <ul class="mb-0 mt-1">
+                                        <li>Peminjam: {{ $borrowing->borrower_name ?: optional($borrowing->user)->fullname ?: '-' }}</li>
+                                        <li>Periode: {{ \Carbon\Carbon::parse($borrowing->borrow_start)->translatedFormat('d M Y H:i') }} s/d {{ \Carbon\Carbon::parse($borrowing->borrow_end)->translatedFormat('d M Y H:i') }}</li>
+                                        @if ($borrowing->purpose)
+                                            <li>Tujuan: {{ $borrowing->purpose }}</li>
+                                        @endif
+                                    </ul>
                                 </div>
-                            </div>
+                            @else
+                                <p class="mb-2"><i class="bi bi-check-circle me-1 text-success"></i> Tidak sedang dipinjam.</p>
+                            @endif
+
+                            @if ($schedule)
+                                <div class="alert alert-info py-2 mb-0">
+                                    <strong><i class="bi bi-calendar-event me-1"></i> Jadwal Pemeliharaan Terdekat</strong>
+                                    <ul class="mb-0 mt-1">
+                                        <li>{{ $schedule->name }}</li>
+                                        <li>{{ \Carbon\Carbon::parse($schedule->start)->translatedFormat('d F Y') }}</li>
+                                    </ul>
+                                </div>
+                            @endif
                         </div>
                     </div>
-                </div>
-
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-md-8">
-                            <div class="card">
-                                <div class="card-header">
-                                    Kesesuaian Kode Barang
-                                </div>
-                                <div class="card-body">
-                                    <div class="form-group">
-                                        <label for="kesesuaianKode">Kesesuaian</label>
-                                        <select class="form-control" id="kesesuaianKode">
-                                            <option>Sesuai</option>
-                                            <option>Tidak Sesuai</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                @else
+                    <div class="alert alert-danger text-center" role="alert">
+                        <i class="bi bi-x-circle-fill me-1"></i> Aset tidak ditemukan!
+                        <br><small>Pastikan QR Code yang dipindai terdaftar di sistem, atau periksa kembali kode aset.</small>
                     </div>
-                </div>
-
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-md-8">
-                            <div class="card">
-                                <div class="card-header">
-                                    Status Penggunaan BMN
-                                </div>
-                                <div class="card-body">
-                                    <p>...</p>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="text-center">
+                        <a href="{{ route('lacak') }}" class="btn btn-primary"><i class="bi bi-qr-code-scan me-1"></i> Pindai Lagi</a>
                     </div>
-                </div>
-
+                @endif
             </div>
-        </section><!-- /Hero Section -->
-
-    </main>
+        </div>
+    </div>
+</section>
+</main>
 @endsection
 
-
-@push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+@push('script-foot')
 @endpush

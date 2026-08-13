@@ -79,6 +79,8 @@
                                     @if ($lineItem->asset)
                                         {{ $loop->iteration }}. {{ $lineItem->asset->name }}<br>
                                         <small>({{ $lineItem->asset->tag }})</small><br>
+                                    @elseif ($lineItem->item_name)
+                                        {{ $loop->iteration }}. {{ $lineItem->item_name }}<br>
                                     @endif
                                 @endforeach
                             @elseif ($item->asset)

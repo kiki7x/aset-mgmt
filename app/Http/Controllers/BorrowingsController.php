@@ -60,6 +60,8 @@ class BorrowingsController extends Controller
                     foreach ($borrowing->items as $item) {
                         if ($item->asset) {
                             $lines[] = e($item->asset->name) . ' <small class="text-muted">(' . e($item->asset->tag) . ')</small>';
+                        } elseif ($item->item_name) {
+                            $lines[] = e($item->item_name) . ' <small class="badge badge-secondary">Non Aset</small>';
                         }
                     }
                     return implode('<br>', $lines);
@@ -120,7 +122,15 @@ class BorrowingsController extends Controller
             $rules['location_id'] = 'required|exists:locations,id';
         } elseif ($type === 'barang') {
             $rules['asset_ids'] = 'required|array|min:1';
-            $rules['asset_ids.*'] = 'exists:assets,id';
+            $rules['asset_ids.*'] = [
+                'max:255',
+                function ($attribute, $value, $fail) {
+                    $value = trim((string) $value);
+                    if ($value !== '' && ctype_digit($value) && ! AssetsModel::whereKey((int) $value)->exists()) {
+                        $fail('Barang yang dipilih tidak valid.');
+                    }
+                },
+            ];
         }
 
         $messages = [
@@ -158,10 +168,28 @@ class BorrowingsController extends Controller
             $borrowing = BorrowingsModel::create($data);
             $location->update(['status' => 'Dipinjam']);
         } elseif ($type === 'barang') {
-            $assets = AssetsModel::whereIn('id', $request->asset_ids)->get();
+            $assetIds = [];
+            $itemNames = [];
+            foreach ((array) $request->input('asset_ids') as $value) {
+                $value = trim((string) $value);
+                if ($value === '') {
+                    continue;
+                }
+                if (ctype_digit($value)) {
+                    $assetIds[] = (int) $value;
+                } else {
+                    $itemNames[] = $value;
+                }
+            }
+
             $borrowing = BorrowingsModel::create($data);
             $newStatusLabel = \App\Models\LabelsModel::where('name', 'Dipinjam')->first();
-            foreach ($assets as $asset) {
+
+            foreach ($assetIds as $assetId) {
+                $asset = AssetsModel::find($assetId);
+                if (! $asset) {
+                    continue;
+                }
                 BorrowingItem::create([
                     'borrowing_id' => $borrowing->id,
                     'asset_id' => $asset->id,
@@ -170,6 +198,15 @@ class BorrowingsController extends Controller
                 if ($newStatusLabel) {
                     $asset->update(['status_id' => $newStatusLabel->id]);
                 }
+            }
+
+            foreach ($itemNames as $itemName) {
+                BorrowingItem::create([
+                    'borrowing_id' => $borrowing->id,
+                    'asset_id' => null,
+                    'item_name' => $itemName,
+                    'original_asset_status' => null,
+                ]);
             }
         }
 
@@ -199,7 +236,7 @@ class BorrowingsController extends Controller
     {
         $borrowedAssetIds = BorrowingItem::whereHas('borrowing', function ($q) {
             $q->where('type', 'barang')->where('status', 'dipinjam');
-        })->pluck('asset_id')->toArray();
+        })->whereNotNull('asset_id')->pluck('asset_id')->toArray();
 
         $assets = AssetsModel::with('status', 'classification', 'location')
             ->whereNotIn('id', $borrowedAssetIds)

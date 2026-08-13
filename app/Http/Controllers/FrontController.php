@@ -137,7 +137,32 @@ class FrontController extends Controller
 
     public function lacak_show($id)
     {
-        $lacak = \App\Models\AssetsModel::where('tag', $id)->firstOrFail();
-        return view('frontsite.lacak_show', compact('lacak'));
+        $asset = \App\Models\AssetsModel::with([
+            'classification', 'category', 'admin', 'user', 'manufacturer',
+            'model', 'supplier', 'status', 'location.building',
+        ])->whereRaw('LOWER(tag) = ?', [Str::lower(trim($id))])->first();
+
+        $borrowing = null;
+        $schedule = null;
+
+        if ($asset) {
+            $borrowing = \App\Models\BorrowingsModel::with('user', 'items.asset')
+                ->where('status', 'dipinjam')
+                ->where(function ($q) use ($asset) {
+                    $q->where('asset_id', $asset->id)
+                        ->orWhereHas('items', function ($q) use ($asset) {
+                            $q->where('asset_id', $asset->id);
+                        });
+                })
+                ->latest('borrow_start')
+                ->first();
+
+            $schedule = \App\Models\Maintenances_scheduleModel::where('asset_id', $asset->id)
+                ->where('start', '>=', now())
+                ->orderBy('start')
+                ->first();
+        }
+
+        return view('frontsite.lacak_show', compact('asset', 'borrowing', 'schedule'));
     }
 }

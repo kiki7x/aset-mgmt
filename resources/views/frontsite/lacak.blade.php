@@ -1,8 +1,5 @@
 @extends('layouts.front', ['title' => 'Lacak - SAPA PPL'])
 
-{{-- @section('title', 'Kelola Aset TIK') --}}
-{{-- <x-slot:title>{{ $title }}</x-slot:title> --}}
-
 @push('script-head')
 <style>
     #video-container {
@@ -10,105 +7,193 @@
         max-width: 600px;
         margin: 0 auto;
         border: 1px solid #ccc;
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+        background: #000;
+    }
+    #qr-video {
+        display: block;
+        width: 100%;
     }
     #qr-canvas {
         display: none;
+    }
+    #scan-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        z-index: 5;
+    }
+    #scan-overlay::before {
+        content: "";
+        position: absolute;
+        left: 10%;
+        right: 10%;
+        top: 0;
+        bottom: 0;
+        border: 3px solid rgba(255, 255, 255, 0.85);
+        border-top: none;
+        border-bottom: none;
+        border-radius: 4px;
+    }
+    #scan-frame {
+        position: absolute;
+        left: 10%;
+        right: 10%;
+        height: 4px;
+        background: #47b2e4;
+        box-shadow: 0 0 12px rgba(71, 178, 228, 0.9);
+        animation: scan-move 2.2s ease-in-out infinite;
+    }
+    @keyframes scan-move {
+        0% { top: 10%; }
+        50% { top: 88%; }
+        100% { top: 10%; }
+    }
+    #scan-status {
+        position: absolute;
+        bottom: 10px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        color: #fff;
+        background: rgba(0, 0, 0, 0.55);
+        padding: 4px 0;
+        font-size: 0.9rem;
+        z-index: 6;
     }
 </style>
 @endpush
 
 @section('content')
 <main class="main">
-<!-- Hero Section -->
 <section id="hero" class="hero section dark-background">
-    <div class="container">
-        {{-- <div class="row gy-4">
-            <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center" data-aos="zoom-out">
-                <h1>Sistem Aplikasi Pengelolaan Aset Poltekpar Lombok</h1>
-                <p>Layanan SAPA PPL bertujuan untuk mempermudah melacak pemanfaatan aset, penjadwalan pemeliharaan aset serta
-                    mempermudah penanganan laporan gangguan sarana dan prasarana bidang TIK dan Peralatan Rumah Tangga.</p>
-                <div class="d-flex">
-                    <a href="{{ route('login') }}" class="btn-get-started">Mulai</a>
-                    <a href="https://www.youtube.com/watch?v=92mqKMU2vuo&pp=ygUQcG9sdGVrcGFyIGxvbWJvaw%3D%3D" class="glightbox btn-watch-video d-flex align-items-center"><i class="bi bi-play-circle"></i><span>Tonton Video</span></a>
-                </div>
-            </div>
-            <div id="carouselDepan" class="carousel slide col-lg-6 order-1 order-lg-2" data-bs-ride="carousel" data-aos="zoom-out" data-aos-delay="200">
-                <div class="carousel-inner rounded">
-                    <div class="carousel-item active">
-                        <img class="rounded img-fluid animated" loading="lazy" src="{{ asset('assets/gambar/rektorat-DJI_0769.webp') }}" alt="First slide">
-                    </div>
-                    <div class="carousel-item">
-                        <img class="rounded img-fluid animated" loading="lazy" src="{{ asset('assets/gambar/gedung_kuliah_1-DJI_0752.webp') }}" alt="Second slide">
-                    </div>
-                    <div class="carousel-item">
-                        <img class="rounded img-fluid animated" loading="lazy" src="{{ asset('assets/gambar/gedung_kuliah_2-DJI_0757.webp') }}" alt="Third slide">
-                    </div>
-                    <div class="carousel-item">
-                        <img class="rounded img-fluid animated" loading="lazy" src="{{ asset('assets/gambar/gkt_lab_hospitality.webp') }}" alt="Fourth slide">
-                    </div>
-                </div>
-                <a class="carousel-control-prev" data-bs-target="#carouselDepan" role="button" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                </a>
-                <a class="carousel-control-next" data-bs-target="#carouselDepan" role="button" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                </a>
-            </div>
-        </div> --}}
+    <div class="container section-title" data-aos="fade-up">
+        <h2><i class="bi bi-qr-code-scan"></i> Lacak Aset</h2>
+        <p>Fitur lacak aset dengan scan QR Code</p>
+    </div>
 
-        <div class="container section-title" data-aos="fade-up">
-            <h2><i class="bi bi-qr-code-scan"></i> Lacak Aset</h2>
-            <p>Fitur lacak aset dengan scan QR Code</p>
-        </div><!-- End Section Title -->
-    
-        <div class="container">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-md-8">
-                        <div class="card">
-                            <div class="card-header">Scan QR Code</div>
-                            <div class="card-body">
-                                <div id="video-container">
-                                    <video id="qr-video" width="100%" autoplay></video>
-                                </div>
-                                <canvas id="qr-canvas" style="display:none;"></canvas>
-                                <div id="qr-result" class="mt-3"></div>
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">Scan QR Code</div>
+                    <div class="card-body">
+                        <div id="scan-alert"></div>
+
+                        <div id="video-container">
+                            <video id="qr-video" width="100%" autoplay playsinline muted></video>
+                            <div id="scan-overlay" style="display:none;">
+                                <div id="scan-frame"></div>
+                                <div id="scan-status">Memindai...</div>
                             </div>
                         </div>
+                        <canvas id="qr-canvas" style="display:none;"></canvas>
+
+                        <div class="text-center mt-3">
+                            <button type="button" id="btn-toggle-scan" class="btn btn-primary">Mulai Scan</button>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <form id="form-manual" action="{{ route('lacak.show', 'tag') }}" method="GET" class="mt-3">
+                            <label for="manual-tag" class="form-label">Tidak bisa scan? Masukkan kode aset (Tag) secara manual:</label>
+                            <div class="input-group">
+                                <input type="text" id="manual-tag" name="tag" class="form-control" placeholder="Contoh: SAPA-TIK-0001" required>
+                                <button type="submit" class="btn btn-success"><i class="bi bi-search"></i> Lacak</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</section><!-- /Hero Section -->
-
+</section>
 </main>
 @endsection
 
-
 @push('script-foot')
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 <script>
     const video = document.getElementById('qr-video');
     const canvas = document.getElementById('qr-canvas');
     const canvasContext = canvas.getContext('2d');
-    const qrResultDiv = document.getElementById('qr-result');
+    const overlay = document.getElementById('scan-overlay');
+    const statusEl = document.getElementById('scan-status');
+    const alertBox = document.getElementById('scan-alert');
+    const btnToggle = document.getElementById('btn-toggle-scan');
+    const formManual = document.getElementById('form-manual');
 
-    function startScanning() {
+    let scanning = false;
+    let stream = null;
+    let animationId = null;
+
+    formManual.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const tag = document.getElementById('manual-tag').value.trim();
+        if (tag) {
+            window.location.href = "{{ route('lacak.show', 'tag') }}".replace('/tag', '/' + encodeURIComponent(tag));
+        }
+    });
+
+    function showMessage(message, type) {
+        alertBox.innerHTML = '';
+        const alert = document.createElement('div');
+        alert.className = 'alert alert-' + type + ' alert-dismissible fade show';
+        alert.setAttribute('role', 'alert');
+        alert.innerHTML = message +
+            '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+        alertBox.appendChild(alert);
+    }
+
+    function stopCamera() {
+        if (stream) {
+            stream.getTracks().forEach(function(track) { track.stop(); });
+            stream = null;
+        }
+        if (animationId) {
+            cancelAnimationFrame(animationId);
+            animationId = null;
+        }
+        video.srcObject = null;
+        scanning = false;
+        overlay.style.display = 'none';
+        btnToggle.textContent = 'Mulai Scan';
+        btnToggle.classList.remove('btn-danger');
+        btnToggle.classList.add('btn-primary');
+    }
+
+    function startCamera() {
+        stopCamera();
+        showMessage('', '');
         navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-            .then(function(stream) {
+            .then(function(camStream) {
+                stream = camStream;
                 video.srcObject = stream;
                 video.play();
+                scanning = true;
+                overlay.style.display = 'flex';
+                btnToggle.textContent = 'Stop Scan';
+                btnToggle.classList.remove('btn-primary');
+                btnToggle.classList.add('btn-danger');
                 requestAnimationFrame(scan);
             })
             .catch(function(error) {
                 console.error('Could not access the camera.', error);
-                alert('Tidak dapat menggunakan fitur Scan QR Code. \nPastikan setting izin/allow Camera pada browser anda.');
+                showMessage(
+                    'Tidak dapat mengakses kamera. Pastikan browser mengizinkan izin kamera, ' +
+                    'atau gunakan pencarian manual di bawah.', 'danger'
+                );
             });
     }
 
     function scan() {
+        if (!scanning) return;
+
         if (video.readyState === video.HAVE_ENOUGH_DATA) {
             canvas.height = video.videoHeight;
             canvas.width = video.videoWidth;
@@ -119,15 +204,29 @@
             });
 
             if (code) {
-                console.log('QR Code detected:', code.data);
-                // Asumsi data QR code berisi ID barang
-                window.location.href = `/lacak/show/${code.data}`;
-                return; // Stop scanning setelah berhasil
+                const tag = String(code.data).trim();
+                console.log('QR Code detected:', tag);
+                statusEl.textContent = 'QR ditemukan, membuka detail...';
+                stopCamera();
+                if (tag) {
+                    window.location.href = "{{ route('lacak.show', 'tag') }}".replace('/tag', '/' + encodeURIComponent(tag));
+                } else {
+                    showMessage('Kode QR tidak valid (kosong). Coba lagi.', 'warning');
+                }
+                return;
             }
         }
-        requestAnimationFrame(scan);
+        animationId = requestAnimationFrame(scan);
     }
 
-    window.onload = startScanning;
+    btnToggle.addEventListener('click', function() {
+        if (scanning) {
+            stopCamera();
+        } else {
+            startCamera();
+        }
+    });
+
+    window.addEventListener('beforeunload', stopCamera);
 </script>
 @endpush

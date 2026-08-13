@@ -150,78 +150,35 @@
             <!-- Section Title -->
             <div class="container section-title" data-aos="fade-up">
                 <h2>Pusat Pengetahuan</h2>
-                <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+                <p>Artikel panduan dan dokumentasi untuk membantu pengguna memanfaatkan aset di lingkungan Poltekpar Lombok.</p>
             </div><!-- End Section Title -->
             <div class="container">
-                <div class="row gy-5">
-                    <div class="col-xl-4 col-md-6">
-                        <div class="post-item position-relative h-100" data-aos="fade-up" data-aos-delay="100">
-                            <div class="post-img position-relative overflow-hidden">
-                                <img src="https://bootstrapmade.com/content/demo/Arsha/assets/img/blog/blog-post-1.webp" class="img-fluid" alt="">
-                                <span class="post-date">December 12</span>
-                            </div>
-                            <div class="post-content d-flex flex-column">
-                                <h3 class="post-title">Eum ad dolor et. Autem aut fugiat debitis</h3>
-                                <div class="meta d-flex align-items-center">
-                                    <div class="d-flex align-items-center">
-                                        <i class="bi bi-person"></i> <span class="ps-2">Julia Parker</span>
-                                    </div>
-                                    <span class="px-3 text-black-50">/</span>
-                                    <div class="d-flex align-items-center">
-                                        <i class="bi bi-folder2"></i> <span class="ps-2">Politics</span>
-                                    </div>
+                <div class="row">
+                    @foreach ($articles as $article)
+                        <div class="col-xl-4 col-md-6">
+                            <div class="post-item position-relative h-100" data-aos="fade-up" data-aos-delay="100">
+                                <div class="post-img position-relative overflow-hidden">
+                                    <img src="{{ $article->featured_image_url ?? asset('arsha/assets/img/news-placeholder.jpg') }}" class="card-img-top" alt="" style="object-fit:cover; height:250px;">
+                                    <span class="post-date">{{ $article->created_at->format('F d') }}</span>
                                 </div>
-                                <hr>
-                                <a href="blog-details.html" class="readmore stretched-link"><span>Read More</span><i class="bi bi-arrow-right"></i></a>
-                            </div>
-                        </div>
-                    </div><!-- End post item -->
-
-                    <div class="col-xl-4 col-md-6">
-                        <div class="post-item position-relative h-100" data-aos="fade-up" data-aos-delay="200">
-                            <div class="post-img position-relative overflow-hidden">
-                                <img src="https://bootstrapmade.com/content/demo/Arsha/assets/img/blog/blog-post-2.webp" class="img-fluid" alt="">
-                                <span class="post-date">July 17</span>
-                            </div>
-                            <div class="post-content d-flex flex-column">
-                                <h3 class="post-title">Et repellendus molestiae qui est sed omnis</h3>
-                                <div class="meta d-flex align-items-center">
-                                    <div class="d-flex align-items-center">
-                                        <i class="bi bi-person"></i> <span class="ps-2">Mario Douglas</span>
+                                <div class="post-content d-flex flex-column">
+                                    <h3 class="post-title">{{ $article->title }}</h3>
+                                    <div class="meta d-flex align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-person"></i> <span class="ps-2">{{ $article->author->name ?? 'Poltekpar' }}</span>
+                                        </div>
+                                        <span class="px-3 text-black-50">/</span>
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-folder2"></i> <span class="ps-2">{{ $article->category->name ?? 'Uncategorized' }}</span>
+                                        </div>
                                     </div>
-                                    <span class="px-3 text-black-50">/</span>
-                                    <div class="d-flex align-items-center">
-                                        <i class="bi bi-folder2"></i> <span class="ps-2">Sports</span>
-                                    </div>
+                                    <hr class="my-2">
+                                    <p class="card-text" style="flex:1">{{ Str::limit(strip_tags($article->content), 140) }}</p>
+                                    <a href="{{ route('knowledge-base.show', $article->slug) }}" class="readmore stretched-link"><span>Selengkapnya</span><i class="bi bi-arrow-right"></i></a>
                                 </div>
-                                <hr>
-                                <a href="blog-details.html" class="readmore stretched-link"><span>Read More</span><i class="bi bi-arrow-right"></i></a>
                             </div>
-                        </div>
-                    </div><!-- End post item -->
-
-                    <div class="col-xl-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                        <div class="post-item position-relative h-100">
-                            <div class="post-img position-relative overflow-hidden">
-                                <img src="https://bootstrapmade.com/content/demo/Arsha/assets/img/blog/blog-post-3.webp" class="img-fluid" alt="">
-                                <span class="post-date">September 05</span>
-                            </div>
-                            <div class="post-content d-flex flex-column">
-                                <h3 class="post-title">Quia assumenda est et veritati tirana ploder</h3>
-                                <div class="meta d-flex align-items-center">
-                                    <div class="d-flex align-items-center">
-                                        <i class="bi bi-person"></i> <span class="ps-2">Lisa Hunter</span>
-                                    </div>
-                                    <span class="px-3 text-black-50">/</span>
-                                    <div class="d-flex align-items-center">
-                                        <i class="bi bi-folder2"></i> <span class="ps-2">Economics</span>
-                                    </div>
-                                </div>
-                                <hr>
-                                <a href="blog-details.html" class="readmore stretched-link"><span>Read More</span><i class="bi bi-arrow-right"></i></a>
-                            </div>
-                        </div>
-                    </div><!-- End post item -->
+                        </div><!-- End post item -->
+                    @endforeach
                 </div>
             </div>
 

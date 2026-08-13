@@ -75,6 +75,8 @@
                     @foreach ($borrowing->items as $item)
                         @if ($item->asset)
                             {{ $loop->iteration }}. {{ $item->asset->name }} ({{ $item->asset->tag }})<br>
+                        @elseif ($item->item_name)
+                            {{ $loop->iteration }}. {{ $item->item_name }}<br>
                         @endif
                     @endforeach
                 @elseif ($borrowing->asset)

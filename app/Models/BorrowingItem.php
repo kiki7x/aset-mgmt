@@ -15,6 +15,7 @@ class BorrowingItem extends Model
     protected $fillable = [
         'borrowing_id',
         'asset_id',
+        'item_name',
         'original_asset_status',
     ];
 

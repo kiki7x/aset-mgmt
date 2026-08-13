@@ -163,9 +163,10 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="form-group col-md-12">
-                                <label>Barang <span class="text-danger">*</span> <small class="text-muted">(bisa pilih lebih dari satu)</small></label>
+                                <label>Barang <span class="text-danger">*</span> <small class="text-muted">(bisa pilih lebih dari satu, atau ketik nama barang yang tidak terdaftar di sistem)</small></label>
                                 <select name="asset_ids[]" class="form-control select2" multiple required>
                                 </select>
+                                <div id="barang-available-info" style="display:none;"></div>
                                 <span class="text-danger small" id="error-barang-asset_ids"></span>
                             </div>
                             <div class="form-group col-md-6">
@@ -346,12 +347,22 @@
                     if (asset.classification) label += ' (' + asset.classification.name + ')';
                     $select.append('<option value="' + asset.id + '">' + label + '</option>');
                 });
-                $select.select2({
+                $select.select2('destroy').select2({
                     theme: 'bootstrap4',
                     width: '100%',
-                    placeholder: '-- Pilih Barang (bisa lebih dari satu) --',
+                    placeholder: data.length > 0 ? '-- Pilih Barang atau ketik nama barang lain --' : '-- Tidak ada barang tersedia --',
+                    allowClear: true,
+                    tags: true,
                     dropdownParent: $('#createBarangModal'),
                 });
+
+                var $info = $('#barang-available-info');
+                if (data.length === 0) {
+                    $info.html('<small class="text-warning"><i class="fas fa-info-circle mr-1"></i> Semua barang sedang dipinjam / tidak tersedia. Anda tetap bisa mengetik nama barang (non-aset) pada field di atas.</small>');
+                    $info.show();
+                } else {
+                    $info.hide();
+                }
             });
         }
 
@@ -483,6 +494,8 @@
                         $.each(data.items, function(i, item) {
                             if (item.asset) {
                                 listItems.push((i + 1) + '. ' + item.asset.name + ' <small class="text-muted">(' + item.asset.tag + ')</small>');
+                            } else if (item.item_name) {
+                                listItems.push((i + 1) + '. ' + item.item_name + ' <small class="text-muted">(Non Aset)</small>');
                             }
                         });
                         html += listItems.join('<br>');

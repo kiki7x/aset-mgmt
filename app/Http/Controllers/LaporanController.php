@@ -555,6 +555,8 @@ class LaporanController extends Controller
                     foreach ($item->items as $lineItem) {
                         if ($lineItem->asset) {
                             $lines[] = $lineItem->asset->name . ' (' . $lineItem->asset->tag . ')';
+                        } elseif ($lineItem->item_name) {
+                            $lines[] = $lineItem->item_name . ' (Non Aset)';
                         }
                     }
                     $itemName = implode(PHP_EOL, $lines);
