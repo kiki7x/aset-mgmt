@@ -116,6 +116,7 @@ class BorrowingsController extends Controller
             'borrow_end' => 'required|date|after_or_equal:borrow_start',
             'purpose' => 'required|string',
             'notes' => 'nullable|string',
+            'borrower_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2100',
         ];
 
         if ($type === 'ruangan') {
@@ -140,6 +141,9 @@ class BorrowingsController extends Controller
             'borrow_end.required' => 'Tanggal akhir wajib diisi.',
             'borrow_end.after_or_equal' => 'Tanggal akhir harus setelah atau sama dengan tanggal mulai.',
             'purpose.required' => 'Tujuan peminjaman wajib diisi.',
+            'borrower_photo.image' => 'File harus berupa gambar.',
+            'borrower_photo.mimes' => 'Format gambar harus jpeg, png, atau jpg.',
+            'borrower_photo.max' => 'Ukuran gambar maksimal 5MB.',
             'location_id.required' => 'Ruangan wajib dipilih.',
             'location_id.exists' => 'Ruangan yang dipilih tidak valid.',
             'asset_ids.required' => 'Barang wajib dipilih.',
@@ -161,6 +165,10 @@ class BorrowingsController extends Controller
             'notes' => $request->notes,
             'created_by' => auth()->id(),
         ];
+
+        if ($request->hasFile('borrower_photo')) {
+            $data['borrower_photo'] = $request->file('borrower_photo')->store('borrower_photos', 'public');
+        }
 
         if ($type === 'ruangan') {
             $location = LocationsModel::findOrFail($request->location_id);

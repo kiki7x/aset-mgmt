@@ -191,6 +191,14 @@
                                 <label>Unit/Instansi</label>
                                 <input type="text" name="borrower_unit" class="form-control">
                             </div>
+                            <div class="form-group col-md-12">
+                                <label>Foto Peminjam/Barang <small class="text-muted">(opsional, JPG/PNG, maks 2MB)</small></label>
+                                <input type="file" name="borrower_photo" class="form-control" accept="image/*">
+                                <span class="text-danger small" id="error-barang-borrower_photo"></span>
+                                <div class="borrower-photo-preview mt-2" style="display:none;">
+                                    <img src="" class="img-fluid" style="max-height:200px;">
+                                </div>
+                            </div>
                             <div class="form-group col-md-6">
                                 <label>Tanggal & Waktu Mulai <span class="text-danger">*</span></label>
                                 <div class="input-group">
@@ -294,9 +302,13 @@
     <script>
         $(document).ready(function() {
             // Initialize Select2
-            $('.select2').select2({
-                theme: 'bootstrap4',
-                width: '100%',
+            $('.select2').each(function () {
+                var $modal = $(this).closest('.modal');
+                var opts = { theme: 'bootstrap4', width: '100%' };
+                if ($modal.length) {
+                    opts.dropdownParent = $modal;
+                }
+                $(this).select2(opts);
             });
 
             // Initialize DateTimePicker
@@ -544,6 +556,20 @@
             $('#returnModal').modal('show');
         });
 
+        // Preview borrower photo
+        $(document).on('change', 'input[name="borrower_photo"]', function() {
+            var $form = $(this).closest('form');
+            var file = this.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $form.find('.borrower-photo-preview img').attr('src', e.target.result);
+                    $form.find('.borrower-photo-preview').show();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
         // Preview return photo
         $('input[name="return_photo"]').on('change', function() {
             var file = this.files[0];
@@ -590,6 +616,7 @@
             $(this).find('form')[0].reset();
             $(this).find('.select2').val(null).trigger('change');
             $(this).find('.text-danger.small').text('');
+            $(this).find('.borrower-photo-preview').hide();
         });
     </script>
 @endpush
