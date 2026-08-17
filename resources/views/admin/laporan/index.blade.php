@@ -187,6 +187,15 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label class="mb-n1 small">Gedung</label>
+                            <select name="gedung" class="form-control form-control-sm">
+                                <option value="">Semua Gedung</option>
+                                @foreach ($gedung as $g)
+                                    <option value="{{ $g->id }}">{{ $g->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
@@ -263,6 +272,15 @@
                                 <option value="Open">Open</option>
                                 <option value="Proses">Proses</option>
                                 <option value="Selesai">Selesai</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="mb-n1 small">Gedung</label>
+                            <select name="gedung" class="form-control form-control-sm">
+                                <option value="">Semua Gedung</option>
+                                @foreach ($gedung as $g)
+                                    <option value="{{ $g->id }}">{{ $g->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <button type="button" class="btn btn-success btn-sm btn-export-excel"><i class="fa-solid fa-file-excel mr-1"></i>Excel</button>

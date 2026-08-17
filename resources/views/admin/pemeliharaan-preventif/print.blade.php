@@ -263,6 +263,14 @@
         </div>
     @endif
 
+    @if (!empty($filterLabels))
+        <div class="report-info">
+            @foreach ($filterLabels as $label)
+                <strong>{{ $label }}</strong><br>
+            @endforeach
+        </div>
+    @endif
+
     <table>
         <thead>
             <tr>
@@ -270,6 +278,7 @@
                 <th class="text-center">Periode</th>
                 <th class="text-center">Judul Pemeliharaan</th>
                 <th class="text-center">Nama Aset</th>
+                <th class="text-center">Gedung</th>
                 <th class="text-center">PIC</th>
                 <th class="text-center">Biaya</th>
                 <th class="text-center">Status</th>
@@ -284,6 +293,7 @@
                     <td>{{ $preventif['period'] }}</td>
                     <td>{{ $preventif['name'] }}</td>
                     <td>{{ $preventif['asset_tag'] }} | {{ $preventif['asset_name'] }}</td>
+                    <td>{{ $preventif['gedung_name'] }}</td>
                     <td>{{ $preventif['pic_name'] }}</td>
                     <td>{{ $preventif['cost'] }}</td>
                     <td>{{ $preventif['status'] }}</td>
@@ -292,7 +302,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="9" class="text-center">Data tidak ditemukan.</td>
+                    <td colspan="10" class="text-center">Data tidak ditemukan.</td>
                 </tr>
             @endforelse
         </tbody>

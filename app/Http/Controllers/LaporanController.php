@@ -8,6 +8,7 @@ use Illuminate\View\View;
 use Carbon\Carbon;
 use Shuchkin\SimpleXLSXGen;
 use App\Models\AssetsModel;
+use App\Models\BuildingsModel;
 use App\Models\LicensesModel;
 use App\Models\LicensecategoriesModel;
 use App\Models\MaintenancesModel;
@@ -30,8 +31,9 @@ class LaporanController extends Controller
         $kategoriLisensi = LicensecategoriesModel::all();
         $kategoriKb = KbCategoriesModel::all();
         $penulisKb = User::whereIn('id', KbArticlesModel::select('author_id'))->orderBy('fullname')->get();
+        $gedung = BuildingsModel::orderBy('name')->get();
 
-        return view('admin.laporan.index', compact('klasifikasi', 'kategoriAset', 'kategoriLisensi', 'kategoriKb', 'penulisKb'));
+        return view('admin.laporan.index', compact('klasifikasi', 'kategoriAset', 'kategoriLisensi', 'kategoriKb', 'penulisKb', 'gedung'));
     }
 
     private const METHOD_MAP = [
@@ -275,7 +277,7 @@ class LaporanController extends Controller
 
         $data = [
             ['No', 'Periode', 'Nama Pemeliharaan', 'Tag Aset', 'Nama Aset', 'Klasifikasi',
-                'PIC', 'Biaya', 'Status', 'Catatan']
+                'Gedung', 'PIC', 'Biaya', 'Status', 'Catatan']
         ];
 
         foreach ($query->get() as $i => $item) {
@@ -286,6 +288,7 @@ class LaporanController extends Controller
                 optional(optional($item->maintenance_schedule)->asset)->tag ?? '-',
                 optional(optional($item->maintenance_schedule)->asset)->name ?? '-',
                 optional(optional(optional($item->maintenance_schedule)->asset)->classification)->name ?? '-',
+                optional(optional(optional(optional($item->maintenance_schedule)->asset)->location)->building)->name ?? '-',
                 optional($item->pic)->fullname ?? '-',
                 $item->cost !== null ? 'Rp ' . number_format($item->cost, 0, ',', '.') : '-',
                 $item->status,
@@ -307,6 +310,7 @@ class LaporanController extends Controller
                 'asset_tag' => optional(optional($item->maintenance_schedule)->asset)->tag ?? '-',
                 'asset_name' => optional(optional($item->maintenance_schedule)->asset)->name ?? '-',
                 'classification_name' => optional(optional(optional($item->maintenance_schedule)->asset)->classification)->name ?? '-',
+                'gedung_name' => optional(optional(optional(optional($item->maintenance_schedule)->asset)->location)->building)->name ?? '-',
                 'pic_name' => optional($item->pic)->fullname ?? '-',
                 'cost' => $item->cost !== null ? 'Rp ' . number_format($item->cost, 0, ',', '.') : '-',
                 'status' => $item->status,
@@ -320,12 +324,13 @@ class LaporanController extends Controller
         return view('admin.pemeliharaan-preventif.print', [
             'preventifs' => $preventifs,
             'totalCost' => $totalCost ? 'Rp ' . number_format($totalCost, 0, ',', '.') : 0,
+            'filterLabels' => $this->getPreventifFilterLabels($request),
         ]);
     }
 
     private function buildPreventifQuery(Request $request)
     {
-        $query = MaintenancesModel::with('maintenance_schedule.asset.classification', 'pic')
+        $query = MaintenancesModel::with('maintenance_schedule.asset.classification', 'maintenance_schedule.asset.location.building', 'pic')
             ->whereNotNull('maintenance_schedule_id');
 
         if ($request->filled('tahun')) {
@@ -342,7 +347,34 @@ class LaporanController extends Controller
             });
         }
 
+        if ($request->filled('gedung')) {
+            $query->whereHas('maintenance_schedule.asset.location.building', function ($q) use ($request) {
+                $q->where('id', $request->input('gedung'));
+            });
+        }
+
         return $query;
+    }
+
+    private function getPreventifFilterLabels(Request $request): array
+    {
+        $labels = [];
+        if ($request->filled('tahun')) {
+            $labels[] = 'Tahun: ' . $request->input('tahun');
+        }
+        if ($request->filled('bulan')) {
+            $bulanNama = Carbon::create()->month($request->input('bulan'))->locale('id')->monthName;
+            $labels[] = 'Bulan: ' . $bulanNama;
+        }
+        if ($request->filled('klasifikasi')) {
+            $names = AssetclassificationsModel::whereIn('id', (array) $request->input('klasifikasi'))->pluck('name')->toArray();
+            $labels[] = 'Klasifikasi: ' . implode(', ', $names);
+        }
+        if ($request->filled('gedung')) {
+            $names = BuildingsModel::whereIn('id', (array) $request->input('gedung'))->pluck('name')->toArray();
+            $labels[] = 'Gedung: ' . implode(', ', $names);
+        }
+        return $labels;
     }
 
     // ─── PEMELIHARAAN KOREKTIF ──────────────────────────────
@@ -352,7 +384,7 @@ class LaporanController extends Controller
         $query = $this->buildKorektifQuery($request);
 
         $data = [
-            ['No', 'Nama', 'Tag Aset', 'Nama Aset', 'PIC', 'Prioritas', 'Status',
+            ['No', 'Nama', 'Tag Aset', 'Nama Aset', 'Gedung', 'PIC', 'Prioritas', 'Status',
                 'Tanggal Jatuh Tempo', 'Biaya', 'Catatan']
         ];
 
@@ -362,6 +394,7 @@ class LaporanController extends Controller
                 $item->name,
                 optional($item->asset)->tag ?? '-',
                 optional($item->asset)->name ?? '-',
+                optional(optional(optional($item->asset)->location)->building)->name ?? '-',
                 optional($item->pic)->fullname ?? '-',
                 $item->priority ?? '-',
                 $item->status,
@@ -388,7 +421,7 @@ class LaporanController extends Controller
 
     private function buildKorektifQuery(Request $request)
     {
-        $query = MaintenancesModel::with('asset', 'pic')
+        $query = MaintenancesModel::with('asset', 'asset.location.building', 'pic')
             ->whereDoesntHave('maintenance_schedule');
 
         if ($request->filled('tahun')) {
@@ -401,6 +434,12 @@ class LaporanController extends Controller
 
         if ($request->filled('status')) {
             $query->where('status', $request->input('status'));
+        }
+
+        if ($request->filled('gedung')) {
+            $query->whereHas('asset.location.building', function ($q) use ($request) {
+                $q->where('id', $request->input('gedung'));
+            });
         }
 
         return $query;
@@ -418,6 +457,10 @@ class LaporanController extends Controller
         }
         if ($request->filled('status')) {
             $labels[] = 'Status: ' . $request->input('status');
+        }
+        if ($request->filled('gedung')) {
+            $names = BuildingsModel::whereIn('id', (array) $request->input('gedung'))->pluck('name')->toArray();
+            $labels[] = 'Gedung: ' . implode(', ', $names);
         }
         return $labels;
     }

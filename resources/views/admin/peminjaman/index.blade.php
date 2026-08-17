@@ -331,6 +331,11 @@
             // Load available assets for barang modal
             loadAvailableAssets();
 
+            // Recalc select2 placeholder width once modal visible (multi-select placeholder fix)
+            $('#createBarangModal').on('shown.bs.modal', function () {
+                $(this).find('select[name="asset_ids[]"]').trigger('change');
+            });
+
             // Auto-fill borrower name from user select
             $('#createRuanganModal select[name="user_id"], #createBarangModal select[name="user_id"]').on('change', function() {
                 var selected = $(this).find(':selected');

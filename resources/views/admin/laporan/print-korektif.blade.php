@@ -60,6 +60,7 @@
                 <th>No.</th>
                 <th>Nama</th>
                 <th>Aset</th>
+                <th>Gedung</th>
                 <th>PIC</th>
                 <th class="text-center">Prioritas</th>
                 <th class="text-center">Status</th>
@@ -74,6 +75,7 @@
                     <td class="text-center">{{ $loop->iteration }}</td>
                     <td>{{ $item->name }}</td>
                     <td>{{ optional($item->asset)->tag ?? '-' }} | {{ optional($item->asset)->name ?? '-' }}</td>
+                    <td>{{ optional(optional(optional($item->asset)->location)->building)->name ?? '-' }}</td>
                     <td>{{ optional($item->pic)->fullname ?? '-' }}</td>
                     <td class="text-center"><span class="badge priority-{{ strtolower($item->priority ?? 'low') }}">{{ $item->priority ?? '-' }}</span></td>
                     <td class="text-center"><span class="badge status-{{ strtolower(str_replace(' ', '-', $item->status ?? '')) }}">{{ $item->status }}</span></td>
@@ -82,7 +84,7 @@
                     <td>{{ $item->notes ?? '-' }}</td>
                 </tr>
             @empty
-                <tr><td colspan="9" class="text-center">Data tidak ditemukan.</td></tr>
+                <tr><td colspan="10" class="text-center">Data tidak ditemukan.</td></tr>
             @endforelse
         </tbody>
     </table>
